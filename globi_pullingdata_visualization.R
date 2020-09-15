@@ -1,35 +1,66 @@
+### USING GLOBI DATA FOR TRI-TROPHIC INTERACTION NETWORK ANALYSES ###
+# 14 september 2020
+# michelle j lee
+# This is a dataset pulled from the Global Biotic Interactions Database (GloBi). The following script pulls data using rglobi and visualizes these interaction networks.
+
+##### Libraries used #####
 library(tidyverse)
-bees <- read_tsv("out-bees-sort.tsv")
-
-bee_histogram <- ggplot(bees, aes(x = genus)) +
-  geom_histogram(stat = "count")
-bee_histogram
-
 library(rglobi)
+library(bipartite)
+library(igraph)
+
+##### APIS DATA FROM GLOBI #####
+
+# finding all interaction types can be difficult with the rglobi CRAN publication. use this command to look at all interaction types
 interactions_types <- get_interaction_types()
 View(interactions_types)
 
-### PULL INTERACTIONS FOR APIS MELLIFERA ###
-# grab data and pagenation
+# PULLING INTERACTIONS FOR APIS MELLIFERA
+# GloBi has limits on how much data you can pull at a time. these lines of code help you grab data and pagenate your searches
+
+### PULL APIS POLLINATION INTERACTIONS
 otherkeys = list("limit"=1000, "skip"=0)
-first_page_of_ten <- get_interactions(taxon = "Apis mellifera", interaction.type = c("pollinates", "hasParasite"), otherkeys = otherkeys)
+first_page_apis_poll <- get_interactions(taxon = "Apis mellifera", interaction.type = c("pollinates", "visitsFlowersOf"), otherkeys = otherkeys)
 otherkeys = list("limit"=1000, "skip"=1000)
-second_page_of_ten <- get_interactions(taxon = "Apis mellifera", interaction.type = c("pollinates", "hasParasite"), otherkeys = otherkeys)
+second_page_apis_poll <- get_interactions(taxon = "Apis mellifera", interaction.type = c("pollinates", "visitsFlowersOf"), otherkeys = otherkeys)
+otherkeys = list("limit"=1000, "skip"=2000)
+third_page_apis_poll <- get_interactions(taxon = "Apis mellifera", interaction.type = c("pollinates", "visitsFlowersOf"), otherkeys = otherkeys)
+otherkeys = list("limit"=1000, "skip"=3000)
+fourth_page_apis_poll <- get_interactions(taxon = "Apis mellifera", interaction.type = c("pollinates", "visitsFlowersOf"), otherkeys = otherkeys)
 # combine pages into one df
-Apis_mell <- rbind(first_page_of_ten,second_page_of_ten) %>% 
+Apis_mell <- rbind(first_page_apis_poll, second_page_apis_poll, third_page_apis_poll, fourth_page_apis_poll) %>% 
   filter(source_taxon_name == "Apis mellifera")
+# check for duplicates
+check_Apis_dups <- duplicated(Apis_mell)
+# create a unique list
+Apis_mell_unique <- unique(Apis_mell)
+
+### EXPLORE AND VISUALIZE INTERACTIONS
+
 # make a df to count occurences
-target_count <- Apis_mell %>% 
+Apis_mell_count <- Apis_mell %>% 
   group_by(target_taxon_name) %>% 
   summarize(count = length(target_taxon_name))
-target_count
+Apis_mell_count
 # make a histogram with counts
-target_hist <- ggplot(target_count, aes(x = count)) +
+Apis_mell_hist <- ggplot(Apis_mell_count, aes(x = count)) +
   geom_histogram(binwidth = 1) +
   xlab("Frequency of A. mellifera Interactions in Dataset")
-target_hist
+Apis_mell_hist
 
-library(bipartite)
+
+# make a df to count occurences
+u_Apis_mell_count <- Apis_mell_unique %>% 
+  group_by(target_taxon_name) %>% 
+  summarize(count = length(target_taxon_name))
+u_Apis_mell_count
+# make a histogram with counts
+u_Apis_mell_hist <- ggplot(u_Apis_mell_count, aes(x = count)) +
+  geom_histogram(binwidth = 1) +
+  xlab("Unique A. mellifera Interactions in Dataset") +
+  ylab("Frequency")
+u_Apis_mell_hist
+
 apis_plants <- Apis_mell %>% 
   filter(interaction_type == "pollinates")
 
@@ -47,8 +78,6 @@ plotweb2(as.data.frame(plantweb), as.data.frame(parweb), method = "normal", empt
 
 
 
-### USING IGRAPH ###
-library(igraph)
 
 ##### PRACTICE #####
 data = "From, To
