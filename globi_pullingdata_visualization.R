@@ -44,36 +44,30 @@ Apis_mell_count <- Apis_mell %>%
 Apis_mell_count
 # make a histogram with counts
 Apis_mell_hist <- ggplot(Apis_mell_count, aes(x = count)) +
-  geom_histogram(binwidth = 1) +
-  xlab("Frequency of A. mellifera Interactions in Dataset")
+  geom_histogram(bins = 7) +
+  xlab("A. mellifera Interactions in Dataset") +
+  ylab("Frequency")
 Apis_mell_hist
 
-
-# make a df to count occurences
+# make a df to count unique occurences
 u_Apis_mell_count <- Apis_mell_unique %>% 
   group_by(target_taxon_name) %>% 
   summarize(count = length(target_taxon_name))
 u_Apis_mell_count
-# make a histogram with counts
+# make a histogram with unique counts
 u_Apis_mell_hist <- ggplot(u_Apis_mell_count, aes(x = count)) +
   geom_histogram(binwidth = 1) +
   xlab("Unique A. mellifera Interactions in Dataset") +
   ylab("Frequency")
 u_Apis_mell_hist
 
-apis_plants <- Apis_mell %>% 
-  filter(interaction_type == "pollinates")
+# create bipartite network visualization with plants using package:bipartite
+plantweb <- frame2webs(Apis_mell_unique, varnames = c("target_taxon_name", "source_taxon_name", "source_taxon_name"), type.out = 'array')
+plotweb(as.data.frame(plantweb)) 
+# not super helpful as only Apis mellifera interacting with thousands of different plant species
 
-plantweb <- frame2webs(apis_plants, varnames = c("target_taxon_name", "source_taxon_name", "source_taxon_name"), type.out = 'array')
-plotweb(as.data.frame(plantweb))
+# create bipartite network visualization with plants using package:igraph
 
-apis_parasites <- Apis_mell %>% 
-  filter(interaction_type == "hasParasite")
-parweb <- frame2webs(apis_parasites, varnames = c("source_taxon_name", "target_taxon_name", "source_taxon_name"), type.out = 'array')
-plotweb(as.data.frame(parweb))
-
-# plot tri-trophic 
-plotweb2(as.data.frame(plantweb), as.data.frame(parweb), method = "normal", empty = FALSE)
 
 
 
