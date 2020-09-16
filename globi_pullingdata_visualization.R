@@ -8,6 +8,7 @@ library(tidyverse)
 library(rglobi)
 library(bipartite)
 library(igraph)
+library(ggplot2)
 
 ##### APIS DATA FROM GLOBI #####
 
@@ -71,82 +72,61 @@ igraph_apis <- graph_from_incidence_matrix(as.data.frame(plantweb))
 igraph_apis %>%
   add_layout_(as_bipartite()) %>%
   plot()
-
-### EXAMPLE IGRAPH CODE
-inc <- matrix(sample(0:1, 50, replace = TRUE, prob=c(2,1)), 10, 5)
-g <- graph_from_incidence_matrix(inc)
-plot(g, layout = layout_as_bipartite,
-     vertex.color=c("green","cyan")[V(g)$type+1])
-# Two columns
-g %>%
-  add_layout_(as_bipartite()) %>%
-  plot()
-
-
-
-
-##### Back to pollinators #####
-#describe network
-poll.network<-graph.data.frame(apis_plants, directed=F)
-
-#bipartite network
-g <- graph_from_data_frame(apis_plants)
-
-layer = rep(2, length(V(g)$name))
-layer[grep("Recipe:",V(g)$name)]=1
-layer[grep("compound:",V(g)$name)]=3
-
-names = V(g)$name
-names = sub("Recipe:","", names)
-names = sub("compound:","", names)
-V(g)$name = names
-
-
-#plot the graph
-plot(bsk.network,vertex.size=5, vertex.label=V, layout=layout_in_circle)
-
-V(g)
-E(g)
-
-
-all_edges <- do.call(rbind,
-                     lapply( list(edge_C_G, edge_P_C, edge_P_G), function(x) setNames(x, c("1","2")) )
-)
-
-g1 <- graph.data.frame(d = all_edges, directed = TRUE)
-
-
+# again, not super helpful with only Apis mellifera interacting with many plants
+# note: make sure the graph window is large enough, otherwise you will get a false error
 
 
 
 ### PULL INTERACTIONS FOR APIDAE ###
 # grab data and pagenation
 otherkeys = list("limit"=1000, "skip"=0)
-first_page_of_thousand <- get_interactions(taxon = "Apidae", interaction.type = c("pollinates", "hasParasite"), otherkeys = otherkeys)
+first_page_of_thousand <- get_interactions(taxon = "Apidae", interaction.type = c("pollinates", "visitsFlowersOf"), otherkeys = otherkeys)
 otherkeys = list("limit"=1000, "skip"=1000)
-second_page_of_thousand <- get_interactions(taxon = "Apidae", interaction.type = c("pollinates", "hasParasite"), otherkeys = otherkeys)
+second_page_of_thousand <- get_interactions(taxon = "Apidae", interaction.type = c("pollinates", "visitsFlowersOf"), otherkeys = otherkeys)
 otherkeys = list("limit"=1000, "skip"=2000)
-third_page_of_thousand <- get_interactions(taxon = "Apidae", interaction.type = c("pollinates", "hasParasite"), otherkeys = otherkeys)
+third_page_of_thousand <- get_interactions(taxon = "Apidae", interaction.type = c("pollinates", "visitsFlowersOf"), otherkeys = otherkeys)
 otherkeys = list("limit"=1000, "skip"=3000)
-fourth_page_of_thousand <- get_interactions(taxon = "Apidae", interaction.type = c("pollinates", "hasParasite"), otherkeys = otherkeys)
+fourth_page_of_thousand <- get_interactions(taxon = "Apidae", interaction.type = c("pollinates", "visitsFlowersOf"), otherkeys = otherkeys)
 otherkeys = list("limit"=1000, "skip"=4000)
-fifth_page_of_thousand <- get_interactions(taxon = "Apidae", interaction.type = c("pollinates", "hasParasite"), otherkeys = otherkeys)
+fifth_page_of_thousand <- get_interactions(taxon = "Apidae", interaction.type = c("pollinates", "visitsFlowersOf"), otherkeys = otherkeys)
 otherkeys = list("limit"=1000, "skip"=5000)
-sixth_page_of_thousand <- get_interactions(taxon = "Apidae", interaction.type = c("pollinates", "hasParasite"), otherkeys = otherkeys)
+sixth_page_of_thousand <- get_interactions(taxon = "Apidae", interaction.type = c("pollinates", "visitsFlowersOf"), otherkeys = otherkeys)
 otherkeys = list("limit"=1000, "skip"=6000)
-seventh_page_of_thousand <- get_interactions(taxon = "Apidae", interaction.type = c("pollinates", "hasParasite"), otherkeys = otherkeys)
+seventh_page_of_thousand <- get_interactions(taxon = "Apidae", interaction.type = c("pollinates", "visitsFlowersOf"), otherkeys = otherkeys)
 otherkeys = list("limit"=1000, "skip"=7000)
-eighth_page_of_thousand <- get_interactions(taxon = "Apidae", interaction.type = c("pollinates", "hasParasite"), otherkeys = otherkeys)
+eighth_page_of_thousand <- get_interactions(taxon = "Apidae", interaction.type = c("pollinates", "visitsFlowersOf"), otherkeys = otherkeys)
 otherkeys = list("limit"=1000, "skip"=8000)
-ninth_page_of_thousand <- get_interactions(taxon = "Apidae", interaction.type = c("pollinates", "hasParasite"), otherkeys = otherkeys)
-
-
-
-
+ninth_page_of_thousand <- get_interactions(taxon = "Apidae", interaction.type = c("pollinates", "visitsFlowersOf"), otherkeys = otherkeys)
+otherkeys = list("limit"=1000, "skip"=9000)
+tenth_page_of_thousand <- get_interactions(taxon = "Apidae", interaction.type = c("pollinates", "visitsFlowersOf"), otherkeys = otherkeys)
+otherkeys = list("limit"=1000, "skip"=10000)
+eleventh_page_of_thousand <- get_interactions(taxon = "Apidae", interaction.type = c("pollinates", "visitsFlowersOf"), otherkeys = otherkeys)
+otherkeys = list("limit"=1000, "skip"=11000)
+twelfth_page_of_thousand <- get_interactions(taxon = "Apidae", interaction.type = c("pollinates", "visitsFlowersOf"), otherkeys = otherkeys)
+otherkeys = list("limit"=1000, "skip"=12000)
+thirteenth_page_of_thousand <- get_interactions(taxon = "Apidae", interaction.type = c("pollinates", "visitsFlowersOf"), otherkeys = otherkeys)
+otherkeys = list("limit"=1000, "skip"=13000)
+fourteenth_page_of_thousand <- get_interactions(taxon = "Apidae", interaction.type = c("pollinates", "visitsFlowersOf"), otherkeys = otherkeys)
+otherkeys = list("limit"=1000, "skip"=14000)
+fifteenth_page_of_thousand <- get_interactions(taxon = "Apidae", interaction.type = c("pollinates", "visitsFlowersOf"), otherkeys = otherkeys)
+otherkeys = list("limit"=1000, "skip"=15000)
+sixteenth_page_of_thousand <- get_interactions(taxon = "Apidae", interaction.type = c("pollinates", "visitsFlowersOf"), otherkeys = otherkeys)
+otherkeys = list("limit"=1000, "skip"=16000)
+seventeenth_page_of_thousand <- get_interactions(taxon = "Apidae", interaction.type = c("pollinates", "visitsFlowersOf"), otherkeys = otherkeys)
+otherkeys = list("limit"=1000, "skip"=17000)
+eighteenth_page_of_thousand <- get_interactions(taxon = "Apidae", interaction.type = c("pollinates", "visitsFlowersOf"), otherkeys = otherkeys)
+otherkeys = list("limit"=1000, "skip"=18000)
+nineteenth_page_of_thousand <- get_interactions(taxon = "Apidae", interaction.type = c("pollinates", "visitsFlowersOf"), otherkeys = otherkeys)
+otherkeys = list("limit"=1000, "skip"=19000)
+twentieth_page_of_thousand <- get_interactions(taxon = "Apidae", interaction.type = c("pollinates", "visitsFlowersOf"), otherkeys = otherkeys)
+otherkeys = list("limit"=1000, "skip"=20000)
+twentyfirst_page_of_thousand <- get_interactions(taxon = "Apidae", interaction.type = c("pollinates", "visitsFlowersOf"), otherkeys = otherkeys)
+otherkeys = list("limit"=1000, "skip"=21000)
+twentysecond_page_of_thousand <- get_interactions(taxon = "Apidae", interaction.type = c("pollinates", "visitsFlowersOf"), otherkeys = otherkeys)
 
 
 # combine pages into one df
-Apidae <- rbind(first_page_of_thousand,second_page_of_thousand, third_page_of_thousand, fourth_page_of_thousand, fifth_page_of_thousand, sixth_page_of_thousand, seventh_page_of_thousand, eighth_page_of_thousand, ninth_page_of_thousand)
+Apidae <- rbind(first_page_of_thousand,second_page_of_thousand, third_page_of_thousand, fourth_page_of_thousand, fifth_page_of_thousand, sixth_page_of_thousand, seventh_page_of_thousand, eighth_page_of_thousand, ninth_page_of_thousand, tenth_page_of_thousand, eleventh_page_of_thousand, twelfth_page_of_thousand, thirteenth_page_of_thousand, fourteenth_page_of_thousand, fifteenth_page_of_thousand, sixteenth_page_of_thousand, seventeenth_page_of_thousand, eighteenth_page_of_thousand, nineteenth_page_of_thousand, twentieth_page_of_thousand, twentyfirst_page_of_thousand, twentysecond_page_of_thousand)
 # make a df to count occurences
 Ap_count <- Apidae %>% 
   group_by(target_taxon_name) %>% 
@@ -157,6 +137,21 @@ Ap_hist <- ggplot(Ap_count, aes(x = count)) +
   geom_histogram(binwidth = 1) +
   xlab("Frequency of Apidae Interactions in Dataset")
 Ap_hist
+
+# remove duplicated rows
+Apidae_unique <- unique(Apidae)
+
+# make a df to count unique occurences
+u_Apidae_count <- Apidae_unique %>% 
+  group_by(target_taxon_name) %>% 
+  summarize(count = length(target_taxon_name))
+u_Apidae_count
+# make a histogram with unique counts
+u_Apidae_hist <- ggplot(u_Apidae_count, aes(x = count)) +
+  geom_histogram(binwidth = 1) +
+  xlab("Unique Apidae Interactions in Dataset") +
+  ylab("Frequency")
+u_Apidae_hist
 
 
 # make a df to count occurences
