@@ -67,63 +67,22 @@ plotweb(as.data.frame(plantweb))
 # not super helpful as only Apis mellifera interacting with thousands of different plant species
 
 # create bipartite network visualization with plants using package:igraph
+igraph_apis <- graph_from_incidence_matrix(as.data.frame(plantweb))
+igraph_apis %>%
+  add_layout_(as_bipartite()) %>%
+  plot()
+
+### EXAMPLE IGRAPH CODE
+inc <- matrix(sample(0:1, 50, replace = TRUE, prob=c(2,1)), 10, 5)
+g <- graph_from_incidence_matrix(inc)
+plot(g, layout = layout_as_bipartite,
+     vertex.color=c("green","cyan")[V(g)$type+1])
+# Two columns
+g %>%
+  add_layout_(as_bipartite()) %>%
+  plot()
 
 
-
-
-
-
-##### PRACTICE #####
-data = "From, To
-Recipe:Chicken Marsala,flour
-Recipe:Chicken Marsala,sage
-Recipe:Chicken Marsala,chicken
-Recipe:Chicken Marsala,wine
-Recipe:Chicken Marsala,butter
-Recipe:Glazed Carrots,butter
-Recipe:Glazed Carrots,vinegar
-Recipe:Glazed Carrots,carrot
-Recipe:Glazed Carrots,chive
-flour,compound:X2
-sage,compound:X3
-chicken,compound:X6
-chicken,compound:X7
-wine,compound:X1
-wine,compound:X4
-wine,compound:X5
-wine,compound:X8
-wine,compound:X9
-wine,compound:X10
-wine,compound:X11
-wine,compound:X12
-butter,compound:X4
-butter,compound:X5
-butter,compound:X7
-butter,compound:X8
-butter,compound:X11
-vinegar,compound:X8
-vinegar,compound:X13
-carrot,compound:X2
-carrot,compound:X15
-chive,compound:X6
-chive,compound:X14
-"
-data=read.csv(textConnection(data),head=TRUE)
-g = graph_from_data_frame(data,directed=FALSE)
-layer = rep(2, length(V(g)$name))
-layer[grep("Recipe:",V(g)$name)]=1
-layer[grep("compound:",V(g)$name)]=3
-names = V(g)$name
-names = sub("Recipe:","", names)
-names = sub("compound:","", names)
-V(g)$name = names
-layout = layout_with_sugiyama(g, layers=layer)
-plot(g,
-     layout=cbind(layer,layout$layout[,1]),
-     vertex.shape=c("square","circle","none")[layer],
-     vertex.size=c(50,20,0)[layer],
-     vertex.label.dist=c(0,0,.8)[layer],
-     vertex.label.degree=0)
 
 
 ##### Back to pollinators #####
