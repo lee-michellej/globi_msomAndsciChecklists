@@ -10,11 +10,14 @@ library(bipartite)
 library(igraph)
 library(ggplot2)
 
-##### APIS DATA FROM GLOBI #####
-
+# NOTE ABOUT RGLOBI
 # finding all interaction types can be difficult with the rglobi CRAN publication. use this command to look at all interaction types
 interactions_types <- get_interaction_types()
 View(interactions_types)
+
+
+
+##### APIS POLLINATION DATA FROM GLOBI #####
 
 # PULLING INTERACTIONS FOR APIS MELLIFERA
 # GloBi has limits on how much data you can pull at a time. these lines of code help you grab data and pagenate your searches
@@ -77,7 +80,7 @@ igraph_apis %>%
 
 
 
-##### APIDAE DATA FROM GLOBI #####
+##### APIDAE POLLINATION DATA FROM GLOBI #####
 # grab data and pagenation
 otherkeys = list("limit"=1000, "skip"=0)
 first_page_of_thousand <- get_interactions(taxon = "Apidae", interaction.type = c("pollinates", "visitsFlowersOf"), otherkeys = otherkeys)
@@ -178,5 +181,117 @@ genera_Apidae_hist
 apidaeplantweb <- frame2webs(genera_Apidae, varnames = c("target_taxon_name", "genus", "genus"), type.out = 'array')
 igraph_apidae <- graph_from_incidence_matrix(as.data.frame(apidaeplantweb))
 igraph_apidae %>%
+  add_layout_(as_bipartite()) %>%
+  plot()
+
+
+
+
+##### APIS PARASITE DATA FROM GLOBI #####
+
+### PULL APIS PARASITE INTERACTIONS
+# source will be Apis : target will be the parasite
+# hasParasite, hasPathogen
+
+otherkeys = list("limit"=1000, "skip"=0)
+first_page_apis_par <- get_interactions(taxon = "Apis mellifera", interaction.type = "hasParasite", otherkeys = otherkeys)
+otherkeys = list("limit"=1000, "skip"=0)
+first_page_apis_path <- get_interactions(taxon = "Apis mellifera", interaction.type = "hasPathogen", otherkeys = otherkeys)
+
+
+# combine pages into one df
+Apis_parpath <- rbind(first_page_apis_par, first_page_apis_path) %>% 
+  filter(source_taxon_name == "Apis mellifera")
+# check for duplicates
+check_Apis_dups <- duplicated(Apis_parpath)
+# create a unique list
+Apis_parpath_unique <- unique(Apis_parpath)
+# only 88 unique here
+
+### EXPLORE AND VISUALIZE INTERACTIONS
+
+# make a df to count occurences
+Apis_parpath_count <- Apis_parpath %>% 
+  group_by(target_taxon_name) %>% 
+  summarize(count = length(target_taxon_name))
+Apis_parpath_count
+# make a histogram with counts
+Apis_parpath_hist <- ggplot(Apis_parpath_count, aes(x = count)) +
+  geom_bar() +
+  scale_x_continuous(breaks = 1:14) +
+  xlab("A. mellifera Interactions in Dataset") +
+  ylab("Frequency")
+Apis_parpath_hist
+
+# make a df to count unique occurences
+u_Apis_parpath_count <- Apis_parpath_unique %>% 
+  group_by(target_taxon_name) %>% 
+  summarize(count = length(target_taxon_name))
+u_Apis_parpath_count
+# make a histogram with unique counts
+u_Apis_parpath_hist <- ggplot(u_Apis_parpath_count, aes(x = count)) +
+  geom_bar() +
+  scale_x_continuous(breaks = 1:14) +
+  xlab("Unique A. mellifera Interactions in Dataset") +
+  ylab("Frequency")
+u_Apis_parpath_hist
+
+# create bipartite network visualization with plants using package:bipartite
+parweb <- frame2webs(Apis_parpath_unique, varnames = c("source_taxon_name", "target_taxon_name", "source_taxon_name"), type.out = 'array')
+plotweb(as.data.frame(parweb)) 
+
+# create bipartite network visualization with plants using package:igraph
+igraph_apis_par <- graph_from_incidence_matrix(as.data.frame(parweb))
+igraph_apis_par %>%
+  add_layout_(as_bipartite()) %>%
+  plot()
+
+
+##### APIDAE PARASITE DATA FROM GLOBI #####
+
+# grab data and pagenation
+otherkeys = list("limit"=1000, "skip"=0)
+first_Apidaepar <- get_interactions(taxon = "Apidae", interaction.type = c("hasParasite", "hasPathogen"), otherkeys = otherkeys)
+
+# remove duplicated rows
+Apidaepar_unique <- unique(first_Apidaepar)
+
+# make a df to count unique occurences
+u_Apidaepar_count <- Apidaepar_unique %>% 
+  group_by(source_taxon_name) %>% 
+  summarize(count = length(source_taxon_name))
+u_Apidaepar_count
+# make a histogram with unique counts
+u_Apidaepar_hist <- ggplot(u_Apidaepar_count, aes(x = count)) +
+  geom_bar() +
+  scale_x_continuous(breaks = 1:100) +
+  xlab("Unique Apidae Interactions in Dataset") +
+  ylab("Frequency")
+u_Apidaepar_hist
+
+# pull out unique genera
+genera_Apidaepar <- Apidaepar_unique %>% 
+  separate(source_taxon_name, into = c("genus", "species"), sep = " ") %>% 
+  filter(genus != "Apidae")
+
+
+# make a df to count unique genera
+genera_Apidaepar_count <- genera_Apidaepar %>% 
+  group_by(genus) %>% 
+  summarize(count = length(genus))
+genera_Apidaepar_count
+# make a histogram with unique counts
+genera_Apidaepar_hist <- ggplot(genera_Apidaepar_count, aes(x = count)) +
+  geom_histogram(binwidth = 1) +
+  xlab("Unique Apidae Genera Interactions in Dataset") +
+  ylab("Frequency")
+genera_Apidaepar_hist
+
+# make bipartite visualization
+apidaeparweb <- frame2webs(genera_Apidaepar, varnames = c("genus", "target_taxon_name", "target_taxon_name"), type.out = 'array')
+plotweb(as.data.frame(apidaeparweb))
+
+igraph_apidaepar <- graph_from_incidence_matrix(as.data.frame(apidaeparweb))
+igraph_apidaepar %>%
   add_layout_(as_bipartite()) %>%
   plot()
