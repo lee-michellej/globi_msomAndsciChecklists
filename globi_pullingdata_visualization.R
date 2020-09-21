@@ -164,6 +164,8 @@ genera_Apidae <- Apidae_unique %>%
   separate(source_taxon_name, into = c("genus", "species"), sep = " ") %>% 
   filter(genus != "Apidae")
 
+# print out CSV file
+#write.csv(genera_Apidae, "Apidae_pollination.csv")
 
 # make a df to count unique genera
 genera_Apidae_count <- genera_Apidae %>% 
@@ -274,6 +276,9 @@ genera_Apidaepar <- Apidaepar_unique %>%
   separate(source_taxon_name, into = c("genus", "species"), sep = " ") %>% 
   filter(genus != "Apidae")
 
+# write CSV file for Apidae parasites
+#write.csv(genera_Apidaepar, "Apidae_parasites.csv")
+
 
 # make a df to count unique genera
 genera_Apidaepar_count <- genera_Apidaepar %>% 
@@ -295,3 +300,44 @@ igraph_apidaepar <- graph_from_incidence_matrix(as.data.frame(apidaeparweb))
 igraph_apidaepar %>%
   add_layout_(as_bipartite()) %>%
   plot()
+
+
+##### APIDAE PARASITES // TARGET SWITCH #####
+
+# grab data and pagenation
+otherkeys = list("limit"=1000, "skip"=0)
+first_Apidaepar2 <- get_interactions(taxon = "Apidae", interaction.type = c("hasParasite", "hasPathogen"), otherkeys = otherkeys)
+
+# remove duplicated rows
+Apidaepar_unique <- unique(first_Apidaepar)
+
+# make a df to count unique occurences
+u_Apidaepar_count <- Apidaepar_unique %>% 
+  group_by(source_taxon_name) %>% 
+  summarize(count = length(source_taxon_name))
+u_Apidaepar_count
+# make a histogram with unique counts
+u_Apidaepar_hist <- ggplot(u_Apidaepar_count, aes(x = count)) +
+  geom_bar() +
+  scale_x_continuous(breaks = 1:100) +
+  xlab("Unique Apidae Interactions in Dataset") +
+  ylab("Frequency")
+u_Apidaepar_hist
+
+# pull out unique genera
+genera_Apidaepar <- Apidaepar_unique %>% 
+  separate(source_taxon_name, into = c("genus", "species"), sep = " ") %>% 
+  filter(genus != "Apidae")
+
+
+# make a df to count unique genera
+genera_Apidaepar_count <- genera_Apidaepar %>% 
+  group_by(genus) %>% 
+  summarize(count = length(genus))
+genera_Apidaepar_count
+# make a histogram with unique counts
+genera_Apidaepar_hist <- ggplot(genera_Apidaepar_count, aes(x = count)) +
+  geom_histogram(binwidth = 1) +
+  xlab("Unique Apidae Genera Interactions in Dataset") +
+  ylab("Frequency")
+genera_Apidaepar_hist
