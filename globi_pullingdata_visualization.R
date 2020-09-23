@@ -308,13 +308,25 @@ igraph_apidaepar %>%
 ##### APIDAE PARASITES // TARGET SWITCH #####
 
 # grab data and pagenation
-otherkeys = list("limit"=1000, "skip"=0)
 get_interaction_matrix(source.taxon.names = NULL,
-                       target.taxon.names = list("Apidae"), interaction.type = c("parasiteOf", "pathogenOf"),
-                       opts = list(), read_csv = read_csv_online)
+  target.taxon.names = list("Apidae"), interaction.type = c("parasiteOf", "pathogenOf"),
+  opts = list(), read_csv = read_csv_online)
 
+otherkeys = list("limit"=1000, "skip"=0)
+path1 <- get_interactions_by_type(interactiontype = c("parasiteOf", "pathogenOf"), otherkeys = otherkeys)
+otherkeys = list("limit"=1000, "skip"=1000)
+path2 <- get_interactions_by_type(interactiontype = c("parasiteOf", "pathogenOf"), otherkeys = otherkeys)
+otherkeys = list("limit"=1000, "skip"=2000)
+path3 <- get_interactions_by_type(interactiontype = c("parasiteOf", "pathogenOf"), otherkeys = otherkeys)
+otherkeys = list("limit"=1000, "skip"=3000)
+path4 <- get_interactions_by_type(interactiontype = c("parasiteOf", "pathogenOf"), otherkeys = otherkeys)
+otherkeys = list("limit"=1000, "skip"=4000)
+path5 <- get_interactions_by_type(interactiontype = c("parasiteOf", "pathogenOf"), otherkeys = otherkeys)
+otherkeys = list("limit"=1000, "skip"=5000)
+path6 <- get_interactions_by_type(interactiontype = c("parasiteOf", "pathogenOf"), otherkeys = otherkeys)
 
-
+path <- rbind(path1, path2, path3, path4, path5, path6) %>% 
+  separate(target_taxon_path, into = c("kingdom", "phylum", "class", "order", "family", "genus", "species", "variety"), sep = " | ")
 
 
 ##### VISUALS USING PRINTED CSV FILES #####
@@ -334,6 +346,33 @@ igraph_apidaepoll %>%
   add_layout_(as_bipartite()) %>% 
   plot()
 
+
+# make a df to count unique occurences
+Apidae_count <- Apidae_pollination %>% 
+  group_by(target_genus) %>% 
+  summarize(count = length(target_genus))
+Apidae_count
+# make a histogram with unique counts
+u_Apidae_hist <- ggplot(Apidae_count, aes(x = count)) +
+  geom_histogram(binwidth = 1) +
+  xlab("Unique Apidae Interactions with plant genera in Dataset") +
+  ylab("Frequency")
+u_Apidae_hist
+
+# make a df to count unique occurences
+Apis_count <- Apidae_pollination %>% 
+  filter(genus == "Apis") %>% 
+  group_by(target_genus) %>% 
+  summarize(count = length(target_genus))
+Apis_count
+# make a histogram with unique counts
+u_Apis_hist <- ggplot(Apis_count, aes(x = count)) +
+  geom_histogram(binwidth = 1) +
+  xlab("Unique Apis Interactions with plant genera in Dataset") +
+  ylab("Frequency")
+u_Apis_hist
+
+### NOW SPLIT BY FAMILY ###
 
 
 # read in CSV and separate target taxon by genus/species/variety
