@@ -167,6 +167,7 @@ genera_Apidae <- Apidae_unique %>%
 # print out CSV file
 #write.csv(genera_Apidae, "Apidae_pollination.csv")
 
+
 # make a df to count unique genera
 genera_Apidae_count <- genera_Apidae %>% 
   group_by(genus) %>% 
@@ -280,6 +281,8 @@ genera_Apidaepar <- Apidaepar_unique %>%
 #write.csv(genera_Apidaepar, "Apidae_parasites.csv")
 
 
+
+
 # make a df to count unique genera
 genera_Apidaepar_count <- genera_Apidaepar %>% 
   group_by(genus) %>% 
@@ -341,3 +344,44 @@ genera_Apidaepar_hist <- ggplot(genera_Apidaepar_count, aes(x = count)) +
   xlab("Unique Apidae Genera Interactions in Dataset") +
   ylab("Frequency")
 genera_Apidaepar_hist
+
+
+
+
+##### VISUALS USING PRINTED CSV FILES #####
+
+# read in CSV and separate target taxon by genus/species/variety
+Apidae_pollination <- read_csv("Apidae_pollination.csv") %>% 
+  select(-"X1") %>% 
+  separate(target_taxon_name, into = c("target_genus", "target_species", "target_variety"), sep = " ") %>% 
+  mutate(oneweb = ".")
+
+# visualize
+apidae_pollweb <- frame2webs(Apidae_pollination, varnames = c("target_genus", "genus", "oneweb"), type.out = 'array')
+plotweb(as.data.frame(apidae_pollweb))
+
+igraph_apidaepoll <- graph_from_incidence_matrix(as.data.frame(apidae_pollweb))
+igraph_apidaepoll %>%
+  add_layout_(as_bipartite()) %>% 
+  plot()
+
+
+
+# read in CSV and separate target taxon by genus/species/variety
+Apidae_parasites <- read_csv("Apidae_parasites.csv") %>% 
+  select(-"X1") %>% 
+  separate(target_taxon_name, into = c("target_genus", "target_species", "target_variety"), sep = " ") %>% 
+  mutate(oneweb = ".")
+
+# visualize
+apidae_parweb <- frame2webs(Apidae_parasites, varnames = c("genus", "target_genus", "oneweb"), type.out = 'array')
+plotweb(as.data.frame(apidae_parweb))
+
+igraph_apidaepar <- graph_from_incidence_matrix(as.data.frame(apidae_parweb))
+igraph_apidaepar %>%
+  add_layout_(as_bipartite()) %>%
+  plot()
+
+
+
+
