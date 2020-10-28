@@ -372,7 +372,14 @@ u_Apis_hist <- ggplot(Apis_count, aes(x = count)) +
   ylab("Frequency")
 u_Apis_hist
 
+
+
 ### NOW SPLIT BY FAMILY ###
+
+Apidae_pollination <- read_csv("Apidae_pollination.csv") %>% 
+  select(-"X1") %>% 
+  separate(target_taxon_name, into = c("target_genus", "target_species", "target_variety"), sep = " ") %>% 
+  mutate(oneweb = ".")
 
 
 # read in CSV and separate target taxon by genus/species/variety
@@ -390,6 +397,10 @@ igraph_apidaepar %>%
   add_layout_(as_bipartite()) %>%
   plot()
 
+### number of parasitic interactions per study ---
+from_globi <- read_csv("interaction.csv")
 
-
+num_int_per_study <- ggplot(from_globi, aes(x = study_source_citation)) +
+  geom_histogram(stat = "count")
+num_int_per_study
 
