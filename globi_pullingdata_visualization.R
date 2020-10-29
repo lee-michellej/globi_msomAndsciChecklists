@@ -17,7 +17,7 @@ View(interactions_types)
 
 
 
-##### APIS POLLINATION DATA FROM GLOBI #####
+### APIS POLLINATION DATA FROM rGLOBI ----
 
 # PULLING INTERACTIONS FOR APIS MELLIFERA
 # GloBi has limits on how much data you can pull at a time. these lines of code help you grab data and pagenate your searches
@@ -39,7 +39,7 @@ check_Apis_dups <- duplicated(Apis_mell)
 # create a unique list
 Apis_mell_unique <- unique(Apis_mell)
 
-### EXPLORE AND VISUALIZE INTERACTIONS
+### EXPLORE AND VISUALIZE INTERACTIONS ###
 
 # make a df to count occurences
 Apis_mell_count <- Apis_mell %>% 
@@ -80,7 +80,7 @@ igraph_apis %>%
 
 
 
-##### APIDAE POLLINATION DATA FROM GLOBI #####
+### APIDAE POLLINATION DATA FROM rGLOBI ----
 # grab data and pagenation
 otherkeys = list("limit"=1000, "skip"=0)
 first_page_of_thousand <- get_interactions(taxon = "Apidae", interaction.type = c("pollinates", "visitsFlowersOf"), otherkeys = otherkeys)
@@ -190,7 +190,7 @@ igraph_apidae %>%
 
 
 
-##### APIS PARASITE DATA FROM GLOBI #####
+### APIS PARASITE DATA FROM rGLOBI ----
 
 ### PULL APIS PARASITE INTERACTIONS
 # source will be Apis : target will be the parasite
@@ -211,7 +211,7 @@ check_Apis_dups <- duplicated(Apis_parpath)
 Apis_parpath_unique <- unique(Apis_parpath)
 # only 88 unique here
 
-### EXPLORE AND VISUALIZE INTERACTIONS
+### EXPLORE AND VISUALIZE INTERACTIONS ###
 
 # make a df to count occurences
 Apis_parpath_count <- Apis_parpath %>% 
@@ -250,7 +250,7 @@ igraph_apis_par %>%
   plot()
 
 
-##### APIDAE PARASITE DATA FROM GLOBI #####
+### APIDAE PARASITE DATA FROM rGLOBI ----
 
 # grab data and pagenation
 otherkeys = list("limit"=1000, "skip"=0)
@@ -305,7 +305,8 @@ igraph_apidaepar %>%
   plot()
 
 
-##### APIDAE PARASITES // TARGET SWITCH #####
+### APIDAE PARASITES // TARGET SWITCH ----
+# I don't think anything came form this... (ml 29oct2020)
 
 # grab data and pagenation
 get_interaction_matrix(source.taxon.names = NULL,
@@ -329,7 +330,8 @@ path <- rbind(path1, path2, path3, path4, path5, path6) %>%
   separate(target_taxon_path, into = c("kingdom", "phylum", "class", "order", "family", "genus", "species", "variety"), sep = " | ")
 
 
-##### VISUALS USING PRINTED CSV FILES #####
+#### VISUALS USING PRINTED CSV FILES ----
+# I printed the outputs from the previous Apidae sections for easier use when reloading the r file. (ml 29oct2020)
 
 # read in CSV and separate target taxon by genus/species/variety
 Apidae_pollination <- read_csv("Apidae_pollination.csv") %>% 
@@ -373,34 +375,17 @@ u_Apis_hist <- ggplot(Apis_count, aes(x = count)) +
 u_Apis_hist
 
 
+### USING CSV FOR PARASITES PULLED DIRECTLY FROM GLOBI ----
+# this file has all metadata that were missing from the rglobi pulls
+# like study citation, lat/long, etc
+from_globi <- read_csv("Parasite_Interaction_fromGlobi.csv")
 
-### NOW SPLIT BY FAMILY ###
-
-Apidae_pollination <- read_csv("Apidae_pollination.csv") %>% 
-  select(-"X1") %>% 
-  separate(target_taxon_name, into = c("target_genus", "target_species", "target_variety"), sep = " ") %>% 
-  mutate(oneweb = ".")
-
-
-# read in CSV and separate target taxon by genus/species/variety
-Apidae_parasites <- read_csv("Apidae_parasites.csv") %>% 
-  select(-"X1") %>% 
-  separate(target_taxon_name, into = c("target_genus", "target_species", "target_variety"), sep = " ") %>% 
-  mutate(oneweb = ".")
-
-# visualize
-apidae_parweb <- frame2webs(Apidae_parasites, varnames = c("genus", "target_genus", "oneweb"), type.out = 'array')
-plotweb(as.data.frame(apidae_parweb))
-
-igraph_apidaepar <- graph_from_incidence_matrix(as.data.frame(apidae_parweb))
-igraph_apidaepar %>%
-  add_layout_(as_bipartite()) %>%
-  plot()
-
-### number of parasitic interactions per study ---
-from_globi <- read_csv("interaction.csv")
-
-num_int_per_study <- ggplot(from_globi, aes(x = study_source_citation)) +
+num_int_per_study <- ggplot(from_globi, aes(x = study_citation)) +
   geom_histogram(stat = "count")
 num_int_per_study
+
+
+
+### quick filtering in large tsv file ----
+## this is terminal for grep -o ‘Apidae.*’ interactions.tsv > Apidae.tsv)
 
