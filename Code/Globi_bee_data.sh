@@ -31,7 +31,7 @@ cat ../Data/interactions.tsv | grep -w "Andrenidae" >> ../Data/raw_globi_data/An
 wc -l ../Data/raw_globi_data/Andrenidae_data.tsv
 
 echo Sorting unique records
-sort ../Data/raw_globi_data/Andrenidae_data.tsv | uniq > ../Data/raw_globi_data/Andrenidae_data_unique.tsv
+sort -r ../Data/raw_globi_data/Andrenidae_data.tsv | uniq >> ../Data/raw_globi_data/Andrenidae_data_unique.tsv
 wc -l ../Data/raw_globi_data/Andrenidae_data_unique.tsv
 #####################################
 #find all Apidae and write one file with all data and a second file only with unique records
@@ -41,7 +41,7 @@ cat ../Data/interactions.tsv | grep -w "Apidae" >> ../Data/raw_globi_data/Apidae
 wc -l ../Data/raw_globi_data/Apidae_data.tsv
 
 echo Sorting unique records
-sort ../Data/raw_globi_data/Apidae_data.tsv | uniq > ../Data/raw_globi_data/Apidae_data_unique.tsv
+sort -r ../Data/raw_globi_data/Apidae_data.tsv | uniq >> ../Data/raw_globi_data/Apidae_data_unique.tsv
 wc -l ../Data/raw_globi_data/Apidae_data_unique.tsv
 #####################################
 #find all Colletidae and write one file with all data and a second file only with unique records
@@ -51,7 +51,7 @@ cat ../Data/interactions.tsv | grep -w "Colletidae" >> ../Data/raw_globi_data/Co
 wc -l ../Data/raw_globi_data/Colletidae_data.tsv
 
 echo Sorting unique records
-sort ../Data/raw_globi_data/Colletidae_data.tsv | uniq > ../Data/raw_globi_data/Colletidae_data_unique.tsv
+sort -r ../Data/raw_globi_data/Colletidae_data.tsv | uniq >> ../Data/raw_globi_data/Colletidae_data_unique.tsv
 wc -l ../Data/raw_globi_data/Colletidae_data_unique.tsv
 #####################################
 #find all Halictidae and write one file with all data and a second file only with unique records
@@ -61,7 +61,7 @@ cat ../Data/interactions.tsv | grep -w "Halictidae" >> ../Data/raw_globi_data/Ha
 wc -l ../Data/raw_globi_data/Halictidae_data.tsv
 
 echo Sorting unique records
-sort ../Data/raw_globi_data/Halictidae_data.tsv | uniq > ../Data/raw_globi_data/Halictidae_data_unique.tsv
+sort -r ../Data/raw_globi_data/Halictidae_data.tsv | uniq >> ../Data/raw_globi_data/Halictidae_data_unique.tsv
 wc -l ../Data/raw_globi_data/Halictidae_data_unique.tsv
 #####################################
 #find all Megachilidae and write one file with all data and a second file only with unique records
@@ -71,7 +71,7 @@ cat ../Data/interactions.tsv | grep -w "Megachilidae" >> ../Data/raw_globi_data/
 wc -l ../Data/raw_globi_data/Megachilidae_data.tsv
 
 echo Sorting unique records
-sort ../Data/raw_globi_data/Megachilidae_data.tsv | uniq > ../Data/raw_globi_data/Megachilidae_data_unique.tsv
+sort -r ../Data/raw_globi_data/Megachilidae_data.tsv | uniq >>../Data/raw_globi_data/Megachilidae_data_unique.tsv
 wc -l ../Data/raw_globi_data/Megachilidae_data_unique.tsv
 #####################################
 #find all Melittidae and write one file with all data and a second file only with unique records
@@ -81,7 +81,7 @@ cat ../Data/interactions.tsv | grep -w "Melittidae" >> ../Data/raw_globi_data/Me
 wc -l ../Data/raw_globi_data/Melittidae_data.tsv
 
 echo Sorting unique records
-sort ../Data/raw_globi_data/Melittidae_data.tsv | uniq > ../Data/raw_globi_data/Melittidae_data_unique.tsv
+sort -r ../Data/raw_globi_data/Melittidae_data.tsv | uniq >> ../Data/raw_globi_data/Melittidae_data_unique.tsv
 wc -l ../Data/raw_globi_data/Melittidae_data_unique.tsv
 #####################################
 #find all Stenotritidae and write one file with all data and a second file only with unique records
@@ -91,7 +91,7 @@ cat ../Data/interactions.tsv | grep -w "Stenotritidae" >> ../Data/raw_globi_data
 wc -l ../Data/raw_globi_data/Stenotritidae_data.tsv
 
 echo Sorting unique records
-sort ../Data/raw_globi_data/Stenotritidae_data.tsv | uniq > ../Data/raw_globi_data/Stenotritidae_data_unique.tsv
+sort -r ../Data/raw_globi_data/Stenotritidae_data.tsv | uniq >> ../Data/raw_globi_data/Stenotritidae_data_unique.tsv
 wc -l ../Data/raw_globi_data/Stenotritidae_data_unique.tsv
 
 #List all TSV files
