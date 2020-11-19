@@ -102,3 +102,7 @@ sort -r ../Data/raw_globi_data/all_bee_data.txt | uniq > ../Data/raw_globi_data/
 rm ../Data/raw_globi_data/all_bee_data.txt
 wc -l ../Data/raw_globi_data/all_bee_data_unique.txt
 
+
+#get list of unique interaction types
+cat ../Data/raw_globi_data/all_bee_data_unique.txt | cut -f 35 | sort -u > ../Data/raw_globi_data/interaction_types.txt
+
