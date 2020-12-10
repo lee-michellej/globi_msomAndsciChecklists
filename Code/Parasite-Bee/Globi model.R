@@ -264,7 +264,7 @@ cols <- c("Estimated" = "black", "Observed" = "red")
 
 
 # Save the output
-ggsave("./Figures/Globi_data_count.pdf", width = 30, height = 16)
+ggsave("./Figures/Globi_data_count.pdf", width = 10, height = 12)
 
 
 # Plot the number of parasites per bee species
@@ -287,8 +287,37 @@ ggplot(mod.est, aes(x = obs, y = mod.mean, ymin = mod.q2.5, ymax = mod.q97.5))+
         panel.grid.minor = element_blank()) 
 
 # Save the output
-ggsave("./Figures/Globi_data_estimate_v_observed.pdf", width = 30, height = 16)
+ggsave("./Figures/Globi_data_estimate_v_observed.pdf", width = 13, height = 12)
 
+
+
+# Stack the data
+hist.dat <- data.frame(
+    Estimate = rep(c("observed", "estimate"), each = length(mod.est$obs)),
+    value = c(mod.est$obs, 
+    mod.est$mod.mean))
+
+# Make histograms
+
+ggplot(hist.dat, aes(x = value,  fill = Estimate))+
+  geom_histogram(aes(y=..density..), col = "black")+
+  geom_density(alpha=.2)+
+  ylab("Density")+
+  xlab("Number of parasite species")+
+  theme_bw()+ 
+  theme(axis.text.x = element_text(size = 17, color = "black"), 
+        axis.text.y = element_text(size = 17, color = "black"), 
+        axis.title.y = element_text(size = 17, color = "black"), 
+        axis.title.x =element_text(size = 17, color = "black"),
+        legend.title =element_text(size = 17, color = "black"),
+        legend.text =element_text(size = 17, color = "black"),
+        plot.title = element_text(size = 25, color = "black", face = "bold"),
+        panel.grid.major = element_blank(), 
+        panel.grid.minor = element_blank()) 
+
+
+# Save the output
+ggsave("./Figures/Globi_data_histogram.pdf", width = 13, height = 12)
 
 
 # End script
