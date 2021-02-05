@@ -5,15 +5,38 @@
 
 
 
+##################################
+######## Objective ###############
+##################################
 
-# Code objective: To determine the number of plants that each bee genus interacts with while accounting for sampling bias
+
+# To determine the number of plants that each bee genus interacts with while accounting for sampling bias
+
 
 # To do this, we will analyze the globi data using an N-mixture model
 
+  # N = Number of plants that each bee genus interacts with
+      # Covariates:
+        # bee genus size
+
+  # p = the probability that a study documents a bee-plant interaction
+      # Covariates:
+        # bee genus size
+
+
+
+##################################
+######## Content generated #######
+##################################
+
+
+
+# This code will generate: 
+
 
 
 ########################################
-########################################
+########### Model assumptions ##########
 ########################################
 
 
@@ -70,14 +93,44 @@ setwd("~/globi_tritrophic_networks/")
 # 2. Load data -------------------------------------------------------
 
 
-# Read in data
+
+
+# Read in count data
+  # This will load object: globi.dat
 load("./Data/globi_data_formatted_bee_plant_2020_12_04.rds")
 
+# Save as a data frame
+globi.dat <- as.data.frame(globi.dat)
+
+# Look at the dimensions
+  # 288 rows = number of bee genera
+  # 38 columns = number of studies
+dim(globi.dat)
+
+# Read in size data
+size <- read.csv("./Data/body_length_jan21.csv")
+
+# Look at data structure
+  # There are 162 rows
+  # 14 columns - all with different size variables
+str(size)
 
 
 
 
-# 3. Write the model in JAGS ------------------------------------------------
+
+# 3. Format the data -------------------------------------------------------
+
+
+
+# We need to make sure that the globi.data (count data) are in the same order as the size data
+
+
+
+
+
+
+# 4. Write the model in JAGS ------------------------------------------------
 
 
 
@@ -139,7 +192,7 @@ sink()
 
 
 
-# 3. Bundle the data ------------------------------------------------
+# 5. Bundle the data ------------------------------------------------
 
 
 
@@ -190,7 +243,7 @@ params <- c("mu.lambda",
 
 
 
-# 8. MCMC settings --------------------------------------------------------
+# 6. MCMC settings --------------------------------------------------------
 
 
 
@@ -205,7 +258,7 @@ nc <- 3
 
 
 
-# 9. Run the models --------------------------------------------------------
+# 7. Run the models --------------------------------------------------------
 
 
 
@@ -231,7 +284,7 @@ plogis(out$mean$p)
 plogis(out$q2.5$p)
 plogis(out$q97.5$p)
 
-# 10. Look at model outputs -------------------------------------------------
+# 8. Look at model outputs -------------------------------------------------
 
 
 
@@ -249,7 +302,9 @@ plot(out)
 save(out, file = "./ModelOutput/out_2020_12_04.rda")
 
 
-# 11. Compare model outputs to truth ----------------------------------------
+
+
+# 9. Visualize the output ----------------------------------------
 
 
 
