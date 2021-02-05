@@ -48,7 +48,7 @@ for(i in 1:n.bee){   # For each bee species
  #p[i] <- r/(r+lambda[i])
   
   # Relating 
-  log(lambda[i]) <- alpha.lambda #+ beta.size * size[i] #+ epsilon[i]
+  log(lambda[i]) <- alpha.lambda #+ epsilon[i] #+ beta.size * size[i]
 
   for(k in 1:n.study){
   
@@ -56,7 +56,7 @@ for(i in 1:n.bee){   # For each bee species
       # p = the probability that each study detected a plant-bee interaction
       y[i, k] ~ dbinom(p.eff[i,k], N[i])
   
-     logit(p.eff[i,k]) <- alpha.p + beta.detect * size[i] #+ eta[i]
+     logit(p.eff[i,k]) <- alpha.p #+ eta[i] # + beta.detect * size[i] 
 
   }
 

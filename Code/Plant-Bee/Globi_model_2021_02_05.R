@@ -4,6 +4,8 @@
 ########################################
 
 
+# Note- I haven't been able to get the random effects terms to work in either part of the model
+
 
 ##################################
 ######## Objective ###############
@@ -22,11 +24,13 @@
 # Observations are obtained from museum collections and research studies worldwide.
 # Studies vary in terms of objectives, study design, etc.
 # The Globi database consists of presence-only data.
-# We subsetted the data to only include bee genera and instances of bees interacting with plants (either as the "source" or "target").
+  # We subsetted the data to only include bee genera and instances of bees interacting with plants (either as the "source" or "target").
+  # We aggregate the presence-only data to count data = the total number of plants that each bee genera is interacting with
+    # Problem - if 1 study documents 1 plant-bee interaction, and another study also documents 1 plant-bee interaction; you don't know if it is the same plant-bee interaction that was documented
+  # By doing this, we loss the identity of the plant species that the bee is interacting with.
 
-# We do not explicitly model space
-# Our questions relate to species 
-
+# We do not explicitly consider space in the model 
+  # Data are collected worldwide across time, and these are records of any possible plant-bee interaction anywhere
 
 # Databases are plagued by 2 problems:
   # 1. sampling bias
@@ -37,7 +41,6 @@
 
 # As a result, patterns may be masked (or there are false patterns) because of observation effort
 
-# We propose a solution to the problem of biased databases.
 
 
 
@@ -53,7 +56,14 @@
 # 2. How to deal with meta-analyses? 
   # What does it mean for the analysis if 2 studies independently visited the same museum collection and recorded an interaction?
 
-# 3. 
+# 3. I'm worried about a mismatch between the model and reality. For example, what if a bee species only has the opportunity to interact with 10 plants that occur within its range, but the model predicts that it interacts with 20. Is there a way to obtain the max number of plant species a bee genus could interact with based on their distributions?
+
+# 4. What are the implications of aggregating the presence-only data to counts?
+  # - We loss identifying features of plants
+  # - Aggregation leads to a loss of information
+    # e.g., aggregating spatial data for counts, and you add a covariate- the measurement is typically from the centroid of the plot = location error
+    # = ecological fallacy
+  # To understand the impact of aggregating the presence-only data to counts in this instance, we need to do a simulation study
 
 
 
@@ -70,6 +80,10 @@
   # p = the probability that a study documents a bee-plant interaction
       # Covariates:
         # bee genus size
+        # Categories for type of study: is it a museum study, field study, meta analysis?
+        # Number of museums/records searched
+        # Number of survey days
+        # Total area searched
 
 
 
@@ -297,7 +311,7 @@ for(i in 1:n.bee){   # For each bee species
  #p[i] <- r/(r+lambda[i])
   
   # Relating 
-  log(lambda[i]) <- alpha.lambda #+ beta.size * size[i] #+ epsilon[i]
+  log(lambda[i]) <- alpha.lambda #+ epsilon[i] #+ beta.size * size[i]
 
   for(k in 1:n.study){
   
@@ -305,7 +319,7 @@ for(i in 1:n.bee){   # For each bee species
       # p = the probability that each study detected a plant-bee interaction
       y[i, k] ~ dbinom(p.eff[i,k], N[i])
   
-     logit(p.eff[i,k]) <- alpha.p + beta.detect * size[i] #+ eta[i]
+     logit(p.eff[i,k]) <- alpha.p #+ eta[i] # + beta.detect * size[i] 
 
   }
 
