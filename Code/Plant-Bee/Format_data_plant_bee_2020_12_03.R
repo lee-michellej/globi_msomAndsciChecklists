@@ -102,6 +102,31 @@ dat1$Prez <- 1
 
 
 
+
+
+# 4. Pull out unique citations -------------------------------------------------------
+
+
+
+
+# there are 4 columns with citation information
+  # referenceDoi
+  # sourceCitation
+  # referenceCitation
+
+dat2 <- dat1 %>% 
+  select(referenceDoi, sourceCitation, referenceCitation) %>% 
+  distinct()
+
+dat2 <- dat2[order(dat2$sourceCitation),]
+
+#str(dat2)
+#
+#View(dat2)
+
+write.csv(dat2, file = "./Data/citation-list.csv")
+
+
 # 4. Make Insect & Plant columns -------------------------------------------------------
 
 
