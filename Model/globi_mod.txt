@@ -1,0 +1,56 @@
+
+model{
+
+# Priors
+for(i in 1:n.bee){ # For each bee species
+
+# We assign a prior from 0 to 1 for psi
+# psi = The probability a bee species interacts with a plant species
+
+  psi[i] ~ dunif(0, 1)
+
+}
+
+# The detection probability = the probability a study documented a bee-plant interaction
+p ~ dunif(0, 1)
+
+
+# Model
+
+for(i in 1:n.bee){
+
+  for(j in 1:n.plant){
+  
+    # True bee-plant interaction
+    
+    z[i, j] ~ dbern(psi[i])
+  
+      for(k in 1:n.study){
+
+      # Observed bee-plant interaction
+      
+        y[i,j,k] ~ dbern(p.eff[i,j,k])
+
+        p.eff[i,j,k] <- p * z[i,j]
+
+    }
+    
+  }
+
+}
+
+
+
+# Derived quantities
+# Determine the total number of plant interactions per bee 
+
+for(i in 1:n.bee){
+
+    # To determine the total number of plant interactions per bee species, we will sum across the plants
+    z.bee.plant[i] <- sum(z[i, ])
+
+  }
+
+
+}
+
