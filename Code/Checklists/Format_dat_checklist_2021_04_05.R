@@ -519,6 +519,53 @@ ggsave("./Figures/Globi_map_2021_05_03.pdf", height = 12, width = 15)
 
 
 
+# Subset the data
+  # Lat from 31 - 34
+  # Long from -125 to -116
+
+dat5 <- dat4[dat4$decimalLatitude > 30 & dat4$decimalLatitude < 36 &
+           dat4$decimalLongitude > -150 & dat4$decimalLongitude < -116, ]
+
+sum(dat5$total)
+
+
+
+# Coordinates
+longlats2 <- SpatialPoints(dat5[, c("decimalLongitude", "decimalLatitude")], 
+                          proj4string=CRS("+proj=longlat +datum=WGS84")) 
+
+names(longlats2) <- NULL
+min.vals2 <- apply(as.data.frame(longlats2), 2, min)
+max.vals2 <- apply(as.data.frame(longlats2), 2, max)
+
+bbox2 <- c(left = min.vals2[1] - 0.02,
+          bottom = min.vals2[2]- 0.02, 
+          right = max.vals2[1] + 0.02, 
+          top = max.vals2[2] + 0.02)
+
+names(bbox2) <- c("left", "bottom", "right", "top")
+
+g.map2 <- ggmap(get_stamenmap(bbox2, zoom = 8, maptype = "terrain"))+
+  geom_point(data = dat5, aes(y = decimalLatitude, 
+                              x = decimalLongitude, 
+                              size = log10(total)))+
+  ylab("Latitude")+
+  xlab("Longitude")+
+  theme_bw()+ 
+  theme(axis.text.x = element_text(size = 17, color = "black"), 
+        axis.text.y = element_text(size = 17, color = "black"), 
+        axis.title.y = element_text(size = 17, color = "black"), 
+        axis.title.x =element_text(size = 17, color = "black"),
+        legend.title =element_text(size = 17, color = "black"),
+        legend.text =element_text(size = 17, color = "black"),
+        panel.grid.major = element_blank(), 
+        panel.grid.minor = element_blank())
+
+g.map2
+
+ggsave("./Figures/Globi_CA_map_2021_05_03.pdf", height = 12, width = 15)
+
+
 
 
 # 5. Summarize the total number of plants each bee interacts with in each study -------------------------------------------------------
