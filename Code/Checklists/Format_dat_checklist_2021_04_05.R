@@ -90,7 +90,12 @@ library(bipartite)
 library(igraph)
 library(ggplot2)
 library(doParallel)
-
+library(ggmap)
+library(dplyr)
+library(plyr)
+library(rgdal)
+library(ggsn)
+library(sf)
 
 # Set working directory
 setwd("~/globi_tritrophic_networks/")
@@ -209,6 +214,7 @@ plant.list$genus_species_infra <- ifelse(is.na(plant.list$infraSpecificEpithet),
 nrow(dat)
 
 
+
 # Pull out if the source or target are bees
 plant.source <- grep("Plantae", dat$targetTaxonPathNames)
 plant.target <- grep("Plantae", dat$sourceTaxonPathNames)
@@ -305,17 +311,17 @@ plant.finder <- data.frame(genus_species = plant.list$genus_species,
 # remove NA rows
 plant.finder <- plant.finder[is.na(plant.finder$genus_species) == FALSE,]
 
- write.csv(bee.finder,
-           file = "./Data/globi-bee-matches.csv")
-
- write.csv(plant.finder,
-           file = "./Data/globi-plant-matches.csv")
- 
- globi.sp <- sort(globi.sp)
-
- write.csv(globi.sp,
-           file = "./Data/globi-species-list.csv")
- 
+# write.csv(bee.finder,
+#           file = "./Data/globi-bee-matches.csv")
+#
+# write.csv(plant.finder,
+#           file = "./Data/globi-plant-matches.csv")
+# 
+# globi.sp <- sort(globi.sp)
+#
+# write.csv(globi.sp,
+#           file = "./Data/globi-species-list.csv")
+# 
 
 # Other code to explore
 
@@ -328,9 +334,9 @@ plant.finder <- plant.finder[is.na(plant.finder$genus_species) == FALSE,]
 # 
 # View(dat1[grep("vandykei", dat1$targetTaxonName),])
 # 
- View(data.frame(spNames = dat1$sourceTaxonSpeciesName,
-                 taxonNames = dat1$sourceTaxonName))
- 
+# View(data.frame(spNames = dat1$sourceTaxonSpeciesName,
+#                 taxonNames = dat1$sourceTaxonName))
+# 
 # "Pseudopanugus" %in% bee.list$genus
 
 
@@ -386,13 +392,15 @@ check.names <- function(list.sp.names, input1, input2, input3, input4){
 
 # We are going through each row and determining if the bee species names appears in the source or target positions
   # This takes a few minutes to run
-bee.check <- foreach(i=1:nrow(dat1)) %dopar% check.names(list.sp.names = bee.species,
+bee.check <- foreach(i=1:nrow(dat1)) %dopar% check.names(
+              list.sp.names = bee.species,
               input1 = dat1$sourceTaxonSpeciesName[i],
               input2 = dat1$sourceTaxonName[i],
               input3 = dat1$targetTaxonSpeciesName[i],
               input4 = dat1$targetTaxonName[i]) 
 
 # Add the bee.check object as a column to dat1
+dat1$Insect <- NA
 dat1[1:length(unlist(bee.check)),]$Insect <- c(unlist(bee.check))
 
 
@@ -405,6 +413,7 @@ plant.check <- foreach(i=1:nrow(dat1)) %dopar% check.names(list.sp.names = plant
                                                          input4 = dat1$targetTaxonName[i]) 
 
 # Add the bee.check object as a column to dat1
+dat1$Plant <- NA
 dat1[1:length(unlist(plant.check)),]$Plant <- c(unlist(plant.check))
 
 
@@ -422,7 +431,8 @@ remove.rows <- length(which(dat1$tot < 2))
 length(which(dat1$tot == 2))
 
 # Save discarded rows as a csv file
-write.csv(dat1[remove.rows,], "./Data/discarded_rows_2021_04_05.csv")
+# write.csv(dat1[remove.rows,], "./Data/discarded_rows_2021_04_05.csv")
+
 
 
 
@@ -432,16 +442,86 @@ dat2 <- dat1[which(dat1$tot == 2),]
 # Drop unused levels
 dat2 <- droplevels(dat2)
 
+# Save the rows with a complete bee-plant match
+write.csv(dat2, "./Data/matched_rows_2021_05_03.csv")
+
+
 # look at citations
-View(table(dat2$sourceCitation))
+# View(table(dat2$sourceCitation))
 
 # Number of observations
   # 8,768
 nrow(dat2)
 
 
+head(dat2)
 
-# 4. Summarize the total number of plants each bee interacts with in each study -------------------------------------------------------
+
+
+# 4. Make a map with the data point -------------------------------------------------------
+
+
+
+
+# Look at the first few rows
+head(dat2)
+
+
+# Remove rows with NA in Lat long
+dat3 <- dat2[is.na(dat2$decimalLatitude) == FALSE & is.na(dat2$decimalLongitude) == FALSE,]
+
+# Number of rows
+nrow(dat3)
+
+# Add a column with 1's
+dat3$Prez <- 1
+
+# Summarize the data by lat/long
+dat4 <- ddply(.data = dat3, 
+      .variable = c("decimalLongitude", "decimalLatitude"), 
+      .fun = summarize,
+      total = sum(Prez))
+
+
+# Coordinates
+longlats <- SpatialPoints(dat3[, c("decimalLongitude", "decimalLatitude")], 
+                         proj4string=CRS("+proj=longlat +datum=WGS84")) 
+
+names(longlats) <- NULL
+min.vals <- apply(as.data.frame(longlats), 2, min)
+max.vals <- apply(as.data.frame(longlats), 2, max)
+
+bbox <- c(left = min.vals[1] - 0.02,
+          bottom = min.vals[2]- 0.02, 
+          right = max.vals[1] + 0.02, 
+          top = max.vals[2] + 0.02)
+
+names(bbox) <- c("left", "bottom", "right", "top")
+
+g.map <- ggmap(get_stamenmap(bbox, zoom = 3, maptype = "terrain"))+
+  geom_point(data = dat4, aes(y = decimalLatitude, x = decimalLongitude, size = log10(total)))+
+  ylab("Latitude")+
+  xlab("Longitude")+
+  theme_bw()+ 
+  theme(axis.text.x = element_text(size = 17, color = "black"), 
+        axis.text.y = element_text(size = 17, color = "black"), 
+        axis.title.y = element_text(size = 17, color = "black"), 
+        axis.title.x =element_text(size = 17, color = "black"),
+        legend.title =element_text(size = 17, color = "black"),
+        legend.text =element_text(size = 17, color = "black"),
+        panel.grid.major = element_blank(), 
+        panel.grid.minor = element_blank())
+
+g.map
+
+ggsave("./Figures/Globi_map_2021_05_03.pdf", height = 12, width = 15)
+
+
+
+
+
+
+# 5. Summarize the total number of plants each bee interacts with in each study -------------------------------------------------------
 
 
 
@@ -503,7 +583,7 @@ dim(bee.plant.cite)
 
 
 
-# 5. Save the data -------------------------------------------------------
+# 6. Save the data -------------------------------------------------------
 
 
 save(bee.plant.cite, file= "./Data/globi_data_formatted_bee_plant_2021_04_05.rds")

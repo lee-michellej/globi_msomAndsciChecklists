@@ -202,6 +202,13 @@ z
 
 # Next, we will generate the observation process and determine if the bee * plant interaction was documented in a study
   # Observations are conditional on true bee + plant interactions (i.e., a bee-plant interaction can't be observed if it doesn't truly occur)- so we multiply p by z (the true pattern of bee and plant interactions)
+
+#alpha <- 0.5
+#beta <- 1
+#pilosity <- runif(n.bee, 0, 1)
+#
+# p <- plogis(alpha + beta * pilosity)
+
 for(i in 1:n.bee){
   for(j in 1:n.plant){
     for(k in 1:n.study){
@@ -209,6 +216,7 @@ for(i in 1:n.bee){
     }
   }
 }
+
 
 # Look at the observation array
   # The rows represent bee species
@@ -304,7 +312,7 @@ for(i in 1:n.bee){
         y[i,j,k] ~ dbern(p.eff[i,j,k])
 
         p.eff[i,j,k] <- p * z[i,j]
-
+        
     }
     
   }
@@ -404,7 +412,7 @@ out <- jags(data = jags.data,
 
 
 # Beep when done
-beepr::beep(2)
+beepr::beep(4)
 
 
 

@@ -16,6 +16,7 @@ p ~ dunif(0, 1)
 
 
 # Model
+  # Note the parrelels between the model code here and how we generated the data above
 
 for(i in 1:n.bee){
 
@@ -32,7 +33,7 @@ for(i in 1:n.bee){
         y[i,j,k] ~ dbern(p.eff[i,j,k])
 
         p.eff[i,j,k] <- p * z[i,j]
-
+        
     }
     
   }
@@ -42,7 +43,8 @@ for(i in 1:n.bee){
 
 
 # Derived quantities
-# Determine the total number of plant interactions per bee 
+# Determine the total number of plants that each bee interacts with
+  # All we do is sum across the 2nd dimension of the z matrix (which represents plant species)
 
 for(i in 1:n.bee){
 
