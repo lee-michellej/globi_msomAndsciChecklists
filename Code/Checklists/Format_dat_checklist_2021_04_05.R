@@ -35,20 +35,24 @@
 
 
 # The data were downloaded from the Globi database.
-# Observations are obtained from museum collections and research studies worldwide.
-# Studies vary in terms of objectives, study design, etc.
+  # Observations are obtained from museum collections, citizen science obervers, and research studies worldwide.
+  # Studies vary in terms of objectives, study design, etc.
+
+
 # The Globi database consists of presence-only data.
   # We subsetted the data to only include bee genera and instances of bees interacting with plants (either as the "source" or "target").
-  # We aggregate the presence-only data to count data = the total number of plants that each bee genera is interacting with
-    # Problem - if 1 study documents 1 plant-bee interaction, and another study also documents 1 plant-bee interaction; you don't know if it is the same plant-bee interaction that was documented
-  # By doing this, we loss the identity of the plant species that the bee is interacting with.
-
-# We do not explicitly consider space in the model 
-  # Data are collected worldwide across time, and these are records of any possible plant-bee interaction anywhere
-
+  
+# We do not explicitly consider space in the model, but we subset the records to only include specific localities
+  # Subset the data
+    # Lat from 31 - 32
+    # Long from -125 to -116
+  # In doing this, we are liklely removing the ecological studies from the list
+  
 # Databases are plagued by 2 problems:
-  # 1. sampling bias
+  # 1. taxonomic sampling bias
       # Particular species may be sampled more frequently than others because more is known about them or inference is desired on that species
+  # 2. spatial sampling bias
+      # Particular areas are easier to reach or sample
   # 2. detection bias
       # Species detectability changes over time and space as a result of observers or number of surveys
       # Number of observers, quality of observers, length of survey, survey conditions
@@ -117,7 +121,7 @@ dat <- read.csv("~/Desktop/Data_globi/all_bee_data_unique.csv")
 
 
 # Read in the bee checklist
-bee.list <- read_tsv("./Data/Checklist_SCI_bees.tsv")
+bee.list <- read.table("./Data/SCI-list-04-2021.txt", header = T, sep = "\t")
 
 # Read in the bee checklist
 plant.list <- read_tsv("./Data/Checklist_SCI_plants.tsv")
@@ -132,18 +136,16 @@ str(dat)
   # Look at globi for column definitions
 
 str(bee.list)
-  # $ family: Bee family 
   # $ genus : Bee genus
   # $ specificEpithet: Bee species name
-  # $ infraSpecificEpithet
-  # $ ScientificName : Bee scientific name
+  # $ infraSpecificEpithet: Bee subspecies name
 
 
 str(plant.list)
   # $ family: Plant family 
   # $ genus : Plant genus
   # $ specificEpithet: Plant species name
-  # $ infraSpecificEpithet
+  # $ infraSpecificEpithet: Plant subspecies name
   # $ ScientificName : Plant scientific name
 
 
@@ -155,11 +157,6 @@ str(plant.list)
 
 
 
-
-# Replace NA's with sp. in bee list
-bee.list$specificEpithet <- ifelse(is.na(bee.list$specificEpithet), 
-                                   "",
-                                   bee.list$specificEpithet)
 
 
 # Make a bee genus species column with infraSpecificEpithet
@@ -242,10 +239,12 @@ globi.sp <- unique(unique(dat1$sourceTaxonSpeciesName),
   # 3,035
 length(globi.sp)
 
+
 # How many of the bee.list species are not in the Globi database?
   # We will test with matching & regular expressions
 bee_present_match <- bee_present_grep <- numeric(nrow(bee.list))
 plant_present_match <- plant_present_grep <- numeric(nrow(plant.list))
+
 
 # Use a loop to go through each genus_species and match with the globi species list
 for(i in 1:nrow(bee.list)){
@@ -275,21 +274,21 @@ plant_present_grep[plant_present_grep > 1] <- 1
 
 
 # How many species matched using regular expressions?
-  # 82
+  # 91
 sum(bee_present_grep)
   # 437
 sum(plant_present_grep)
 
 
 # How many species matched using matching?
-  # 79
+  # 91
 sum(bee_present_match)
   # 129
 sum(plant_present_match)
 
 
 # As a reminder there are:
-  # 120 bee species in our checklist
+  # 142 bee species in our checklist
   # 1,869 plant species
 
 # Which species were not found with matching?
@@ -311,6 +310,9 @@ plant.finder <- data.frame(genus_species = plant.list$genus_species,
 # remove NA rows
 plant.finder <- plant.finder[is.na(plant.finder$genus_species) == FALSE,]
 
+
+# Write the files 
+
 # write.csv(bee.finder,
 #           file = "./Data/globi-bee-matches.csv")
 #
@@ -323,22 +325,6 @@ plant.finder <- plant.finder[is.na(plant.finder$genus_species) == FALSE,]
 #           file = "./Data/globi-species-list.csv")
 # 
 
-# Other code to explore
-
-# write.csv(data.frame(sp.names = sort(unique(dat1$targetTaxonSpeciesName))),
-#                     file = "./Data/globi-targetTaxonSpeciesNames.csv")
-# 
-# bee.list$genus_species[2] %in% dat1$targetTaxonSpeciesName
-# 
-# grep(bee.list$genus_species[4], dat1$targetTaxonSpeciesName)
-# 
-# View(dat1[grep("vandykei", dat1$targetTaxonName),])
-# 
-# View(data.frame(spNames = dat1$sourceTaxonSpeciesName,
-#                 taxonNames = dat1$sourceTaxonName))
-# 
-# "Pseudopanugus" %in% bee.list$genus
-
 
 
 
@@ -347,7 +333,7 @@ plant.finder <- plant.finder[is.na(plant.finder$genus_species) == FALSE,]
 
 
 # Unique bee species
-  # 120 species
+  # 142 species
 bee.species <- unique(bee.list$genus_species)
 
 
@@ -390,7 +376,7 @@ check.names <- function(list.sp.names, input1, input2, input3, input4){
 
 # use foreach and %dopar% to parrallelize the computation
 
-# We are going through each row and determining if the bee species names appears in the source or target positions
+# We are going through each row in the Globi dataset (dat1) and determining if the BEE species names in Globi (in either the source or target positions) appears in our bee checklist
   # This takes a few minutes to run
 bee.check <- foreach(i=1:nrow(dat1)) %dopar% check.names(
               list.sp.names = bee.species,
@@ -400,11 +386,14 @@ bee.check <- foreach(i=1:nrow(dat1)) %dopar% check.names(
               input4 = dat1$targetTaxonName[i]) 
 
 # Add the bee.check object as a column to dat1
+# Create an empty column
 dat1$Insect <- NA
+
+# Then add the bee.check object to the new column
 dat1[1:length(unlist(bee.check)),]$Insect <- c(unlist(bee.check))
 
 
-# We are going through each row and determining if the plant species names appears in the source or target positions
+# We are going through each row in the Globi dataset (dat1) and determining if the PLANT species names in Globi (in either the source or target positions) appears in our bee checklist
   # This takes a few minutes to run
 plant.check <- foreach(i=1:nrow(dat1)) %dopar% check.names(list.sp.names = plant.species,
                                                          input1 = dat1$sourceTaxonSpeciesName[i],
@@ -413,7 +402,10 @@ plant.check <- foreach(i=1:nrow(dat1)) %dopar% check.names(list.sp.names = plant
                                                          input4 = dat1$targetTaxonName[i]) 
 
 # Add the bee.check object as a column to dat1
+# Create an empty column
 dat1$Plant <- NA
+
+# Then add the bee.check object to the new column
 dat1[1:length(unlist(plant.check)),]$Plant <- c(unlist(plant.check))
 
 
@@ -427,11 +419,12 @@ dat1$tot <- dat1$Plant + dat1$Insect
 # Determine the number of records that will be discarded
 remove.rows <- length(which(dat1$tot < 2))
 
-# How many rows will be kept
+# How many rows will be kept?
+  # 8,755
 length(which(dat1$tot == 2))
 
 # Save discarded rows as a csv file
-# write.csv(dat1[remove.rows,], "./Data/discarded_rows_2021_04_05.csv")
+# write.csv(dat1[remove.rows,], "./Data/discarded_rows_2021_05_14.csv")
 
 
 
@@ -443,14 +436,14 @@ dat2 <- dat1[which(dat1$tot == 2),]
 dat2 <- droplevels(dat2)
 
 # Save the rows with a complete bee-plant match
-write.csv(dat2, "./Data/matched_rows_2021_05_03.csv")
+write.csv(dat2, "./Data/matched_rows_2021_05_14.csv")
 
 
 # look at citations
 # View(table(dat2$sourceCitation))
 
 # Number of observations
-  # 8,768
+  # 8,755
 nrow(dat2)
 
 
@@ -467,10 +460,19 @@ head(dat2)
 head(dat2)
 
 
+# Determine which rows do not have lat long data
+dat2.5 <- dat2[is.na(dat2$decimalLatitude) == TRUE & is.na(dat2$decimalLongitude) == TRUE,]
+
+
+# Write csv file
+#write.csv(unique(dat2.5$sourceCitation), "./Data/entries_missing_lat_long_2021_05_14.csv")
+
+
 # Remove rows with NA in Lat long
 dat3 <- dat2[is.na(dat2$decimalLatitude) == FALSE & is.na(dat2$decimalLongitude) == FALSE,]
 
 # Number of rows
+  # 7,097
 nrow(dat3)
 
 # Add a column with 1's
@@ -514,13 +516,16 @@ g.map <- ggmap(get_stamenmap(bbox, zoom = 3, maptype = "terrain"))+
 
 g.map
 
-ggsave("./Figures/Globi_map_2021_05_03.pdf", height = 12, width = 15)
+ggsave("./Figures/Globi_map_2021_05_14.pdf", height = 12, width = 15)
 
+
+# Create a list of unique species names
+# write.csv(sort(c(as.character(unique(dat3$sourceTaxonName)), as.character(unique(dat3$targetTaxonName)))), file = "./Data/species_names_Globi_map.csv")
 
 
 
 # Subset the data
-  # Lat from 31 - 34
+  # Lat from 31 - 36
   # Long from -125 to -116
 
 dat5 <- dat4[dat4$decimalLatitude > 30 & dat4$decimalLatitude < 36 &
@@ -563,7 +568,20 @@ g.map2 <- ggmap(get_stamenmap(bbox2, zoom = 8, maptype = "terrain"))+
 
 g.map2
 
-ggsave("./Figures/Globi_CA_map_2021_05_03.pdf", height = 12, width = 15)
+ggsave("./Figures/Globi_CA_map_2021_05_14.pdf", height = 12, width = 15)
+
+
+
+# Now subset the actual checklist database to the lat/long indicated here
+dat6 <- dat3[dat3$decimalLatitude > 30 & dat3$decimalLatitude < 36 &
+               dat3$decimalLongitude > -150 & dat3$decimalLongitude < -116, ]
+
+# Number of observations
+nrow(dat6)
+
+# Create a list of unique species names
+# write.csv(sort(c(as.character(unique(dat6$sourceTaxonName)), as.character(unique(dat6$targetTaxonName)))), file = "./Data/species_names_Globi_CA_map.csv")
+
 
 
 
@@ -572,19 +590,27 @@ ggsave("./Figures/Globi_CA_map_2021_05_03.pdf", height = 12, width = 15)
 
 
 
+
 # Now, we need to make the wide formatted data
   # Along the rows = each bee genus
   # Along the columns = each study
   # In each cell = the number of unique plant-bee interactions
 
-# Create a citation list object
-cit.list <- unique(dat2$sourceCitation)
+# Drop unused levels
+dat6 <- droplevels(dat6)
 
+# Create a citation list object
+cit.list <- unique(dat6$sourceCitation)
+
+
+# Write csv file
+# write.csv(cit.list, "./Data/final_literature_cited_list_2021_05_14.csv")
 
 # Create the array that will be filled in
 bee.plant.cite <- array(0, dim = c(length(bee.species),
                                    length(plant.species),
                                    length(cit.list)))
+
 
 # Add row names
 rownames(bee.plant.cite) <- bee.species
@@ -596,28 +622,31 @@ colnames(bee.plant.cite) <- plant.species
 dimnames(bee.plant.cite)[[3]] <- cit.list
 
 # Total number of interactions by citations
-  # 3,273,360
+  # 1,010,472
 length(bee.species) *
 length(plant.species)* 
 length(cit.list)
 
+
+
+
 # Now we will fill in the 3D array
-for(i in 1:nrow(dat2)){
+for(i in 1:nrow(dat6)){
   
 # Determine which citation
-cit.pos <- which(cit.list %in% dat2$sourceCitation[i] == TRUE)
+cit.pos <- which(cit.list %in% dat6$sourceCitation[i] == TRUE)
 
 # Determine which bee
-bee.pos <- which(bee.species %in% dat2$sourceTaxonSpeciesName[i]  == TRUE |
-                 bee.species %in% dat2$sourceTaxonName[i] == TRUE |
-                 bee.species %in% dat2$targetTaxonSpeciesName[i] == TRUE |
-                 bee.species %in% dat2$targetTaxonName[i] == TRUE )
+bee.pos <- which(bee.species %in% dat6$sourceTaxonSpeciesName[i]  == TRUE |
+                 bee.species %in% dat6$sourceTaxonName[i] == TRUE |
+                 bee.species %in% dat6$targetTaxonSpeciesName[i] == TRUE |
+                 bee.species %in% dat6$targetTaxonName[i] == TRUE )
 
 # Determine which plant
-plant.pos <- which(plant.species %in% dat2$sourceTaxonSpeciesName[i]  == TRUE |
-                   plant.species %in% dat2$sourceTaxonName[i] == TRUE |
-                   plant.species %in% dat2$targetTaxonSpeciesName[i] == TRUE |
-                   plant.species %in% dat2$targetTaxonName[i] == TRUE )
+plant.pos <- which(plant.species %in% dat6$sourceTaxonSpeciesName[i]  == TRUE |
+                   plant.species %in% dat6$sourceTaxonName[i] == TRUE |
+                   plant.species %in% dat6$targetTaxonSpeciesName[i] == TRUE |
+                   plant.species %in% dat6$targetTaxonName[i] == TRUE )
 
 # Add a 1
 bee.plant.cite[bee.pos, plant.pos, cit.pos] <- 1
@@ -629,13 +658,29 @@ bee.plant.cite[bee.pos, plant.pos, cit.pos] <- 1
 dim(bee.plant.cite)
 
 
+# Remove columns (which correspond to plants) that do not 
+# Determine which columns have at least 1 entry and match those plant names with the column names in bee.plant.cite
+cols.keep <- colnames(bee.plant.cite) %in%
+  names(which(apply(bee.plant.cite, 2, sum) > 0)) 
+
+# Keep these columns
+bee.plant.cite2 <- bee.plant.cite[, cols.keep, ]
+
+# List of plant names removed
+write.csv(colnames(bee.plant.cite)[cols.keep == FALSE],
+          "./Data/plant_species_removed_no_interaction_2021_05_14.csv")
+
+# Look at the dimensions
+dim(bee.plant.cite2)
+  # 142, 128, 6
+
 
 # 6. Save the data -------------------------------------------------------
 
 
-save(bee.plant.cite, file= "./Data/globi_data_formatted_bee_plant_2021_04_05.rds")
+save(bee.plant.cite2, file= "./Data/globi_data_formatted_bee_plant_2021_05_14.rds")
 
-write.csv(bee.plant.cite, file= "./Data/globi_data_formatted_bee_plant_2021_04_05.csv")
+write.csv(dat6, file= "./Data/globi_data_subset_bee_plant_2021_05_14.csv")
 
 
 

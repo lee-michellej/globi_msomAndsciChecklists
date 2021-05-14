@@ -7,12 +7,21 @@ for(i in 1:n.bee){ # For each bee species
 # We assign a prior from 0 to 1 for psi
 # psi = The probability a bee species interacts with a plant species
 
-  psi[i] ~ dunif(0, 1)
+  alpha_psi[i] ~ dnorm(mu.psi, tau.psi)
+
+# The detection probability = the probability a study documented a bee-plant interaction
+  alpha_p[i] ~ dnorm(mu.p, tau.p)
 
 }
 
-# The detection probability = the probability a study documented a bee-plant interaction
-p ~ dunif(0, 1)
+mu.psi ~ dnorm(0, 0.01)
+mu.p ~ dnorm(0, 0.01)
+
+tau.psi <- 1/(sd.psi * sd.psi)
+sd.psi ~ dgamma(0.01, 0.01)
+
+tau.p <- 1/(sd.p * sd.p)
+sd.p ~ dgamma(0.01, 0.01)
 
 
 # Model
@@ -20,19 +29,24 @@ p ~ dunif(0, 1)
 
 for(i in 1:n.bee){
 
+
   for(j in 1:n.plant){
   
     # True bee-plant interaction
     
-    z[i, j] ~ dbern(psi[i])
-  
+    z[i, j] ~ dbern(psi[i, j])
+ 
+   logit(psi[i, j]) <- alpha_psi[i]
+
       for(k in 1:n.study){
 
       # Observed bee-plant interaction
       
         y[i,j,k] ~ dbern(p.eff[i,j,k])
 
-        p.eff[i,j,k] <- p * z[i,j]
+        p.eff[i,j,k] <- p[i,j,k] * z[i,j]
+        
+        logit(p[i,j,k]) <- alpha_p[i]
         
     }
     
