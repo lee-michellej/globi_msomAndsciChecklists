@@ -129,12 +129,21 @@ for(i in 1:n.bee){ # For each bee species
 # We assign a prior from 0 to 1 for psi
 # psi = The probability a bee species interacts with a plant species
 
-  psi[i] ~ dunif(0, 1)
+  alpha_psi[i] ~ dnorm(mu.psi, tau.psi)
+
+# The detection probability = the probability a study documented a bee-plant interaction
+  alpha_p[i] ~ dnorm(mu.p, tau.p)
 
 }
 
-# The detection probability = the probability a study documented a bee-plant interaction
-p ~ dunif(0, 1)
+mu.psi ~ dnorm(0, 0.01)
+mu.p ~ dnorm(0, 0.01)
+
+tau.psi <- 1/(sd.psi * sd.psi)
+sd.psi ~ dgamma(0.01, 0.01)
+
+tau.p <- 1/(sd.p * sd.p)
+sd.p ~ dgamma(0.01, 0.01)
 
 
 # Model
@@ -142,19 +151,24 @@ p ~ dunif(0, 1)
 
 for(i in 1:n.bee){
 
+
   for(j in 1:n.plant){
   
     # True bee-plant interaction
     
-    z[i, j] ~ dbern(psi[i])
-  
+    z[i, j] ~ dbern(psi[i, j])
+ 
+   logit(psi[i, j]) <- alpha_psi[i]
+
       for(k in 1:n.study){
 
       # Observed bee-plant interaction
       
         y[i,j,k] ~ dbern(p.eff[i,j,k])
 
-        p.eff[i,j,k] <- p * z[i,j]
+        p.eff[i,j,k] <- p[i,j,k] * z[i,j]
+        
+        logit(p[i,j,k]) <- alpha_p[i]
         
     }
     
@@ -206,13 +220,18 @@ inits <- function() {list(
   z = zinit,
   
   # Parameters
-  psi = runif(jags.data$n.bee, 0 , 1),
-  p = runif(1, 0 , 1)
+  mu.psi = runif(1, -3 , 3),
+  sd.psi = runif(1, 0 , 1),
+  mu.p = runif(1, -3 , 3),
+  sd.p = runif(1, 0 , 1)
+  
 )}
 
 
 # List parameters to monitor
-params <- c("psi", "p", "z.bee.plant")
+params <- c("alpha_psi", "mu.psi", "sd.psi",
+            "alpha_p", "mu.p", "sd.p",
+            "z.bee.plant")
 
 
 
@@ -224,9 +243,9 @@ params <- c("psi", "p", "z.bee.plant")
 
 
 # MCMC settings
-ni <- 10000
-na <- 10000
-nb <- 3000
+ni <- 25000
+na <- 20000
+nb <- 5000
 nt <- 5
 nc <- 3
 
@@ -257,7 +276,7 @@ out <- jags(data = jags.data,
 # Beep when done
 beepr::beep(4)
 
-
+out$Rhat$alpha_p
 
 
 
@@ -287,35 +306,39 @@ plot(out)
 
 
 # Combine the names, truth, and model output
-dat <- data.frame(names = c(rownames(bee.plant.cite2),
-                            "Detection prob",
+dat <- data.frame(names = c(paste(rownames(bee.plant.cite2), "interact prob"),
+                            paste(rownames(bee.plant.cite2), "detect prob"),
                             rownames(bee.plant.cite2)), 
-                 # obs = c(y.bee.plant), 
-                  mod.mean = c( out$mean$psi,
-                                out$mean$p,
+                  obs = c(rep(NA, times = nrow(bee.plant.cite2)),
+                          rep(NA, times = nrow(bee.plant.cite2)),
+                          y.bee.plant), 
+                  mod.mean = c( out$mean$alpha_psi,
+                                out$mean$alpha_p,
                                 out$mean$z.bee.plant), 
-                  mod.q2.5 = c(out$q2.5$psi,
-                               out$q2.5$p,
+                  mod.q2.5 = c(out$q2.5$alpha_psi,
+                               out$q2.5$alpha_p,
                                out$q2.5$z.bee.plant), 
-                  mod.q97.5 = c(out$q97.5$psi,
-                                out$q97.5$p,
+                  mod.q97.5 = c(out$q97.5$alpha_psi,
+                                out$q97.5$alpha_p,
                                 out$q97.5$z.bee.plant))
 
 
-# Set colors for truth and estimates
-cols <- c("Truth" = "red", "Estimated" = "black")
+# Make detection probability the last entry
+#dat$names <- factor(dat$names,
+#                    levels = c(sort(rownames(bee.plant.cite2)),
+#                               "Detection prob"))
+
 
 ## Make the plots
 
 # Plot with probabilities
 ggplot(dat[1:(jags.data$n.bee+1),], aes(x= names, y=mod.mean, ymin=mod.q2.5, ymax=mod.q97.5))+ 
   geom_linerange(size = 1) +
-  geom_point(size = 3, aes(x = names, y = mod.mean, col = "Estimated")) +
- # geom_point(size = 3, aes(x = names, y = true, col = "Truth")) +
+  geom_point(size = 3, aes(x = names, y = mod.mean)) +
   scale_colour_manual("Values", values=cols)+
   geom_hline(yintercept = 0, lty=2) +
   coord_flip() + ylab('Parameter estimates') +
-  xlab("Parameter names") +
+  xlab("Species names") +
   ggtitle("Parameter estimates")+
   theme_bw()+ 
   theme(axis.text.x = element_text(size = 17, color = "black"), 
@@ -328,23 +351,27 @@ ggplot(dat[1:(jags.data$n.bee+1),], aes(x= names, y=mod.mean, ymin=mod.q2.5, yma
         panel.grid.major = element_blank(), 
         panel.grid.minor = element_blank()) 
 
+# Save the plot
+ggsave("./Figures/Model_params_2021_05_14.pdf", height = 15, width = 8)
 
 
+# Object with colors
+cols <- c("Observation" = "red", "Estimated" = "black")
 
 # Plot with number of bee-plant interactions
-ggplot(dat[c((jags.data$n.bee+1):nrow(dat)),], 
+ggplot(dat[c((jags.data$n.bee+2):(jags.data$n.bee * 2)),], 
        aes(x= names, y=mod.mean, ymin=mod.q2.5, ymax=mod.q97.5))+ 
   geom_linerange(size = 1) +
   geom_point(size = 3, aes(x = names, y = mod.mean, col = "Estimated")) +
-#  geom_point(size = 3, aes(x = names, y = true, col = "Truth")) +
+  geom_point(size = 3, aes(x = names, y = obs, col = "Observation")) +
   scale_colour_manual("Values", values=cols)+
   geom_hline(yintercept = 0, lty=2) +
-  coord_flip() + ylab('Parameter estimates') +
-  xlab("Parameter names") +
+  coord_flip() + ylab('Estimated number of plant interactions per bee') +
+  xlab("Species names") +
   ggtitle("Number of bee-plant interactions")+
   theme_bw()+ 
   theme(axis.text.x = element_text(size = 17, color = "black"), 
-        axis.text.y = element_text(size = 17, color = "black"), 
+        axis.text.y = element_text(size = 10, color = "black"), 
         axis.title.y = element_text(size = 17, color = "black"), 
         axis.title.x =element_text(size = 17, color = "black"),
         legend.title =element_text(size = 17, color = "black"),
@@ -353,6 +380,8 @@ ggplot(dat[c((jags.data$n.bee+1):nrow(dat)),],
         panel.grid.major = element_blank(), 
         panel.grid.minor = element_blank()) 
 
+# Save the plot
+ggsave("./Figures/Num_interacting_2021_05_14.pdf", height = 15, width = 8)
 
 
 # End script
