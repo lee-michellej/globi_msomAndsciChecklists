@@ -1,77 +1,201 @@
-## simulate data-set
-
-## nsp: number of species
-##
-## nsite: number of sites the species might actually occupy
-##
-## nyr: number of years (note: need to examine the special case of
-## nyr=2, which is what Soroye had - this might actually be a
-## worst-scase scenario).
-##
-## nvisit: number of visits within a year
-##
-## mu.psi:
-## sigma.psi.sp:
-## mu.psi.yr:
-## sigma.psi.yr:
-## mu.p:
-## sigma.p.sp:
-## sigma.p.yr:
+########################################
+########################################
+# This code was written by: G. V. DiRenzo
+# If you have any questions, please email: gdirenzo@umass.edu
+########################################
+########################################
 
 
-## Function to simulate ranges.
-##
-## Note that, as we include more species, we will be including more
-## 'irrelevant sites' for each species, and this is a pattern that
-## will likely be true of real data.  The structure of the species
-## across space may also matter here (e.g., continents, vs cts
-## connected landscape) and is something we could investigate.
-##
-## For now, the below uses 'sample', so every range size is equally
-## likely.  We may want to consider something more realistic, such as
-## a log-normal distribution, or explicit space.  This likely matters.
-make.ranges <- function(nsp, nsite, type.range) {
+
+########################################
+####### Code Objective #################
+########################################
+
+# Objective: 
+  # To write the function to simulate species detection/non-detection 
+
+
+########################################
+####### Code Output ####################
+########################################
+
+
+# This code generates 2 functions:
+  # make.range()
+    # This function simulates bee species plant ranges (i.e., the range of plant species that each bee interacts with)
+  # make.data()
+    # This function simulates bee species detection/non-detection data
+
+
+###########################
+###### Notes ##############
+###########################
+
+
+
+
+########################################
+######## Table of Contents #############
+########################################
+
+# 1. Define range function
+# 2. Define data function
+
+###############################
+###############################
+###############################
+
+
+
+# Call in libraries
+library(tidyverse)
+
+
+# 1. Define range function ------------------------------------------------
+
+
+
+## Define the function to simulate 2 scenarios for bee-plant ranges:
+
+  ## Scenario 1: All bee-plant interactions are equally likely (type.range == "equal")
+    ## In this case, we are use the sample() function to determine the bee-plant interactions
+
+  ## Scenario 2: Bee species are restricted to interacting with a subset of plant species. This can occur for a variety of reasons in nature (e.g., differing phenology, morphology, etc.). 
+    ## In this case, we use a log-normal distribution to determine which plant species a bee could possibly interact with using function rbeta()
+
+
+# Define function to determine plant ranges of bees
+make.ranges <- function(n.bee.sp,          # Number of bee species
+                        n.plant.sp,        # Number of plant species
+                        type.range) { # type.range can == "equal" or "logn"
+  
+  # If type.range == "equal" then do this:
   if(type.range == 'equal') {
-    nsite.by.sp <- sample.int(n=nsite, size=nsp, replace=TRUE)
+    
+    #  take a sample of the specified size from the elements of x using either with or without replacement
+    plant.by.bee <- sample.int(n=n.plant.sp, 
+                               size= n.bee.sp, 
+                               replace=TRUE)
+    
+  # If type.range == "logn" then do this:
   } else if(type.range == 'logn') {
-    prop.sites <- rbeta(nsp, shape1=1, shape2=3)
-    nsite.by.sp <- round(nsite * prop.sites)
+    
+    # Draw n.bee.sp values from a beta distribution with shape1 = 1 and shape2 = 3 (corresponds to a log normal)
+    prop.plants <- rbeta(n.bee.sp, shape1 = 1, shape2 = 3)
+    
+    # Round the prop.plants values
+      # plant.by.bee object = the number of plant species that each bee species interacts with
+    plant.by.bee <- round(n.plant.sp * prop.plants)
+    
   }
   
-  get.sites.within.range <- function(ii) {
-    sites <- rep(0,nsite)
-    sites[sample(x=1:nsite, size=ii, replace=FALSE)] <- 1
-    sites
+  # Function to extract which plant species each bee interacts with
+  get.plants.within.range <- function(ii) {
+    
+    plants <- rep(0, n.plant.sp)
+    
+    plants[sample(x=1:n.plant.sp, size=ii, replace=FALSE)] <- 1
+    
+    plants
   }
-  res <- t(sapply(nsite.by.sp, get.sites.within.range))
-  names(dim(res)) <- c('nsp','nsite')
+  
+  # Apply the get.plants.within.range() function to the plant.by.bee object
+  res <- t(sapply(plant.by.bee, get.plants.within.range))
+  
+  # Rename the dimensions
+  names(dim(res)) <- c('n.bee.sp','n.plant.sp')
+  
+  # Convert to logical ("TRUE" or "FALSE")
   res==1
+  
 }
 
-make.data <- function(nsp=25,
-                      nsite=100,
-                      nyr=5,
-                      nvisit=3,
+
+
+
+
+# 2. Define data function ------------------------------------------------
+
+
+
+## Define the function to simulate bee-plant detection/non-detection
+
+
+## simulate data-set
+
+# Definitions-
+## n.bee.sp: number of bee species
+## n.plant.sp: number of plant species that bee species might actually occupy
+## n.citation: number of citations
+
+# Occupancy parameters- 
+## mu.psi:
+## sigma.psi.sp:
+
+# Detection parameters- 
+## mu.p:
+## sigma.p.sp:
+## sigma.p.cite:
+
+# Visitation parameters- 
+## mu.v:
+## mu.v.yr: 
+
+
+n.bee.sp=5
+n.plant.sp=10
+n.citation=2
+
+# Define model parameters for:
+# Occupancy
+mu.psi=0
+sigma.psi.sp=0.1
+
+# Detection
+mu.p=0
+sigma.p.sp=0.1
+sigma.p.cite=0.1
+
+# Visitation
+mu.v=-0.5
+mu.v.yr=-0.5
+
+# Bee species range info
+type.range='equal'
+missing.visits=FALSE
+sp.range=NULL
+
+
+make.data <- function(# Define number of species & citations
+                      n.bee.sp=25,
+                      n.plant.sp=100,
+                      n.citation=5,
+                      
+                      # Define model parameters for:
+                      # Occupancy
                       mu.psi=0,
                       sigma.psi.sp=0.1,
-                      mu.psi.yr=0,
-                      sigma.psi.yr=0.1,
+                      
+                      # Detection
                       mu.p=0,
                       sigma.p.sp=0.1,
-                      p.yr=0,
-                      sigma.p.site=0.1,
+                      sigma.p.cite=0.1,
+                      
+                      # Visitation
                       mu.v=-0.5,
                       mu.v.yr=-0.5,
+                      
+                      # Bee species range info
                       type.range='equal',
                       missing.visits=FALSE,
-                      sp.range=NULL) {
+                      sp.range=NULL){
   
   ## ------------------------------------------------------------
   ## If species' ranges are not passed in, simulate them for the
   ## specified number of species and sites.
   if(is.null(sp.range)) {
-    sp.range <- make.ranges(nsp=nsp,
-                            nsite=nsite,
+    sp.range <- make.ranges(n.bee.sp=n.bee.sp,
+                            n.plant.sp=n.plant.sp,
                             type.range=type.range)
   }
   ## ------------------------------------------------------------
@@ -81,135 +205,175 @@ make.data <- function(nsp=25,
   ## and also site visit probabilities
   
   ## species-specific random intercepts
-  psi.sp <- rnorm(n=nsp, mean=0, sd=sigma.psi.sp)
-  p.sp   <- rnorm(n=nsp, mean=0, sd=sigma.p.sp)
+    ## Logit scale
+  psi.sp <- rnorm(n=n.bee.sp, mean=0, sd=sigma.psi.sp)
+  p.sp   <- rnorm(n=n.bee.sp, mean=0, sd=sigma.p.sp)
   
-  ## effect of year on occupancy (species-specific random slopes)
-  psi.yr <- rnorm(n=nsp, mean=mu.psi.yr, sd=sigma.psi.yr)
-  
-  ## effect of site on detection (year-specific)
-  p.site <- matrix(rnorm(n=nsite*nyr, mean=0, sd=sigma.p.site),
-                   nrow=nsite,
-                   ncol=nyr)
+  ## effect of citation on detection
+    ## Logit scale
+  p.cite <- matrix(rnorm(n=n.plant.sp*n.citation, 
+                         mean=0, sd=sigma.p.cite),
+                   nrow=n.plant.sp,
+                   ncol=n.citation)
   
   ## create empty occupancy, detection, and visitation probability
   ## matrices
-  psi.mat <- array(NA, dim=c(nsp=nsp,
-                             nsite=nsite,
-                             nyr=nyr))
-  p.mat <- array(NA, dim=c(nsp=nsp,
-                           nsite=nsite,
-                           nyr=nyr,
-                           nvisit=nvisit))
-  v.mat <- array(NA, dim=c(nsite=nsite,
-                           nyr=nyr,
-                           nvisit=nvisit))
+  # Occupancy
+  psi.mat <- array(NA, dim=c(n.bee.sp=n.bee.sp,
+                             n.plant.sp=n.plant.sp))
+  # Detection
+  p.mat <- array(NA, dim=c(n.bee.sp=n.bee.sp,
+                           n.plant.sp=n.plant.sp,
+                           n.citation=n.citation))
+  # Visitation
+  v.mat <- array(NA, dim=c(n.plant.sp=n.plant.sp,
+                           n.citation=n.citation))
   
-  ## fill in these matrices
-  for(site in 1:nsite) {
-    for(yr in 1:nyr) {
-      for(sp in 1:nsp) {
-        psi.mat[sp,site,yr] <- expit(mu.psi +
-                                       psi.sp[sp] +
-                                       psi.yr[sp]*(yr-1))
+  ## Fill in these matrices with the probabilities
+  for(plant in 1:n.plant.sp) {
+    
+      for(bee in 1:n.bee.sp) {
+        psi.mat[bee,plant] <- plogis(mu.psi +
+                                  psi.sp[bee] )
       }
-      for(visit in 1:nvisit) {
-        v.mat[site,yr,visit] <- expit(mu.v + mu.v.yr*(yr-1))
-        for(sp in 1:nsp) {
-          p.mat[sp,site,yr,visit] <- expit(mu.p +
-                                             p.sp[sp] +
-                                             p.site[site,yr] +
-                                             p.yr*(yr-1))
+    
+      for(citation in 1:n.citation) {
+        v.mat[plant,citation] <- plogis(mu.v)
+        
+        for(bee in 1:n.bee.sp) {
+          p.mat[bee,plant,citation] <- plogis(mu.p +
+                                             p.sp[bee] +
+                                             p.cite[bee,citation] )
         }
       }
     }
-  }
+
+
   ## ------------------------------------------------------------
   
   ## ------------------------------------------------------------
-  ## Create occupancy and detectability matrices, etc
+  ## Create range, occupancy, detectability, visitation matrices
   
-  ## To do this, we will construct a range matrix (TRUE for all sites
-  ## in range and FALSE for all sites outside of range).  Array
-  ## dimensions will also include yr and visit, so that we can use
-  ## array multiplication to easily set non-relevant entries to zero.
-  range.arr <- array(sp.range, dim=c(nsp=nsp,
-                                     nsite=nsite,
-                                     nyr=nyr,
-                                     nvisit=nvisit))
+  ## First, we will construct a range matrix (TRUE for all plants
+  ## in range of bee species and FALSE for all plants outside of range).  
+  range.arr <- array(sp.range, dim=c(n.bee.sp=n.bee.sp,
+                                     n.plant.sp=n.plant.sp))
   
+# True bee species interactions by plant species
   occ.arr <- array(rbinom(n=length(psi.mat),
                           size=1,
                           prob=psi.mat),
-                   dim=c(nsp=nsp,
-                         nsite=nsite,
-                         nyr=nyr,
-                         nvisit=nvisit))
-  det.arr <- array(rbinom(n=length(p.mat),
-                          size=1,
-                          prob=p.mat),
-                   dim=c(nsp=nsp,
-                         nsite=nsite,
-                         nyr=nyr,
-                         nvisit=nvisit))
-  vis.arr <- array(rbinom(n=length(v.mat),
-                          size=1,
-                          prob=v.mat),
-                   dim=c(nsite=nsite,
-                         nyr=nyr,
-                         nvisit=nvisit))
+                   dim=c(n.bee.sp=n.bee.sp,
+                         n.plant.sp=n.plant.sp))
   
-  ## subset occ.arr down only to sites within each species' range
+
+## subset occ.arr down only to plant species within each bee species' range
   occ.arr <- occ.arr*range.arr
-  ## subset detection to only sites where the species was present
-  det.arr <- det.arr*occ.arr
+
+    ## Visualize this to confirm - no points occur where occ.arr == 1 and range.arr == 0
+    ##   plot(c(occ.arr), c(range.arr))
+
+    
+# Now- determine detections
+  
+  ## Create empty detections array
+  det.arr <- array(NA, dim = c(n.bee.sp, n.plant.sp, n.citation))
+  
+for(plant in 1:n.plant.sp) {
+    for(bee in 1:n.bee.sp) {
+     for(citation in 1:n.citation) {
+       
+       det.arr[bee, plant, citation] <- rbinom(n=1,
+                                               size=1,
+                                               prob=p.mat[bee, plant, citation] *
+                                                 occ.arr[bee, plant])
+       
+    }
+  }
+}
+  ## Visualize the detection data vs the occupancy data
+    ## There should be no points where occ.arr == 0 and det.arr == 1
+  ## plot(c(apply(det.arr, c(1, 2), max)), c(occ.arr))
+  
+  ## Collapse the detection array across 1st dimension (bee dimension)
+    ## what remains are the plant x citation
+  det.plant.cite <- apply(det.arr, c(2, 3), max)
+  
+  ## Create empty vistiation array
+  vis.arr <- array(NA, dim = c(n.plant.sp, n.citation))
+  
+  for(plant in 1:n.plant.sp) {
+    
+    for(citation in 1:n.citation) {
+      
+      vis.arr[plant, citation] <- rbinom(n=1,
+                                         size=1,
+                                         prob=v.mat[plant, citation])
+      
+    }
+  }
+  
   ## subset actual detections by incorporating visits
   if(missing.visits) {
-    vis.arr.with.sp <- aperm(array(vis.arr, dim=dim(det.arr)[c(2:4,1)]),
-                             c(4,1:3))
-    det.arr <- det.arr*vis.arr.with.sp
+    
+    # transpose the array to repeat values for each species - done in 2 steps
+  ## step 1. Repeat vis.arr n.bee.sp times 
+  vis.arr2 <- array(vis.arr, 
+                    dim=dim(det.arr)[c(2:3,1)]) # this moves the 1st dimension (bee ID) to last dimension
+  
+  ## step 2. transpose the array
+    # from: n.plant.sp x n.citation x n.bee.sp
+    # to: n.bee.sp x n.plant.sp x n.citation
+    vis.arr.with.sp <- aperm(vis.arr2, c(3,1:2))
+    
+    # Multiply the detections by the visitation array
+    det.arr <- det.arr * vis.arr.with.sp
+    
   }
+
   ## ------------------------------------------------------------
   
   ## ------------------------------------------------------------
   ## create objects to return
-  
-  ## true Z matrix is useful for later on when we evaluate performance
-  ## of various models
-  Z <- (apply(occ.arr, 1:3, sum)>0)*1
-  
-  ## observation matrix
-  X <- det.arr
-  
+
   ## add dimension names to arrays
-  arr.names <- list(sp=paste('sp',str_pad(1:nsp,4,pad='0'),sep='_'),
-                    site=paste('site',str_pad(1:nsite,4,pad='0'),sep='_'),
-                    yr=paste('y',1:nyr,sep='_'),
-                    visit=paste('v',1:nvisit,sep='_'))
-  dimnames(sp.range) <- arr.names[1:2]
-  dimnames(Z)        <- arr.names[1:3]
-  dimnames(X)        <- arr.names[1:4]
+  arr.names <- list(bee=paste('bee',str_pad(1:n.bee.sp,3,pad='0'),sep='_'),
+                    plant=paste('plant',str_pad(1:n.plant.sp,3,pad='0'),sep='_'),
+                    cite=paste('citation',1:n.citation,sep='_'))
   
-  list(sp.range=sp.range,
+  if(is.null(sp.range) == FALSE){
+  dimnames(sp.range) <- arr.names[1:2]
+  }
+  dimnames(occ.arr)  <- arr.names[1:2]
+  dimnames(det.arr)  <- arr.names[1:3]
+  dimnames(vis.arr)  <- arr.names[2:3]
+  
+  list(# Simulated data (truth, range, observed, visits)
+       sp.range=sp.range,
+       occ.arr = occ.arr,
+       det.arr = det.arr,
        vis.arr=vis.arr,
-       Z=Z,
-       X=X,
-       nsp=nsp,
-       nsite=nsite,
-       nyr=nyr,
-       nvisit=nvisit,
+
+       # Study design
+       n.bee.sp=n.bee.sp,
+       n.plant.sp=n.plant.sp,
+       n.citation=n.citation,
+
+       # Occupancy parameters
        mu.psi=mu.psi,
        sigma.psi.sp=sigma.psi.sp,
-       mu.psi.yr=mu.psi.yr,
-       sigma.psi.yr=sigma.psi.yr,
+
+       # Detection parameters
        mu.p=mu.p,
-       sigma.p.site=sigma.p.site,
+       sigma.p.cite=sigma.p.cite,
+       
+       # Visitation parameters
        mu.v=mu.v,
-       mu.v.yr=mu.v.yr,
-       p.yr=p.yr,
+       
+       # Random effects values
        psi.sp=psi.sp,
        p.sp=p.sp,
-       psi.yr=psi.yr,
-       p.site=p.site)
+       p.cite=p.cite)
   ## ------------------------------------------------------------
 }
+
