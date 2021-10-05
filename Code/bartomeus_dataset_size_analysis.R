@@ -18,12 +18,17 @@
 
 # 3. check relationship between freq bee is seen and size
 
-
+# 4. create dataframe using interaction matrix to create zeros
 
 
 ### Libraries and set working directory --------------
 
 library(tidyverse)
+library(bipartite)
+setwd("~/Desktop/globi_bees/Code")
+source("../Code/interaction_matrix_function.R")
+
+
 setwd("~/Desktop/globi_bees/Data")
 
 
@@ -103,6 +108,21 @@ ggplot(int_size_summ, aes(x = total_av, y = times_in_dataset)) +
   xlab("bee size (mm)") +
   ylab("rows in dataset") +
   geom_smooth(method = "lm")
+
+
+
+
+
+
+
+### interaction matrix to add zeros --------------------- 
+
+full_list <- interactions %>% 
+  uncount(Freq)
+
+
+int_matrix <- as.data.frame(df2intmatrix(full_list, varnames = c("Plant_sp", "insect_genus"), type.out = "array"))
+
 
 
 
