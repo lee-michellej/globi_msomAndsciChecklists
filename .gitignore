@@ -6,4 +6,4 @@
 Data/interactions.tsv
 Data/raw_globi_data/
 *.zip
-
+.httr-oauth
