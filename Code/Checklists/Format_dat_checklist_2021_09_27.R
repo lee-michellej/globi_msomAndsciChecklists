@@ -125,12 +125,26 @@ dat <- read.csv("~/Desktop/Folder/Data_globi/all_bee_data_unique.csv")
 bee.list <- read_tsv("~/Dropbox/Globi/Data/bees-SCI_2021_09_14.tsv")
   # Updated 27 Sept 2021
 
+# Read in bee phenology data
+bee.phenology <- read_tsv("~/Dropbox/Globi/Data/All-California-phenologyTable.tsv")
+
 # Read in the plant checklist
 plant.list <- read.table("~/Dropbox/Globi/Data/plants-SCI_traits_ml_2021_09_14.txt", header = T, sep = "\t")
   # Updated 27 Sept 2021
 
+# Read in plant phenology data
+plant.phenology <- read.table("~/Dropbox/Globi/Data/plants-SCI_traitsfull_ml_2021_09_14.txt", header = T, sep = "\t")
+
 # Read in file with type of citation
 citation <- read.csv("./Data/citation-list-type.csv")
+
+
+# Other bee names
+bee.names <- read.csv("./Data/Checklist names and synonyms - Author-less.csv")
+
+
+# Institution codes
+institution.codes <- read.csv("./Data/institutioncodes_oct21.csv")
 
 
 # Look at data structure
@@ -273,6 +287,70 @@ sum(plant_present_match)
     # Calliopsis
     # Sphecodes
     # Stelis
+
+
+# Now, we will add species synonymns to the list
+View(bee.names)
+
+
+# Pull apart the names ;
+View(str_split(bee.names$Synonyms.from.DL, ";", simplify = TRUE))
+
+# Then convert from wide to long format
+
+BN <- bee.names %>%
+  mutate(syn.names.1 = str_split(Synonyms.from.DL, "; ", simplify = TRUE)[,1],
+         syn.names.2 = str_split(Synonyms.from.DL, "; ", simplify = TRUE)[,2],
+         syn.names.3 = str_split(Synonyms.from.DL, "; ", simplify = TRUE)[,3],
+         syn.names.4 = str_split(Synonyms.from.DL, "; ", simplify = TRUE)[,4],
+         syn.names.5 = str_split(Synonyms.from.DL, "; ", simplify = TRUE)[,5],
+         syn.names.6 = str_split(Synonyms.from.DL, "; ", simplify = TRUE)[,6],
+         syn.names.7 = str_split(Synonyms.from.DL, "; ", simplify = TRUE)[,7],
+         syn.names.8 = str_split(Synonyms.from.DL, "; ", simplify = TRUE)[,8],
+         syn.names.9 = str_split(Synonyms.from.DL, "; ", simplify = TRUE)[,9],
+         syn.names.10 = str_split(Synonyms.from.DL, "; ", simplify = TRUE)[,10]) %>% 
+  pivot_longer(cols = syn.names.1:syn.names.10,
+               names_to = "syn.names") %>%
+  mutate(syn.number = str_split(syn.names, "syn.names.", simplify = TRUE)[,2]) %>%
+  select(Checklist.names, syn.number, value)%>%
+  filter(value != "") %>%
+  mutate(value = str_trim(value))
+
+
+
+View(BN)
+
+
+
+
+# How many of the bee.list species are not in the Globi database?
+# We will test with matching & regular expressions
+bee_present_match_syn <- bee_present_grep_syn <- numeric(nrow(bee.names))
+
+
+# Use a loop to go through each genus_species and match with the globi species list
+for(i in 1:nrow(BN)){
+  
+  # Matching
+  bee_present_match_syn[i] <- BN$value[i] %in% globi.sp
+  
+  # Regular expressions
+  bee_present_grep_syn[i] <- length(grep(BN$value[i], globi.sp))
+  
+}
+
+
+# Replace anything with a > 1 value with a 1
+bee_present_grep_syn[bee_present_grep_syn > 1] <- 1
+
+
+# How many species matched?
+sum(bee_present_grep_syn)
+  # 9
+sum(bee_present_match_syn)
+  # 8
+
+
 
 # Which species did not match anything in Globi?
 bee.finder <- data.frame(genus_species = bee.list$Genus_sp,
@@ -572,9 +650,33 @@ dat6$lit <- ifelse(dat6$sourceCitation ==  unique(dat6$sourceCitation)[4],
                    as.character(dat6$referenceCitation),
                    as.character(dat6$sourceCitation))
 
+# For the "Symbiota Collections of Arthropods Network (SCAN)" citation, we need to replace with the insitiuion codes
+# But first, we need to pull apart the column with the institution codes, and then replace them with the actual names
+
+
+
+  #######  ********* Check to make sure you are using the right column for the instution codes   #######  *********   #######  ********* 
+
+
+
+dat6 <- dat6 %>%
+  mutate(inst.code = str_split(sourceTaxonId, ":", simplify = TRUE)[,1])
+
+
+# Now, with the institution codes seperated, we can replace the "SCAN" sourceCitation in the lit column with the instituion code
+dat6$lit <- ifelse(dat6$lit == unique(dat6$lit)[2] ,
+                    as.character(dat6$inst.code),
+                    as.character(dat6$lit))
 
 # Create a citation list object
 cit.list <- unique(dat6$lit)
+
+# Number of unique collections/citations
+length(cit.list)
+
+# Write csv file
+# write.csv(cit.list, "./Data/final_literature_cited_list_2021_05_14.csv")
+
 
 
 # Format the date of observation
@@ -582,38 +684,117 @@ cit.list <- unique(dat6$lit)
 dat6$eventDate <- as.POSIXct(dat6$eventDateUnixEpoch/1000, origin = "1970-01-01")
 
 
-library(tidyverse)
-as_tibble(dat6) %>% str_split(eventDate, "-", n = 3)
-
-
-# I need to split apart the date column.....
-
-
-# Write csv file
-# write.csv(cit.list, "./Data/final_literature_cited_list_2021_05_14.csv")
+# Pull apart the info in the event date
+  # Year
+  # Month
+  # Day - this column also includes time - but I won't finish formatting this because we don't need this detail
+dat7 <- as_tibble(dat6) %>% 
+  mutate(year = str_split(eventDate, "-", n = 3, simplify = TRUE)[,1],
+         month= str_split(eventDate, "-", n = 3, simplify = TRUE)[,2],
+         day = str_split(eventDate, "-", n = 3, simplify = TRUE)[,3])
 
 
 # Create the array that will be filled in
-bee.plant.date.cite <- array(0, dim = c(length(bee.species),
-                                   length(plant.species),
-                                   length(cit.list)))
+bee.plant.date.cite <- array(0, dim = c(length(bee.species), # Number of bee species
+                                   length(plant.species), # Number of plant species
+                                   12, # 12 months
+                                   length(cit.list))) # Number of unique references
 
 
 # Add row names
-rownames(bee.plant.cite) <- bee.species
+rownames(bee.plant.date.cite) <- bee.species
 
 # Add column names
-colnames(bee.plant.cite) <- plant.species
+colnames(bee.plant.date.cite) <- plant.species
 
-# Add sheet names
-dimnames(bee.plant.cite)[[3]] <- cit.list
+# Add sheet names - month
+dimnames(bee.plant.date.cite)[[3]] <- c(1:12)
+
+# Add 4th dimension names
+dimnames(bee.plant.date.cite)[[4]] <- cit.list
 
 # Total number of interactions by citations
-  # 568,284
+  # 7,783,872
 length(bee.species) *
 length(plant.species)* 
+  12 * 
 length(cit.list)
 
+
+# Is the bee phenology data (bee.phenology) in the same order as the list of bee species?
+  # YES - alphabetical order
+# View(cbind(bee.phenology$scientificName, rownames(bee.plant.date.cite)))
+
+# Add a new Genus species column to the plant phenology data
+plant.phenology$Genus_species <- paste(plant.phenology$Genus, 
+                                       plant.phenology$Species, 
+                                       sep = " ")
+
+# Is the bee phenology data (bee.phenology) in the same order as the list of bee species?
+  # NO - different orders
+ View(cbind(re.prdered$Genus_species, colnames(bee.plant.date.cite)))
+
+re.prdered <- plant.phenology[match(colnames(bee.plant.date.cite), plant.phenology$Genus_species),]
+ 
+# Try reording the plants according to how they appear in your bee.plant.date.cite
+ 
+ 
+ 
+# Month counter
+bee.plant.inter <- data.frame(beeID = NA,
+                              plantID = NA,
+                              monthID = NA)
+ 
+bee.plant.forbid <- data.frame(beeID = NA,
+                              plantID = NA,
+                              monthID = NA)
+a <- 1
+b <- 1
+
+for(i in 1:nrow(bee.plant.date.cite)){ # For each bee species
+  for(j in 1:ncol(bee.plant.date.cite)){ # For each plant species
+   
+    for(k in 1:12){ # for each month
+      
+      # Work through each species and month
+        # If the value = 0, then the species doesn't interact with ANY plants that month
+ #   if(bee.phenology[i, k+1] == 0){
+ #     bee.plant.date.cite[i, , k, ] <- -9999
+ #     
+ #   }
+    
+      # Possible interactions
+      if(is.na(plant.phenology[j, k + 26]) == FALSE){
+        if(bee.phenology[i, k+1] == 1 & 
+           plant.phenology[j, k + 26] == 1){
+          
+          bee.plant.inter[a,1] <- i
+          bee.plant.inter[a,2] <- j
+          bee.plant.inter[a,3] <- k
+          
+          a <- a + 1
+        }
+      }
+      
+      # Forbidden links
+      if(is.na(plant.phenology[j, k + 26]) == FALSE){
+        if(bee.phenology[i, k+1] == 0 |
+           plant.phenology[j, k + 26] == 0){
+          
+          bee.plant.forbid[b,1] <- i
+          bee.plant.forbid[b,2] <- j
+          bee.plant.forbid[b,3] <- k
+          
+          b <- b + 1
+        }
+      }
+      
+    }
+  }
+}
+
+# Plant species 71 = all NA 
+plant.phenology[j, 1:12 + 26]
 
 
 
