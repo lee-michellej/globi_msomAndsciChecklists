@@ -660,7 +660,7 @@ dat6$lit <- ifelse(dat6$sourceCitation ==  unique(dat6$sourceCitation)[4],
 
 
 dat6 <- dat6 %>%
-  mutate(inst.code = str_split(sourceTaxonId, ":", simplify = TRUE)[,1])
+  mutate(inst.code = str_split(sourceCatalogNumber, ":", simplify = TRUE)[,1])
 
 
 # Now, with the institution codes seperated, we can replace the "SCAN" sourceCitation in the lit column with the instituion code
