@@ -188,6 +188,89 @@ plant.list$Genus_sp <- paste(plant.list$Genus, plant.list$Species, sep = " ")
 
 
 
+# 4. Current valid names of bees & plants -------------------------------------------------------
+
+
+
+
+# Add taxize code here
+
+
+# Now, we will add species synonymns to the list
+View(bee.names)
+
+
+
+
+
+############ delete the synoynms for Apis mellifera
+
+
+
+
+# Pull apart the names ;
+View(str_split(bee.names$Synonyms.from.DL, ";", simplify = TRUE))
+
+# Then convert from wide to long format
+
+BN <- bee.names %>%
+  mutate(syn.names.1 = str_split(Synonyms.from.DL, "; ", simplify = TRUE)[,1],
+         syn.names.2 = str_split(Synonyms.from.DL, "; ", simplify = TRUE)[,2],
+         syn.names.3 = str_split(Synonyms.from.DL, "; ", simplify = TRUE)[,3],
+         syn.names.4 = str_split(Synonyms.from.DL, "; ", simplify = TRUE)[,4],
+         syn.names.5 = str_split(Synonyms.from.DL, "; ", simplify = TRUE)[,5],
+         syn.names.6 = str_split(Synonyms.from.DL, "; ", simplify = TRUE)[,6],
+         syn.names.7 = str_split(Synonyms.from.DL, "; ", simplify = TRUE)[,7],
+         syn.names.8 = str_split(Synonyms.from.DL, "; ", simplify = TRUE)[,8],
+         syn.names.9 = str_split(Synonyms.from.DL, "; ", simplify = TRUE)[,9],
+         syn.names.10 = str_split(Synonyms.from.DL, "; ", simplify = TRUE)[,10]) %>% 
+  pivot_longer(cols = syn.names.1:syn.names.10,
+               names_to = "syn.names") %>%
+  mutate(syn.number = str_split(syn.names, "syn.names.", simplify = TRUE)[,2]) %>%
+  select(Checklist.names, syn.number, value)%>%
+  filter(value != "") %>%
+  mutate(value = str_trim(value))
+
+
+
+View(BN)
+
+
+
+
+# How many of the bee.list species are not in the Globi database?
+# We will test with matching & regular expressions
+bee_present_match_syn <- bee_present_grep_syn <- numeric(nrow(bee.names))
+
+
+# Use a loop to go through each genus_species and match with the globi species list
+for(i in 1:nrow(BN)){
+  
+  # Matching
+  bee_present_match_syn[i] <- BN$value[i] %in% globi.sp
+  
+  # Regular expressions
+  bee_present_grep_syn[i] <- length(grep(BN$value[i], globi.sp))
+  
+}
+
+
+# Replace anything with a > 1 value with a 1
+bee_present_grep_syn[bee_present_grep_syn > 1] <- 1
+
+
+# How many species matched?
+sum(bee_present_grep_syn)
+# 9
+sum(bee_present_match_syn)
+# 8
+
+
+
+
+
+
+
 # 4. Subset globi data to rows that have plant records only -------------------------------------------------------
 
 
@@ -287,69 +370,6 @@ sum(plant_present_match)
     # Calliopsis
     # Sphecodes
     # Stelis
-
-
-# Now, we will add species synonymns to the list
-View(bee.names)
-
-
-# Pull apart the names ;
-View(str_split(bee.names$Synonyms.from.DL, ";", simplify = TRUE))
-
-# Then convert from wide to long format
-
-BN <- bee.names %>%
-  mutate(syn.names.1 = str_split(Synonyms.from.DL, "; ", simplify = TRUE)[,1],
-         syn.names.2 = str_split(Synonyms.from.DL, "; ", simplify = TRUE)[,2],
-         syn.names.3 = str_split(Synonyms.from.DL, "; ", simplify = TRUE)[,3],
-         syn.names.4 = str_split(Synonyms.from.DL, "; ", simplify = TRUE)[,4],
-         syn.names.5 = str_split(Synonyms.from.DL, "; ", simplify = TRUE)[,5],
-         syn.names.6 = str_split(Synonyms.from.DL, "; ", simplify = TRUE)[,6],
-         syn.names.7 = str_split(Synonyms.from.DL, "; ", simplify = TRUE)[,7],
-         syn.names.8 = str_split(Synonyms.from.DL, "; ", simplify = TRUE)[,8],
-         syn.names.9 = str_split(Synonyms.from.DL, "; ", simplify = TRUE)[,9],
-         syn.names.10 = str_split(Synonyms.from.DL, "; ", simplify = TRUE)[,10]) %>% 
-  pivot_longer(cols = syn.names.1:syn.names.10,
-               names_to = "syn.names") %>%
-  mutate(syn.number = str_split(syn.names, "syn.names.", simplify = TRUE)[,2]) %>%
-  select(Checklist.names, syn.number, value)%>%
-  filter(value != "") %>%
-  mutate(value = str_trim(value))
-
-
-
-View(BN)
-
-
-
-
-# How many of the bee.list species are not in the Globi database?
-# We will test with matching & regular expressions
-bee_present_match_syn <- bee_present_grep_syn <- numeric(nrow(bee.names))
-
-
-# Use a loop to go through each genus_species and match with the globi species list
-for(i in 1:nrow(BN)){
-  
-  # Matching
-  bee_present_match_syn[i] <- BN$value[i] %in% globi.sp
-  
-  # Regular expressions
-  bee_present_grep_syn[i] <- length(grep(BN$value[i], globi.sp))
-  
-}
-
-
-# Replace anything with a > 1 value with a 1
-bee_present_grep_syn[bee_present_grep_syn > 1] <- 1
-
-
-# How many species matched?
-sum(bee_present_grep_syn)
-  # 9
-sum(bee_present_match_syn)
-  # 8
-
 
 
 # Which species did not match anything in Globi?
