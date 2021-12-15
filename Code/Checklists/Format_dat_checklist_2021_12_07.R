@@ -204,6 +204,12 @@ plant.list$genus_species <- paste(plant.list$Genus, plant.list$Species)
 
 
 
+# Remove species without a species name ( == "sp.")
+
+
+
+
+
 
 # 4. Subset globi data to rows that have plant records only -------------------------------------------------------
 
@@ -235,7 +241,7 @@ length(plant.rows)
 
 # Keep only plant rows
 dat1 <- dat[plant.rows,]
-
+nrow(dat1)
 
 # Create a list with all of the unique species in Globi - 
 # Plant & Bee
@@ -256,20 +262,14 @@ length(globi.sp)
 
 
 
+
 # Pull apart the bee names in 1 column by the ; symbol, and bind it to the original names
 bee.names2 <- cbind(as.character(bee.names[,1]), 
                     str_split(bee.names$Synonyms.from.DL, ";", simplify = TRUE)
 )
 
 # View the new data frame
-# View(bee.names)
-
-# bee.names[5, 2]
-
-# Remove the parentheses from the names
-for(i in 1:ncol(bee.names2)){
-  bee.names2[,i] <- gsub(".[(].+[)]",'',bee.names2[,i])
-}
+# View(bee.names2)
 
 # Remove the ", YEAR" at the end of each entry
 for(i in 1:ncol(bee.names2)){
@@ -304,24 +304,24 @@ for(i in 1:ncol(bee.names3)){
   bee.names3[,i] <- gsub(", .*",'', bee.names3[,i])
 }
 
-# Remove anything with a ", ...."
+# Remove anything with a "_ ...."
 for(i in 1:ncol(bee.names3)){
   bee.names3[,i] <- gsub("_.*",'', bee.names3[,i])
 }
-
-
 
 # Remove anything with a "var ...."
 for(i in 1:ncol(bee.names3)){
   bee.names3[,i] <- gsub("var .*",'', bee.names3[,i])
 }
 
-View(bee.names3)
+# View(bee.names3)
 
 # Some of these entries still have multiple names
 # I will retain the first 2 words from each entry
 
 
+
+########## Some entries will have ( ) and some will have the subspecies
 
 
 
@@ -344,7 +344,7 @@ for(i in 1:nrow(bee.names3)){
 
 
 
-# How many of the bee.list species are not in the Globi database?
+# How many of the bee.names3 species are not in the Globi database?
 # We will test with matching & regular expressions
 bee_present_match_syn <- bee_present_grep_syn <- matrix(NA, nrow = nrow(bee.names3), ncol = ncol(bee.names3))
 
@@ -382,6 +382,13 @@ for(i in 1:nrow(bee.names3)){
     bee_present_match_syn[i,j] <- as.numeric(bee_present_match_syn[i,j])
   }
 }
+
+
+
+
+
+######## Create a list of the species that are not detected in Globi
+
 
 
 
