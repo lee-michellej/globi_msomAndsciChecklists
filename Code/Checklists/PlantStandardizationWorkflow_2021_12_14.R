@@ -80,8 +80,15 @@ globi1 <- globi[plant.rows,] %>%
   filter()
 
 
+### try workflow using file created by Grace in checklist
+
 setwd("~/Desktop/globi_bees/Data")
 matched <- read_csv("matched_rows_2021_09_13.csv")
+
+
+stand_matched <- data.frame(TPL(matched$targetTaxonName))
+
+
 
 
 
@@ -96,5 +103,15 @@ stand_globi1 <- data.frame(TPL(globi1$scientificName))
 
 
 #### 6 - merge datasets based on standardized plant name ####
+
+attempt_merge <- left_join(stand_matched, stand_sci, by = "Taxon")
+#check the number of globi-based observations without a match to the sci list
+
+failed_merge <- anti_join(stand_matched, stand_sci, by = "Taxon")
+
+
+
 #### 7 - write new file to be added to ongoing cleaning workflow ####
 
+setwd("~/Desktop/globi_bees/Data")
+write.csv(mergedfinal, "mergedplantlists.csv", row.names = FALSE)
