@@ -1,0 +1,74 @@
+---
+title:Data Cleaning
+output:html_document
+participants:N. Bachelder, A. Chen, Z. Fang, M. Rapaport, S. Solomon
+date:Feb 18, 2021
+source:https://www.globalbioticinteractions.org/about
+---
+  
+```{r}
+library(ggplot2)
+library("dplyr")
+library("tidyr")
+require(igraph)
+library(reticulate)
+```
+
+# Install python and pandas
+```{r}
+library(reticulate)
+path_to_python <- "~/anaconda3/bin/python"
+use_python(path_to_python)
+conda_install('r-reticulate', packages = 'pandas')
+```
+# Filtering
+```{python}
+import pandas as pd
+df = pd.read_csv("interactions.csv", header=0)
+```
+
+## Subset
+```{python}
+# List of total seven of bee families
+b_families = ['Andrenidae','Apidae','Colletidae','Halictidae','Megachilidae','Melittidae','Stenotritidae']
+# Bee as target, Plant as source
+bee_source_df = df.loc[(df['sourceTaxonFamilyName'].isin(b_families)) &
+                         (df['targetTaxonKingdomName']=='Plantae')]
+# Plant as source, Bee as target
+plant_source_df = df.loc[(df['sourceTaxonKingdomName']=='Plantae') &
+                           (df['targetTaxonFamilyName'].isin(b_families))]
+# Flip target/source for above df
+new_col = {}
+for col in df.columns:
+  if 'source' in col:
+  new_col[col] = 'target'+col[6:]
+elif 'target' in col:
+  new_col[col] = 'source'+col[6:]
+else:
+  new_col[col] = col
+plant_source_df = plant_source_df.rename(columns=new_col)
+```
+
+## Combine
+```{python}
+# Combine without dropping duplicates
+# The filtering method guarantees two disjoint data frames
+interactions_dup = pd.concat([bee_source_df,plant_source_df], axis=0)
+# Combine and drop duplicates
+interactions = pd.concat([bee_source_df,plant_source_df], axis=0).drop_duplicates()
+```
+
+## Result
+```{r}
+glimpse(py$interactions)
+```
+
+# Export to csv.gz file
+```{python}
+interactions_dup.to_csv("interactions_dup.csv.gz", 
+                        index=False, 
+                        compression="gzip")
+interactions.to_csv("interactions.csv.gz",
+                    index=False,
+                    compression='gzip')
+```
