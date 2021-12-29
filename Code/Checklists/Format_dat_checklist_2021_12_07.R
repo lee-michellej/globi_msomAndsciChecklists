@@ -151,6 +151,7 @@ institution.codes <- read.csv("./Data/institutioncodes_oct21.csv")
 
 
 
+
 # Look at data structure
 str(dat)
   # Look at globi for column definitions
@@ -249,7 +250,6 @@ globi.sp <- unique(unique(dat1$sourceTaxonSpeciesName),
 # Number of unique species
   # 3,035
 length(globi.sp)
-
 
 
 
@@ -462,6 +462,7 @@ bee.names4 <- as_tibble(bee.names4) %>%
 # Remove any empty cells
 bee.names4 <- bee.names4[bee.names4$synonym != "", ]
 
+View(bee.names4)
 
 ##########
 # Step 3: Replace the species name in the Globi database with the current species name (column 1 of the bee.names4 dataframe)
@@ -595,11 +596,6 @@ for(j in 1:length(dat1$sourceTaxonSpeciesName)){
     
   }
   
-  
-  
-  
-  
-  
 }
 
 
@@ -619,7 +615,8 @@ for(j in 1:length(dat1$sourceTaxonSpeciesName)){
 
 # Unique bee species
   # 140 species
-bee.species <- unique(bee.names4$current.name)
+bee.species <- bee.names3[,1]
+
 
 
 # Unique plant species
@@ -741,6 +738,8 @@ head(dat2)
 
 
 # 4. Make a map with the data point -------------------------------------------------------
+
+
 
 
 
@@ -883,47 +882,223 @@ nrow(dat6)
 
 
 
+# We will be working with the following 2 dataframes in this section:
+  # dat6 = the subsetted species & CA dataset
+  # institution.codes = the name of the institutions
 
-# View(institution.codes)
-
-View(dat6)
-
-
-
-
-
+# To look at the data frames, use these functions:
+  # View(institution.codes)
+  # View(dat6)
 
 
-# Now, we will summarize the data
-  # Along the rows = each bee genus
-  # Along the columns = each study
-  # In each cell = the number of unique plant-bee interactions
+# The institution codes can be found in this column of the Globi database:
+  # sourceCatalogNumber
 
-# Drop unused levels
-dat6 <- droplevels(dat6)
+# We need to pull apart the alphabetical characters and the numeric characters
+dat7 <- dat6 %>% 
+  mutate(., fullcode = sub(" ","", sourceCatalogNumber)) %>% 
+  mutate(., withdashcode = sub("_","", fullcode)) %>% 
+  mutate(., no_characters = sub("-","", withdashcode)) %>% 
+  separate(no_characters, 
+           into = c("code", "num"), 
+           sep = "(?<=[A-Za-z])(?=[0-9])"
+  )
 
-# Create a citation list object
-cit.list <- unique(dat6$sourceCitation)
+# Remove dashes from the names in institution.codes object
+inst.code <- institution.codes %>% 
+              mutate(., nodash = sub("-","", code)) 
+
+# Look to see how many names match between our code column and the inst.code$nodash
+unique(dat7$code) %in% inst.code$nodash
+
+
+# Write a file with the institution codes
+# write.csv(unique(dat7$code), file = "./Data/data_summary/subset_data_inst_codes_2021 12 29.csv")
+
+
+
+
+
+# Next, we need to create 1 column with either the institution code or the sourceCitation
+
+# Copy over the sourceCitation column
+dat7$citation <- as.character(dat7$sourceCitation)
+
+# levels(dat7$sourceCitation)
+
+for(i in 1:nrow(dat7)){
+  
+  # If the source citation == "Symbiota Collections of Arthropods Network (SCAN)", then do this:
+  if(dat7$sourceCitation[i] == "Symbiota Collections of Arthropods Network (SCAN)"){
+    
+    # Copy over the institution code into the citation column
+    dat7$citation[i] <- dat7$code[i]
+    
+  }
+  
+}
+
+
+compare_cols <- data.frame(original_sourceCitation = as.character(dat7$sourceCitation),
+           inst.code = as.character(dat7$code),
+           new_column = as.character(dat7$citation)
+)
+
+# Write the compare_col data frame
+# write.csv(compare_cols, "./Data/data_summary/compare-citation-columns 2021 12 29.csv")
+
+# Look at the dataframe
+# View(compare_cols)
+
+# Write the unique citations
+# write.csv(unique(dat7$citation), "./Data/data_summary/unique-citations- 2021 12 29.csv")
+
+
+
+
+
+
+# 6. Format the date column  -------------------------------------------------------
+
+
 
 
 
 # Format the date of observation
 # eventDateUnixEpoch
-dat6$eventDate <- as.POSIXct(dat6$eventDateUnixEpoch/1000, origin = "1970-01-01")
+dat7$eventDate <- as.POSIXct(dat7$eventDateUnixEpoch/1000, origin = "1970-01-01")
 
 
 # Pull apart the info in the event date
 # Year
 # Month
 # Day - this column also includes time - but I won't finish formatting this because we don't need this detail
-dat7 <- as_tibble(dat6) %>% 
+dat8 <- as_tibble(dat7) %>% 
   mutate(year = str_split(eventDate, "-", n = 3, simplify = TRUE)[,1],
          month= str_split(eventDate, "-", n = 3, simplify = TRUE)[,2],
          day = str_split(eventDate, "-", n = 3, simplify = TRUE)[,3])
 
 
-# Write csv file
-write.csv(cit.list, "./Data/data_summary/final_literature_cited_list_2021_12_28.csv")
+
+
+# 7. Determine which bee-plant interactions are possible & which are forbidden -------------------------------------------------------
+
+
+
+
+
+
+# Need to remove rows without species name from the bee.phenology dataframe
+bee.phenology <- bee.phenology[bee.phenology$scientificName %in% bee.list$genus_species_infra,]
+
+nrow(bee.phenology)
+
+
+# Is the bee phenology data (bee.phenology) in the same order as the list of bee species?
+# YES - alphabetical order
+  # View(cbind(bee.phenology$scientificName, rownames(bee.plant.date.cite)))
+
+# Add a new Genus species column to the plant phenology data
+plant.phenology$Genus_species <- paste(plant.phenology$Genus, 
+                                       plant.phenology$Species, 
+                                       sep = " ")
+
+# Is the plant phenology data (plant.phenology) in the same order as the list of bee species?
+  # NO - different orders
+re.ordered.plant.phenology <- plant.phenology[match(colnames(bee.plant.date.cite), 
+                                                    plant.phenology$Genus_species),]
+
+# View(cbind(re.ordered.plant.phenology$Genus_species, colnames(bee.plant.date.cite)))
+
+
+
+# Next, we will be working on a long dataframe and specify which bee-plant interactions are:
+  # possible
+  # AND forbidden
+
+# Create empty dataframe for possible bee-plant interactions
+bee.plant.inter <- data.frame(beeID = NA,
+                              plantID = NA,
+                              monthID = NA)
+
+# Create empty dataframe for FORBIDDEN bee-plant interactions
+bee.plant.forbid <- data.frame(beeID = NA,
+                               plantID = NA,
+                               monthID = NA)
+
+# These objects will serve as counters, it will make sense in the loop
+a <- 1
+b <- 1
+
+# Start the loop
+for(i in 1:nrow(bee.plant.date.cite)){ # For each bee species
+  for(j in 1:ncol(bee.plant.date.cite)){ # For each plant species
+    for(k in 1:12){ # for each month
+      
+      # There is a row in the plant.phenology table that is all NA - we need to skip it
+      if(is.na(plant.phenology[j, k + 26]) == FALSE){
+        
+      
+      # Possible interactions
+        if(# If the bee is active (bee.phenology == 1)
+          bee.phenology[i, k+1] == 1 & 
+           
+          # AND if the plant is available (plant.phenology == 1)
+          plant.phenology[j, k + 26] == 1){
+          
+          # Then that bee plant interaction can occur and write it in the file: bee.plant.inter
+          bee.plant.inter[a,1] <- i
+          bee.plant.inter[a,2] <- j
+          bee.plant.inter[a,3] <- k
+          
+          # Add 1 to the counter
+          a <- a + 1
+        }
+      
+      # Forbidden links
+        if(# If the bee is NOT active
+           bee.phenology[i, k+1] == 0 |
+           
+           # OR if the plant is not available
+           plant.phenology[j, k + 26] == 0){
+          
+          # This is a forbidden link, and write it here
+          bee.plant.forbid[b,1] <- i
+          bee.plant.forbid[b,2] <- j
+          bee.plant.forbid[b,3] <- k
+          
+          # Add 1 to the counter
+          b <- b + 1
+      }
+      
+    }
+  
+  }
+    
+}}
+
+
+
+
+
+
+
+# 8. Format the data for the model -------------------------------------------------------
+
+
+
+# The data will be a 4-D array
+  # Dim 1 = bee species
+  # Dim 2 = plant species
+  # Dim 3 = month
+  # Dim 4 = citation
+
+
+# Drop unused levels
+dat8 <- droplevels(dat8)
+
+# Create a citation list object
+cit.list <- unique(dat8$citation)
 
 # Create the array that will be filled in
 bee.plant.date.cite <- array(0, dim = c(length(bee.species), # Number of bee species
@@ -946,133 +1121,92 @@ dimnames(bee.plant.date.cite)[[4]] <- cit.list
 
 
 # Total number of interactions by citations
-  # 7,783,872
+# 15,015,504
 length(bee.species) *
-length(plant.species)* 
+  length(plant.species)* 
   12*
-length(cit.list)
+  length(cit.list)
 
 
 
-# Is the bee phenology data (bee.phenology) in the same order as the list of bee species?
-# YES - alphabetical order
-# View(cbind(bee.phenology$scientificName, rownames(bee.plant.date.cite)))
 
-# Add a new Genus species column to the plant phenology data
-plant.phenology$Genus_species <- paste(plant.phenology$Genus, 
-                                       plant.phenology$Species, 
-                                       sep = " ")
+# Fill in the 4-D array with the data
 
-# Is the bee phenology data (bee.phenology) in the same order as the list of bee species?
-# NO - different orders
-View(cbind(re.prdered$Genus_species, colnames(bee.plant.date.cite)))
+# First we fill in the possible interactions with a 0 - then, we will go back and fill them in with a 1 if they were detected
+# To do this, we need to determine which months each citation went out to look for the bee-plant interaction
 
-re.prdered <- plant.phenology[match(colnames(bee.plant.date.cite), plant.phenology$Genus_species),]
+# For each citation - loop through them
+for(j in 1:length(unique(dat8$citation))){
 
-# Try reording the plants according to how they appear in your bee.plant.date.cite
-
-
-
-# Month counter
-bee.plant.inter <- data.frame(beeID = NA,
-                              plantID = NA,
-                              monthID = NA)
-
-bee.plant.forbid <- data.frame(beeID = NA,
-                               plantID = NA,
-                               monthID = NA)
-a <- 1
-b <- 1
-
-for(i in 1:nrow(bee.plant.date.cite)){ # For each bee species
-  for(j in 1:ncol(bee.plant.date.cite)){ # For each plant species
-    
-    for(k in 1:12){ # for each month
-      
-      # Work through each species and month
-      # If the value = 0, then the species doesn't interact with ANY plants that month
-      #   if(bee.phenology[i, k+1] == 0){
-      #     bee.plant.date.cite[i, , k, ] <- -9999
-      #     
-      #   }
-      
-      # Possible interactions
-      if(is.na(plant.phenology[j, k + 26]) == FALSE){
-        if(bee.phenology[i, k+1] == 1 & 
-           plant.phenology[j, k + 26] == 1){
-          
-          bee.plant.inter[a,1] <- i
-          bee.plant.inter[a,2] <- j
-          bee.plant.inter[a,3] <- k
-          
-          a <- a + 1
-        }
-      }
-      
-      # Forbidden links
-      if(is.na(plant.phenology[j, k + 26]) == FALSE){
-        if(bee.phenology[i, k+1] == 0 |
-           plant.phenology[j, k + 26] == 0){
-          
-          bee.plant.forbid[b,1] <- i
-          bee.plant.forbid[b,2] <- j
-          bee.plant.forbid[b,3] <- k
-          
-          b <- b + 1
-        }
-      }
-      
-    }
-  }
+  # Subset the data
+  dat.sub <- dat8[dat8$citation == dat8$citation[j],]
+  
+  # Determine what months they were out looking
+  citation.months <- as.numeric(unique(dat.sub$month))
+  
+  # Trim the NA's
+  citation.months <- citation.months[which(is.na(citation.months) == FALSE)]
+  
+for(i in 1:nrow(bee.plant.inter)){
+  
+  bee.plant.date.cite[bee.plant.inter[i,1],
+                      bee.plant.inter[i,2],
+                      bee.plant.inter[i,3], 
+                      citation.months]     <- 0
+  
+}
+  
 }
 
-# Plant species 71 = all NA 
-plant.phenology[j, 1:12 + 26]
+
+# Now we will fill in the 4-D array with the presence data
+for(i in 1:nrow(dat8)){
+  
+  # Determine which citation
+  cit.pos <- which(cit.list %in% dat8$citation[i] == TRUE)
+  
+  # Determine which bee
+  bee.pos <- which(bee.species %in% dat8$sourceTaxonSpeciesName[i]  == TRUE |
+                   bee.species %in% dat8$sourceTaxonName[i] == TRUE |
+                   bee.species %in% dat8$targetTaxonSpeciesName[i] == TRUE |
+                   bee.species %in% dat8$targetTaxonName[i] == TRUE )
+  
+  # Determine which month
+  month.pos <- as.numeric(dat8$month[i])
+  
+  # Determine which plant
+  plant.pos <- which(plant.species %in% dat8$sourceTaxonSpeciesName[i]  == TRUE |
+                     plant.species %in% dat8$sourceTaxonName[i] == TRUE |
+                     plant.species %in% dat8$targetTaxonSpeciesName[i] == TRUE |
+                     plant.species %in% dat8$targetTaxonName[i] == TRUE )
+  
+  # If we have a value for each of the positions, then add a 1
+  if(is.na(cit.pos) == FALSE &
+     is.na(bee.pos == 0) == FALSE &
+     is.na(month.pos == 0) == FALSE &
+     is.na(plant.pos == 0) == FALSE) {
+    
+    # Add a 1
+    bee.plant.date.cite[bee.pos, plant.pos, month.pos, cit.pos] <- 1
+    
+  }
+  
+
+}
 
 
 
 
+# 9. Save the data -------------------------------------------------------
 
 
-
-# Look at the dimensions
-dim(bee.plant.cite)
-  # 142 bee species
-  # 667 plant species
-  # 6 citation sources
+# Save the 4-D array
+save(bee.plant.date.cite, file= "./Data/data_summary/globi_data_formatted_bee_plant_date_citation_2021_12_29.rds")
 
 
-# Remove columns (which correspond to plants) that do not 
-# Determine which columns have at least 1 entry and match those plant names with the column names in bee.plant.cite
-cols.keep <- colnames(bee.plant.cite) %in%
-  names(which(apply(bee.plant.cite, 2, sum) > 0)) 
+# Save the subsetted Globi data
+save(dat8, file= "./Data/data_summary/FINAL - subsetted_globi_data_2021 12 29.csv" )
 
-# Keep these columns
-bee.plant.cite2 <- bee.plant.cite[, cols.keep, ]
-
-# List of plant names removed
-write.csv(colnames(bee.plant.cite)[cols.keep == FALSE],
-          "./Data/plant_species_removed_no_interaction_2021_09_13.csv")
-
-# Look at the dimensions
-dim(bee.plant.cite2)
-  # 142, 101, 6
-
-
-
-# 6. Save the data -------------------------------------------------------
-
-
-save(bee.plant.cite2, file= "./Data/globi_data_formatted_bee_plant_2021_09_13.rds")
-
-write.csv(dat6, file= "./Data/globi_data_subset_bee_plant_2021_09_13.csv")
-
-
-
-
-# Still to do
-  # Determine which column has month/time info
-  # Add NA to bee-plant interaction when the collector went in the wrong month
 
 
 # End script

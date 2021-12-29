@@ -25,7 +25,7 @@ Andrena	subaustralis	NA
 Andrena	submoesta	NA
 Andrena	subtilis	NA
 Andrena	vandykei	NA
-Calliopsis	(Micronomadopsis)	NA
+Calliopsis	sp.	NA
 Heterosarus	californicus	NA
 Panurginus	armaticeps	NA
 Panurginus	gracilis	NA
