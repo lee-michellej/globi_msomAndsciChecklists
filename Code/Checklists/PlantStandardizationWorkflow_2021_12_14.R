@@ -68,24 +68,22 @@ stand_sci <- left_join(sci, as.data.frame(TPL(sci$scientificName)) %>%
 
 # filter for only plants and only species names
 setwd("~/Downloads")
-globi <- read_tsv("all_bee_data_unique.txt")
+globi.dat <- read_csv("all_bee_data_unique.csv")
 
 # look for just plants
-plant.source <- grep("Plantae", globi$targetTaxonPathNames)
-plant.target <- grep("Plantae", globi$sourceTaxonPathNames)
+plant.source <- grep("Plantae", globi.dat$targetTaxonPathNames)
+plant.target <- grep("Plantae", globi.dat$sourceTaxonPathNames)
 plant.rows <- unique(c(plant.source, plant.target))
-length(plant.rows) #300166 entries
+length(plant.rows) #295135 entries
 # Keep only plant rows
-globi1 <- globi[plant.rows,] %>%
+globi1 <- globi.dat[plant.rows,] %>%
   filter()
 
 
 ### try workflow using file created by Grace in checklist
 
-setwd("~/Desktop/globi_bees/Data")
-matched <- read_csv("matched_rows_2021_09_13.csv")
-
-
+# before trying TPL flip the target/source to make sure all plants are in the same column
+# then make a list of unique plants as TPL takes a long time
 stand_matched <- data.frame(TPL(matched$targetTaxonName))
 
 

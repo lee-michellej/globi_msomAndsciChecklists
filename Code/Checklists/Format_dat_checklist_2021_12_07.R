@@ -100,6 +100,7 @@ library(plyr)
 library(rgdal)
 library(ggsn)
 library(sf)
+library(reshape2)
 
 # Set working directory
 setwd("~/globi_tritrophic_networks/")
@@ -109,6 +110,7 @@ setwd("~/globi_tritrophic_networks/")
 
 
 # 2. Load data -------------------------------------------------------
+
 
 
 
@@ -139,7 +141,8 @@ citation <- read.csv("./Data/citation-list-type.csv")
 
 
 # Other bee names = Synonyms
-bee.names <- read.csv("./Data/Checklist names and synonyms - Author-less.csv")
+  # https://docs.google.com/spreadsheets/d/140eMiLBjG7ySc5oviCXJL8A5OT1VTM5rMwEvDTJmd8U/edit#gid=0
+bee.names <- read.csv("~/Dropbox/Globi/Data/Checklist-bee-names.csv")
 
 
 # Institution codes
@@ -199,7 +202,17 @@ plant.list$genus_species <- paste(plant.list$Genus, plant.list$Species)
 
 
 
+
+
+# Remove species without a species name ( == "sp.")
+
+
+
+
+
+
 # 4. Subset globi data to rows that have plant records only -------------------------------------------------------
+
 
 
 
@@ -209,7 +222,7 @@ plant.list$genus_species <- paste(plant.list$Genus, plant.list$Species)
 
 
 # The downloaded dataset has:
-  # 304,795 rows
+# 304,795 rows
 nrow(dat)
 
 
@@ -223,38 +236,34 @@ plant.target <- grep("Plantae", dat$sourceTaxonPathNames)
 plant.rows <- unique(c(plant.source, plant.target))
 
 # The number of rows with plant interactions:
-  # 259,135 rows
+# 259,135 rows
 length(plant.rows)
 
 # Keep only plant rows
 dat1 <- dat[plant.rows,]
-
+nrow(dat1)
 
 # Create a list with all of the unique species in Globi - 
-  # Plant & Bee
+# Plant & Bee
 globi.sp <- unique(unique(dat1$sourceTaxonSpeciesName), 
-                     unique(dat1$sourceTaxonName),
-                     unique(dat1$targetTaxonSpeciesName),
-                     unique(dat1$targetTaxonName))
+                   unique(dat1$sourceTaxonName),
+                   unique(dat1$targetTaxonSpeciesName),
+                   unique(dat1$targetTaxonName))
 
 # Number of unique species
-  # 3,035
+# 3,035
 length(globi.sp)
 
 
 
 
+# 5. Format the bee synonym data -------------------------------------------------------
 
 
-# 3. Format the bee synonym data -------------------------------------------------------
 
 
 
-# Now, we will add species synonymns to the list
-# View(bee.names)
-
-
-# Pull apart the names by the ; symbol, and bind it to the original names
+# Pull apart the bee names in 1 column by the ; symbol, and bind it to the original names
 bee.names2 <- cbind(as.character(bee.names[,1]), 
                     str_split(bee.names$Synonyms.from.DL, ";", simplify = TRUE)
 )
@@ -262,58 +271,95 @@ bee.names2 <- cbind(as.character(bee.names[,1]),
 # View the new data frame
 # View(bee.names2)
 
-# Remove the parentheses from the names
+# Remove the ", YEAR" at the end of each entry
 for(i in 1:ncol(bee.names2)){
-  bee.names2[,i] <- gsub(".[(].+[)]",'',bee.names2[,i])
+  bee.names2[,i] <- gsub(", [0-9][0-9][0-9][0-9]",'',bee.names2[,i])
 }
 
 # Remove the space at the beginning of each name
 for(i in 1:nrow(bee.names2)){
   for(j in 1:ncol(bee.names2)){
-    bee.names2[i,j] <-  gsub(" ^", '', bee.names2[i,j])
+    bee.names2[i,j] <- trimws(bee.names2[i,j])
   }
 }
-
-
-# Remove the "_homonym" text
-# Remove the ", valid subspecies" text
-# Remove the ", replacement name" text
-# Remove the ", incorrect termination" text
 
 # Copy over bee.names2
 bee.names3 <- bee.names2
 
-# Remove the subspecies name
+# Remove the name of the person that described the species
 for(i in 1:nrow(bee.names2)){
   for(j in 1:ncol(bee.names2)){
     
-    if(length(str_split(bee.names2[i,j], " ", simplify = TRUE)) == 3){
+    if(length(str_split(bee.names2[i,j], " ", simplify = TRUE)) > 2){
+      
       bee.names3[i,j] <- gsub("\\s*\\w*$", "", bee.names2[i,j])
-    } else {bee.names3[i,j] <- bee.names2[i,j]}
+    
+      } else {bee.names3[i,j] <- bee.names2[i,j]}
   }
   
-}   
+} 
 
-View(bee.names3)
-i = 14
-j = 3
+# Remove anything with a ", ...."
+for(i in 1:ncol(bee.names3)){
+  bee.names3[,i] <- gsub(", .*",'', bee.names3[,i])
+}
 
-# How many of the bee.list species are not in the Globi database?
+# Remove anything with a "_ ...."
+for(i in 1:ncol(bee.names3)){
+  bee.names3[,i] <- gsub("_.*",'', bee.names3[,i])
+}
+
+# Remove anything with a "var ...."
+for(i in 1:ncol(bee.names3)){
+  bee.names3[,i] <- gsub("var .*",'', bee.names3[,i])
+}
+
+# View(bee.names3)
+
+# Some of these entries still have multiple names
+# I will retain the first 2 words from each entry
+
+
+
+########## Some entries will have ( ) and some will have the subspecies
+
+
+
+# Remove subspecies names
+for(i in 1:nrow(bee.names3)){
+  for(j in 1:ncol(bee.names3)){
+    
+    if(length(str_split(bee.names3[i,j], " ", simplify = TRUE)) > 2){
+      
+      bee.names3[i,j] <- paste( str_split(bee.names3[i,j], " ", simplify = TRUE)[1,1],
+                                str_split(bee.names3[i,j], " ", simplify = TRUE)[1,2],
+                                sep = " ")
+
+    } else {bee.names3[i,j] <- bee.names3[i,j]}
+  }
+  
+} 
+
+# View(bee.names3)
+
+
+
+# How many of the bee.names3 species are not in the Globi database?
 # We will test with matching & regular expressions
-bee_present_match_syn <- bee_present_grep_syn <- matrix(NA, nrow = nrow(bee.names2), ncol = ncol(bee.names2))
+bee_present_match_syn <- bee_present_grep_syn <- matrix(NA, nrow = nrow(bee.names3), ncol = ncol(bee.names3))
 
 
 # Use a loop to go through each genus_species and match with the globi species list
-for(i in 1:nrow(bee.names2)){
-  for(j in 1:ncol(bee.names2)){
+for(i in 1:nrow(bee.names3)){
+  for(j in 1:ncol(bee.names3)){
     
     # Perform if statement if bee.names2 does not equal ""
-    if(bee.names2[i,j] != ""){
+    if(bee.names3[i,j] != ""){
       # Matching
-      bee_present_match_syn[i,j] <- bee.names2[i,j] %in% globi.sp
+      bee_present_match_syn[i,j] <- bee.names3[i,j] %in% globi.sp
       
       # Regular expressions
-      bee_present_grep_syn[i,j] <- length(grep(bee.names2[i,j], globi.sp))
+      bee_present_grep_syn[i,j] <- length(grep(bee.names3[i,j], globi.sp))
     }
     
     
@@ -322,21 +368,27 @@ for(i in 1:nrow(bee.names2)){
 
 # Determine how many speces (i.e., rows) were found
 # The max should be 1
-row_sums <- apply(bee_present_grep_syn, 1, max, na.rm = TRUE)
+row_sums2 <- apply(bee_present_match_syn, 1, max, na.rm = TRUE)
 
-# Remove any species with > 1 sum
-sum(row_sums[which(row_sums < 2)])
+sum(row_sums2)
 
-# 87 total species were detected
+# 94 total species were detected
 # of the 142
 
+# How many names were detected for some individuals?
+# Convert to numeric
+for(i in 1:nrow(bee.names3)){
+  for(j in 1:ncol(bee.names3)){
+    bee_present_match_syn[i,j] <- as.numeric(bee_present_match_syn[i,j])
+  }
+}
 
-# How many total names are matching?
-sum(bee_present_grep_syn[which(row_sums < 2),], na.rm = TRUE)
 
 
 
-View(cbind(bee.list$genus_species, bee.names2[,1]))
+
+######## Create a list of the species that are not detected in Globi
+
 
 
 
@@ -348,77 +400,82 @@ View(cbind(bee.list$genus_species, bee.names2[,1]))
 
 
 
-# How many of the bee.list species are not in the Globi database?
-  # We will test with matching & regular expressions
-bee_present_match <- bee_present_grep <- numeric(nrow(bee.list))
-plant_present_match <- plant_present_grep <- numeric(nrow(plant.list))
+# I don't think we need this section any more because of what we are doing with the synonym names
+  # Here we were just matching the names via a vector (1 name per species)
 
 
-# Use a loop to go through each genus_species and match with the globi species list
-for(i in 1:nrow(bee.list)){
-  
-  # Matching
-  bee_present_match[i] <- bee.list$genus_species[i] %in% globi.sp
-  
-  # Regular expressions
-  bee_present_grep[i] <- length(grep(bee.list$genus_species[i], globi.sp))
-  
-}
-
-for(i in 1:nrow(plant.list)){
-  
-  # Matching
-  plant_present_match[i] <- plant.list$genus_species[i] %in% globi.sp
-  
-  # Regular expressions
-  plant_present_grep[i] <- length(grep(plant.list$genus_species[i], globi.sp))
-  
-}
-
-
-# Replace anything with a > 1 value with a 1
-bee_present_grep[bee_present_grep > 1] <- 1
-plant_present_grep[plant_present_grep > 1] <- 1
-
-
-# How many species matched using regular expressions?
-  # 91
-sum(bee_present_grep)
-  # 77
-sum(plant_present_grep)
-
-
-# How many species matched using matching?
-  # 91
-sum(bee_present_match)
-  # 77
-sum(plant_present_match)
-
-
-# As a reminder there are:
-  # 142 bee species in our checklist
-  # 667 plant species
-
-# Which species were not found with matching?
-  # The ones without a species name
-    # Calliopsis
-    # Sphecodes
-    # Stelis
-
-# Which species did not match anything in Globi?
-bee.finder <- data.frame(genus_species = bee.list$genus_species,
-               match = bee_present_match, 
-               grep = bee_present_grep)
-
-
-plant.finder <- data.frame(genus_species = plant.list$genus_species,
-                match = plant_present_match, 
-                grep = plant_present_grep)
-
-# remove NA rows
-plant.finder <- plant.finder[is.na(plant.finder$genus_species) == FALSE,]
-
-
+# # How many of the bee.list species are not in the Globi database?
+#   # We will test with matching & regular expressions
+# bee_present_match <- bee_present_grep <- numeric(nrow(bee.list))
+# plant_present_match <- plant_present_grep <- numeric(nrow(plant.list))
+# 
+# 
+# # Use a loop to go through each genus_species and match with the globi species list
+# for(i in 1:nrow(bee.list)){
+#   
+#   # Matching
+#   bee_present_match[i] <- bee.list$genus_species[i] %in% globi.sp
+#   
+#   # Regular expressions
+#   bee_present_grep[i] <- length(grep(bee.list$genus_species[i], globi.sp))
+#   
+# }
+# 
+# for(i in 1:nrow(plant.list)){
+#   
+#   # Matching
+#   plant_present_match[i] <- plant.list$genus_species[i] %in% globi.sp
+#   
+#   # Regular expressions
+#   plant_present_grep[i] <- length(grep(plant.list$genus_species[i], globi.sp))
+#   
+# }
+# 
+# 
+# # Replace anything with a > 1 value with a 1
+# bee_present_grep[bee_present_grep > 1] <- 1
+# plant_present_grep[plant_present_grep > 1] <- 1
+# 
+# 
+# # How many species matched using regular expressions?
+#   # 91
+# sum(bee_present_grep)
+#   # 77
+# sum(plant_present_grep)
+# 
+# 
+# # How many species matched using matching?
+#   # 91
+# sum(bee_present_match)
+#   # 77
+# sum(plant_present_match)
+# 
+# 
+# # As a reminder there are:
+#   # 142 bee species in our checklist
+#   # 667 plant species
+# 
+# # Which species were not found with matching?
+#   # The ones without a species name
+#     # Calliopsis
+#     # Sphecodes
+#     # Stelis
+# 
+# # Which species did not match anything in Globi?
+# bee.finder <- data.frame(genus_species = bee.list$genus_species,
+#                                  match = bee_present_match, 
+#                                   grep = bee_present_grep,
+#                                synonym = )
+# 
+# 
+# plant.finder <- data.frame(genus_species = plant.list$genus_species,
+#                                    match = plant_present_match, 
+#                                    grep = plant_present_grep)
+# 
+# # remove NA rows
+# plant.finder <- plant.finder[is.na(plant.finder$genus_species) == FALSE,]
+# 
+# 
 # Write the files 
 
 # write.csv(bee.finder,
@@ -436,7 +493,117 @@ plant.finder <- plant.finder[is.na(plant.finder$genus_species) == FALSE,]
 
 
 
+
+
+
+
+
+# 4. Adjust names in the Globi database -------------------------------------------------------
+
+
+
+View(dat1)
+
+# We need to adjust the names in the Globi database with the synonym names - so that we know which species it is suppose to be- rather than having 10+ names for a single species
+
+# Turn the object bee.names3 into a vector
+bee.vector <-  c(bee.names3)
+
+# Remove empty cells
+bee.vector <- unique(bee.vector[bee.vector != ""])
+
+# Step 1: Determine if the Globi name matches any of the synonym names
+for(i in 1:length(bee.vector)){
+  if(dat1$sourceTaxonSpeciesName[i] %in% bee.vector){
+    print(i)
+  }
+}
+
+# Determine the number of matched between dat1$sourceTaxonSpeciesName and the original bee names checklist
+length(which(dat1$sourceTaxonSpeciesName %in% bee.names3[,1] == TRUE))
+  # 29,257
+
+# Determine the number of matches between dat1$sourceTaxonSpeciesName and bee.vector
+length(which(dat1$sourceTaxonSpeciesName %in% bee.vector == TRUE))
+  # 33,139
+
+
+
+# Step 2: Convert bee.names to long format - and just search in the synonym column
+
+# Convert bee.names3 to a dataframe
+bee.names3 <- as.data.frame(bee.names3)
+
+# Remove the first column
+colnames(bee.names3)[1] <- "current.name"
+
+# Convert to long format
+bee.names4 <- melt(bee.names3, id = "current.name")[,-2]
+
+# Replace column names
+colnames(bee.names4) <- c("current.name", "synonym")
+
+## Make sure there are no duplicate synonyms
+as_tibble(bee.names4) %>%
+  unique(current.name, synonym) %>%
+  group_by(synonym) %>%
+  tally()
+
+
+
+# Step 3: Replace the name with the current species name (column 1 of the bee.names3 dataframe)
+
+# Need to identify which ROW the species name comes from
+# Create an empty object to fill
+row.num <- numeric()
+
+# For each column in bee.names3
+for(i in 2:ncol(bee.names3)){
+
+    # For each entry in the dat1 dataframe
+    for(j in 1:length(dat1$sourceTaxonSpeciesName)){
+      
+      # Skip if blank
+      if(dat1$sourceTaxonSpeciesName[j] != ""){
+      
+      # Identify which row in the bee.names3 dataframe match with the species name in dat1
+      row.num <- c(row.num, which(bee.names3[,i] == dat1$sourceTaxonSpeciesName[j]))
+      
+      # If there is a match, replace the name with the 1st entry in the bee.names3 dataframe
+      if(length(row.num) > 0){
+        
+        dat1$sourceTaxonSpeciesName[i] <- bee.names3[row.num,1][1]
+      
+      }
+      
+      # Add an error check - to make sure it isn't matching multiple synonyms
+      
+      
+      # Make row.num empty again
+     # row.num <- numeric()
+      
+      }
+    }
+}
+
+
+
+
+
+# What was the big dataset?
+# How many got trimmed from the available data?
+
+
+
+
 # 4. Make Insect & Plant columns -------------------------------------------------------
+
+
+
+
+
+
+
 
 
 

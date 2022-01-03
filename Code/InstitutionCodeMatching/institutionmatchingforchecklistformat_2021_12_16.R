@@ -33,11 +33,34 @@ inst.codes <- read_csv("institutioncodes_2021_12_16.csv")
 
 # 3 load globi data ----
 
+setwd("~/Downloads")
+globi.dat <- read_csv("all_bee_data_unique.csv")
 
+
+
+  select(sourceCatalogNumber)
+View(head(globi.dat))
 
 
 # 4 edit globi sourceInstitutionCode ----
 
+globi.inst <- globi.dat %>% 
+  select(sourceCatalogNumber)
 
 
+
+
+
+globi_instcodes <- globi.inst %>% 
+  mutate(., sourceCatalogNumber = sub(" ","", sourceCatalogNumber)) %>% 
+  mutate(., sourceCatalogNumber = sub("_","", sourceCatalogNumber)) %>%
+  mutate(., sourceCatalogNumber = sub("-","", sourceCatalogNumber)) %>% 
+  separate(sourceCatalogNumber, 
+           into = c("code", "num"), 
+           sep = "(?<=[A-Za-z])(?=[0-9])"
+  )
+# issue with semi colons
+# issue with periods
+# issue with full number codes
+# some codes need the dash or need to be separated before dash is removed
 
