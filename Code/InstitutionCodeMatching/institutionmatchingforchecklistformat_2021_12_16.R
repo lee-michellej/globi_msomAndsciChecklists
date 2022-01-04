@@ -1,6 +1,6 @@
 ##### create a workflow for the format checklist to match institution codes #####
 # code written by M.J.Lee Dec 2021
-# the goal of this code is to create a workflow to match the intitution code list to the GloBI dataset
+# the goal of this code is to create a workflow to match the institution code list to the GloBI dataset
 # this code should be added to the checklist formatting workflow
 
 ##### information about the data ----
@@ -14,8 +14,8 @@
 ### 1 load libraries
 ### 2 load institution list
 ### 3 load globi data
-### 4 edit globi sourceInsitutionCode (i.e. separate into multiple variations that can be matched)
-### 5 merge globi dataset with instition list and check what institions were not matched
+### 4 edit globi sourceInstitutionCode (i.e. separate into multiple variations that can be matched)
+### 5 merge globi dataset with institution list and check what institutions were not matched
 # note, after step 5, this code should be included in the checklist format workflow.
 
 
