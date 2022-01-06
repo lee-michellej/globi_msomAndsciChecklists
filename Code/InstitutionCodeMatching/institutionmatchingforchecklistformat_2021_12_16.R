@@ -34,12 +34,11 @@ inst.codes <- read_csv("institutioncodes_2021_12_16.csv")
 # 3 load globi data ----
 
 setwd("~/Downloads")
-globi.dat <- read_csv("all_bee_data_unique.csv")
-
-
-
-  select(sourceCatalogNumber)
+globi.dat <- read_csv("interactions_aftercapstonecode_3jan22.csv")
 View(head(globi.dat))
+
+
+
 
 
 # 4 edit globi sourceInstitutionCode ----
@@ -47,20 +46,59 @@ View(head(globi.dat))
 globi.inst <- globi.dat %>% 
   select(sourceCatalogNumber)
 
+list.globi.inst <- data.frame(unique(globi.inst))
 
-
-
-
-globi_instcodes <- globi.inst %>% 
-  mutate(., sourceCatalogNumber = sub(" ","", sourceCatalogNumber)) %>% 
-  mutate(., sourceCatalogNumber = sub("_","", sourceCatalogNumber)) %>%
-  mutate(., sourceCatalogNumber = sub("-","", sourceCatalogNumber)) %>% 
-  separate(sourceCatalogNumber, 
-           into = c("code", "num"), 
-           sep = "(?<=[A-Za-z])(?=[0-9])"
-  )
 # issue with semi colons
 # issue with periods
 # issue with full number codes
 # some codes need the dash or need to be separated before dash is removed
+
+globi_instcodes <- globi.inst %>% 
+  mutate(., sourceCatalogNumber = gsub(" ","", sourceCatalogNumber)) %>% 
+  mutate(., sourceCatalogNumber = gsub("_","", sourceCatalogNumber)) %>%
+  mutate(., sourceCatalogNumber = gsub("-","", sourceCatalogNumber)) %>% 
+  mutate(., sourceCatalogNumber = gsub(":","", sourceCatalogNumber)) %>% 
+  separate(sourceCatalogNumber, 
+           into = c("code", "num"), 
+           sep = "(?<=[A-Za-z])(?=[0-9])"
+  )
+
+list.globi.code <- data.frame(unique(globi_instcodes))
+# removing periods didn't work for some reason
+# resulting code has some periods left
+# i think this would be resolved using the newer version of globi dataset with other code section
+
+
+
+
+# 5 antimerge globi dataset with institution list -----
+
+# what didn't merge
+df1_antimerge <- anti_join(globi_instcodes, inst.codes, by = c("code" = "firstcode"))
+
+list.antimerge <- data.frame(unique(df1_antimerge$code))
+# 1671 unique entries that don't have a matching institution
+# want too filter this list for non-numbers
+
+list.antimerge <- data.frame(unique(df1_antimerge$code)) %>% 
+  filter(unique.df1_antimerge.code. == "[0-9]")
+
+
+
+
+filteredlist.antimerge <- filter(list.antimerge$unique.df1_antimerge.code., is.character(list.antimerge$unique.df1_antimerge.code.))
+
+data[!grepl("[A-Za-z]", data$VALUE),]
+
+
+
+# 6 merge globi dataset with institution list -----
+
+
+
+
+
+# 7 print new csv with attached institution codes -----
+
+
 
