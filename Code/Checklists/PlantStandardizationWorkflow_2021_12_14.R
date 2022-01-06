@@ -33,8 +33,8 @@ library(Taxonstand)
 # txt file from SBBG that we will not publish on github 
 # file is sourced from google drive. titled ""
 
-setwd("~/Desktop/2020-2021")
-sci <- read_tsv("plants-SCI_traits_ml_2021_10_02.txt")
+setwd("~/Desktop/GradGeneral/2020-2021")
+sci.plants <- read_tsv("plants-SCI_traits_ml_2021_10_02.txt")
 
 
 
@@ -47,9 +47,7 @@ sci <- read_tsv("plants-SCI_traits_ml_2021_10_02.txt")
 # and rejoin it to a new version of the SCI dataset with in a new column
 
 
-stand_sci <- left_join(sci, as.data.frame(TPL(sci$scientificName)) %>%
-                         select(Taxon, Genus, Species), 
-                       by = c("Genus" = "Genus", "Species" = "Species"))
+stand_sci <- TPL(sci.plants$scientificName)
 
 
 # full SCI checklist came back with 4 errors:
@@ -62,29 +60,52 @@ stand_sci <- left_join(sci, as.data.frame(TPL(sci$scientificName)) %>%
 
 
 
+
+#### 3.5 - create new species column and remerge with sci list ----
+
+# using TPL output, create new column with species name called "plant_stand"
+stand_sci_short <- stand_sci %>% 
+  select(Taxon, New.Genus, New.Species) %>% 
+  unite("plant_stand", New.Genus:New.Species, sep= " ", remove = FALSE)
+
+# remerge with SCI plant list
+sci.plants.stand <- left_join(sci.plants, stand_sci_short, by = c("scientificName" = "Taxon"))
+
+# check for duplicates in SCI plant list using the standardized "plant_stand" column
+dup.sci.plants.stand <- sci.plants.stand %>% 
+  group_by(plant_stand) %>%  
+  mutate(num_rows = sum(n())) %>% 
+  filter(num_rows > 1)
+# a total of 36 species from the SCI plant list are considered duplicates of one another for a total of 16 extras
+# however, merging this dataset with the globi dataset is adding a total of 3708 entries to the globi interaction list because of the duplicates
+
+slice.sci.plants.stand <- sci.plants.stand %>% 
+  group_by(plant_stand) %>%  
+  slice(1)
+
+
+
+# write csv for taxonstand sci list for easy use later
+
+setwd("~/Desktop/GradGeneral/2020-2021")
+write.csv(stand_sci, "standardsci_010622.csv", row.names = FALSE)
+
+
+
+
+
+
+
+
 #### 4 - load GloBI interactions list ####
 # csv file from GloBI that is too large for github
 # file is sourced from google drive. titled ""
 
-# filter for only plants and only species names
+# using globi dataset cleaned using the capstone student workflow
 setwd("~/Downloads")
-globi.dat <- read_csv("all_bee_data_unique.csv")
-
-# look for just plants
-plant.source <- grep("Plantae", globi.dat$targetTaxonPathNames)
-plant.target <- grep("Plantae", globi.dat$sourceTaxonPathNames)
-plant.rows <- unique(c(plant.source, plant.target))
-length(plant.rows) #295135 entries
-# Keep only plant rows
-globi1 <- globi.dat[plant.rows,] %>%
-  filter()
+globi.dat <- read_csv("interactions_aftercapstonecode_3jan22.csv")
 
 
-### try workflow using file created by Grace in checklist
-
-# before trying TPL flip the target/source to make sure all plants are in the same column
-# then make a list of unique plants as TPL takes a long time
-stand_matched <- data.frame(TPL(matched$targetTaxonName))
 
 
 
@@ -92,20 +113,53 @@ stand_matched <- data.frame(TPL(matched$targetTaxonName))
 
 #### 5 - run taxonstand for globi lists ####
 
-stand_globi1 <- left_join(globi1, as.data.frame(TPL(globi1$scientificName)) %>%
-                         select(Taxon, Genus, Species), 
-                       by = c("Genus" = "Genus", "Species" = "Species"))
+# make unique list of globi plants so the TPL doesn't take as long
+plants.globi.dat <- globi.dat %>% 
+  select(targetTaxonSpeciesName)
 
-stand_globi1 <- data.frame(TPL(globi1$scientificName))
+unique.plants.globi.dat <- data.frame(unique(plants.globi.dat))
+
+
+stand_globi1 <- data.frame(TPL(unique.plants.globi.dat$targetTaxonSpeciesName))
+
+
+
+
+
+
+#### 5.5 - create new species column and remerge with globi list ----
+
+# using TPL output, create new column with species name called "plant_stand"
+stand_globi_short <- stand_globi1 %>% 
+  select(Taxon, New.Genus, New.Species) %>% 
+  unite("plant_stand", New.Genus:New.Species, sep= " ", remove = FALSE)
+
+# remerge with SCI plant list
+globi.dat.plantstand <- left_join(globi.dat, stand_globi_short, by = c("targetTaxonSpeciesName" = "Taxon"))
+
+
+# write csv for taxonstand sci list for easy use later
+
+setwd("~/Downloads")
+write.csv(globi.dat.plantstand, "standardplantglobi_010622.csv", row.names = FALSE)
+
+
+
+
+
 
 
 
 #### 6 - merge datasets based on standardized plant name ####
 
-attempt_merge <- left_join(stand_matched, stand_sci, by = "Taxon")
-#check the number of globi-based observations without a match to the sci list
+attempt_merge <- left_join(globi.dat.plantstand, slice.sci.plants.stand, by = "plant_stand", keep = FALSE)
+# length of 259009
 
-failed_merge <- anti_join(stand_matched, stand_sci, by = "Taxon")
+#check the number of globi-based observations without a match to the sci list
+failed_merge <- anti_join(globi.dat.plantstand, slice.sci.plants.stand, by = "plant_stand")
+# length of 239692
+# 19317 should have merged with the SCI dataset
+
 
 
 
