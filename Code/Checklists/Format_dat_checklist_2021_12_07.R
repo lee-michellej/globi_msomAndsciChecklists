@@ -118,7 +118,9 @@ setwd("~/globi_tritrophic_networks/")
 # Read in data
   # Note that this is not in the github repo because the file size is too big
   # This data was downloaded from globi
-dat <- read.csv("~/Desktop/Folder/Data_globi/all_bee_data_unique.csv")
+dat <- read.table("~/Desktop/Folder/Data_globi/all_bee_data_unique-2021.txt",
+                  sep = "/t",
+                  header = TRUE)
 
 
 # Read in bee phenology data
