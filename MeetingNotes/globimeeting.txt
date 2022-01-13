@@ -1,3 +1,51 @@
+================
+Meeting 6-Jan-22
+================
+
+github:
+ - merge "branch master" what does this mean?
+ - do I see your commits on my end?
+ - should only be seeing my own commits from my own changes in my local git, right?
+
+
+capstone student workflow up and running:
+ - works well and will resolve some issues on the plant resolver side 
+ - will likely be helpful in the bee name resolver side of the workflow as well
+
+
+institution codes:
+ - looks like the csv file from November 2020 might have a missing column "sourceInstitutionCode"
+ - updated institution code list and matching
+ - the updated institution code matching should use the newer dataset
+		sourceInstitutionCode is able to do a lot of legwork in terms of cleaning the "sourceCatalogNumber"
+ - if some entries will not have an associated institution code -- how will this be dealt with in the following analyses
+ 
+
+
+plant standardization:
+ - used taxonstand and the plant list to create a "plant_stand" column for all datasets -- merge using this column
+ - there were some duplicates in the SCI dataset after using the name resolver
+ - not sure how we want to deal with this
+ - otherwise this workflow is ready to add to the main checklist formatting
+ - using the SCI matching, about 19,317 data points to use
+K: merge phenologies
+
+
+*rerun code with new dataset with "sourceInstitutionCode" column and new entries
+
+K: synonyms from discoverlife
+cleaned version of discoverlife has cleaned version
+https://zenodo.org/record/5738043#.YddfjRPMLdR
+
+
+
+
+
+
+
+
+
+
 
 =================
 Meeting 16-Dec-21
