@@ -44,9 +44,10 @@ View(head(globi.dat))
 # 4 edit globi sourceInstitutionCode ----
 
 globi.inst <- globi.dat %>% 
-  select(sourceCatalogNumber)
+  select(sourceInstitutionCode, sourceCatalogNumber)
 
-list.globi.inst <- data.frame(unique(globi.inst))
+list.globi.inst <- data.frame(unique(globi.inst$sourceInstitutionCode))
+# 70 unique institutions in this globi dataset
 
 # issue with semi colons
 # issue with periods
@@ -74,7 +75,7 @@ list.globi.code <- data.frame(unique(globi_instcodes))
 # 5 antimerge globi dataset with institution list -----
 
 # what didn't merge
-df1_antimerge <- anti_join(globi_instcodes, inst.codes, by = c("code" = "firstcode"))
+df1_antimerge <- anti_join(globi_instcodes, inst.codes, by = c("sourceInstitutionCode" = "firstcode"))
 
 list.antimerge <- data.frame(unique(df1_antimerge$code))
 # 1671 unique entries that don't have a matching institution
