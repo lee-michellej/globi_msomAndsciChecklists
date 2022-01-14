@@ -12,15 +12,14 @@ library(reticulate)
 
 # Install python and pandas
 ```{r}
-library(reticulate)
-path_to_python <- "~/anaconda3/bin/python"
-use_python(path_to_python)
+# path_to_python <- "~/anaconda3/bin/python"
+# use_python(path_to_python)
 conda_install('r-reticulate', packages = 'pandas')
 ```
 # Filtering
 ```{python}
 import pandas as pd
-df = pd.read_csv("all_bee_data_unique.csv", header=0)
+df = pd.read_csv("all_bee_data_unique.txt", sep='\t', header=0)
 ```
 
 ## Subset
@@ -37,11 +36,11 @@ plant_source_df = df.loc[(df['sourceTaxonKingdomName']=='Plantae') &
 new_col = {}
 for col in df.columns:
   if 'source' in col:
-  new_col[col] = 'target'+col[6:]
-elif 'target' in col:
-  new_col[col] = 'source'+col[6:]
-else:
-  new_col[col] = col
+    new_col[col] = 'target'+col[6:]
+  elif 'target' in col:
+    new_col[col] = 'source'+col[6:]
+  else:
+    new_col[col] = col
 plant_source_df = plant_source_df.rename(columns=new_col)
 ```
 
