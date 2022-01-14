@@ -574,14 +574,20 @@ nrow(dat6)
 
 
 
-# Use this column:
-  # sourceInstitutionCode
 
 
 
-# We will be working with the following 2 dataframes in this section:
-# dat6 = the subsetted species & CA dataset
-# institution.codes = the name of the institutions
+# Pick up here with Michelle
+
+
+
+
+
+
+
+# We will be working with the following 2 objects in this section:
+  # dat6 = the subsetted species & CA dataset
+  # institution.codes = the name of the institutions
 
 # To look at the data frames, use these functions:
 # View(institution.codes)
@@ -589,11 +595,11 @@ nrow(dat6)
 
 
 # The institution codes can be found in this column of the Globi database:
-# sourceCatalogNumber
+  # sourceInstitutionCode
 
 # We need to pull apart the alphabetical characters and the numeric characters
 dat7 <- dat6 %>%
-  mutate(., fullcode = sub(" ","", sourceCatalogNumber)) %>%
+  mutate(., fullcode = sub(" ","", sourceInstitutionCode)) %>%
   mutate(., withdashcode = sub("_","", fullcode)) %>%
   mutate(., no_characters = sub("-","", withdashcode)) %>%
   separate(no_characters,
@@ -601,12 +607,19 @@ dat7 <- dat6 %>%
            sep = "(?<=[A-Za-z])(?=[0-9])"
   )
 
+dat6$sourceInstitutionCode
+
 # Remove dashes from the names in institution.codes object
 inst.code <- institution.codes %>%
-  mutate(., nodash = sub("-","", code))
+  mutate(., nodash = sub("-","", fullcode)) %>%
+  mutate(., nodashORspace = sub(" ","", nodash))
+
 
 # Look to see how many names match between our code column and the inst.code$nodash
-unique(dat7$code) %in% inst.code$nodash
+as.character(unique(dat7$sourceInstitutionCode)) %in% as.character(inst.code$fullcode)
+
+inst.code$fullcode[grep("UCSB", inst.code$fullcode)]
+inst.code$fullcode[grep("UNM", inst.code$fullcode)]
 
 
 # Write a file with the institution codes
@@ -668,9 +681,9 @@ dat7$eventDate <- as.POSIXct(dat7$eventDateUnixEpoch/1000, origin = "1970-01-01"
 
 
 # Pull apart the info in the event date
-# Year
-# Month
-# Day - this column also includes time - but I won't finish formatting this because we don't need this detail
+  # Year
+  # Month
+  # Day - this column also includes time - but I won't finish formatting this because we don't need this detail
 dat8 <- as_tibble(dat7) %>%
   mutate(year = str_split(eventDate, "-", n = 3, simplify = TRUE)[,1],
          month= str_split(eventDate, "-", n = 3, simplify = TRUE)[,2],
@@ -688,10 +701,38 @@ dat8 <- as_tibble(dat7) %>%
 
 
 
+# Working with the bee.phenology data
+# Make sure that the bee names have the most up to date resolvedBeeName
+
+# Add an empty column
+bee.phenology$resolvedBeeNames <- NA
+
+
+# Use a loop to go through each scientificName and match with the providedName species list
+for(i in 1:nrow(bee.phenology)){
+  
+  # 1. Identify the row in the bee.names4 dataframe that the name matches
+  row.num <- which(bee.phenology$scientificName[i] == bee.names$providedName)[1]
+  
+  # The previous line needs to come back with a number to do the next command
+  if(length(row.num) > 0){
+    
+    # 2. Replace the Globi name with the current.name
+    bee.phenology$resolvedBeeNames[i] <- as.character(bee.names$resolvedName[row.num])
+    
+  } else {bee.phenology$resolvedBeeNames[i] <- NA}
+  
+}
+
+
+# Remove the NA rows
+bee.phenology <- bee.phenology[is.na(bee.phenology$resolvedBeeNames) == FALSE,]
+
 
 # Need to remove rows without species name from the bee.phenology dataframe
-bee.phenology <- bee.phenology[bee.phenology$scientificName %in% bee.list$genus_species_infra,]
+bee.phenology <- bee.phenology[bee.phenology$scientificName %in% bee.species,]
 
+  # I'm not sure why this is coming up with a different number of rows
 nrow(bee.phenology)
 
 
