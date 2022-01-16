@@ -1,13 +1,71 @@
+=================
+Meeting 14-Jan-22
+=================
+Combining code Grace and Michelle
+
+Michelle ran capstone cleaning code and uploaded to the google drive folder
+We will pull the google drive to run the formatting code
+
+Subsetting the locality data
+Occupancy models define by location and time
+
+Grace has data in the GitHub repo, desktop, dropbox
+
+ - Data info section
+* Run through data info in next meeting
+
+
+
+
+Read in data:
+ - bee checklist revised
+ - SCI plant list only using scientific name
+
+
+
+
+Questions for Katja:
+* bee synonym list — 4 species that are not on the zenodo/discoverlife synonym list
+
+* pull out list of bee species that don’t have a name into the name resolver (zenodo) — will print and give to Katja
+
+* “no-resolved-bee-names-2022 01 14.csv” file will contain entries from globi that didn’t match zenodo synonym list (3674 names, 138 unique species names)
+
+* associated list of unmatched names has also been printed “no-resolved-bee-names-list-2022 01 14.csv”
+
+* using the resolver on checklist we lose 3 names, check row 113 for a no match “Coelioxys octodentata”
+
+* confirm “sourceTaxonSpeciesName” will not have parentheses
+
+
+583 observations cut down from 
+
+
+Michelle to do:
+ - updated plant names will be “resolvedPlantNames”
+ - create updated Globi dataset that will have resolvedPlantNames column
+ - create updated plant checklist that will have resolvedPlantNames column
+ - on the cleaned plant checklist — need to consolidate phenology — max phenology dates possible
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 ================
 Meeting 6-Jan-22
 ================
-
-github:
- - merge "branch master" what does this mean?
- - do I see your commits on my end?
- - should only be seeing my own commits from my own changes in my local git, right?
-
-
 capstone student workflow up and running:
  - works well and will resolve some issues on the plant resolver side 
  - will likely be helpful in the bee name resolver side of the workflow as well
