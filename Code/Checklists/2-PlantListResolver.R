@@ -66,7 +66,7 @@ stand_sci <- TPL(sci.plants$scientificName)
 # using TPL output, create new column with species name called "plant_stand"
 stand_sci_short <- stand_sci %>% 
   select(Taxon, New.Genus, New.Species) %>% 
-  unite("plant_stand", New.Genus:New.Species, sep= " ", remove = FALSE)
+  unite("resolvedPlantNames", New.Genus:New.Species, sep= " ", remove = FALSE)
 
 # remerge with SCI plant list
 sci.plants.stand <- left_join(sci.plants, stand_sci_short, by = c("scientificName" = "Taxon"))
@@ -89,6 +89,10 @@ slice.sci.plants.stand <- sci.plants.stand %>%
 
 setwd("~/Desktop/GradGeneral/2020-2021")
 write.csv(stand_sci, "standardsci_010622.csv", row.names = FALSE)
+
+
+
+
 
 
 
@@ -132,7 +136,7 @@ stand_globi1 <- data.frame(TPL(unique.plants.globi.dat$targetTaxonSpeciesName))
 # using TPL output, create new column with species name called "plant_stand"
 stand_globi_short <- stand_globi1 %>% 
   select(Taxon, New.Genus, New.Species) %>% 
-  unite("plant_stand", New.Genus:New.Species, sep= " ", remove = FALSE)
+  unite("resolvedPlantName", New.Genus:New.Species, sep= " ", remove = FALSE)
 
 # remerge with SCI plant list
 globi.dat.plantstand <- left_join(globi.dat, stand_globi_short, by = c("targetTaxonSpeciesName" = "Taxon"))
