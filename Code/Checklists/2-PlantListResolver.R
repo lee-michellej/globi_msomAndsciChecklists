@@ -59,37 +59,50 @@ stand_sci <- TPL(sci.plants$scientificName)
 
 
 
-
-
 #### 3.5 - create new species column and remerge with sci list ----
 
 # using TPL output, create new column with species name called "plant_stand"
-stand_sci_short <- stand_sci %>% 
+stand_sci_1 <- stand_sci %>%
   select(Taxon, New.Genus, New.Species) %>% 
   unite("resolvedPlantNames", New.Genus:New.Species, sep= " ", remove = FALSE)
 
-# remerge with SCI plant list
-sci.plants.stand <- left_join(sci.plants, stand_sci_short, by = c("scientificName" = "Taxon"))
+# remerge to main stand_sci
+stand_sci_2 <- left_join(sci.plants, stand_sci_1, by = c("scientificName" = "Taxon"))
 
 # check for duplicates in SCI plant list using the standardized "plant_stand" column
-dup.sci.plants.stand <- sci.plants.stand %>% 
-  group_by(plant_stand) %>%  
+dup.sci.plants.stand <- stand_sci_2 %>% 
+  group_by(resolvedPlantNames) %>%  
   mutate(num_rows = sum(n())) %>% 
   filter(num_rows > 1)
 # a total of 36 species from the SCI plant list are considered duplicates of one another for a total of 16 extras
 # however, merging this dataset with the globi dataset is adding a total of 3708 entries to the globi interaction list because of the duplicates
 
-slice.sci.plants.stand <- sci.plants.stand %>% 
-  group_by(plant_stand) %>%  
-  slice(1)
+
+
+# extract one value from the duplicates that has the longest phenology period
+slice.sci.plants.stand1 <- dup.sci.plants.stand %>%
+  ungroup(.) %>% 
+  mutate(sumPhenology = rowSums(.[27:38])) %>% 
+  group_by(resolvedPlantNames) %>%  
+  slice_max(sumPhenology, n = 1) %>% 
+  slice(1) %>% 
+  select(-num_rows, -sumPhenology)
+
+
+# take df that had all SCI plants and remove all potential duplicates
+stand_sci_3 <- anti_join(stand_sci_2, dup.sci.plants.stand, by = "resolvedPlantNames") %>% 
+  # remerge extracted duplicates to the SCI plant list
+  rbind(., slice.sci.plants.stand1)
+
+
+
 
 
 
 # write csv for taxonstand sci list for easy use later
 
 setwd("~/Desktop/GradGeneral/2020-2021")
-write.csv(stand_sci, "standardsci_010622.csv", row.names = FALSE)
-
+write.csv(stand_sci_3, "resolvedplantsci_011722.csv", row.names = FALSE)
 
 
 
@@ -122,11 +135,13 @@ plants.globi.dat <- globi.dat %>%
   select(targetTaxonSpeciesName)
 
 unique.plants.globi.dat <- data.frame(unique(plants.globi.dat))
+# taking unique list of globi plants ends up with 5654 plants
 
-
-stand_globi1 <- data.frame(TPL(unique.plants.globi.dat$targetTaxonSpeciesName))
-
-
+startTime <- Sys.time()
+resolved_globi1 <- data.frame(TPL(unique.plants.globi.dat$targetTaxonSpeciesName))
+endTime <- Sys.time()
+startTime - endTime
+# runs about 40 minutes
 
 
 
@@ -134,18 +149,23 @@ stand_globi1 <- data.frame(TPL(unique.plants.globi.dat$targetTaxonSpeciesName))
 #### 5.5 - create new species column and remerge with globi list ----
 
 # using TPL output, create new column with species name called "plant_stand"
-stand_globi_short <- stand_globi1 %>% 
+stand_globi_short <- resolved_globi1 %>% 
   select(Taxon, New.Genus, New.Species) %>% 
-  unite("resolvedPlantName", New.Genus:New.Species, sep= " ", remove = FALSE)
+  unite("resolvedPlantNames", New.Genus:New.Species, sep= " ", remove = FALSE)
 
-# remerge with SCI plant list
-globi.dat.plantstand <- left_join(globi.dat, stand_globi_short, by = c("targetTaxonSpeciesName" = "Taxon"))
+# remove NAs
+stand_globi_short1 <- na.omit(stand_globi_short)
+# three NAs removed
+
+
+# remerge unique list of species names with whole globi dataset (so there will be duplicates)
+globi.dat.plantstand <- left_join(globi.dat, stand_globi_short1, by = c("targetTaxonSpeciesName" = "Taxon"))
 
 
 # write csv for taxonstand sci list for easy use later
 
 setwd("~/Downloads")
-write.csv(globi.dat.plantstand, "standardplantglobi_010622.csv", row.names = FALSE)
+write.csv(globi.dat.plantstand, "resolvedplantnamesglobi_011722.csv", row.names = FALSE)
 
 
 
@@ -156,11 +176,11 @@ write.csv(globi.dat.plantstand, "standardplantglobi_010622.csv", row.names = FAL
 
 #### 6 - merge datasets based on standardized plant name ####
 
-attempt_merge <- left_join(globi.dat.plantstand, slice.sci.plants.stand, by = "plant_stand", keep = FALSE)
+attempt_merge <- left_join(globi.dat.plantstand, slice.sci.plants.stand, by = "resolvedPlantNames", keep = FALSE)
 # length of 259009
 
 #check the number of globi-based observations without a match to the sci list
-failed_merge <- anti_join(globi.dat.plantstand, slice.sci.plants.stand, by = "plant_stand")
+failed_merge <- anti_join(globi.dat.plantstand, slice.sci.plants.stand, by = "resolvedPlantNames")
 # length of 239692
 # 19317 should have merged with the SCI dataset
 
