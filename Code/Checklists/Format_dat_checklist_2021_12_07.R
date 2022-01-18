@@ -1,6 +1,6 @@
 ########################################
 ########################################
-# This code was written by: G. V. DiRenzo
+# This code was written by: G. V. DiRenzo & M. J. Lee
 # If you have any questions, please email: gdirenzo@umass.edu
 ########################################
 ########################################
@@ -12,17 +12,26 @@
 ##################################
 
 
-# To format the globi data [3D array (bee species x plant species x citation)] for the analysis
+# To format the globi data [4D array (bee species x plant species x month x citation)] for the analysis
 
 # The objective of the analysis is to determine the number of plants that each bee species interacts with while accounting for sampling bias
 
 # We will be using a multi-species occupancy model for the analysis
+  # We will account for bee-plant interactions that were not observed
+  # We will account for bee-plant interactions that can not occur
+    # e.g., bees aren't active when plants are flowering (forbidden links)
+  # We will use citations & collections are the "replicate surveys"
+  # We will account for the month that citations & collections were searching for bee-plant interactions
 
 
 ##################################
 ######## Output of Code ##########
 ##################################
 
+
+# We should list other outputs
+  # maps
+  # csv files etc.
 
 # This code generates 1 file: 
   # "./Data/globi_data_formatted_bee_plant_2021_04_05.rds"
@@ -36,28 +45,28 @@
 
 # The data were downloaded from the Globi database.
   # Observations are obtained from museum collections, citizen science obervers, and research studies worldwide.
-  # Studies vary in terms of objectives, study design, etc.
+  # These observations vary in terms of objectives, study design, etc.
 
 
 # The Globi database consists of presence-only data.
-  # We subsetted the data to only include bee genera and instances of bees interacting with plants (either as the "source" or "target").
+  # We subsetted the data to only include bee genera and instances of bees interacting with plants (either as the "source" or "target") that occur in a specific location = Santa Cruz Island + some mainland CA area
+  # We will assign non-detections by compiling a checklist of the bees and plants for Santa Cruz island.
   
 # We do not explicitly consider space in the model, but we subset the records to only include specific localities
   # Subset the data
     # Lat from 31 - 32
     # Long from -125 to -116
-  # In doing this, we are liklely removing the ecological studies from the list
   
-# Databases are plagued by 2 problems:
+# We note that databases are plagued by 3 problems:
   # 1. taxonomic sampling bias
       # Particular species may be sampled more frequently than others because more is known about them or inference is desired on that species
-  # 2. spatial sampling bias
+  # 2. Spatial sampling bias
       # Particular areas are easier to reach or sample
-  # 2. detection bias
+  # 3. Detection bias
       # Species detectability changes over time and space as a result of observers or number of surveys
-      # Number of observers, quality of observers, length of survey, survey conditions
+      # Number of observers, quality of observers, length of survey, survey conditions varies
 
-# As a result, patterns may be masked (or there are false patterns) because of observation effort
+# As a result, ecoloigcal patterns may be masked (or there are false patterns) because of observation effort
 
 
 
@@ -118,9 +127,8 @@ setwd("~/globi_tritrophic_networks/")
 # Read in data
   # Note that this is not in the github repo because the file size is too big
   # This data was downloaded from globi
-dat <- read.table("~/Desktop/Folder/Data_globi/all_bee_data_unique-2021.txt",
-                  sep = "/t",
-                  header = TRUE)
+# dat <- read.csv("~/Desktop/Folder/Data_globi/all_bee_data_unique-2021.csv")
+dat <- read.csv("~/Desktop/Folder/Data_globi/interactions_postcapstoneclean_13jan22.csv")
 
 
 # Read in bee phenology data
@@ -144,11 +152,13 @@ citation <- read.csv("./Data/citation-list-type.csv")
 
 # Other bee names = Synonyms
   # https://docs.google.com/spreadsheets/d/140eMiLBjG7ySc5oviCXJL8A5OT1VTM5rMwEvDTJmd8U/edit#gid=0
-bee.names <- read.csv("~/Dropbox/Globi/Data/Checklist-bee-names.csv")
-
+# bee.names <- read.csv("~/Dropbox/Globi/Data/Checklist-bee-names.csv")
+  # Zenodo synoynm list
+  # https://zenodo.org/record/5738043#.YddffBPML0o
+bee.names <- read.csv("~/Desktop/Folder/Data_globi/discoverlife-Anthophila.csv")
 
 # Institution codes
-institution.codes <- read.csv("./Data/institutioncodes_oct21.csv")
+institution.codes <- read.csv("./Data/institutioncodes_2021_12_16.csv")
 
 
 
@@ -224,7 +234,7 @@ plant.list$genus_species <- paste(plant.list$Genus, plant.list$Species)
 
 
 # The downloaded dataset has:
-# 304,795 rows
+# 345,852 rows
 nrow(dat)
 
 
@@ -238,7 +248,7 @@ plant.target <- grep("Plantae", dat$sourceTaxonPathNames)
 plant.rows <- unique(c(plant.source, plant.target))
 
 # The number of rows with plant interactions:
-# 259,135 rows
+# 300,531 rows
 length(plant.rows)
 
 # Keep only plant rows
@@ -253,7 +263,7 @@ globi.sp <- unique(unique(dat1$sourceTaxonSpeciesName),
                    unique(dat1$targetTaxonName))
 
 # Number of unique species
-# 3,035
+# 3,821
 length(globi.sp)
 
 
@@ -263,6 +273,40 @@ length(globi.sp)
 
 
 
+
+
+# Working on code for the zenodo list...
+
+
+
+# Look at the structure of the bee synonym list
+str(bee.names)
+  # resolvedName = latest name
+  # providedName = list of all possible synoynms
+
+# Total number of unique species in the synonym list: 
+  # 20,461
+length(levels(bee.names$resolvedName))
+
+# Do all of the species in out checklist appear in the synoynm list?
+bee.list$genus_species %in% levels(bee.names$resolvedName)
+
+# Which species are not included?
+bee.list$genus_species[which(bee.list$genus_species %in% levels(bee.names$resolvedName) == FALSE)]
+  # [1] "Andrena macrocephala"         "Calliopsis (Micronomadopsis)"
+  # [3] "Heterosarus californicus"     "Exomalopsis cerei"           
+  # [5] "Melissodes lupina"            "Melissodes tepida"           
+  # [7] "Triepeolus heterurus"         "Sphecodes sp."               
+  # [9] "Coelioxys octodentata"        "Stelis sp."  
+
+
+
+
+
+
+
+
+# Code below is for yolanda's bee list
 
 
 # Pull apart the bee names in 1 column by the ; symbol, and bind it to the original names
