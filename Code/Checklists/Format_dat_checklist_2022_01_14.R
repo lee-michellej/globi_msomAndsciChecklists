@@ -128,6 +128,32 @@ setwd("~/globi_tritrophic_networks/")
 
 
 
+# Things I did/need to talk about:
+  # 1. Downloaded new file from google drive to my desktop
+      # resolvedplantsci_011722.csv
+      # resolvedplantnamesglobi_011722csv.zip
+  # 2. Names to update: Should this be done in the bee checklist file?
+# Heterosarus californicus
+# current valid: Pseudopanurgus californicus (Cresson, 1878)
+# 
+# Exomalopsis cerei
+# current valid: Anthophorula cerei (Timberlake, 1947)
+# 
+# Melissodes lupina
+# current valid: Melissodes lupinus Cresson, 1879
+# 
+# Triepeolus heterurus
+# current valid: Triepeolus utahensis (Cockerell, 1921)
+# 
+# Coelioxys octodentata
+# current valid: Coelioxys octodentatus Say, 1824
+# 
+# The no:match issue is a bit more confusing. In the providedName column the values no:match do not exist. It does exist in the resolvedName column. The reason it exists is that those names are homonyms, but I cannot remember exactly why no:match shows up for the resolved name in these cases. I think the solution is to remove all lines in the DiscoverLife name list that are homonyms, or has HOMONYM_OF in the relationName column.
+  # 3. I added the upload of: bee.names.globi <- new google sheet from Katja - Globi unresolved names
+
+
+
+
 # Pre-processing steps to Globi data (that take a while to run):
   # Step 1: Standardizing columns where bee & plant species names appear
     # File names: 1-SourceTargetStandardization.Rmd
@@ -160,6 +186,10 @@ citation <- read.csv("./Data/citation-list-type.csv")
   # Zenodo synoynm list
   # https://zenodo.org/record/5738043#.YddffBPML0o
 bee.names <- read.csv("~/Desktop/Folder/Data_globi/discoverlife-Anthophila.csv")
+
+
+# Other bee names NOT on the Zenodo list but found in Globi
+bee.names.globi <- read.csv("./Data/Globi-names-not-in-discoverlife - Sheet1.csv")
 
 # Institution codes
 institution.codes <- read.csv("./Data/institutioncodes_2021_12_16.csv")
