@@ -128,11 +128,44 @@ setwd("~/globi_tritrophic_networks/")
 
 
 
-# Things I did/need to talk about:
-  # 1. Downloaded new file from google drive to my desktop
-      # resolvedplantsci_011722.csv
-      # resolvedplantnamesglobi_011722csv.zip
-  # 2. Names to update: Should this be done in the bee checklist file?
+
+# Pre-processing steps to Globi data (that take a while to run):
+  # Step 1: Standardizing columns where bee & plant species names appear
+    # File names: 1-SourceTargetStandardization.Rmd
+  # Step 2: Add resolved plant species names (resolvedPlantName)
+            # Will be done on the Globi datset
+            # And on the plant phenology list
+    # File names: 2-......R
+
+# Read in data
+  # Note that this is not in the github repo because the file size is too big
+  # This data was downloaded from globi 
+  # resolvedplantnamesglobi_011722csv.zip = This is the whole Globi csv file- with the new resolvedPLant names column
+# dat <- read.csv("~/Desktop/Folder/Data_globi/all_bee_data_unique-2021.csv")
+dat <- read.csv("~/Desktop/Folder/Data_globi/resolvedplantnamesglobi_011722.csv")
+
+
+# Read in bee phenology data
+bee.phenology <- read_tsv("~/Dropbox/Globi/Data/All-California-phenologyTable.tsv")
+
+# Read in the bee checklist
+bee.list <- read.table("./Data/SCI-list-04-2021.txt", header = T, sep = "\t")
+
+# Read in plant phenology data
+  # resolvedplantsci_011722.csv = Final santa cruz island checklist - has phenology & resolved specie snames
+plant.phenology <- read.csv("~/Desktop/Folder/Data_globi/resolvedplantsci_011722.csv")
+
+# Read in file with type of citation
+citation <- read.csv("./Data/citation-list-type.csv")
+
+
+# Other bee names = Synonyms
+  # Zenodo synoynm list
+  # https://zenodo.org/record/5738043#.YddffBPML0o
+bee.names <- read.csv("~/Desktop/Folder/Data_globi/discoverlife-Anthophila.csv")
+
+# Other bee names NOT on the Zenodo list but found in Globi
+  # Synoynm list for bee species that do not appear in the Zenodo file
 # Heterosarus californicus
 # current valid: Pseudopanurgus californicus (Cresson, 1878)
 # 
@@ -147,49 +180,8 @@ setwd("~/globi_tritrophic_networks/")
 # 
 # Coelioxys octodentata
 # current valid: Coelioxys octodentatus Say, 1824
-# 
-# The no:match issue is a bit more confusing. In the providedName column the values no:match do not exist. It does exist in the resolvedName column. The reason it exists is that those names are homonyms, but I cannot remember exactly why no:match shows up for the resolved name in these cases. I think the solution is to remove all lines in the DiscoverLife name list that are homonyms, or has HOMONYM_OF in the relationName column.
-  # 3. I added the upload of: bee.names.globi <- new google sheet from Katja - Globi unresolved names
-
-
-
-
-# Pre-processing steps to Globi data (that take a while to run):
-  # Step 1: Standardizing columns where bee & plant species names appear
-    # File names: 1-SourceTargetStandardization.Rmd
-  # Step 2: Add resolved plant species names (resolvedPlantName)
-            # Will be done on the Globi datset
-            # And on the plant phenology list
-    # File names: 2-......R
-
-# Read in data
-  # Note that this is not in the github repo because the file size is too big
-  # This data was downloaded from globi
-# dat <- read.csv("~/Desktop/Folder/Data_globi/all_bee_data_unique-2021.csv")
-dat <- read.csv("~/Desktop/Folder/Data_globi/interactions_postcapstoneclean_13jan22.csv")
-
-
-# Read in bee phenology data
-bee.phenology <- read_tsv("~/Dropbox/Globi/Data/All-California-phenologyTable.tsv")
-
-# Read in the bee checklist
-bee.list <- read.table("./Data/SCI-list-04-2021.txt", header = T, sep = "\t")
-
-# Read in plant phenology data
-plant.phenology <- read.table("~/Dropbox/Globi/Data/plants-SCI_traits_ml_2021_10_02.txt", header = T, sep = "\t")
-
-# Read in file with type of citation
-citation <- read.csv("./Data/citation-list-type.csv")
-
-
-# Other bee names = Synonyms
-  # Zenodo synoynm list
-  # https://zenodo.org/record/5738043#.YddffBPML0o
-bee.names <- read.csv("~/Desktop/Folder/Data_globi/discoverlife-Anthophila.csv")
-
-
-# Other bee names NOT on the Zenodo list but found in Globi
 bee.names.globi <- read.csv("./Data/Globi-names-not-in-discoverlife - Sheet1.csv")
+
 
 # Institution codes
 institution.codes <- read.csv("./Data/institutioncodes_2021_12_16.csv")
@@ -240,6 +232,9 @@ bee.list$genus_species_infra <- ifelse(is.na(bee.list$infraSpecificEpithet),
 bee.list <- bee.list[bee.list$specificEpithet != "sp.",]
 
 
+# Final number of bee species
+nrow(bee.list)
+
 
 
 
@@ -249,15 +244,18 @@ bee.list <- bee.list[bee.list$specificEpithet != "sp.",]
 
 
 
-# The downloaded dataset has:
-# 300,465 rows
+
+
+# The downloaded Globi dataset has:
+  # 300,465 rows
 nrow(dat)
 
 
 
 # Remove rows without a bee species name and without plant species name
 dat1 <- dat[dat$sourceTaxonSpeciesName != "" & dat$targetTaxonSpeciesName != "", ]
-
+dat1 <- dat1[is.na(dat1$sourceTaxonSpeciesName) == FALSE & 
+              is.na(dat1$resolvedPlantNames) == FALSE, ]
 
 
 
@@ -270,11 +268,12 @@ globi.sp <- unique(c(as.character(unique(dat1$sourceTaxonSpeciesName)),
                      as.character(unique(dat1$targetTaxonSpeciesName))))
 
 # Number of unique bee and plant species (not discriminated)
-  # 7,409
+  # 7,407
 length(globi.sp)
 
+
 # Number of unique observations
-  # 157,904
+  # 157,893
 nrow(dat1)
 
 
@@ -286,14 +285,31 @@ nrow(dat1)
 
 
 
-# Working on code for the zenodo list...
+# Add
+  # bee.names.globi
 
+
+# Change the column name from Accepted.Name to resolvedBeeNames
+colnames(bee.names.globi)[grep("Accepted.Name", colnames(bee.names.globi))] <- "resolvedBeeNames"
+
+
+# Filter out
+  # The no:match issue is a bit more confusing. In the providedName column the values no:match do not exist. It does exist in the resolvedName column. The reason it exists is that those names are homonyms, but I cannot remember exactly why no:match shows up for the resolved name in these cases. I think the solution is to remove all lines in the DiscoverLife name list that are homonyms, or has HOMONYM_OF in the relationName column.
 
 
 # Look at the structure of the bee synonym list
 str(bee.names)
   # resolvedName = latest name
   # providedName = list of all possible synoynms
+
+str(bee.names.globi)
+  # resolvedBeeNames = latest name
+  # sourceTaxonSpeciesName = list of all possible synoynms
+
+
+# Filter out homonyms
+bee.names <- bee.names[bee.names$relationName != "HOMONYM_OF",]
+
 
 # Total number of unique species in the synonym list: 
   # 20,461
@@ -305,8 +321,8 @@ bee.list$genus_species %in% levels(bee.names$providedName)
 
 # Which species are not included?
 bee.list$genus_species[which(bee.list$genus_species %in% levels(bee.names$providedName) == FALSE)]
- # [1] "Heterosarus californicus" "Exomalopsis cerei"        "Melissodes lupina"       
- # [4] "Triepeolus heterurus"  
+ # None - all are included
+
 
 
 
@@ -315,46 +331,79 @@ dat1$resolvedBeeNames <- NA
 
 # Use a loop to go through each genus_species and match with the globi species list
   # This function takes ~ 8 minutes to run
+
+#i <- which(dat1$sourceTaxonSpeciesName == "Afranthidium junodi")[1]
+
 start.time <- Sys.time()
 for(i in 1:nrow(dat1)){
 
   # 1. Identify the row in the bee.names4 dataframe that the name matches
-  row.num <- which(dat1$sourceTaxonSpeciesName[i] == bee.names$providedName)[1]
+  # Zenodo list
+  row.num.zenodo <- which(dat1$sourceTaxonSpeciesName[i] == bee.names$providedName)[1]
+  # Check the Katja list
+  row.num.kat <- which(dat1$sourceTaxonSpeciesName[i] == bee.names.globi$sourceTaxonSpeciesName)[1]
   
+
   # The previous line needs to come back with a number to do the next command
-  if(length(row.num) > 0){
+  if(is.na(row.num.zenodo) == FALSE){
     
     # 2. Replace the Globi name with the current.name
-    dat1$resolvedBeeNames[i] <- as.character(bee.names$resolvedName[row.num])
+    dat1$resolvedBeeNames[i] <- as.character(bee.names$resolvedName[row.num.zenodo])
   
-  } else {dat1$resolvedBeeNames[i] <- NA}
+  } else if (is.na(row.num.kat) == FALSE ) {
+    dat1$resolvedBeeNames[i] <- as.character(bee.names.globi$resolvedBeeNames[row.num.kat])
+    
+  } else {
+      dat1$resolvedBeeNames[i] <- NA}
   
 }
 end.time <- Sys.time()
+beepr::beep(3)
 
 # Determine amount of time to run for loop
 end.time - start.time
 
 
 # Pull out the rows in the GLobi dataset that were NOT matched with any species names in the synoynm list (from Zenodo)
-not.matched.bee.rows <- dat1[is.na(dat1$resolvedBeeNames) == TRUE, ]
+not.matched.bee.rows <- dat1[is.na(dat1$resolvedBeeNames) == TRUE |
+                               dat1$resolvedBeeNames == "no:match", ]
+# Are there any no matches?
+length(which(dat1$resolvedBeeNames == "no:match"))
+
+# How many have NAs?
+length(which(is.na(dat1$resolvedBeeNames) == TRUE))
+
 
 # Number of rows that did not produce matches
-  # 3,674
+  # 244
 nrow(not.matched.bee.rows)
 
-nrow(dat1)
+# Drop unused levels
+not.matched.bee.rows <- droplevels(not.matched.bee.rows)
 
-write.csv(not.matched.bee.rows, "./Data/no-resolved-bee-names-2022 01 14.csv")
+# The not.matched list boils down to 4 levels:  
+    # Pseudopanugus sp. E1  
+    # Megachile cincta      
+    # Coelioxys octodentata 
+    # Osmia capensis
 
-# List of species that did not match
-not.resolved.bees.sp <- unique(not.matched.bee.rows$sourceTaxonSpeciesName)
+# Select the columns you want to keep
+unique.rows <- not.matched.bee.rows %>%
+                  select(32:52) %>%
+                  unique()
 
-write.csv(not.resolved.bees.sp, "./Data/no-resolved-bee-names-list-2022 01 14.csv")
+# Save output
+write.csv(unique.rows, "./Data/no-resolved-bee-names-2022 01 21.csv")
+
 
 
 
 # Now we have the Globi dataset with updated bee names
+
+
+
+
+
 
 # Next we need to update our checklist with the resolvedNames
 
@@ -365,6 +414,7 @@ bee.list$resolvedBeeNames <- NA
 for(i in 1:nrow(bee.list)){
   
   # 1. Identify the row in the bee.names4 dataframe that the name matches
+  # Zenodo list
   row.num <- which(bee.list$genus_species[i] == bee.names$providedName)[1]
   
   # The previous line needs to come back with a number to do the next command
@@ -377,6 +427,48 @@ for(i in 1:nrow(bee.list)){
   
 }
 
+# Pull out the rows in the bee.list dataset that were NOT matched with any species names in the synoynm list (from Zenodo)
+  # All should have matches
+bee.list[is.na(bee.list$resolvedBeeNames) == TRUE |
+               bee.list$resolvedBeeNames == "no:match", ]
+
+
+
+
+
+# Last, we need to update the bee names in the bee.phenology object
+
+# Make a new column for the resolvedBeeNames
+bee.phenology$resolvedBeeNames <- NA
+
+# Use a loop to go through each scientificName and match with the bee.phenology species list
+for(i in 1:nrow(bee.phenology)){
+  
+  # 1. Identify the row in the bee.names4 dataframe that the name matches
+  # Zenodo list
+  row.num <- which(bee.phenology$scientificName[i] == bee.names$providedName)[1]
+  
+  # The previous line needs to come back with a number to do the next command
+  if(is.na(row.num)  == FALSE){
+    
+    # 2. Replace the Globi name with the current.name
+    bee.phenology$resolvedBeeNames[i] <- as.character(bee.names$resolvedName[row.num])
+    
+  } else {bee.phenology$resolvedBeeNames[i] <- NA}
+  
+}
+
+# Pull out the rows in the bee.phenology dataset that were NOT matched with any species names in the synoynm list (from Zenodo)
+  # All should have matches
+bee.phenology[is.na(bee.phenology$resolvedBeeNames) == TRUE |
+                    bee.phenology$resolvedBeeNames == "no:match", ]
+
+
+
+#View(bee.phenology)
+
+
+
 
 
 
@@ -387,15 +479,18 @@ for(i in 1:nrow(bee.list)){
 
 
 # Unique bee species
-  # 136 species
+  # 139 species
 bee.species <- unique(bee.list$resolvedBeeNames)
 bee.species <- bee.species[is.na(bee.species) == FALSE]
 bee.species <- bee.species[bee.species != "no:match"]
 
+length(bee.species)
+
 # Unique plant species
-  # 582 species
+  # 562 species
 plant.species <- unique(plant.phenology$scientificName)
 
+length(plant.species)
 
 
 
@@ -412,9 +507,7 @@ for(i in 1:nrow(dat1)){
     dat1$Insect[i] <- 1
   } else {dat1$Insect[i] <- 0}
   
-  
-  #### NOTE - need to change to resolvedPlantNames
-  if(dat1$targetTaxonSpeciesName[i] %in% plant.species){
+  if(dat1$resolvedPlantNames[i] %in% plant.species){
     dat1$Plant[i] <- 1
   } else {dat1$Plant[i] <- 0}
 
@@ -437,12 +530,12 @@ dat1$tot <- dat1$Plant + dat1$Insect
 remove.rows <- length(which(dat1$tot < 2))
 
 # How many rows will be removed?
-  # 149,915
+  # 150,016
 remove.rows
 
 
 # How many rows will be kept?
-  # 7,989
+  # 7,877
 length(which(dat1$tot == 2))
 
 
@@ -458,14 +551,14 @@ dat2 <- dat1[which(dat1$tot == 2),]
 dat2 <- droplevels(dat2)
 
 # Save the rows with a complete bee-plant match
-write.csv(dat2, "./Data/matched_rows_2022_01_14.csv")
+write.csv(dat2, "./Data/matched_rows_2022_01_21.csv")
 
 
 # look at citations
 # View(table(dat2$sourceCitation))
 
 # Number of observations
-  #  7,989
+  #  7,877
 nrow(dat2)
 
 
@@ -533,7 +626,7 @@ g.map <- ggmap(get_stamenmap(bbox, zoom = 3, maptype = "terrain"))+
 
 g.map
 
-ggsave("./Figures/Globi_map_2022_01_14.pdf", height = 12, width = 15)
+#ggsave("./Figures/Globi_map_2022_01_14.pdf", height = 12, width = 15)
 
 
 
@@ -582,7 +675,7 @@ g.map2 <- ggmap(get_stamenmap(bbox2, zoom = 8, maptype = "terrain"))+
 
 g.map2
 
-ggsave("./Figures/Globi_CA_map_2022_01_14.pdf", height = 12, width = 15)
+# ggsave("./Figures/Globi_CA_map_2022_01_14.pdf", height = 12, width = 15)
 
 
 
@@ -607,14 +700,6 @@ nrow(dat6)
 
 
 
-# Pick up here with Michelle
-
-
-
-
-
-
-
 # We will be working with the following 2 objects in this section:
   # dat6 = the subsetted species & CA dataset
   # institution.codes = the name of the institutions
@@ -626,72 +711,95 @@ nrow(dat6)
 
 # The institution codes can be found in this column of the Globi database:
   # sourceInstitutionCode
+# But we also need to look through 1 other columns:
+  # sourceCatalogNumber
 
-# We need to pull apart the alphabetical characters and the numeric characters
-dat7 <- dat6 %>%
-  mutate(., fullcode = sub(" ","", sourceInstitutionCode)) %>%
-  mutate(., withdashcode = sub("_","", fullcode)) %>%
-  mutate(., no_characters = sub("-","", withdashcode)) %>%
-  separate(no_characters,
-           into = c("code", "num"),
+
+# Pull apart the sourceCatalogNumber column into 2 parts:
+  # code
+  # num
+dat6 <- dat6 %>% 
+  mutate(., sourceCatalogNumber = gsub(" ","", sourceCatalogNumber)) %>% 
+  mutate(., sourceCatalogNumber = gsub("_","", sourceCatalogNumber)) %>%
+  mutate(., sourceCatalogNumber = gsub("-","", sourceCatalogNumber)) %>% 
+  mutate(., sourceCatalogNumber = gsub(":","", sourceCatalogNumber)) %>% 
+  separate(sourceCatalogNumber, 
+           into = c("code", "num"), 
            sep = "(?<=[A-Za-z])(?=[0-9])"
   )
+# Now we have a code column from dat6 we should use to match 
 
-dat6$sourceInstitutionCode
-
-# Remove dashes from the names in institution.codes object
-inst.code <- institution.codes %>%
-  mutate(., nodash = sub("-","", fullcode)) %>%
-  mutate(., nodashORspace = sub(" ","", nodash))
+# The column sourceInstitutionCode does not need to be modified
 
 
-# Look to see how many names match between our code column and the inst.code$nodash
-as.character(unique(dat7$sourceInstitutionCode)) %in% as.character(inst.code$fullcode)
+# institution.codes object
+  # 3 columns
+  # fullcode
+  # firstcode
+  # secondcode
 
-inst.code$fullcode[grep("UCSB", inst.code$fullcode)]
-inst.code$fullcode[grep("UNM", inst.code$fullcode)]
-
-
-# Write a file with the institution codes
-# write.csv(unique(dat7$code), file = "./Data/data_summary/subset_data_inst_codes_2021 12 29.csv")
+# Next we will match 2 columns globi dataset (code, sourceInstitutionCode) with the 3 columns in the institution.codes object
 
 
+# Make a new column for the resolvedInstitutionName
+dat6$resolvedSource <- NA
 
-
-
-# Next, we need to create 1 column with either the institution code or the sourceCitation
-
-# Copy over the sourceCitation column
-dat7$citation <- as.character(dat7$sourceCitation)
-
-# levels(dat7$sourceCitation)
-
-for(i in 1:nrow(dat7)){
+# Use a loop to go through each row of dat6 and try to match with any of the 3 columns in institution.codes object
+for(i in 1:nrow(dat6)){
   
-  # If the source citation == "Symbiota Collections of Arthropods Network (SCAN)", then do this:
-  if(dat7$sourceCitation[i] == "Symbiota Collections of Arthropods Network (SCAN)"){
+  # Using sourceInstitutionCode, look to see if it matches any of the first 3 columns in the institution.codes object
+  first.col <- which(dat6$sourceInstitutionCode[i] == institution.codes$fullcode)
+  sec.col <- which(dat6$sourceInstitutionCode[i] == institution.codes$firstcode)
+  third.col <- which(dat6$sourceInstitutionCode[i] == institution.codes$secondcode)
+  
+  
+  if(length(first.col) > 0){
     
-    # Copy over the institution code into the citation column
-    dat7$citation[i] <- dat7$code[i]
+    # 2. Add in a resolvedSource
+    dat6$resolvedSource[i] <- as.character(institution.codes$institution[first.col])
+    
+  } else if (length(sec.col)  > 0){
+    dat6$resolvedSource[i] <- as.character(institution.codes$institution[sec.col])
+    
+  }else if (length(third.col)  > 0){
+    dat6$resolvedSource[i] <- as.character(institution.codes$institution[third.col])
+    
+  } else{
+    dat6$resolvedSource[i] <- NA
+    }
+  
+  
+}
+
+# Looks good!
+ View(dat6[,c("resolvedSource", "code", "sourceInstitutionCode", "sourceCitation")])
+
+
+# Look at the levels of the sourceCitation
+ dat6 <- droplevels(dat6)
+levels(dat6$sourceCitation)
+
+for(i in 1:nrow(dat6)){
+  
+  # If the resolvedSource == NA, then do this:
+  if(is.na(dat6$resolvedSource[i]) == TRUE){
+    
+    # Copy over the sourceCitation
+    dat6$resolvedSource[i] <- as.character(dat6$sourceCitation[i])
     
   }
   
 }
 
 
-compare_cols <- data.frame(original_sourceCitation = as.character(dat7$sourceCitation),
-                           inst.code = as.character(dat7$code),
-                           new_column = as.character(dat7$citation)
-)
+# Write the file with the final globi dataset
+write.csv(dat6, "./Data/final-globi-list-clean 2022 01 21.csv")
 
-# Write the compare_col data frame
-# write.csv(compare_cols, "./Data/data_summary/compare-citation-columns 2021 12 29.csv")
+# Look at the numnber of unique citations
+citations <- levels(dat6$resolvedInstitutionName)
 
-# Look at the dataframe
-# View(compare_cols)
 
-# Write the unique citations
-# write.csv(unique(dat7$citation), "./Data/data_summary/unique-citations- 2021 12 29.csv")
+write.csv(citations, "./Data/final-globi-citations-unique 2022 01 21.csv")
 
 
 
@@ -707,14 +815,14 @@ compare_cols <- data.frame(original_sourceCitation = as.character(dat7$sourceCit
 
 # Format the date of observation
 # eventDateUnixEpoch
-dat7$eventDate <- as.POSIXct(dat7$eventDateUnixEpoch/1000, origin = "1970-01-01")
+dat6$eventDate <- as.POSIXct(dat6$eventDateUnixEpoch/1000, origin = "1970-01-01")
 
 
 # Pull apart the info in the event date
   # Year
   # Month
   # Day - this column also includes time - but I won't finish formatting this because we don't need this detail
-dat8 <- as_tibble(dat7) %>%
+dat7 <- as_tibble(dat6) %>%
   mutate(year = str_split(eventDate, "-", n = 3, simplify = TRUE)[,1],
          month= str_split(eventDate, "-", n = 3, simplify = TRUE)[,2],
          day = str_split(eventDate, "-", n = 3, simplify = TRUE)[,3])
@@ -731,30 +839,6 @@ dat8 <- as_tibble(dat7) %>%
 
 
 
-# Working with the bee.phenology data
-# Make sure that the bee names have the most up to date resolvedBeeName
-
-# Add an empty column
-bee.phenology$resolvedBeeNames <- NA
-
-
-# Use a loop to go through each scientificName and match with the providedName species list
-for(i in 1:nrow(bee.phenology)){
-  
-  # 1. Identify the row in the bee.names4 dataframe that the name matches
-  row.num <- which(bee.phenology$scientificName[i] == bee.names$providedName)[1]
-  
-  # The previous line needs to come back with a number to do the next command
-  if(length(row.num) > 0){
-    
-    # 2. Replace the Globi name with the current.name
-    bee.phenology$resolvedBeeNames[i] <- as.character(bee.names$resolvedName[row.num])
-    
-  } else {bee.phenology$resolvedBeeNames[i] <- NA}
-  
-}
-
-
 # Remove the NA rows
 bee.phenology <- bee.phenology[is.na(bee.phenology$resolvedBeeNames) == FALSE,]
 
@@ -762,13 +846,18 @@ bee.phenology <- bee.phenology[is.na(bee.phenology$resolvedBeeNames) == FALSE,]
 # Need to remove rows without species name from the bee.phenology dataframe
 bee.phenology <- bee.phenology[bee.phenology$scientificName %in% bee.species,]
 
-  # I'm not sure why this is coming up with a different number of rows
+
+
+
+# I'm not sure why this is coming up with a different number of rows
 nrow(bee.phenology)
 
 
 # Is the bee phenology data (bee.phenology) in the same order as the list of bee species?
 # YES - alphabetical order
 # View(cbind(bee.phenology$scientificName, rownames(bee.plant.date.cite)))
+
+
 
 # Add a new Genus species column to the plant phenology data
 plant.phenology$Genus_species <- paste(plant.phenology$Genus,
