@@ -1,4 +1,27 @@
 =================
+Meeting 19-Jan-22
+=================
+
+* bee synonym list — 4 species that are not on the zenodo/discoverlife synonym list
+ - any synonyms for these? are these the resolved names
+
+
+* pull out list of bee species that don’t have a name into the name resolver (zenodo) — will print and give to Katja
+
+* “no-resolved-bee-names-2022 01 14.csv” file will contain entries from globi that didn’t match zenodo synonym list (3674 names, 138 unique species names)
+
+* associated list of unmatched names has also been printed “no-resolved-bee-names-list-2022 01 14.csv”
+ == send this list to Katja
+
+* using the resolver on checklist we lose 3 names, check row 113 for a no match “Coelioxys octodentata”
+ - search zenodo list for "no:match"
+
+* confirm “sourceTaxonSpeciesName” will not have parentheses
+ == what provided names in sourceTaxonSpeciesName in the globi dataset have parentheses
+
+
+
+=================
 Meeting 14-Jan-22
 =================
 Combining code Grace and Michelle
