@@ -1,4 +1,52 @@
 =================
+Meeting 21-Jan-22
+=================
+
+ - Editing synonym list with updated 5 that Katja sent via email
+Heterosarus californicus
+current valid: Pseudopanurgus californicus (Cresson, 1878)
+Exomalopsis cerei
+current valid: Anthophorula cerei (Timberlake, 1947)
+Melissodes lupina
+current valid: Melissodes lupinus Cresson, 1879
+Triepeolus heterurus
+current valid: Triepeolus utahensis (Cockerell, 1921)
+Coelioxys octodentata
+current valid: Coelioxys octodentatus Say, 1824
+
+
+pulled Katja’s email list of more resolved bee names that were not matched in globi database
+ - this will be part of another matching 
+ - need to rename to resolvedBeeNames
+***need to send updated list of no matches — only 4 species names
+
+139 bee species from the SCI checklist
+
+Jorrit’s update to eventDate
+ - won’t run for this iteration, but should grab updated data and this list before writing manuscript
+
+
+
+***Bee phenology list
+ - update scientific names in bee phenology list to only have 2 names
+ - and to match bee.list
+ - should hopefully just be a copy and paste from the checklist
+ - will need to update bee list for covariates to make sure consistent
+
+
+sourceCollectionCode
+ - dat6$code
+ - 7 stacks of data
+Why were Seltmann et al. publications dropped
+***final-globi-list-clean
+
+
+
+
+
+
+
+=================
 Meeting 19-Jan-22
 =================
 
