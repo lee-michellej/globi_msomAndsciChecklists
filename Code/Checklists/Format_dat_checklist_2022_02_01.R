@@ -347,7 +347,7 @@ for(i in 1:nrow(dat1)){
   
 }
 end.time <- Sys.time()
-beepr::beep(3)
+#beepr::beep(3)
 
 # Determine amount of time to run for loop
 end.time - start.time
@@ -473,7 +473,7 @@ for(i in 1:nrow(dat1)){
 
 }
 end.time <- Sys.time()
-beepr::beep(3)
+# beepr::beep(3)
 
 # How long did it take to run the loop?
 end.time - start.time
@@ -574,21 +574,21 @@ bbox <- c(left = min.vals[1] - 0.02,
 
 names(bbox) <- c("left", "bottom", "right", "top")
 
-g.map <- ggmap(get_stamenmap(bbox, zoom = 3, maptype = "terrain"))+
-  geom_point(data = dat4, aes(y = decimalLatitude, x = decimalLongitude, size = log10(total)))+
-  ylab("Latitude")+
-  xlab("Longitude")+
-  theme_bw()+ 
-  theme(axis.text.x = element_text(size = 17, color = "black"), 
-        axis.text.y = element_text(size = 17, color = "black"), 
-        axis.title.y = element_text(size = 17, color = "black"), 
-        axis.title.x =element_text(size = 17, color = "black"),
-        legend.title =element_text(size = 17, color = "black"),
-        legend.text =element_text(size = 17, color = "black"),
-        panel.grid.major = element_blank(), 
-        panel.grid.minor = element_blank())
-
-g.map
+#g.map <- ggmap(get_stamenmap(bbox, zoom = 3, maptype = "terrain"))+
+#  geom_point(data = dat4, aes(y = decimalLatitude, x = decimalLongitude, #size = log10(total)))+
+#  ylab("Latitude")+
+#  xlab("Longitude")+
+#  theme_bw()+ 
+#  theme(axis.text.x = element_text(size = 17, color = "black"), 
+#        axis.text.y = element_text(size = 17, color = "black"), 
+#        axis.title.y = element_text(size = 17, color = "black"), 
+#        axis.title.x =element_text(size = 17, color = "black"),
+#        legend.title =element_text(size = 17, color = "black"),
+#        legend.text =element_text(size = 17, color = "black"),
+#        panel.grid.major = element_blank(), 
+#        panel.grid.minor = element_blank())
+#
+#g.map
 
 #ggsave("./Figures/Globi_map_2022_01_14.pdf", height = 12, width = 15)
 
@@ -621,23 +621,23 @@ bbox2 <- c(left = min.vals2[1] - 0.02,
 
 names(bbox2) <- c("left", "bottom", "right", "top")
 
-g.map2 <- ggmap(get_stamenmap(bbox2, zoom = 8, maptype = "terrain"))+
-  geom_point(data = dat5, aes(y = decimalLatitude, 
-                              x = decimalLongitude, 
-                              size = log10(total)))+
-  ylab("Latitude")+
-  xlab("Longitude")+
-  theme_bw()+ 
-  theme(axis.text.x = element_text(size = 17, color = "black"), 
-        axis.text.y = element_text(size = 17, color = "black"), 
-        axis.title.y = element_text(size = 17, color = "black"), 
-        axis.title.x =element_text(size = 17, color = "black"),
-        legend.title =element_text(size = 17, color = "black"),
-        legend.text =element_text(size = 17, color = "black"),
-        panel.grid.major = element_blank(), 
-        panel.grid.minor = element_blank())
-
-g.map2
+#g.map2 <- ggmap(get_stamenmap(bbox2, zoom = 8, maptype = "terrain"))+
+#  geom_point(data = dat5, aes(y = decimalLatitude, 
+#                              x = decimalLongitude, 
+#                              size = log10(total)))+
+#  ylab("Latitude")+
+#  xlab("Longitude")+
+#  theme_bw()+ 
+#  theme(axis.text.x = element_text(size = 17, color = "black"), 
+#        axis.text.y = element_text(size = 17, color = "black"), 
+#        axis.title.y = element_text(size = 17, color = "black"), 
+#        axis.title.x =element_text(size = 17, color = "black"),
+#        legend.title =element_text(size = 17, color = "black"),
+#        legend.text =element_text(size = 17, color = "black"),
+#        panel.grid.major = element_blank(), 
+#        panel.grid.minor = element_blank())
+#
+#g.map2
 
 # ggsave("./Figures/Globi_CA_map_2022_02_01.pdf", height = 12, width = 15)
 
@@ -947,7 +947,7 @@ for(i in 1:nrow(bee.plant.date.cite)){ # For each bee species
   }
 
 end.time <- Sys.time()
-beepr::beep(3)
+#beepr::beep(3)
 
 # How long did the loop take?
 end.time - start.time
@@ -959,7 +959,7 @@ nrow(bee.plant.inter)
 
 # Save the bee.plant.inter file
   # This file takes a while to generate - so in the future - we can just import it into this space
-save(bee.plant.inter, file= "./Data/bee_plant_inter_2022_02_01.rds")
+# save(bee.plant.inter, file= "./Data/bee_plant_inter_2022_02_01.rds")
 
 
 
@@ -981,30 +981,31 @@ save(bee.plant.inter, file= "./Data/bee_plant_inter_2022_02_01.rds")
 
 # For each citation - loop through them
 start.time <- Sys.time()
-for(j in 1:length(unique(dat7$citation))){
+for(j in 1:length(citations)){
   
-  # Subset the data
-  dat.sub <- dat7[dat7$citation == dat7$citation[j],]
+  # Subset the data - sometimes this generates NA rows
+  dat.sub <- dat7[dat7$resolvedSource == citations[j],]
+  
+  # Remove NA months
+  dat.sub <- dat.sub[is.na(dat.sub$month) == FALSE,]
   
   # Determine what months they were out looking
   citation.months <- as.numeric(unique(dat.sub$month))
   
-  # Trim the NA's
-  citation.months <- citation.months[which(is.na(citation.months) == FALSE)]
+  # If the source citation isn't going out on a particular month - we DO NOT want to populate it was a 0
+    # We only use a 0 if the source citation is going out
+  bee.plant.inter.sub <- bee.plant.inter[bee.plant.inter$monthID %in% citation.months,]
   
-  for(i in 1:nrow(bee.plant.inter)){
-    
-    bee.plant.date.cite[bee.plant.inter[i,1],
-                        bee.plant.inter[i,2],
-                        bee.plant.inter[i,3],
-                        citation.months]     <- 0
-    
-  }
+    # Now fill in the 4-D array with 0's for the month that the source citation went out
+    bee.plant.date.cite[bee.plant.inter.sub$beeID,  # bee species
+                        bee.plant.inter.sub$plantID,  # plant species
+                        bee.plant.inter.sub$monthID,  # Month
+                        j]     <- 0
   
 }
 
 end.time <- Sys.time()
-beepr::beep(3)
+#beepr::beep(3)
 
 # How long did the loop take?
 end.time - start.time
