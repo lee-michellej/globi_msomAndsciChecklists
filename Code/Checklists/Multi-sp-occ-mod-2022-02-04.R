@@ -165,20 +165,13 @@ sigma.p ~ dgamma(0.01, 0.01)
 
 # Ecological model
   # For each possible bee-plant interaction when they are interacting *using the bee.plant.inter matrix
-for(i in n.bee.inter){
-
-  for(j in n.plant.inter){
-  
-    for(t in n.month.inter){
+for(i in 1:n.row.inter){
 
     # True bee-plant interaction during month t
     
-    z[i, j, t] ~ dbern(psi[i, j, t])
+    z[n.bee.inter[i], n.plant.inter[i], n.month.inter[i]] ~ dbern(psi[n.bee.inter[i], n.plant.inter[i], n.month.inter[i]])
  
-      logit(psi[i, j, t]) <- u[i]
-    }
-    
-  }
+      logit(psi[n.bee.inter[i], n.plant.inter[i], n.month.inter[i]]) <- u[n.bee.inter[i]]
   
 }
 
@@ -186,26 +179,17 @@ for(i in n.bee.inter){
 # Observation model
   # For each bee-plant interaction during the months that each source citation was in the field
   # We don't want to penalize (or assign a non-detection) for months that the source citation was NOT in the field
-for(i in n.bee.obs){
-
-  for(j in n.plant.obs){
-  
-    for(t in n.month.obs){
-  
-        for(k in n.citation.obs){
+for(i in 1:n.row.obs){
 
         # Observed bee-plant interaction by month and by source citation
         
-          y[i,j,t,k] ~ dbern(p.eff[i,j,t,k])
+          y[n.bee.obs[i], n.plant.obs[i], n.month.obs[i], n.citation.obs[i]] ~ dbern(p.eff[n.bee.obs[i], n.plant.obs[i], n.month.obs[i], n.citation.obs[i]])
 
-          p.eff[i,j,t,k] <- p[i,j,t,k] * z[i, j, t]
+          p.eff[n.bee.obs[i], n.plant.obs[i], n.month.obs[i], n.citation.obs[i]] <- 
+          p[n.bee.obs[i], n.plant.obs[i], n.month.obs[i], n.citation.obs[i]] * 
+          z[n.bee.obs[i], n.plant.obs[i], n.month.obs[i]]
           
-          logit(p[i,j,t,k]) <- v[i]
-      }
-        
-    }
-    
-  }
+          logit(p[n.bee.obs[i], n.plant.obs[i], n.month.obs[i], n.citation.obs[i]]) <- v[n.bee.obs[i]]
 
 }
 
@@ -214,17 +198,17 @@ for(i in n.bee.obs){
 # Derived quantities
 # Determine the total number of plants that each bee interacts with
   # All we do is sum across the 2nd dimension of the z matrix (which represents plant species)
-
-for(i in n.bee.inter){
-
-  for(t in n.month.inter){
-  
-    # To determine the total number of plant interactions per bee species per month, we will sum across the plants
-      # outside of the model - we will collapse across months
-    z.bee.plant.month[i, t] <- sum(z[i, , t])
-  }
-  
-}
+#
+#for(i in n.bee.inter){
+#
+#  for(t in n.month.inter){
+#  
+#    # To determine the total number of plant interactions per bee species per month, we will sum across the plants
+#      # outside of the model - we will collapse across months
+#    z.bee.plant.month[i, t] <- sum(z[i, , t])
+#  }
+#  
+#}
 
 
 }
@@ -238,29 +222,75 @@ sink()
 # 4. Bundle the data ------------------------------------------------
 
 
+bee.ID <- 4
+plant.ID <- 2
 
+#bee.plant.inter %>%
+#  group_by(beeID, plantID, monthID) %>%
+#  tally() %>%
+#  filter(n > 1)
+#
+#n <- 100
+#n2 <-  10
 
 # Bundle all the data together in a list
 jags.data <- list(
-  # True bee-plant interactions by month for Ecological model
-    n.bee.inter   = bee.plant.inter$beeID,
-    n.plant.inter = bee.plant.inter$plantID,
-    n.month.inter = bee.plant.inter$monthID,
-    
-  # Observed 
-    n.bee.obs =      bee.plant.obs$beeID,
-    n.plant.obs =    bee.plant.obs$plantID,
-    n.month.obs =    bee.plant.obs$monthID,
-    n.citation.obs = bee.plant.obs$sourceID,
+  # Number of bee species
+  n.bee = dim(bee.plant.date.cite)[1],
+  
+ # Number of true bee-plant interactions by month
+ n.row.inter = nrow(bee.plant.inter),
+ 
+ # True bee-plant interactions by month for Ecological model
+     n.bee.inter   = bee.plant.inter$beeID,
+     n.plant.inter = bee.plant.inter$plantID,
+     n.month.inter = bee.plant.inter$monthID,
+     
+   # Number of possible observations
+   n.row.obs = nrow(bee.plant.obs), 
+   
+   # Observed 
+     n.bee.obs =      bee.plant.obs$beeID,
+     n.plant.obs =    bee.plant.obs$plantID,
+     n.month.obs =    bee.plant.obs$monthID,
+     n.citation.obs = bee.plant.obs$sourceID,
+  
+#    n.row.inter = length(bee.plant.inter[bee.plant.inter$beeID == bee.ID &
+#                                           bee.plant.inter$plantID == plant.ID,]$beeID),
+#
+#  # True bee-plant interactions by month for Ecological model
+#    n.bee.inter   = bee.plant.inter[bee.plant.inter$beeID == bee.ID &
+#                                      bee.plant.inter$plantID == plant.ID ,]$beeID,
+#    n.plant.inter = bee.plant.inter[bee.plant.inter$beeID == bee.ID &
+#                                      bee.plant.inter$plantID == plant.ID,]$plantID,
+#    n.month.inter = bee.plant.inter[bee.plant.inter$beeID == bee.ID &
+#                                      bee.plant.inter$plantID == plant.ID,]$monthID,
+#    
+#  # Number of possible observations
+#  n.row.obs = length(bee.plant.obs[bee.plant.obs$beeID == bee.ID &
+#                                   bee.plant.obs$plantID == plant.ID,]$beeID), 
+#  
+#  # Observed 
+#    n.bee.obs =      bee.plant.obs[bee.plant.obs$beeID == bee.ID &
+#                                     bee.plant.obs$plantID == plant.ID,]$beeID,
+#    n.plant.obs =    bee.plant.obs[bee.plant.obs$beeID == bee.ID &
+#                                     bee.plant.obs$plantID == plant.ID,]$plantID,
+#    n.month.obs =    bee.plant.obs[bee.plant.obs$beeID == bee.ID &
+#                                     bee.plant.obs$plantID == plant.ID,]$monthID,
+#    n.citation.obs = bee.plant.obs[bee.plant.obs$beeID == bee.ID &
+#                                     bee.plant.obs$plantID == plant.ID,]$sourceID,
 
   # Observation data
   y = bee.plant.date.cite)
+
+# Look at the data structure
+str(jags.data)
 
 
 # Initial values - to give the model reasonable starting values for the parameters and latent states
   # collapse observations across 4th dimension (souce citations)
 zinit <- apply(jags.data$y, c(1, 2, 3), max, na.rm = TRUE) 
-zinit[zinit == "-Inf"] <- 0
+zinit[zinit == "-Inf"] <- NA
 
 inits <- function() {list(
   # Latent states
@@ -277,6 +307,23 @@ inits <- function() {list(
   
 )}
 
+
+zinit[77,65,1]
+
+jags.data$y[77,65,1, ]
+
+
+  bee.plant.obs[bee.plant.obs$beeID == 77 &
+                bee.plant.obs$plantID == 65 & 
+                bee.plant.obs$monthID == 1, ]
+  
+
+  
+  bee.plant.inter[bee.plant.inter$beeID == 77 &
+                    bee.plant.inter$plantID == 65 & 
+                    bee.plant.inter$monthID == 1, ]
+  
+  
 
 # List parameters to monitor
 params <- c( "mu.psi", "sigma.psi",
@@ -295,10 +342,10 @@ params <- c( "mu.psi", "sigma.psi",
 
 
 # MCMC settings
-ni <- 25000
-na <- 20000
-nb <- 5000
-nt <- 5
+ni <- 2
+na <- 1
+nb <- 1
+nt <- 1
 nc <- 3
 
 
@@ -312,7 +359,8 @@ nc <- 3
 
 
 # Run the model
-# Takes ~ 0.09 minutes
+start.time <- Sys.time()
+
 out <- jags(data = jags.data, 
             inits = inits, 
             parameters.to.save = params, 
@@ -324,11 +372,13 @@ out <- jags(data = jags.data,
             n.adapt = na,
             parallel = TRUE)
 
+end.time <- Sys.time()
+beepr::beep(2)
 
-# Beep when done
-beepr::beep(4)
+# How long did the loop take?
+end.time - start.time
 
-out$Rhat$alpha_p
+
 
 
 
@@ -350,6 +400,14 @@ plot(out)
 
 
 
+## Summarize the z output
+
+# We saved the following object from jags: z.bee.plant.month
+jags.data
+
+
+
+
 # 9. Compare model outputs to truth ----------------------------------------
 
 
@@ -358,40 +416,30 @@ plot(out)
 
 
 # Combine the names, truth, and model output
-dat <- data.frame(names = c(paste(rownames(bee.plant.cite2), "interact prob"),
-                            paste(rownames(bee.plant.cite2), "detect prob"),
-                            rownames(bee.plant.cite2)), 
-                  obs = c(rep(NA, times = nrow(bee.plant.cite2)),
-                          rep(NA, times = nrow(bee.plant.cite2)),
-                          y.bee.plant), 
-                  mod.mean = c( out$mean$alpha_psi,
-                                out$mean$alpha_p,
-                                out$mean$z.bee.plant), 
-                  mod.q2.5 = c(out$q2.5$alpha_psi,
-                               out$q2.5$alpha_p,
-                               out$q2.5$z.bee.plant), 
-                  mod.q97.5 = c(out$q97.5$alpha_psi,
-                                out$q97.5$alpha_p,
-                                out$q97.5$z.bee.plant))
-
-
-# Make detection probability the last entry
-#dat$names <- factor(dat$names,
-#                    levels = c(sort(rownames(bee.plant.cite2)),
-#                               "Detection prob"))
+dat <- data.frame(names = c(paste(rownames(bee.plant.date.cite), "interact prob"),
+                            paste(rownames(bee.plant.date.cite), "detect prob")), 
+                  obs = c(rep(NA, times = nrow(bee.plant.date.cite)),
+                          rep(NA, times = nrow(bee.plant.date.cite))), 
+                  mod.mean = c( out$mean$u,
+                                out$mean$v), 
+                  mod.q2.5 = c(out$q2.5$u,
+                               out$q2.5$v), 
+                  mod.q97.5 = c(out$q97.5$u,
+                                out$q97.5$v))
 
 
 ## Make the plots
 
 # Plot with probabilities
-ggplot(dat[1:(jags.data$n.bee+1),], aes(x= names, y=mod.mean, ymin=mod.q2.5, ymax=mod.q97.5))+ 
+ggplot(dat[grep("interact", dat$names),], 
+       aes(x= names, y=mod.mean, ymin=mod.q2.5, ymax=mod.q97.5))+ 
   geom_linerange(size = 1) +
   geom_point(size = 3, aes(x = names, y = mod.mean)) +
   scale_colour_manual("Values", values=cols)+
   geom_hline(yintercept = 0, lty=2) +
-  coord_flip() + ylab('Parameter estimates') +
+  coord_flip() + ylab('Interaction estimates') +
   xlab("Species names") +
-  ggtitle("Parameter estimates")+
+  ggtitle("Interaction estimates")+
   theme_bw()+ 
   theme(axis.text.x = element_text(size = 17, color = "black"), 
         axis.text.y = element_text(size = 10, color = "black"), 
@@ -404,7 +452,38 @@ ggplot(dat[1:(jags.data$n.bee+1),], aes(x= names, y=mod.mean, ymin=mod.q2.5, yma
         panel.grid.minor = element_blank()) 
 
 # Save the plot
-ggsave("./Figures/Model_params_2021_05_14.pdf", height = 15, width = 8)
+ggsave("./Figures/Model_params_psi_2022_02_08.pdf", height = 15, width = 8)
+
+
+
+# Plot with probabilities
+ggplot(dat[grep("detect", dat$names),], 
+       aes(x= names, y=mod.mean, ymin=mod.q2.5, ymax=mod.q97.5))+ 
+  geom_linerange(size = 1) +
+  geom_point(size = 3, aes(x = names, y = mod.mean)) +
+  scale_colour_manual("Values", values=cols)+
+  geom_hline(yintercept = 0, lty=2) +
+  coord_flip() + ylab('Detection estimates') +
+  xlab("Species names") +
+  ggtitle("Detection estimates")+
+  theme_bw()+ 
+  theme(axis.text.x = element_text(size = 17, color = "black"), 
+        axis.text.y = element_text(size = 10, color = "black"), 
+        axis.title.y = element_text(size = 17, color = "black"), 
+        axis.title.x =element_text(size = 17, color = "black"),
+        legend.title =element_text(size = 17, color = "black"),
+        legend.text =element_text(size = 17, color = "black"),
+        plot.title = element_text(size = 25, color = "black", face = "bold"),
+        panel.grid.major = element_blank(), 
+        panel.grid.minor = element_blank()) 
+
+# Save the plot
+ggsave("./Figures/Model_params_p_2022_02_08.pdf", height = 15, width = 8)
+
+
+
+
+
 
 
 # Object with colors

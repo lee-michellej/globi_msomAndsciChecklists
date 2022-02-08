@@ -1173,7 +1173,114 @@ nrow(bee.plant.obs)
 
 
 
-# 14. Save the data -------------------------------------------------------
+# 14. Compare the interaction matrix and the observation matrix -------------------------------------------------------
+
+
+
+# Observation matrix:
+  # bee.plant.obs
+
+# Interaction matrix
+  # bee.plant.inter
+
+
+head(bee.plant.inter)
+
+head(bee.plant.obs)
+
+
+# Add a new column
+bee.plant.obs$y <- NA
+
+for(i in 1:nrow(bee.plant.obs)){
+  
+  bee.plant.obs$y[i] <-  bee.plant.date.cite[bee.plant.obs$beeID[i],
+                                             bee.plant.obs$plantID[i],
+                                             bee.plant.obs$monthID[i],
+                                             bee.plant.obs$sourceID[i]]
+  
+}
+
+# Are any of the rows have NA?
+length(which(is.na(bee.plant.obs$y) == TRUE))
+
+# Look at which ones have an non-detection
+bee.plant.obs %>%
+  filter(bee.plant.obs$y == 0)
+
+
+# Look at which ones have a detection
+bee.plant.obs %>%
+  filter(bee.plant.obs$y == 1)
+
+
+
+# Are there any combinations from the observations (bee.plant.date.cite) that aren't in the possible interactions?
+# Collapse observations across 4th dimension (souce citations)
+y.obs <- apply(bee.plant.date.cite, c(1, 2, 3), max, na.rm = TRUE) 
+y.obs[y.obs == "-Inf"] <- NA
+
+y.obs.long <- data.frame(beeID = NA,
+                         plantID = NA,
+                         monthID = NA,
+                         obs = NA)
+
+a <- 1
+
+start.time <- Sys.time()
+
+for(i in 1:dim(y.obs)[1]){
+  for(j in 1:dim(y.obs)[2]){
+    for(k in 1:dim(y.obs)[3]){
+      
+      if(is.na(y.obs[i,j,k]) == FALSE){
+        
+        y.obs.long[a, 1] <- i
+        y.obs.long[a, 2] <- j
+        y.obs.long[a, 3] <- k
+        y.obs.long[a, 4] <- y.obs[i,j,k]
+        
+        a <- a + 1
+      } 
+      
+    }
+  }
+}
+
+end.time <- Sys.time()
+beepr::beep(3)
+
+# How long did the loop take?
+end.time - start.time
+
+
+# Save the output
+write.csv(y.obs.long, file = "./Data/observations-documented-but-not-possible-2022 02 08.csv")
+
+
+# Add a column to the possible interactions 
+bee.plant.inter$inter <- 1
+
+# merge the new long observations dataframe with the possible interactions data frame
+y2 <- merge(y.obs.long, 
+            bee.plant.inter, 
+            all.x = TRUE)
+
+# Identify which bee-plant-month observations were detected BUT are not possible
+observed.but.not.possible <- y2[which(is.na(y2$inter) == TRUE),]
+nrow(observed.but.not.possible)
+
+
+observed.but.not.possible[1,]
+
+bee.plant.inter[bee.plant.inter$beeID == 32 & 
+                  bee.plant.inter$plantID == 400 , ]
+  # Note that monthID 2 is not listed in the possible times they interact
+
+
+
+
+# 15. Save the data -------------------------------------------------------
 
 
 # Save the 4-D array
