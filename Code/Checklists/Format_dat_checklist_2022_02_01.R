@@ -1208,25 +1208,35 @@ length(which(is.na(bee.plant.obs$y) == TRUE))
 bee.plant.obs %>%
   filter(bee.plant.obs$y == 0)
 
+nrow(bee.plant.obs %>%
+       filter(bee.plant.obs$y == 0))
 
 # Look at which ones have a detection
 bee.plant.obs %>%
   filter(bee.plant.obs$y == 1)
 
+nrow(bee.plant.obs %>%
+       filter(bee.plant.obs$y == 1))
 
 
-# Are there any combinations from the observations (bee.plant.date.cite) that aren't in the possible interactions?
-# Collapse observations across 4th dimension (souce citations)
+# Are there any combinations from the observations (bee.plant.date.cite) that aren't in the possible interactions (bee.plant.inter)?
+# To do this, first we start by collapsing observations across 4th dimension (souce citations)
 y.obs <- apply(bee.plant.date.cite, c(1, 2, 3), max, na.rm = TRUE) 
 y.obs[y.obs == "-Inf"] <- NA
 
+# Create a new dataframe where we will store the observations in long format (similar to the possible interactions)
 y.obs.long <- data.frame(beeID = NA,
                          plantID = NA,
                          monthID = NA,
                          obs = NA)
 
+# Start a counter
 a <- 1
 
+
+# Using a for loop - we will loop through each dimension of the y.obs array
+  # If there is no NA, we will create a row with the observation in the y.obs.long dataframe
+  # This loop takes like 1 hr
 start.time <- Sys.time()
 
 for(i in 1:dim(y.obs)[1]){
@@ -1258,13 +1268,16 @@ end.time - start.time
 write.csv(y.obs.long, file = "./Data/observations-documented-but-not-possible-2022 02 08.csv")
 
 
+
+
+
 # Add a column to the possible interactions 
 bee.plant.inter$inter <- 1
 
-# merge the new long observations dataframe with the possible interactions data frame
+# Merge the new long observations dataframe (y.obs.long) with the possible interactions data frame (bee.plant.inter)
 y2 <- merge(y.obs.long, 
             bee.plant.inter, 
-            all.x = TRUE)
+            all.x = TRUE) # keep all rows in the new long observations dataframe (y.obs.long) 
 
 # Identify which bee-plant-month observations were detected BUT are not possible
 observed.but.not.possible <- y2[which(is.na(y2$inter) == TRUE),]
@@ -1276,6 +1289,10 @@ observed.but.not.possible[1,]
 bee.plant.inter[bee.plant.inter$beeID == 32 & 
                   bee.plant.inter$plantID == 400 , ]
   # Note that monthID 2 is not listed in the possible times they interact
+
+
+
+
 
 
 
