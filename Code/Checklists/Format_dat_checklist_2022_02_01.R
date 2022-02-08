@@ -91,7 +91,8 @@
 # 10. Create the 4-D array we will fill in
 # 11. Determine which bee-plant interactions are possible & which are forbidden
 # 12. Fill in the 4-D array for the model
-# 13. Save the data
+# 13. Create a matrix with the observed bee-plant-month by citation elements
+# 14. Save the data
 
 
 
@@ -108,18 +109,12 @@
 
 # Load libraries
 library(tidyverse)
-library(rglobi)
-library(bipartite)
-library(igraph)
 library(ggplot2)
-library(doParallel)
-library(ggmap)
 library(dplyr)
 library(plyr)
 library(rgdal)
-library(ggsn)
+#library(ggsn)
 library(sf)
-library(reshape2)
 
 # Set working directory
 setwd("~/globi_tritrophic_networks/")
@@ -223,6 +218,7 @@ str(bee.list)
 
 
 # Number of rows in bee.list = # of species
+  # 142
 nrow(bee.list)
 
 # Remove species without a species name ( == "sp.")
@@ -230,6 +226,7 @@ bee.list <- bee.list[bee.list$specificEpithet != "sp.",]
 
 # Final number of bee species
   # Removed rows not identified to species level
+  # 139
 nrow(bee.list)
 
 
@@ -746,7 +743,7 @@ for(i in 1:nrow(dat6)){
 }
 
 # Looks good!
- View(dat6[,c("resolvedSource", "code", "sourceInstitutionCode", "sourceCitation")])
+ #View(dat6[,c("resolvedSource", "code", "sourceInstitutionCode", "sourceCitation")])
 
 
 # Look at the levels of the sourceCitation
@@ -769,7 +766,7 @@ for(i in 1:nrow(dat6)){
 
 
 # Write the file with the final globi dataset
-write.csv(dat6, "./Data/final-globi-list-clean 2022 02 01.csv")
+#write.csv(dat6, "./Data/final-globi-list-clean 2022 02 01.csv")
 
 # Look at the numnber of unique citations
 citations <- levels(as.factor(dat6$resolvedSource))
@@ -819,6 +816,10 @@ dat7 <- dat7[is.na(dat7$month) == FALSE,]
 # Remove repeat observations
 dat7 <- dat7 %>%
           distinct()
+
+
+# remove any NA rows in dat7
+dat7 <- dat7[is.na(dat7$resolvedSource) == FALSE,]
 
 
 
@@ -1024,9 +1025,6 @@ length(which(bee.plant.date.cite == 0))
 
 
 
-# remove any NA rows in dat7
-dat7 <- dat7[is.na(dat7$resolvedSource) == FALSE,]
-
 
 # Now we will fill in the 4-D array with the presence data
 start.time <- Sys.time()
@@ -1079,7 +1077,103 @@ length(which(bee.plant.date.cite == 1))
 
 
 
-# 13. Save the data -------------------------------------------------------
+
+# 13. Create a matrix with the observed bee-plant-month by citation elements -------------------------------------------------------
+
+
+
+
+
+# Next, we will be working on a long dataframe and specify which bee-plant interactions were observed
+
+
+## Create empty dataframe for possible bee-plant interactions
+bee.plant.obs <- data.frame(beeID = NA,
+                            plantID = NA,
+                            monthID = NA,
+                            sourceID = NA)
+
+
+# We start by identifying the unique combinations of source citation by month
+source.month <- data.frame(monthID = NA,
+                           sourceID = NA)
+
+# pull out the source and month
+for(i in 1:nrow(dat7)){ 
+  
+  # Determine which citation
+  cit.pos <- which(citations %in% dat7$resolvedSource[i] == TRUE)
+  
+  # Determine which month
+  month.pos <- as.numeric(dat7$month[i])
+
+  source.month[i, 1] <- month.pos
+  source.month[i, 2] <- cit.pos
+  
+}
+
+# Number of rows
+nrow(source.month)
+
+# Identify the unique month-source combinations
+source.month <- source.month %>%
+  distinct()
+
+# Number of unique combinations
+nrow(source.month)
+
+
+## Start the loop
+start.time <- Sys.time()
+for(i in 1:nrow(source.month)){ # For each row in source.month
+      
+      # Determine which citation
+      cit.pos <- source.month$sourceID[i]
+      
+      # Determine which month
+      month.pos <-source.month$monthID[i]
+      
+      # Subset the bee-plant interactions dataframe to the specific month & add a new column with the source ID
+      bee.plant.inter.sub <- data.frame(
+                                  bee.plant.inter[bee.plant.inter$monthID == month.pos,],
+                                  sourceID = cit.pos)
+      
+      # Row bind the subsetted data to the previous dataframe
+      bee.plant.obs <- rbind(bee.plant.obs, bee.plant.inter.sub)
+      
+      print(i)
+  }
+
+end.time <- Sys.time()
+#beepr::beep(3)
+
+# How long did the loop take?
+end.time - start.time
+
+# Number of rows
+nrow(bee.plant.obs)
+
+# Remove repeat observations
+bee.plant.obs <- bee.plant.obs %>%
+  distinct()
+
+# remove the NA row
+bee.plant.obs <- bee.plant.obs[-1,]
+
+# How many observations are there?
+nrow(bee.plant.obs)
+
+
+# Save the bee.plant.obs file
+  # This file takes a while to generate - so in the future - we can just import it into this space
+# save(bee.plant.obs, file= "./Data/bee_plant_obs_2022_02_01.rds")
+
+
+
+
+
+
+# 14. Save the data -------------------------------------------------------
 
 
 # Save the 4-D array

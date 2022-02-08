@@ -93,6 +93,10 @@ load("./Data/bee_plant_inter_2022_02_01.rds")
   # object = bee.plant.inter
   # 2-D matrix
 
+# Load the observed bee-plant-month by source citation interactions
+  # object = bee.plant.obs
+  # 2-D matrix
+load("./Data/bee_plant_obs_2022_02_01.rds")
 
 
 
@@ -128,7 +132,7 @@ ggplot(data = obs.dat, aes(obs)) +
 
 
 
-# 5. Write the model in JAGS ------------------------------------------------
+# 3. Write the model in JAGS ------------------------------------------------
 
 
 
@@ -161,11 +165,11 @@ sigma.p ~ dgamma(0.01, 0.01)
 
 # Ecological model
   # For each possible bee-plant interaction when they are interacting *using the bee.plant.inter matrix
-for(i in n.bee){
+for(i in n.bee.inter){
 
-  for(j in n.plant){
+  for(j in n.plant.inter){
   
-    for(t in n.month){
+    for(t in n.month.inter){
 
     # True bee-plant interaction during month t
     
@@ -181,6 +185,7 @@ for(i in n.bee){
 
 # Observation model
   # For each bee-plant interaction during the months that each source citation was in the field
+  # We don't want to penalize (or assign a non-detection) for months that the source citation was NOT in the field
 for(i in n.bee.obs){
 
   for(j in n.plant.obs){
@@ -210,13 +215,16 @@ for(i in n.bee.obs){
 # Determine the total number of plants that each bee interacts with
   # All we do is sum across the 2nd dimension of the z matrix (which represents plant species)
 
-for(i in 1:n.bee){
+for(i in n.bee.inter){
 
+  for(t in n.month.inter){
+  
     # To determine the total number of plant interactions per bee species per month, we will sum across the plants
       # outside of the model - we will collapse across months
-    z.bee.plant[i, t] <- sum(z[i, , t])
-
+    z.bee.plant.month[i, t] <- sum(z[i, , t])
   }
+  
+}
 
 
 }
@@ -227,23 +235,31 @@ sink()
 
 
 
-# 5. Bundle the data ------------------------------------------------
+# 4. Bundle the data ------------------------------------------------
 
 
 
 
 # Bundle all the data together in a list
 jags.data <- list(
-  bee.plant.inter = bee.plant.inter,
-    n.bee = bee.plant.inter$beeID,
-    n.plant = bee.plant.inter$plantID,
-    n.study = bee.plant.inter$monthID,
-    n.citation = 7,
+  # True bee-plant interactions by month for Ecological model
+    n.bee.inter   = bee.plant.inter$beeID,
+    n.plant.inter = bee.plant.inter$plantID,
+    n.month.inter = bee.plant.inter$monthID,
+    
+  # Observed 
+    n.bee.obs =      bee.plant.obs$beeID,
+    n.plant.obs =    bee.plant.obs$plantID,
+    n.month.obs =    bee.plant.obs$monthID,
+    n.citation.obs = bee.plant.obs$sourceID,
+
+  # Observation data
   y = bee.plant.date.cite)
 
 
 # Initial values - to give the model reasonable starting values for the parameters and latent states
-zinit <- apply(jags.data$y, c(1, 2), max, na.rm = TRUE) 
+  # collapse observations across 4th dimension (souce citations)
+zinit <- apply(jags.data$y, c(1, 2, 3), max, na.rm = TRUE) 
 zinit[zinit == "-Inf"] <- 0
 
 inits <- function() {list(
@@ -251,18 +267,23 @@ inits <- function() {list(
   z = zinit,
   
   # Parameters
+  # Occupancy
   mu.psi = runif(1, -3 , 3),
-  sd.psi = runif(1, 0 , 1),
+  sigma.psi = runif(1, 0 , 1),
+  
+  # Detection
   mu.p = runif(1, -3 , 3),
-  sd.p = runif(1, 0 , 1)
+  sigma.p = runif(1, 0 , 1)
   
 )}
 
 
 # List parameters to monitor
-params <- c("alpha_psi", "mu.psi", "sd.psi",
-            "alpha_p", "mu.p", "sd.p",
-            "z.bee.plant")
+params <- c( "mu.psi", "sigma.psi",
+             "mu.p", "sigma.p",
+             "u",
+             "v",
+            "z.bee.plant.month")
 
 
 
