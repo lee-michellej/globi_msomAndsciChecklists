@@ -1236,7 +1236,7 @@ a <- 1
 
 # Using a for loop - we will loop through each dimension of the y.obs array
   # If there is no NA, we will create a row with the observation in the y.obs.long dataframe
-  # This loop takes like 1 hr
+  # This loop takes ~42 min
 start.time <- Sys.time()
 
 for(i in 1:dim(y.obs)[1]){
@@ -1283,15 +1283,117 @@ y2 <- merge(y.obs.long,
 observed.but.not.possible <- y2[which(is.na(y2$inter) == TRUE),]
 nrow(observed.but.not.possible)
 
-
+# Look at the first row
 observed.but.not.possible[1,]
 
+# Look at the possible bee-plant by month interactions
 bee.plant.inter[bee.plant.inter$beeID == 32 & 
                   bee.plant.inter$plantID == 400 , ]
   # Note that monthID 2 is not listed in the possible times they interact
 
 
 
+# Pull out the information from Globi that corresponds to this information
+# Add a column with the bee name and the plant name
+
+# Add empty columns to fill in
+observed.but.not.possible$beeName <- NA
+observed.but.not.possible$plantName <- NA
+
+# Loop through each row of the dataframe
+for(i in 1:nrow(observed.but.not.possible)){
+  # Pull out the bee name
+  observed.but.not.possible$beeName[i] <- bee.species[observed.but.not.possible$beeID[i]]
+  
+  # Pull out the plant name
+  observed.but.not.possible$plantName[i] <- plant.species[observed.but.not.possible$plantID[i]]
+}
+
+# Now, we have to determine which row is associated with each interaction in the Globi database
+obs.not.possible.globi <- data.frame()
+
+for(i in 1:nrow(observed.but.not.possible)){
+
+  # Determine which rows match with the criteria
+  globi.row <- which( dat7$resolvedBeeNames == observed.but.not.possible$beeName[i]  &
+                      dat7$resolvedPlantNames ==observed.but.not.possible$plantName[i] & 
+                      dat7$month == observed.but.not.possible$monthID[i] )
+  
+  glob.sub <- dat7[globi.row,]
+  
+  # Then add the info to the new dataframe
+  obs.not.possible.globi <- rbind(obs.not.possible.globi, glob.sub)
+  
+  print(i)
+  
+}
+
+
+# Number of rows:
+nrow(obs.not.possible.globi)
+
+
+# Append the phenology information
+
+# Add columns for bee phenology
+phen <- data.frame(Bee.Jan = rep(NA, times = nrow(obs.not.possible.globi)),
+                      Bee.Feb = rep(NA, times = nrow(obs.not.possible.globi)),
+                      Bee.Mar = rep(NA, times = nrow(obs.not.possible.globi)),
+                      Bee.Apr = rep(NA, times = nrow(obs.not.possible.globi)),
+                      Bee.May = rep(NA, times = nrow(obs.not.possible.globi)),
+                      Bee.Jun = rep(NA, times = nrow(obs.not.possible.globi)),
+                      Bee.Jul = rep(NA, times = nrow(obs.not.possible.globi)),
+                      Bee.Aug = rep(NA, times = nrow(obs.not.possible.globi)),
+                      Bee.Sep = rep(NA, times = nrow(obs.not.possible.globi)),
+                      Bee.Oct = rep(NA, times = nrow(obs.not.possible.globi)),
+                      Bee.Nov = rep(NA, times = nrow(obs.not.possible.globi)),
+                      Bee.Dec = rep(NA, times = nrow(obs.not.possible.globi)),
+                      
+                      Plant.Jan = rep(NA, times = nrow(obs.not.possible.globi)),
+                      Plant.Feb = rep(NA, times = nrow(obs.not.possible.globi)),
+                      Plant.Mar = rep(NA, times = nrow(obs.not.possible.globi)),
+                      Plant.Apr = rep(NA, times = nrow(obs.not.possible.globi)),
+                      Plant.May = rep(NA, times = nrow(obs.not.possible.globi)),
+                      Plant.Jun = rep(NA, times = nrow(obs.not.possible.globi)),
+                      Plant.Jul = rep(NA, times = nrow(obs.not.possible.globi)),
+                      Plant.Aug = rep(NA, times = nrow(obs.not.possible.globi)),
+                      Plant.Sep = rep(NA, times = nrow(obs.not.possible.globi)),
+                      Plant.Oct = rep(NA, times = nrow(obs.not.possible.globi)),
+                      Plant.Nov = rep(NA, times = nrow(obs.not.possible.globi)),
+                      Plant.Dec = rep(NA, times = nrow(obs.not.possible.globi)))
+
+obs.not.possible.globi <- cbind(obs.not.possible.globi, phen)
+
+# Pull out the column number that identifies the bee phenology
+bee.phen.cols <- grep("Bee.", colnames(obs.not.possible.globi))
+
+# Pull out the column number that identifies the plant phenology
+plant.phen.cols <- grep("Plant.", colnames(obs.not.possible.globi))
+
+
+# Loop through each row
+for(i in 1:nrow(obs.not.possible.globi)){
+  
+  # Determine which row matches between obs.not.possible.globi and bee.list
+  bee.list.row <- which(obs.not.possible.globi$resolvedBeeNames[i] == bee.list$scientificName)
+
+  # Determine which row matches between obs.not.possible.globi and plant.phenology
+  plant.list.row <- which(obs.not.possible.globi$resolvedPlantNames[i] == plant.phenology$scientificName)
+  
+    
+  # Add the bee phenology info 
+  obs.not.possible.globi[i, bee.phen.cols] <-  bee.list[bee.list.row, 7:18]
+  
+  # Add the plant phenology info
+  obs.not.possible.globi[i, plant.phen.cols] <-  plant.phenology[plant.list.row, 27:(27+11)]
+
+  
+}
+
+# Write the file
+#write.csv(obs.not.possible.globi,
+#          file = "./Data/globi-obs-not-possible 2022 02 10.csv")
+#
 
 
 
