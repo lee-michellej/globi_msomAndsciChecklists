@@ -1398,6 +1398,44 @@ for(i in 1:nrow(obs.not.possible.globi)){
 
 
 
+# In the meantime, to get the model to work, I will assign all of these species non-detections in the observation array
+
+
+
+observed.but.not.possible
+
+
+
+# Now we will fill in the 4-D array with the presence data
+start.time <- Sys.time()
+for(i in 1:nrow(observed.but.not.possible)){
+  
+  # Determine which citation made the mistake
+  citID <- which(bee.plant.date.cite[observed.but.not.possible$beeID[i], 
+                      observed.but.not.possible$plantID[i], 
+                      observed.but.not.possible$monthID[i], 
+                       ] == 1)
+  
+  # Replace the 1 with an NA
+bee.plant.date.cite[observed.but.not.possible$beeID[i], 
+                    observed.but.not.possible$plantID[i], 
+                    observed.but.not.possible$monthID[i], 
+                    citID] <- NA
+  
+  
+}
+
+end.time <- Sys.time()
+# beepr::beep(3)
+
+# How long did the loop take?
+end.time - start.time
+
+
+
+
+
+
 
 # 15. Save the data -------------------------------------------------------
 

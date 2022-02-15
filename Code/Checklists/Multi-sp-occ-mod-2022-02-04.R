@@ -198,17 +198,18 @@ for(i in 1:n.row.obs){
 # Derived quantities
 # Determine the total number of plants that each bee interacts with
   # All we do is sum across the 2nd dimension of the z matrix (which represents plant species)
-#
-#for(i in n.bee.inter){
-#
-#  for(t in n.month.inter){
-#  
-#    # To determine the total number of plant interactions per bee species per month, we will sum across the plants
-#      # outside of the model - we will collapse across months
-#    z.bee.plant.month[i, t] <- sum(z[i, , t])
-#  }
-#  
-#}
+
+for(i in n.bee.inter){
+
+  for(t in n.month.inter){
+  
+    # To determine the total number of plant interactions per bee species per month, we will sum across the plants
+      # outside of the model - we will collapse across months
+    z.bee.plant.month[i, t] <- sum(z[i, , t])
+    
+  }
+  
+}
 
 
 }
@@ -222,66 +223,39 @@ sink()
 # 4. Bundle the data ------------------------------------------------
 
 
-bee.ID <- 4
-plant.ID <- 2
 
-#bee.plant.inter %>%
-#  group_by(beeID, plantID, monthID) %>%
-#  tally() %>%
-#  filter(n > 1)
-#
-#n <- 100
-#n2 <-  10
+
+# Subset to the first 100 plants
+bee.plant.inter2 <- bee.plant.inter[bee.plant.inter$plantID < 101,]
+bee.plant.obs2 <- bee.plant.obs[bee.plant.obs$plantID < 101,]
+bee.plant.date.cite2 <- bee.plant.date.cite[, 1:100, , ]
+
 
 # Bundle all the data together in a list
 jags.data <- list(
+  
   # Number of bee species
   n.bee = dim(bee.plant.date.cite)[1],
   
  # Number of true bee-plant interactions by month
- n.row.inter = nrow(bee.plant.inter),
+ n.row.inter = nrow(bee.plant.inter2),
  
  # True bee-plant interactions by month for Ecological model
-     n.bee.inter   = bee.plant.inter$beeID,
-     n.plant.inter = bee.plant.inter$plantID,
-     n.month.inter = bee.plant.inter$monthID,
+     n.bee.inter   = bee.plant.inter2$beeID,
+     n.plant.inter = bee.plant.inter2$plantID,
+     n.month.inter = bee.plant.inter2$monthID,
      
    # Number of possible observations
-   n.row.obs = nrow(bee.plant.obs), 
+   n.row.obs = nrow(bee.plant.obs2), 
    
    # Observed 
-     n.bee.obs =      bee.plant.obs$beeID,
-     n.plant.obs =    bee.plant.obs$plantID,
-     n.month.obs =    bee.plant.obs$monthID,
-     n.citation.obs = bee.plant.obs$sourceID,
-  
-#    n.row.inter = length(bee.plant.inter[bee.plant.inter$beeID == bee.ID &
-#                                           bee.plant.inter$plantID == plant.ID,]$beeID),
-#
-#  # True bee-plant interactions by month for Ecological model
-#    n.bee.inter   = bee.plant.inter[bee.plant.inter$beeID == bee.ID &
-#                                      bee.plant.inter$plantID == plant.ID ,]$beeID,
-#    n.plant.inter = bee.plant.inter[bee.plant.inter$beeID == bee.ID &
-#                                      bee.plant.inter$plantID == plant.ID,]$plantID,
-#    n.month.inter = bee.plant.inter[bee.plant.inter$beeID == bee.ID &
-#                                      bee.plant.inter$plantID == plant.ID,]$monthID,
-#    
-#  # Number of possible observations
-#  n.row.obs = length(bee.plant.obs[bee.plant.obs$beeID == bee.ID &
-#                                   bee.plant.obs$plantID == plant.ID,]$beeID), 
-#  
-#  # Observed 
-#    n.bee.obs =      bee.plant.obs[bee.plant.obs$beeID == bee.ID &
-#                                     bee.plant.obs$plantID == plant.ID,]$beeID,
-#    n.plant.obs =    bee.plant.obs[bee.plant.obs$beeID == bee.ID &
-#                                     bee.plant.obs$plantID == plant.ID,]$plantID,
-#    n.month.obs =    bee.plant.obs[bee.plant.obs$beeID == bee.ID &
-#                                     bee.plant.obs$plantID == plant.ID,]$monthID,
-#    n.citation.obs = bee.plant.obs[bee.plant.obs$beeID == bee.ID &
-#                                     bee.plant.obs$plantID == plant.ID,]$sourceID,
+     n.bee.obs =      bee.plant.obs2$beeID,
+     n.plant.obs =    bee.plant.obs2$plantID,
+     n.month.obs =    bee.plant.obs2$monthID,
+     n.citation.obs = bee.plant.obs2$sourceID,
 
   # Observation data
-  y = bee.plant.date.cite)
+  y = bee.plant.date.cite2)
 
 # Look at the data structure
 str(jags.data)
@@ -308,21 +282,6 @@ inits <- function() {list(
 )}
 
 
-zinit[77,65,1]
-
-jags.data$y[77,65,1, ]
-
-
-  bee.plant.obs[bee.plant.obs$beeID == 77 &
-                bee.plant.obs$plantID == 65 & 
-                bee.plant.obs$monthID == 1, ]
-  
-
-  
-  bee.plant.inter[bee.plant.inter$beeID == 77 &
-                    bee.plant.inter$plantID == 65 & 
-                    bee.plant.inter$monthID == 1, ]
-  
   
 
 # List parameters to monitor
@@ -342,13 +301,21 @@ params <- c( "mu.psi", "sigma.psi",
 
 
 # MCMC settings
-ni <- 2
-na <- 1
-nb <- 1
+ni <- 100
+na <- 50
+nb <- 20
 nt <- 1
 nc <- 3
 
 
+# Will 578 plant species
+# 2 iterations = 5 minutes
+# 100 iterations = 100 * 5/2 = 250 minutes
+
+
+# With 100 plant species
+# 2 iterations = 0.37 sec
+# 100 iterations = 100 * 0.37/2 * 1/60 =  minutes
 
 
 
@@ -381,7 +348,6 @@ end.time - start.time
 
 
 
-
 # 8. Look at model outputs -------------------------------------------------
 
 
@@ -400,10 +366,12 @@ plot(out)
 
 
 
-## Summarize the z output
 
-# We saved the following object from jags: z.bee.plant.month
-jags.data
+# Summarize the z output
+
+out$sims.list$z.bee.plant.month
+
+
 
 
 
@@ -452,7 +420,7 @@ ggplot(dat[grep("interact", dat$names),],
         panel.grid.minor = element_blank()) 
 
 # Save the plot
-ggsave("./Figures/Model_params_psi_2022_02_08.pdf", height = 15, width = 8)
+# ggsave("./Figures/Model_params_psi_2022_02_08.pdf", height = 15, width = 8)
 
 
 
@@ -478,7 +446,7 @@ ggplot(dat[grep("detect", dat$names),],
         panel.grid.minor = element_blank()) 
 
 # Save the plot
-ggsave("./Figures/Model_params_p_2022_02_08.pdf", height = 15, width = 8)
+# ggsave("./Figures/Model_params_p_2022_02_08.pdf", height = 15, width = 8)
 
 
 
