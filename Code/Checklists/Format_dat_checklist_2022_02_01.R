@@ -873,7 +873,7 @@ length(bee.species) *
 
 
 # If section 7 was not run - load the file
-load("./Data/bee_plant_inter_2022_02_01.rds")
+# load("./Data/bee_plant_inter_2022_02_01.rds")
 
 
 
@@ -882,82 +882,84 @@ load("./Data/bee_plant_inter_2022_02_01.rds")
   # possible
   # AND forbidden
 
-## Create empty dataframe for possible bee-plant interactions
-#bee.plant.inter <- data.frame(beeID = NA,
-#                              plantID = NA,
-#                              monthID = NA)
-#
-## Create empty dataframe for FORBIDDEN bee-plant interactions
-#bee.plant.forbid <- data.frame(beeID = NA,
-#                               plantID = NA,
-#                               monthID = NA)
-#
-## These objects will serve as counters, it will make sense in the loop
-#a <- 1
-#b <- 1
-#
-## Start the loop
-#  # This takes 1.7 hrs to run
-#start.time <- Sys.time()
-#for(i in 1:nrow(bee.plant.date.cite)){ # For each bee species
-#  for(j in 1:ncol(bee.plant.date.cite)){ # For each plant species
-#    for(k in 1:12){ # for each month
-#      
-#      # There is a row in the plant.phenology table that is all NA - we need to skip it
-#     # if(is.na(plant.phenology[j, k + 26]) == FALSE){
-#        
-#        
-#        # Possible interactions
-#        if(# If the bee is active (bee.phenology == 1)
-#          
-#          # Start with January (column == 7)
-#          bee.list[i, k+6] == 1 &
-#          
-#          # AND if the plant is available (plant.phenology == 1)
-#          plant.phenology[j, k + 26] == 1){
-#          
-#          # Then that bee plant interaction can occur and write it in the file: bee.plant.inter
-#          bee.plant.inter[a,1] <- i
-#          bee.plant.inter[a,2] <- j
-#          bee.plant.inter[a,3] <- k
-#          
-#          # Add 1 to the counter
-#          a <- a + 1
-#        }
-#        
-#        # Forbidden links
-#      #  if(# If the bee is NOT active
-#      #    
-#      #    # Make sure this is the right column############
-#      #    bee.list[i, k+6] == 0 |
-#      #    
-#      #    # OR if the plant is not available
-#      #    plant.phenology[j, k + 26] == 0){
-#      #    
-#      #    # This is a forbidden link, and write it here
-#      #    bee.plant.forbid[b,1] <- i
-#      #    bee.plant.forbid[b,2] <- j
-#      #    bee.plant.forbid[b,3] <- k
-#      #    
-#      #    # Add 1 to the counter
-#      #    b <- b + 1
-#      #  }
-#        
-#      }
-#      
-#    }
-#    
-#  }
-#
-#end.time <- Sys.time()
-##beepr::beep(3)
-#
-## How long did the loop take?
-#end.time - start.time
+# Create empty dataframe for possible bee-plant interactions
+bee.plant.inter <- data.frame(beeID = NA,
+                              plantID = NA,
+                              monthID = NA)
+
+# Create empty dataframe for FORBIDDEN bee-plant interactions
+bee.plant.forbid <- data.frame(beeID = NA,
+                               plantID = NA,
+                               monthID = NA)
+
+# These objects will serve as counters, it will make sense in the loop
+a <- 1
+b <- 1
+
+# Start the loop
+  # This takes 1.7 hrs to run
+start.time <- Sys.time()
+
+for(i in 1:nrow(bee.plant.date.cite)){ # For each bee species
+  for(j in 1:ncol(bee.plant.date.cite)){ # For each plant species
+    for(k in 1:dim(bee.plant.date.cite)[3]){ # for each month
+      
+      # There is a row in the plant.phenology table that is all NA - we need to kip it
+     # if(is.na(plant.phenology[j, k + 26]) == FALSE){
+        
+        
+        # Possible interactions
+        if(# If the bee is active (bee.phenology == 1)
+          
+          # Start with January (column == 7)
+          bee.list[i, k+6] == 1 &
+          
+          # AND if the plant is available (plant.phenology == 1)
+          plant.phenology[j, k + 26] == 1){
+          
+          # Then that bee plant interaction can occur and write it in the file: ee.plant.inter
+          bee.plant.inter[a,1] <- i
+          bee.plant.inter[a,2] <- j
+          bee.plant.inter[a,3] <- k
+          
+          # Add 1 to the counter
+          a <- a + 1
+        }
+        
+        # Forbidden links
+      #  if(# If the bee is NOT active
+      #    
+      #    # Make sure this is the right column############
+      #    bee.list[i, k+6] == 0 |
+      #    
+      #    # OR if the plant is not available
+      #    plant.phenology[j, k + 26] == 0){
+      #    
+      #    # This is a forbidden link, and write it here
+      #    bee.plant.forbid[b,1] <- i
+      #    bee.plant.forbid[b,2] <- j
+      #    bee.plant.forbid[b,3] <- k
+      #    
+      #    # Add 1 to the counter
+      #    b <- b + 1
+      #  }
+        
+      }
+      
+    }
+    
+  }
+
+end.time <- Sys.time()
+#beepr::beep(3)
+
+# How long did the loop take?
+end.time - start.time
 
 # How many possible interactions are there?
   # 216,385
 nrow(bee.plant.inter)
+
 
 
 # Save the bee.plant.inter file
@@ -1184,22 +1186,29 @@ nrow(bee.plant.obs)
   # bee.plant.inter
 
 
-head(bee.plant.inter)
+# The look takes a while to run, so you can just upload the file:
+bee.plant.obs <- read.csv("./Data/bee-plant-obs-long-format 2022 02 15.csv")
 
-head(bee.plant.obs)
+# head(bee.plant.inter)
+# 
+# head(bee.plant.obs)
+# 
+# 
+# # Add a new column
+# bee.plant.obs$y <- NA
+# 
+# for(i in 1:nrow(bee.plant.obs)){
+#   
+#   bee.plant.obs$y[i] <-  bee.plant.date.cite[bee.plant.obs$beeID[i],
+#                                              bee.plant.obs$plantID[i],
+#                                              bee.plant.obs$monthID[i],
+#                                              bee.plant.obs$sourceID[i]]
+#   
+# }
+# 
+# 
+# write.csv(bee.plant.obs, file = "./Data/bee-plant-obs-long-format 2022 02 15.csv")
 
-
-# Add a new column
-bee.plant.obs$y <- NA
-
-for(i in 1:nrow(bee.plant.obs)){
-  
-  bee.plant.obs$y[i] <-  bee.plant.date.cite[bee.plant.obs$beeID[i],
-                                             bee.plant.obs$plantID[i],
-                                             bee.plant.obs$monthID[i],
-                                             bee.plant.obs$sourceID[i]]
-  
-}
 
 # Are any of the rows have NA?
 length(which(is.na(bee.plant.obs$y) == TRUE))
@@ -1224,50 +1233,51 @@ nrow(bee.plant.obs %>%
 y.obs <- apply(bee.plant.date.cite, c(1, 2, 3), max, na.rm = TRUE) 
 y.obs[y.obs == "-Inf"] <- NA
 
-# Create a new dataframe where we will store the observations in long format (similar to the possible interactions)
-y.obs.long <- data.frame(beeID = NA,
-                         plantID = NA,
-                         monthID = NA,
-                         obs = NA)
+# # Create a new dataframe where we will store the observations in long format # (similar to the possible interactions)
+# y.obs.long <- data.frame(beeID = NA,
+#                          plantID = NA,
+#                          monthID = NA,
+#                          obs = NA)
+# 
+# # Start a counter
+# a <- 1
+# 
+# 
+# # Using a for loop - we will loop through each dimension of the y.obs array
+#   # If there is no NA, we will create a row with the observation in the y.obs.long # dataframe
+#   # This loop takes ~42 min
+# start.time <- Sys.time()
+# 
+# for(i in 1:dim(y.obs)[1]){
+#   for(j in 1:dim(y.obs)[2]){
+#     for(k in 1:dim(y.obs)[3]){
+#       
+#       if(is.na(y.obs[i,j,k]) == FALSE){
+#         
+#         y.obs.long[a, 1] <- i
+#         y.obs.long[a, 2] <- j
+#         y.obs.long[a, 3] <- k
+#         y.obs.long[a, 4] <- y.obs[i,j,k]
+#         
+#         a <- a + 1
+#       } 
+#       
+#     }
+#   }
+# }
+# 
+# end.time <- Sys.time()
+# beepr::beep(3)
+# 
+# # How long did the loop take?
+# end.time - start.time
+# 
+# 
+# # Save the output
+# write.csv(y.obs.long, file = "./Data/observations-documented-but-not-possible-2022 02 08.csv")
 
-# Start a counter
-a <- 1
 
-
-# Using a for loop - we will loop through each dimension of the y.obs array
-  # If there is no NA, we will create a row with the observation in the y.obs.long dataframe
-  # This loop takes ~42 min
-start.time <- Sys.time()
-
-for(i in 1:dim(y.obs)[1]){
-  for(j in 1:dim(y.obs)[2]){
-    for(k in 1:dim(y.obs)[3]){
-      
-      if(is.na(y.obs[i,j,k]) == FALSE){
-        
-        y.obs.long[a, 1] <- i
-        y.obs.long[a, 2] <- j
-        y.obs.long[a, 3] <- k
-        y.obs.long[a, 4] <- y.obs[i,j,k]
-        
-        a <- a + 1
-      } 
-      
-    }
-  }
-}
-
-end.time <- Sys.time()
-beepr::beep(3)
-
-# How long did the loop take?
-end.time - start.time
-
-
-# Save the output
-write.csv(y.obs.long, file = "./Data/observations-documented-but-not-possible-2022 02 08.csv")
-
-
+y.obs.long <- read.csv("./Data/observations-documented-but-not-possible-2022 02 08.csv")
 
 
 
@@ -1284,13 +1294,16 @@ observed.but.not.possible <- y2[which(is.na(y2$inter) == TRUE),]
 nrow(observed.but.not.possible)
 
 # Look at the first row
-observed.but.not.possible[1,]
+observed.but.not.possible[21,]
 
 # Look at the possible bee-plant by month interactions
-bee.plant.inter[bee.plant.inter$beeID == 32 & 
-                  bee.plant.inter$plantID == 400 , ]
+bee.plant.inter[bee.plant.inter$beeID == 35 & 
+                  bee.plant.inter$plantID == 1 , ]
   # Note that monthID 2 is not listed in the possible times they interact
 
+
+plant.phenology[plant.phenology$scientificName == "Oxalis pes-caprae", 27: (27+11)]
+bee.list[bee.list$scientificName == "Agapostemon texanus", 7: (7+11)]
 
 
 # Pull out the information from Globi that corresponds to this information
@@ -1303,10 +1316,12 @@ observed.but.not.possible$plantName <- NA
 # Loop through each row of the dataframe
 for(i in 1:nrow(observed.but.not.possible)){
   # Pull out the bee name
-  observed.but.not.possible$beeName[i] <- bee.species[observed.but.not.possible$beeID[i]]
+  observed.but.not.possible$beeName[i] <- 
+            bee.species[observed.but.not.possible$beeID[i]]
   
   # Pull out the plant name
-  observed.but.not.possible$plantName[i] <- plant.species[observed.but.not.possible$plantID[i]]
+  observed.but.not.possible$plantName[i] <- 
+            plant.species[observed.but.not.possible$plantID[i]]
 }
 
 # Now, we have to determine which row is associated with each interaction in the Globi database
@@ -1316,7 +1331,7 @@ for(i in 1:nrow(observed.but.not.possible)){
 
   # Determine which rows match with the criteria
   globi.row <- which( dat7$resolvedBeeNames == observed.but.not.possible$beeName[i]  &
-                      dat7$resolvedPlantNames ==observed.but.not.possible$plantName[i] & 
+                      dat7$resolvedPlantNames == observed.but.not.possible$plantName[i] & 
                       dat7$month == observed.but.not.possible$monthID[i] )
   
   glob.sub <- dat7[globi.row,]
@@ -1331,6 +1346,9 @@ for(i in 1:nrow(observed.but.not.possible)){
 
 # Number of rows:
 nrow(obs.not.possible.globi)
+
+
+obs.not.possible.globi$resolvedBeeNames
 
 
 # Append the phenology information
@@ -1362,13 +1380,23 @@ phen <- data.frame(Bee.Jan = rep(NA, times = nrow(obs.not.possible.globi)),
                       Plant.Nov = rep(NA, times = nrow(obs.not.possible.globi)),
                       Plant.Dec = rep(NA, times = nrow(obs.not.possible.globi)))
 
-obs.not.possible.globi <- cbind(obs.not.possible.globi, phen)
+obs.not.possible.globi$resolvedBeeNames
+
+obs.not.possible.globi <- data.frame(obs.not.possible.globi, phen)
+
+obs.not.possible.globi$resolvedBeeNames
 
 # Pull out the column number that identifies the bee phenology
 bee.phen.cols <- grep("Bee.", colnames(obs.not.possible.globi))
+# Only take out months
+bee.phen.cols <- bee.phen.cols[2:13]
+colnames(obs.not.possible.globi)[bee.phen.cols]
 
 # Pull out the column number that identifies the plant phenology
 plant.phen.cols <- grep("Plant.", colnames(obs.not.possible.globi))
+# Only take out months
+plant.phen.cols <- plant.phen.cols[2:13]
+colnames(obs.not.possible.globi)[plant.phen.cols]
 
 
 # Loop through each row
@@ -1382,13 +1410,19 @@ for(i in 1:nrow(obs.not.possible.globi)){
   
     
   # Add the bee phenology info 
-  obs.not.possible.globi[i, bee.phen.cols] <-  bee.list[bee.list.row, 7:18]
+  obs.not.possible.globi[i, bee.phen.cols] <-  bee.list[bee.list.row, 7:(7+11)]
   
   # Add the plant phenology info
   obs.not.possible.globi[i, plant.phen.cols] <-  plant.phenology[plant.list.row, 27:(27+11)]
 
+  print(obs.not.possible.globi$resolvedBeeNames[i])
   
 }
+
+
+obs.not.possible.globi[1,]
+
+obs.not.possible.globi$resolvedBeeNames
 
 # Write the file
 #write.csv(obs.not.possible.globi,
@@ -1402,7 +1436,6 @@ for(i in 1:nrow(obs.not.possible.globi)){
 
 
 
-observed.but.not.possible
 
 
 
