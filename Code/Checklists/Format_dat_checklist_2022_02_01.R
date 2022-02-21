@@ -1278,7 +1278,7 @@ y.obs[y.obs == "-Inf"] <- NA
  
  
 # # Save the output
- write.csv(y.obs.long, file = "./Data/observations-documented-but-not-possible-2022 02 18.csv")
+# write.csv(y.obs.long, file = "./Data/observations-documented-but-not-possible-2022 02 18.csv")
 
 
 # y.obs.long <- read.csv("./Data/observations-documented-but-not-possible-2022 02 08.csv")
@@ -1301,13 +1301,9 @@ nrow(observed.but.not.possible)
 observed.but.not.possible[21,]
 
 # Look at the possible bee-plant by month interactions
-bee.plant.inter[bee.plant.inter$beeID == 35 & 
-                  bee.plant.inter$plantID == 1 , ]
+bee.plant.inter[bee.plant.inter$beeID == 72 & 
+                  bee.plant.inter$plantID == 12 , ]
   # Note that monthID 2 is not listed in the possible times they interact
-
-
-plant.phenology[plant.phenology$scientificName == "Oxalis pes-caprae", 27: (27+11)]
-bee.list[bee.list$scientificName == "Agapostemon texanus", 7: (7+11)]
 
 
 # Pull out the information from Globi that corresponds to this information
@@ -1430,8 +1426,14 @@ obs.not.possible.globi$resolvedBeeNames
 
 # Write the file
 #write.csv(obs.not.possible.globi,
-#          file = "./Data/globi-obs-not-possible 2022 02 10.csv")
+#          file = "./Data/globi-obs-not-possible 2022 02 18.csv")
 #
+
+
+
+
+
+
 
 
 
@@ -1479,12 +1481,12 @@ end.time - start.time
 
 # Save the 4-D array
 save(bee.plant.date.cite, 
-     file= "./Data/data_summary/globi_data_formatted_bee_plant_date_citation_2022_02_01.rds")
+     file= "./Data/data_summary/globi_data_formatted_bee_plant_date_citation_2022_02_18.rds")
 
 
 # Save the subsetted Globi data
 save(dat7, 
-     file= "./Data/data_summary/FINAL - subsetted_globi_data_2022 02 01.csv" )
+     file= "./Data/data_summary/FINAL - subsetted_globi_data_2022 02 18.csv" )
 
 
 

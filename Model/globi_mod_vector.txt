@@ -1,0 +1,83 @@
+
+model{
+
+# Priors
+for(i in 1:n.bee){ # For each bee species
+
+# Species-specific random effect for psi
+# psi = The probability a bee species interacts with a plant species
+
+  u[i] ~ dnorm(mu.psi, tau.psi)
+
+# Species-specific random effect for p
+# p = The detection probability = the probability a study documented a bee-plant interaction
+
+  v[i] ~ dnorm(mu.p, tau.p)
+
+}
+
+
+# Mean values
+mu.psi ~ dnorm(0, 0.01)
+mu.p ~ dnorm(0, 0.01)
+
+# Precision and sd values for psi
+tau.psi <- 1/(sigma.psi * sigma.psi)
+sigma.psi ~ dgamma(0.01, 0.01)
+
+# Precision and sd values for p
+tau.p <- 1/(sigma.p * sigma.p)
+sigma.p ~ dgamma(0.01, 0.01)
+
+
+# Ecological model
+  # For each possible bee-plant interaction when they are interacting *using the bee.plant.inter matrix
+for(i in 1:n.row.true){
+
+    # True bee-plant interaction during month t
+    
+    z[bee.ID.true[i], plant.ID.true[i], month.ID.true[i]] ~ dbern(psi[bee.ID.true[i], plant.ID.true[i], month.ID.true[i]])
+ 
+      logit(psi[bee.ID.true[i], plant.ID.true[i], month.ID.true[i]]) <- u[bee.ID.true[i]]
+  
+}
+
+
+# Observation model
+  # For each bee-plant interaction during the months that each source citation was in the field
+  # We don't want to penalize (or assign a non-detection) for months that the source citation was NOT in the field
+for(i in 1:n.row.obs){
+
+        # Observed bee-plant interaction by month and by source citation
+        
+          y[i] ~ dbern(p.eff[bee.ID.obs[i], plant.ID.obs[i], month.ID.obs[i], citation.ID.obs[i]])
+
+          p.eff[bee.ID.obs[i], plant.ID.obs[i], month.ID.obs[i], citation.ID.obs[i]] <- 
+          p[bee.ID.obs[i], plant.ID.obs[i], month.ID.obs[i], citation.ID.obs[i]] * 
+          z[bee.ID.obs[i], plant.ID.obs[i], month.ID.obs[i]]
+          
+          logit(p[bee.ID.obs[i], plant.ID.obs[i], month.ID.obs[i], citation.ID.obs[i]]) <- v[bee.ID.obs[i]]
+
+}
+
+
+
+## Derived quantities
+## Determine the total number of plants that each bee interacts with
+#  # All we do is sum across the 2nd dimension of the z matrix (which represents plant species)
+#
+#for(i in n.bee.inter){
+#
+#  for(t in n.month.inter){
+#  
+#    # To determine the total number of plant interactions per bee species per month, we will sum across the plants
+#      # outside of the model - we will collapse across months
+#    z.bee.plant.month[i, t] <- sum(z[i, , t])
+#    
+#  }
+#  
+#}
+
+
+}
+
