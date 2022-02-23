@@ -1172,7 +1172,7 @@ nrow(bee.plant.obs)
 
 # Save the bee.plant.obs file
   # This file takes a while to generate - so in the future - we can just import it into this space
-# save(bee.plant.obs, file= "./Data/bee_plant_obs_2022_02_01.rds")
+save(bee.plant.obs, file= "./Data/bee_plant_obs_2022_02_18.rds")
 
 
 
@@ -1193,25 +1193,25 @@ nrow(bee.plant.obs)
 # The look takes a while to run, so you can just upload the file:
 # bee.plant.obs <- read.csv("./Data/bee-plant-obs-long-format 2022 02 18.csv")
 
-# head(bee.plant.inter)
-# 
-# head(bee.plant.obs)
-# 
-# 
-# # Add a new column
-# bee.plant.obs$y <- NA
-# 
-# for(i in 1:nrow(bee.plant.obs)){
-#   
-#   bee.plant.obs$y[i] <-  bee.plant.date.cite[bee.plant.obs$beeID[i],
-#                                              bee.plant.obs$plantID[i],
-#                                              bee.plant.obs$monthID[i],
-#                                              bee.plant.obs$sourceID[i]]
-#   
-# }
-# 
-# 
-# write.csv(bee.plant.obs, file = "./Data/bee-plant-obs-long-format 2022 02 18.csv")
+ head(bee.plant.inter)
+ 
+ head(bee.plant.obs)
+ 
+ 
+ # Add a new column
+ bee.plant.obs$y <- NA
+ 
+ for(i in 1:nrow(bee.plant.obs)){
+   
+   bee.plant.obs$y[i] <-  bee.plant.date.cite[bee.plant.obs$beeID[i],
+                                              bee.plant.obs$plantID[i],
+                                              bee.plant.obs$monthID[i],
+                                              bee.plant.obs$sourceID[i]]
+   
+ }
+ 
+ 
+ write.csv(bee.plant.obs, file = "./Data/bee-plant-obs-long-format 2022 02 18.csv")
 
 
 # Are any of the rows have NA?
@@ -1281,7 +1281,7 @@ y.obs[y.obs == "-Inf"] <- NA
 # write.csv(y.obs.long, file = "./Data/observations-documented-but-not-possible-2022 02 18.csv")
 
 
-# y.obs.long <- read.csv("./Data/observations-documented-but-not-possible-2022 02 08.csv")
+#y.obs.long <- read.csv("./Data/observations-documented-but-not-possible-2022 02 18.csv")
 
 
 
@@ -1298,11 +1298,11 @@ observed.but.not.possible <- y2[which(is.na(y2$inter) == TRUE),]
 nrow(observed.but.not.possible)
 
 # Look at the first row
-observed.but.not.possible[21,]
+observed.but.not.possible[1,]
 
 # Look at the possible bee-plant by month interactions
-bee.plant.inter[bee.plant.inter$beeID == 72 & 
-                  bee.plant.inter$plantID == 12 , ]
+bee.plant.inter[bee.plant.inter$beeID == 1 & 
+                  bee.plant.inter$plantID == 73 , ]
   # Note that monthID 2 is not listed in the possible times they interact
 
 

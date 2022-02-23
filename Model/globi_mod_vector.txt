@@ -62,21 +62,18 @@ for(i in 1:n.row.obs){
 
 
 
-## Derived quantities
-## Determine the total number of plants that each bee interacts with
-#  # All we do is sum across the 2nd dimension of the z matrix (which represents plant species)
+#for(i in 1:n.bee){
 #
-#for(i in n.bee.inter){
-#
-#  for(t in n.month.inter){
+#  for(j in 1:n.plant){
 #  
-#    # To determine the total number of plant interactions per bee species per month, we will sum across the plants
-#      # outside of the model - we will collapse across months
-#    z.bee.plant.month[i, t] <- sum(z[i, , t])
-#    
+#    z.bee.plant[i, j] <- max(z[i, j, ])
+#  
 #  }
 #  
+#  z.bee.tot[i] <- sum(z.bee.plant[i, ])
+#
 #}
+
 
 
 }

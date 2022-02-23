@@ -96,7 +96,7 @@ load("./Data/bee_plant_inter_2022_02_18.rds")
 # Load the observed bee-plant-month by source citation interactions
   # object = bee.plant.obs
   # 2-D matrix
-load("./Data/bee_plant_obs_2022_02_18.rds")
+load("./Data/bee_plant_obs_2022_02_01.rds")
 
 
 
@@ -207,21 +207,18 @@ for(i in 1:n.row.obs){
 
 
 
-## Derived quantities
-## Determine the total number of plants that each bee interacts with
-#  # All we do is sum across the 2nd dimension of the z matrix (which represents plant species)
-#
-#for(i in n.bee.inter){
-#
-#  for(t in n.month.inter){
-#  
-#    # To determine the total number of plant interactions per bee species per month, we will sum across the plants
-#      # outside of the model - we will collapse across months
-#    z.bee.plant.month[i, t] <- sum(z[i, , t])
-#    
-#  }
-#  
-#}
+for(i in 1:n.bee){
+
+  for(j in 1:n.plant){
+  
+    z.bee.plant[i, j] <- max(z[i, j, ])
+  
+  }
+  
+  z.bee.tot[i] <- sum(z.bee.plant[i, ])
+
+}
+
 
 
 }
@@ -274,9 +271,13 @@ str(jags.data)
 #zinit <- apply(jags.data$y, c(1, 2, 3), max, na.rm = TRUE) 
 #zinit[zinit == "-Inf"] <- NA
 
+zinit <- apply(bee.plant.date.cite, c(1, 2, 3), max, na.rm = TRUE) 
+zinit[zinit == "-Inf"] <- NA
+
+
 inits <- function() {list(
   # Latent states
-  # z = zinit,
+  z = zinit,
   
   # Parameters
   # Occupancy
@@ -297,7 +298,7 @@ params <- c( "mu.psi", "sigma.psi",
              "mu.p", "sigma.p",
              "u",
              "v",
-            "z.bee.plant.month")
+            "z.bee.tot")
 
 
 
@@ -309,16 +310,18 @@ params <- c( "mu.psi", "sigma.psi",
 
 
 # MCMC settings
-ni <- 100
-na <- 20
-nb <- 20
+ni <- 10000
+na <- 2000
+nb <- 2000
 nt <- 1
 nc <- 3
 
 
 # Will 578 plant species
 # 2 iterations = 5 minutes
-# 100 iterations = 100 * 5/2 = 250 minutes
+# 100 iterations = 8.195694 minutes
+# 1000 iterations (200 na, 200 nb)= 14.239 minutes
+# 10000 iterations (2000 na, 2000 nb)= 14.239 minutes
 
 
 
@@ -381,27 +384,60 @@ out$sims.list$z.bee.plant.month
 
 
 
-# 9. Compare model outputs to truth ----------------------------------------
+# 9. Examine model outputs ----------------------------------------
 
 
 
 
 
+# Extract the mean values for z = true bee, plant, by month interactions
+# Look at the number of dimensions
+dim(out$mean$z)
 
-# Combine the names, truth, and model output
+# Now, we want to sum the number of unique plants per bee per month
+# To do this, first we will determine if the bee EVER interacts with the plant
+bee.plant <- apply(out$mean$z, c(1, 2), max, na.rm = TRUE)
+bee.plant[bee.plant == "-Inf"] <- NA
+
+# And then, we will sum across plant IDs
+bee.interactions <- apply(bee.plant, 1, sum, na.rm = TRUE)
+
+
+# Repeat steps for 95% CI - lower & upper
+bee.plant.lower <- apply(out$q2.5$z, c(1, 2), max, na.rm = TRUE)
+bee.plant.lower[bee.plant.lower == "-Inf"] <- NA
+bee.interactions.lower <- apply(bee.plant.lower, 1, sum, na.rm = TRUE)
+
+bee.plant.upper <- apply(out$q97.5$z, c(1, 2), max, na.rm = TRUE)
+bee.plant.upper[bee.plant.upper == "-Inf"] <- NA
+bee.interactions.upper <- apply(bee.plant.upper, 1, sum, na.rm = TRUE)
+
+
+
+# Combine the names, and model output
 dat <- data.frame(names = c(paste(rownames(bee.plant.date.cite), "interact prob"),
-                            paste(rownames(bee.plant.date.cite), "detect prob")), 
+                            paste(rownames(bee.plant.date.cite), "detect prob"),
+                            rownames(bee.plant.date.cite)), 
                   obs = c(rep(NA, times = nrow(bee.plant.date.cite)),
-                          rep(NA, times = nrow(bee.plant.date.cite))), 
+                          rep(NA, times = nrow(bee.plant.date.cite)),
+                          obs.dat$obs), 
                   mod.mean = c( out$mean$u,
-                                out$mean$v), 
+                                out$mean$v,
+                                bee.interactions), 
                   mod.q2.5 = c(out$q2.5$u,
-                               out$q2.5$v), 
+                               out$q2.5$v,
+                               bee.interactions.lower), 
                   mod.q97.5 = c(out$q97.5$u,
-                                out$q97.5$v))
+                                out$q97.5$v,
+                                bee.interactions.upper))
 
 
 ## Make the plots
+
+
+
+### ------ Bee - plant interaction probability plot
+
 
 # Plot with probabilities
 ggplot(dat[grep("interact", dat$names),], 
@@ -427,6 +463,9 @@ ggplot(dat[grep("interact", dat$names),],
 # Save the plot
 # ggsave("./Figures/Model_params_psi_2022_02_08.pdf", height = 15, width = 8)
 
+
+
+### ------ Detection probability plot
 
 
 # Plot with probabilities
@@ -463,7 +502,7 @@ ggplot(dat[grep("detect", dat$names),],
 cols <- c("Observation" = "red", "Estimated" = "black")
 
 # Plot with number of bee-plant interactions
-ggplot(dat[c((jags.data$n.bee+2):(jags.data$n.bee * 2)),], 
+ggplot(dat[is.na(dat$obs) == FALSE,], 
        aes(x= names, y=mod.mean, ymin=mod.q2.5, ymax=mod.q97.5))+ 
   geom_linerange(size = 1) +
   geom_point(size = 3, aes(x = names, y = mod.mean, col = "Estimated")) +
@@ -485,7 +524,7 @@ ggplot(dat[c((jags.data$n.bee+2):(jags.data$n.bee * 2)),],
         panel.grid.minor = element_blank()) 
 
 # Save the plot
-ggsave("./Figures/Num_interacting_2021_05_14.pdf", height = 15, width = 8)
+# ggsave("./Figures/Num_interacting_2021_05_14.pdf", height = 15, width = 8)
 
 
 # End script
