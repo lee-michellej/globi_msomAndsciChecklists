@@ -1,4 +1,63 @@
 =================
+Meeting 23-Feb-22
+=================
+
+
+Cutting the plant list more:
+ - accounting for imperfect detection -- can still estimate interactions that might have occurred but were never observed
+ - compare plant list to whole GLOBI database
+ - can bring back the plant families after the model is being tested
+
+* trim the plant list more (by 200-300)
+* make edits to manuscript
+
+As of today 1,000 interactions takes about 15 minutes
+But not converging -- will need 10,000 interactions
+
+
+Model covariates:
+ - talk about covariates that we'd want to include in the data
+
+
+
+
+================
+Meeting 9-Feb-22
+================
+
+Updates from Katja:
+SCI checklist is most updated -- everything updated is in bold
+Zenodo checklist needs to updated accordingly (but we're not waiting on it)
+Globi names in discover life might need to be updated
+
+Grace:
+Done with writing new code for the checklist data
+Started writing the methods section based on the checklist data
+Grace trying to run the model
+In globi, source citation observed a bee-plant interaction where it is not listed as possible
+
+Katja wants a unique list of interactions
+Could throw out the data OR check with an expert
+Come up with some sort of rule
+
+
+Michelle can take a look at the "forbidden links" that have been violated
+Event date, locality, etc
+Katja has some fuzz around the bees that are 
+Can we make the are bigger
+Need to think about relative diversity 
+
+Edit manuscript to reflect your own steps
+What other checklist numbers do we want?
+
+May 17th due date
+3 months until due date
+
+
+
+
+
+=================
 Meeting 21-Jan-22
 =================
 
