@@ -1,4 +1,121 @@
 =================
+Meeting 06-Apr-22
+=================
+
+Updates from Grace:
+Using NIMBLE takes 3-4 hours
+Collinearity
+
+Will need to mention that phenology windows will be different than what is observed
+Many different microhabitats on SCI
+Continuous water (natural and irrigated)
+Phenology will be different 
+
+Michelle: make a list of manually adjusted plant phenologies
+All plants that are over 1-month different
+New sheet that Grace sends over will include Apis mellifera
+Will add three species on the list
+There may be other species with all zeros
+
+Katja:
+Zenodo publication will be updated
+
+
+Bowl shape ~ yellow color
+Doesn't seem to be a relationship (not collinear)
+
+Bee solitary ~ bee size
+Most bees are solitary
+Bombus, Halictus, Apis are slightly eusocial
+
+Strippiness~ bee size
+No pattern between variables
+
+Strippiness ~ solitary
+Again, most bees are solitary
+
+Apis definitely an outlier in terms of how many plants visited
+
+Generally graphs with Apis have similar shape to those without Apis
+All lines represent MCMC iterations
+Black line is the mean
+94% confidence interval
+
+Specialization versus generalization (pollen consumption)
+
+ === Bee-plant interaction probability ===
+What does that mean biologically?
+How specialized a bee is?
+Probability based on the species of plant, not the number of times a species in recorded
+
+
+ === Ecological Model ===
+ - Increases with bee size
+
+ - Seems to be more right skewed with sociality
+
+
+# comparative statistics between Apis and non Apis for flower traits #
+How could the impact of Apis not being on SCI impact the results we're seeing?
+ - Yellow flowers have higher probability
+
+ - No difference in flower shape (potentially different between Apis and non-Apis)
+ - counterintuitive result: that Apis doesn't increase visitation to bowl flowers
+
+ === Detection model  ===
+ - strippiness did not impact detection
+
+ - inat has higher prob of detection, more variable
+
+ - bee size detection decreases with increased size (does overlap with zero)
+ - could this be because the island doesn't support large bees?
+ - collections could go for smaller/rarer bees?
+ * source by size (Grace will look at relationship)
+ - averaged all species within a genus
+
+ - quadratic month -- no real relationship
+ - detection of bee with specific plant during a month
+
+ - flower color counterintuitive
+ * number of flower yellow and not yellow
+
+ - flower shape also counterintuitive
+ - more observations on rare plants?
+ * number of bowl versus not bowl
+
+ * compare raw data to the observation list
+How could this predict the value of the actual 
+Not enough data to inform the model on certain things?
+ - bias there
+ - we don't know if it's the bees visiting the plants or the people looking at the bees/plants
+ - no abundance data for various flower species
+
+ === moving forward ===
+ - do we include or not include Apis?
+ - would take out Apis moving forward
+ - wouldn't want to drop results overall
+
+
+ - Michelle will update plant list
+
+ - what does it mean to move forward with the shortened plant list?
+ - trimming the data based solely on recorded values
+ - how many species on the plant list have no recorded interaction
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+=================
 Meeting 23-Feb-22
 =================
 
