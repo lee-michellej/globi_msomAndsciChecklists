@@ -37,7 +37,7 @@ unique.globi.fam.gen <- unique(globi.famgen.list)
 setwd("~/Downloads")
 
 
-sci <- read_csv("resolvedplantsci_011722.csv")
+sci <- read_csv("resolvedplantsci_041122.csv")
 # full list is 568 plants (pre-shortening from mid february)
 
 sci.fam <- sci %>% 
@@ -60,12 +60,20 @@ sci.famgen <- sci %>%
 shared.fam <- as.list(unique.globi.list)
 
 # take the unique list of families from the santa cruz island list
-# 
 
 filtered.byFam <- filter(sci.fam, sci.fam$Family %in% unique.globi.list$Family)
 # 370 unique plant entries which cuts down the overall list considerably
 # however, the goal is to cut it down even more than this
 
+
+
+# how many plants are on this list that don't have an interaction? -----
+
+sci.shortened.byFam <- filter(sci,
+                              sci$Family %in% unique.globi.list$Family)
+
+sci.shortened.byFam.matched <- filter(sci.shortened.byFam, sci.shortened.byFam$resolvedPlantNames %in% dat.readin$resolvedPlantNames)
+# out of the 370 unique plant entries kept, only 75 are actually in the globi interaction database. thus through this filtering process by FAMILY, we keep 295 plants that do not have a recorded interaction
 
 
 
@@ -74,6 +82,13 @@ filtered.byGen <- filter(sci.famgen,
                          sci.famgen$fam.gen %in% unique.globi.fam.gen$fam.gen)
 # this filter down to 151 plants
 
+# how many plants are on this list that don't have an interaction? -----
+
+sci.shortened.byFam <- filter(sci,
+                              sci$Family %in% unique.globi.list$Family)
+
+sci.shortened.byGen.matched <- filter(sci.shortened, sci.shortened$resolvedPlantNames %in% dat.readin$resolvedPlantNames)
+# out of the 151 unique plant entries kept, only 75 are actually in the globi interaction database. thus through this filtering process by FAMILY & GENUS, we keep 76 plants that do not have a recorded interaction
 
 
 
@@ -85,9 +100,7 @@ sci.shortened <- filter(sci.famgen,
 sci.shortened.final <- sci.shortened %>% 
   select(-fam.gen)
   
-write.csv(sci.shortened.final, "short_resolvedplantsci_022422.csv", row.names = FALSE)
-
-
+write.csv(sci.shortened.final, "short_resolvedplantsci_041122.csv", row.names = FALSE)
 
 
 
@@ -128,6 +141,9 @@ unique.noapis.fam.gen <- unique(globi.noapis.famgen.list)
 
 
 
+
+
+
 # without apis | match lists by family ------
 # match family list with the list of plants that are part of the no apis globi interaction dataset
 
@@ -148,9 +164,17 @@ filtered.byGen <- filter(sci.famgen,
 
 
 
+
+# how many plants included not on noapis interaction list -----
+sci.shortened.final.noapis.matched <- filter(sci.shortened.final.noapis, sci.shortened.final.noapis$resolvedPlantNames %in% dat.readin$resolvedPlantNames)
+# 66 plants kept from original globi match
+# thus 126-66 = 60 species not in the globi database in this file
+
+
+
 # print data file of shortened plants without apis (126) ------------
 
 sci.shortened.final.noapis <- filtered.byGen %>% 
   select(-fam.gen)
 
-write.csv(sci.shortened.final.noapis, "short_noapis_resolvedplantsci_022422.csv", row.names = FALSE)
+write.csv(sci.shortened.final.noapis, "short_noapis_resolvedplantsci_041122.csv", row.names = FALSE)
