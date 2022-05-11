@@ -77,7 +77,7 @@ library(coda)
 
 
 # Set working directory
-setwd("~/globi_tritrophic_networks/")
+setwd("~/Github/globi_tritrophic_networks/")
 
 
 
@@ -270,27 +270,41 @@ run_MCMC_allcode <- function(seed){
     
     
     # Mean bee-plant interaction probability
-    mu.psi ~ dnorm(0, 0.01)
+    mu.psi ~ dnorm(0, 2.5)
+    # dnorm(0, 2.5)
+    # dnorm(0, 2)
+      # dnorm(0, 0.75)
+      # dnorm(0, 0.10)
     
     # Precision and sd values for psi
     tau.psi <- 1/(sigma.psi * sigma.psi)
-    sigma.psi ~ dgamma(0.1, 0.1)
+    sigma.psi ~ dgamma(1, 1)
+      # dgamma(1, 1)
+      # dgamma(0.1, 0.1)
     
     
     # Mean bee-plant detection probability
     # This is the prior that worked in the null model: mu.p ~ dnorm(0, 0.75)
-    mu.p ~ dnorm(0, 0.01)
+    mu.p ~ dnorm(0, 2.5)
+      # dnorm(0, 2.5)
+      # dnorm(0, 2)
+      # dnorm(0, 0.10)
+      # dnorm(0, 0.75)
     
     # Precision and sd values for p
     # This is the prior that worked in the null model: sigma.p ~ dgamma(1, 1)
     tau.p <- 1/(sigma.p * sigma.p)
-    sigma.p ~ dgamma(0.1, 0.1)
+    sigma.p ~ dgamma(1, 1)
+      # dgamma(1, 1)
+      # dgamma(0.1, 0.1)
     
     
     # Priors for covariates
     
     # Psi
-    sd_psi ~ dgamma(0.1, 0.1)
+    sd_psi ~ dgamma(1, 1)
+      # dgamma(1, 1)
+      # dgamma(0.1, 0.1)
     tau_in_psi <- pow(sd_psi, -2)
     tau_psi[1] <- tau_in_psi            # coef effectively zero
     tau_psi[2] <- tau_in_psi / 1000     # nonzero coef
@@ -307,7 +321,9 @@ run_MCMC_allcode <- function(seed){
     
     
     # P
-    sd_p ~ dgamma(0.1, 0.1)
+    sd_p ~ dgamma(1, 1)
+      # dgamma(1, 1)
+      # dgamma(0.1, 0.1)
     tau_in_p <- pow(sd_p, -2)
     tau_p[1] <- tau_in_p            # coef effectively zero
     tau_p[2] <- tau_in_p / 1000     # nonzero coef
