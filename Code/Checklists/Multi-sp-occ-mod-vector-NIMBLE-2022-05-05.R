@@ -270,22 +270,26 @@ run_MCMC_allcode <- function(seed){
     
     
     # Mean bee-plant interaction probability
-    mu.psi ~ dnorm(0, 2.5)
-    # dnorm(0, 2.5)
-    # dnorm(0, 2)
+    mu.psi ~ dnorm(-0.25, 2.0)
+      # dnorm(-0.25, 2.0)
+      # dnorm(0, 2.5)
+      # dnorm(0, 2)
       # dnorm(0, 0.75)
       # dnorm(0, 0.10)
     
     # Precision and sd values for psi
     tau.psi <- 1/(sigma.psi * sigma.psi)
-    sigma.psi ~ dgamma(1, 1)
+    sigma.psi ~ T(dnorm(3.75, sd = sqrt(1/2)), 0, 10)
+      # dnorm(3.75, 2)T(0,)
       # dgamma(1, 1)
       # dgamma(0.1, 0.1)
+      # x ∼ T(dnorm(0, sd = 10), 0, a),
     
     
     # Mean bee-plant detection probability
     # This is the prior that worked in the null model: mu.p ~ dnorm(0, 0.75)
-    mu.p ~ dnorm(0, 2.5)
+    mu.p ~ dnorm(-2, 2.0)
+      # dnorm(-2, 2.0)
       # dnorm(0, 2.5)
       # dnorm(0, 2)
       # dnorm(0, 0.10)
@@ -294,7 +298,8 @@ run_MCMC_allcode <- function(seed){
     # Precision and sd values for p
     # This is the prior that worked in the null model: sigma.p ~ dgamma(1, 1)
     tau.p <- 1/(sigma.p * sigma.p)
-    sigma.p ~ dgamma(1, 1)
+    sigma.p ~ T(dnorm(2.0, sd = sqrt(1/2)), 0, 10)
+      # dnorm(2, 2)T(0,)
       # dgamma(1, 1)
       # dgamma(0.1, 0.1)
     
@@ -302,7 +307,8 @@ run_MCMC_allcode <- function(seed){
     # Priors for covariates
     
     # Psi
-    sd_psi ~ dgamma(1, 1)
+    sd_psi ~ T(dnorm(1.0, sd = sqrt(1/2)), 0, 10)
+      # dnorm(1, 2)T(0,)
       # dgamma(1, 1)
       # dgamma(0.1, 0.1)
     tau_in_psi <- pow(sd_psi, -2)
@@ -321,7 +327,8 @@ run_MCMC_allcode <- function(seed){
     
     
     # P
-    sd_p ~ dgamma(1, 1)
+    sd_p ~ T(dnorm(0.10, sd = sqrt(1/2)), 0, 10)
+      # dnorm(0.1, 2)T(0,)
       # dgamma(1, 1)
       # dgamma(0.1, 0.1)
     tau_in_p <- pow(sd_p, -2)
