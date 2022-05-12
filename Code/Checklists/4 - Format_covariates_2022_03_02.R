@@ -94,17 +94,17 @@ citation.list <- read.csv("~/globi_tritrophic_networks/Data/final-globi-citation
 
 #--------------- WITH Apis
 
-
-# Upload the observed bee-plant data
-load("~/globi_tritrophic_networks/Data/data_summary/globi_data_formatted_bee_plant_date_citation_2022_04_05 - short plant list.rds")
-  # object name = bee.plant.date.cite
-  # 4-D array
-
-
-# Flower color
-plant.covariates <- read.csv("~/Dropbox/Globi/Data/short_resolvedplantsci_022422.csv")
-
-
+# 
+# # Upload the observed bee-plant data
+# load("~/globi_tritrophic_networks/Data/data_summary/globi_data_formatted_bee_plant_date_citation_2022_04_05 - short plant list.rds")
+#   # object name = bee.plant.date.cite
+#   # 4-D array
+# 
+# 
+# # Flower color
+# plant.covariates <- read.csv("~/Dropbox/Globi/Data/short_resolvedplantsci_022422.csv")
+# 
+# 
 
 
 #--------------- WITHOUT Apis
@@ -118,7 +118,7 @@ sociality <- sociality[sociality$Species != "Apis mellifera",]
 
 
 # Upload the observed bee-plant data
-load("~/globi_tritrophic_networks/Data/data_summary/globi_data_formatted_bee_plant_date_citation_2022_04_11 - short plant list - no apis.rds")
+load("~/Github/globi_tritrophic_networks/Data/data_summary/globi_data_formatted_bee_plant_date_citation_2022_04_11 - short plant list - no apis.rds")
   # object name = bee.plant.date.cite
   # 4-D array
   

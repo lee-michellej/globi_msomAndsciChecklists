@@ -684,25 +684,29 @@ bbox2 <- c(left = min.vals2[1] - 0.02,
 
 names(bbox2) <- c("left", "bottom", "right", "top")
 
-#g.map2 <- ggmap(get_stamenmap(bbox2, zoom = 8, maptype = "terrain"))+
-#  geom_point(data = dat5, aes(y = decimalLatitude, 
-#                              x = decimalLongitude, 
-#                              size = log10(total)))+
-#  ylab("Latitude")+
-#  xlab("Longitude")+
-#  theme_bw()+ 
-#  theme(axis.text.x = element_text(size = 17, color = "black"), 
-#        axis.text.y = element_text(size = 17, color = "black"), 
-#        axis.title.y = element_text(size = 17, color = "black"), 
-#        axis.title.x =element_text(size = 17, color = "black"),
-#        legend.title =element_text(size = 17, color = "black"),
-#        legend.text =element_text(size = 17, color = "black"),
-#        panel.grid.major = element_blank(), 
-#        panel.grid.minor = element_blank())
-#
-#g.map2
+g.map2 <- ggmap(get_stamenmap(bbox2, zoom = 8, maptype = "terrain"))+
+  geom_point(data = dat5, aes(y = decimalLatitude, 
+                              x = decimalLongitude, 
+                              size = total),
+             fill = "darkgoldenrod3",
+             pch = 21)+
+  ylab("Latitude")+
+  xlab("Longitude")+
+  theme_bw()+ 
+  theme(axis.text.x = element_text(size = 17, color = "black"), 
+        axis.text.y = element_text(size = 17, color = "black"), 
+        axis.title.y = element_text(size = 17, color = "black"), 
+        axis.title.x =element_text(size = 17, color = "black"),
+        legend.title =element_text(size = 17, color = "black"),
+        legend.text =element_text(size = 17, color = "black"),
+        panel.grid.major = element_blank(), 
+        panel.grid.minor = element_blank())+
+  guides(size=guide_legend(title="Total \nsample \nsize"))
 
-# ggsave("./Figures/Globi_CA_map_2022_02_01.pdf", height = 12, width = 15)
+g.map2
+
+ggsave("~/Github/globi_tritrophic_networks/Figures/2022_05_12/Globi_CA_map_2022_05_12.pdf", 
+       height = 10, width = 12)
 
 
 
