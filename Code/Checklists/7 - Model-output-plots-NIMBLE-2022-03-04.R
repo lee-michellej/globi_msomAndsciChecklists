@@ -76,7 +76,7 @@ setwd("~/Github/globi_tritrophic_networks/")
  
  
  ## Load the entire nimble output
-# load("~/Dropbox/Globi/ModelOutput/OUTPUT - globi-short plant list- 2022 05 12 - all cov - NO apis - NIMBLE - SSVS.rds")
+load("~/Dropbox/Globi/ModelOutput/OUTPUT - globi-short plant list- 2022 05 12 - all cov - NO apis - NIMBLE - SSVS.rds")
  # object = result
  # MCMC object
  
@@ -289,6 +289,18 @@ dat <- data.frame(names = c(paste(rownames(bee.plant.date.cite), "interact prob"
                                 v.upper,
                                 bee.interactions.upper))
 
+# Subset the data
+dat2 <- dat[is.na(dat$obs) == FALSE,-1]
+
+# Rename columns
+colnames(dat2) <- c("SpeciesID",
+                    "Number-of-observed-plant-interactions",
+                    "Number-of-possible-plant-interactions",
+                    "Number-of-estimated-plant-interactions",
+                    "Lower-95%-CI",
+                    "Upper-95%-CI")
+write.csv(dat2,
+file = "./Data/Fig1-bee-plant-interactions.csv")
 
 
 
