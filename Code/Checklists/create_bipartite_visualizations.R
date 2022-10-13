@@ -50,7 +50,11 @@ dat <- read_csv("bee-plant-mod-probabilities.csv") %>%
 
 setwd("~/Desktop/globi/globi_tritrophic_networks/Data/")
 globi_dat <- read_csv("final-globi-list-clean 2022 02 01.csv") %>% 
-  select(resolvedPlantNames, resolvedBeeNames)
+  select(resolvedPlantNames, resolvedBeeNames, sourceTaxonFamilyName, targetTaxonOrderName) %>% 
+  mutate(plant_order = ifelse(is.na(targetTaxonOrderName),
+                              "Boraginales",
+                              targetTaxonOrderName))
+
 
 
 
@@ -119,6 +123,44 @@ globi_matdat <- as.data.frame(df2intmatrix(as.data.frame(globi_filtered),
 # +++++ ------
 
 # Order of species list by phylogenetic order ----
+# not completely ordered correctly:
+# ordered by family for bees: https://www.researchgate.net/figure/Family-and-subfamily-level-phylogeny-for-bees-based-on-Danforth-et-al-2013_fig1_332959316
+# ordered to order for plants: https://www.researchgate.net/publication/279592674_An_ordinal_classification_for_the_families_of_flowering_plants
+setwd("~/Desktop/globi/globi_tritrophic_networks/Data/")
+
+
+# ///// for modelled data -------
+
+# make phylogeny list for modeled plant list
+
+
+# make phylogeny list for modeled bee list
+
+
+# make list to feed to network code
+
+
+
+
+# ///// for GloBI data -------
+
+# make phylogeny list for globi plant list
+glob_plant_order <- read_csv("plant_phylog.csv") %>% 
+  right_join(globi_filtered, by = "plant_order") %>% 
+  arrange(plant_phylog, resolvedPlantNames)
+
+# make phylogeny list for globi bee list
+glob_bee_order <- read_csv("bee_phylog.csv") %>% 
+  right_join(globi_filtered, by = c("bee_family" = "sourceTaxonFamilyName")) %>% 
+  arrange(bee_phylog, resolvedBeeNames)
+
+# make list to feed to network code
+glob_order <- list(
+  seq.high = unique(glob_bee_order$resolvedBeeNames),
+  seq.low = unique(glob_plant_order$resolvedPlantNames)
+)
+
+
 
 
 
@@ -145,6 +187,7 @@ plotweb(cut_matdat, method = "normal", empty = TRUE, arrow = "no",
 
 # Plot GloBI network -------
 
+# without phylogenetic order
 plotweb(globi_matdat, method = "normal", empty = TRUE, arrow = "no",
         col.interaction = adjustcolor("cornsilk3"),
         col.high = "goldenrod",
@@ -156,6 +199,24 @@ plotweb(globi_matdat, method = "normal", empty = TRUE, arrow = "no",
         y.lim = c(-1.55,3.25),
         x.lim = c(0, 2.2),
         #plot.axes = TRUE
+)
+
+
+# with phylogenetic order
+
+
+plotweb(globi_matdat, method = "normal", empty = TRUE, arrow = "no",
+        col.interaction = adjustcolor("cornsilk3"),
+        col.high = "goldenrod",
+        col.low = "olivedrab4",
+        bor.col.interaction = NA,
+        bor.col.high = NA,
+        bor.col.low = NA,
+        text.rot = 90,
+        y.lim = c(-1.55,3.25),
+        x.lim = c(0, 2.2),
+        #plot.axes = TRUE
+        sequence = glob_order
 )
 
 #adjustcolor("lightgray", alpha.f = 0.75)
