@@ -129,28 +129,18 @@ globi_matdat <- as.data.frame(df2intmatrix(as.data.frame(globi_filtered),
 setwd("~/Desktop/globi/globi_tritrophic_networks/Data/")
 
 
-# ///// for modelled data -------
-
-# make phylogeny list for modeled plant list
-
-
-# make phylogeny list for modeled bee list
-
-
-# make list to feed to network code
-
-
-
-
 # ///// for GloBI data -------
 
+plant_phylog <- read_csv("plant_phylog.csv")
+bee_phylog <- read_csv("bee_phylog.csv")
+
 # make phylogeny list for globi plant list
-glob_plant_order <- read_csv("plant_phylog.csv") %>% 
+glob_plant_order <- plant_phylog %>% 
   right_join(globi_filtered, by = "plant_order") %>% 
   arrange(plant_phylog, resolvedPlantNames)
 
 # make phylogeny list for globi bee list
-glob_bee_order <- read_csv("bee_phylog.csv") %>% 
+glob_bee_order <- bee_phylog %>% 
   right_join(globi_filtered, by = c("bee_family" = "sourceTaxonFamilyName")) %>% 
   arrange(bee_phylog, resolvedBeeNames)
 
@@ -161,6 +151,43 @@ glob_order <- list(
 )
 
 
+
+
+# ///// for modelled data -------
+
+# SOMETHING HAPPENING HERE WHERE LISTS AREN'T MATCHING UP
+
+# make phylogeny list for modeled plant list
+mod_plant_list <- as.data.frame(read_csv("plant_phylog_modellist.csv")) %>% 
+  filter(!is.na(scientificName))
+
+# check for missing species names
+# mod_plant_missing <- anti_join(cut_df,
+#                               mod_plant_list, 
+#                               by = c("plant.names" = "scientificName"))
+
+mod_plant_order <- left_join(cut_df, mod_plant_list, 
+                             by = c("plant.names" = "scientificName")) %>% 
+  left_join(plant_phylog, by  = c("Order" = "plant_order")) %>% 
+  arrange(plant_phylog, resolvedPlantNames)
+#resolvedPlantNames
+#want Family order
+
+
+# make phylogeny list for modeled bee list
+mod_bee_list <- read_csv("bee_phylog_modellist.csv")
+# 23 bee species -- the same as the unique bees included in model cut off
+
+mod_bee_phylog <- left_join(cut_df, mod_bee_list, by = "bee.names") %>% 
+  left_join(bee_phylog, by = c("bee.family" = "bee_family")) %>% 
+  arrange(bee_phylog, bee.names)
+
+
+# make list to feed to network code
+mod_order <- list(
+  seq.high = unique(mod_bee_phylog$bee.names),
+  seq.low = unique(mod_plant_order$plant.names)
+)
 
 
 
@@ -178,6 +205,7 @@ plotweb(cut_matdat, method = "normal", empty = TRUE, arrow = "no",
         text.rot = 90,
         y.lim = c(-1.55,3.25),
         x.lim = c(0, 2.2),
+        sequence = mod_order
         #plot.axes = TRUE
 )
 
