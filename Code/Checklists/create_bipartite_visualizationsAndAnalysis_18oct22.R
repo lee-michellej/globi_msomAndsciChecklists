@@ -120,6 +120,31 @@ globi_matdat <- as.data.frame(df2intmatrix(as.data.frame(globi_filtered),
                                          emptylist = TRUE))
 
 
+
+# +++++ ------
+# Network differences -------
+# +++++ ------
+
+# notes:
+# we used the cut off model list to create our updated globi list
+# thus, basic measures like nodes might not be the must useful information
+
+# number of plant partners
+# evenness of interactions across partners
+# nestedness
+# connectance
+
+
+# null models and try H2 and d?
+# not sure this is worth it
+
+
+
+
+
+
+# +++++ ------
+# Create visualizations-------
 # +++++ ------
 
 # Order of species list by phylogenetic order ----
