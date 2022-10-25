@@ -122,21 +122,34 @@ globi_matdat <- as.data.frame(df2intmatrix(as.data.frame(globi_filtered),
 
 
 # +++++ ------
-# Network differences -------
+# Network metric differences -------
 # +++++ ------
 
-# notes:
-# we used the cut off model list to create our updated globi list
-# thus, basic measures like nodes might not be the must useful information
-
-# number of plant partners
-# evenness of interactions across partners
-# nestedness
-# connectance
+# calculate some basic metrics for the model
+model_metrics <- as.data.frame(networklevel(cut_matdat, index = c('nestedness', 
+                                                 'connectance',
+                                                 'interaction evenness',
+                                                 'NODF')))
+names(model_metrics)[1] <- "model_values"
 
 
-# null models and try H2 and d?
-# not sure this is worth it
+
+
+# calculate some basic metrics for the globi data
+globi_metrics <- as.data.frame(networklevel(globi_matdat, index = c('nestedness', 
+                                                                  'connectance',
+                                                                  'interaction evenness',
+                                                                  'NODF')))
+names(globi_metrics)[1] <- "globi_values"
+
+tglobi_metrics <- as.data.frame(t(globi_metrics))
+
+
+
+
+# combine two dataframes
+metrics <- cbind(model_metrics, globi_metrics)
+
 
 
 
@@ -144,8 +157,323 @@ globi_matdat <- as.data.frame(df2intmatrix(as.data.frame(globi_filtered),
 
 
 # +++++ ------
-# Create visualizations-------
+# Null models -------
+
+# rewrite files as not dataframes ------
+model_matrix <- df2intmatrix(as.data.frame(cut_df), 
+                                         varnames = c("plant.names", "bee.names", "prob_10"),
+                                         type.out = "array",
+                                         emptylist = TRUE)
+
+
+globi_matrix <- df2intmatrix(as.data.frame(globi_filtered), 
+                             varnames = c("resolvedPlantNames", "resolvedBeeNames"),
+                             type.out = "array",
+                             emptylist = TRUE)
+
+# make list of webs and name them ------
+webs <- list(model_matrix, globi_matrix)
+
+webs.names <- c("model", "globi")
+names(webs) <- webs.names
+             
+
+# calculate network measures -------
+net.metrics.nest <- lapply(webs, networklevel, index = 'nestedness')
+net.metrics.evenness <- lapply(webs, networklevel, index = 'interaction evenness')
+net.metrics.connect <- lapply(webs, networklevel, index = 'connectance')
+net.metrics.h2 <- lapply(webs, networklevel, index = 'H2')
+net.metrics.nodf <- lapply(webs, networklevel, index = 'NODF')
+
+
+
+# make nulls ------
+net.nulls.vaz <- lapply(webs, nullmodel, method = "vaznull", N = 500)
+#net.nulls.r2d <- lapply(webs, nullmodel, method = "r2dtable", N = 500)
+#net.nulls.swap <- lapply(webs, nullmodel, method = "swap.web", N = 500)
+
+### +++++ nestedness --------
+
+# calculate nestedness of nulls
+net.null.nest = function(nulls){
+  net.null.metric <- list()
+  for (i in 1:length(nulls)) {
+    net.null.metric[[i]] = do.call('rbind', 
+                                   lapply(nulls[[i]], networklevel, index = 'nestedness'))
+  }
+  names(net.null.metric) <- webs.names
+  return(net.null.metric)
+}
+
+vaz.nest <- net.null.nest(net.nulls.vaz)
+
+# calculate z-scores
+
+net.zscore = function(obsval, nullval) {
+  (obsval - mean(nullval))/sd(nullval)  
+} 
+
+nest.zscore = function(nulltype){
+  net.nest.zscore <- list() 
+  for(i in 1:length(net.metrics.nest)){
+    net.nest.zscore[[i]] = net.zscore(net.metrics.nest[[i]]['nestedness'], 
+                                      nulltype[[i]][ ,'nestedness'])
+  }
+  names(net.nest.zscore) <- webs.names
+  return(net.nest.zscore)
+}
+
+vaz.nest.zscore <- nest.zscore(vaz.nest)
+
+
+# add z scores
+add.pvalues = function(net.metric.zscore){
+  # Change the output class from list of a list into a matrix
+  net.metric.zscore <- do.call('rbind', net.metric.zscore) 
+  
+  # Convert z-scores to p-values (two-sided)
+  net.metric.pvalue <- 2*pnorm(-abs(net.metric.zscore))
+  
+  # Change matrix into a dataframe
+  net.metric.pvalue <- as.data.frame(as.table(net.metric.pvalue))
+  colnames(net.metric.pvalue) <- c('site', 'metric', 'pvalue')
+  
+  net.metric.pvalue <- within(net.metric.pvalue, {
+    significance <- ifelse(pvalue <= 0.001, "***", 
+                           ifelse(pvalue <= 0.01, "**",
+                                  ifelse(pvalue <= 0.05, "*", "not significant")))
+  })
+  return(net.metric.pvalue)
+} 
+
+
+vaz.test.nest <- add.pvalues(vaz.nest.zscore)
+
+
+# print p-values of zscores
+
+print(vaz.test.nest)
+
+
+
+
+
+
+
+
+
+
+
+
+
+### +++++ interaction evenness --------
+
+# calculate inteve of nulls
+net.null.inteve = function(nulls){
+  net.null.metric <- list()
+  for (i in 1:length(nulls)) {
+    net.null.metric[[i]] = do.call('rbind', 
+                                   lapply(nulls[[i]], networklevel, index = 'interaction evenness'))
+  }
+  names(net.null.metric) <- webs.names
+  return(net.null.metric)
+}
+
+vaz.inteve <- net.null.inteve(net.nulls.vaz)
+
+# calculate z-scores
+
+inteve.zscore = function(nulltype){
+  net.inteve.zscore <- list() 
+  for(i in 1:length(net.metrics.evenness)){
+    net.inteve.zscore[[i]] = net.zscore(net.metrics.evenness[[i]]['interaction evenness'], 
+                                      nulltype[[i]][ ,'interaction evenness'])
+  }
+  names(net.inteve.zscore) <- webs.names
+  return(net.inteve.zscore)
+}
+
+vaz.inteve.zscore <- inteve.zscore(vaz.inteve)
+
+
+# add z scores
+
+vaz.test.inteve <- add.pvalues(vaz.inteve.zscore)
+
+
+# print p-values of zscores
+
+print(vaz.test.inteve)
+
+
+
+
+
+
+
+
+
+### +++++ h2 --------
+
+# calculate h2 of nulls
+net.null.h2 = function(nulls){
+  net.null.metric <- list()
+  for (i in 1:length(nulls)) {
+    net.null.metric[[i]] = do.call('rbind', 
+                                   lapply(nulls[[i]], networklevel, index = 'H2'))
+  }
+  names(net.null.metric) <- webs.names
+  return(net.null.metric)
+}
+
+vaz.h2 <- net.null.h2(net.nulls.vaz)
+
+# calculate z-scores
+
+h2.zscore = function(nulltype){
+  net.h2.zscore <- list() 
+  for(i in 1:length(net.metrics.h2)){
+    net.h2.zscore[[i]] = net.zscore(net.metrics.h2[[i]]['H2'], 
+                                        nulltype[[i]][ ,'H2'])
+  }
+  names(net.h2.zscore) <- webs.names
+  return(net.h2.zscore)
+}
+
+vaz.h2.zscore <- h2.zscore(vaz.h2)
+
+
+# add z scores
+
+vaz.test.h2 <- add.pvalues(vaz.h2.zscore)
+
+
+# print p-values of zscores
+
+print(vaz.test.h2)
+
+
+
+
+
+
+
+
+
+
+
+### +++++ connectance --------
+
+# calculate connectance of nulls
+net.null.connectance = function(nulls){
+  net.null.metric <- list()
+  for (i in 1:length(nulls)) {
+    net.null.metric[[i]] = do.call('rbind', 
+                                   lapply(nulls[[i]], networklevel, index = 'connectance'))
+  }
+  names(net.null.metric) <- webs.names
+  return(net.null.metric)
+}
+
+vaz.connectance <- net.null.connectance(net.nulls.vaz)
+
+# calculate z-scores
+
+connectance.zscore = function(nulltype){
+  net.connectance.zscore <- list() 
+  for(i in 1:length(net.metrics.connect)){
+    net.connectance.zscore[[i]] = net.zscore(net.metrics.connect[[i]]['connectance'], 
+                                    nulltype[[i]][ ,'connectance'])
+  }
+  names(net.connectance.zscore) <- webs.names
+  return(net.connectance.zscore)
+}
+
+vaz.connectance.zscore <- connectance.zscore(vaz.connectance)
+
+
+# add z scores
+
+vaz.test.connectance <- add.pvalues(vaz.connectance.zscore)
+
+
+# print p-values of zscores
+
+print(vaz.test.connectance)
+# connectance remains the same in vaz.nulls so this makes sense that it is the same.
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+### +++++ NODF --------
+
+# calculate nodf of nulls
+net.null.nodf = function(nulls){
+  net.null.metric <- list()
+  for (i in 1:length(nulls)) {
+    net.null.metric[[i]] = do.call('rbind', 
+                                   lapply(nulls[[i]], networklevel, index = 'NODF'))
+  }
+  names(net.null.metric) <- webs.names
+  return(net.null.metric)
+}
+
+vaz.nodf <- net.null.nodf(net.nulls.vaz)
+
+# calculate z-scores
+
+nodf.zscore = function(nulltype){
+  net.nodf.zscore <- list() 
+  for(i in 1:length(net.metrics.nodf)){
+    net.nodf.zscore[[i]] = net.zscore(net.metrics.nodf[[i]]['NODF'], 
+                                    nulltype[[i]][ ,'NODF'])
+  }
+  names(net.nodf.zscore) <- webs.names
+  return(net.nodf.zscore)
+}
+
+vaz.nodf.zscore <- nodf.zscore(vaz.nodf)
+
+
+# add z scores
+
+vaz.test.nodf <- add.pvalues(vaz.nodf.zscore)
+
+
+# print p-values of zscores
+
+print(vaz.test.nodf)
+
+
+
+
+
+# +++++ combine results into one table ---------
+
+
+tests <- rbind(vaz.test.nest, 
+               vaz.test.h2, 
+               vaz.test.inteve,
+               vaz.test.nodf) %>% 
+  select(metric, everything())
+
+
+
+
+
 # +++++ ------
+# Visualizations-------
 
 # Order of species list by phylogenetic order ----
 # not completely ordered correctly:
