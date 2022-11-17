@@ -53,7 +53,8 @@ globi_dat <- read_csv("final-globi-list-clean 2022 02 01.csv") %>%
   select(resolvedPlantNames, resolvedBeeNames, sourceTaxonFamilyName, targetTaxonOrderName) %>% 
   mutate(plant_order = ifelse(is.na(targetTaxonOrderName),
                               "Boraginales",
-                              targetTaxonOrderName))
+                              targetTaxonOrderName)) %>% 
+  separate(resolvedPlantNames, into = c("genus", NA), sep = " ", remove = FALSE)
 
 
 
@@ -63,11 +64,16 @@ globi_dat <- read_csv("final-globi-list-clean 2022 02 01.csv") %>%
 # cut off here of probability of 0.03%
 cut_df <- dat %>% 
   dplyr::select(bee.names, plant.names, prob_10) %>% 
-  dplyr::filter(prob_10 >= 3)
+  dplyr::filter(prob_10 >= 3) %>% 
+  separate(plant.names, into = c("genus", NA), sep = " ", remove = FALSE)
 
 # make interaction matrix
 cut_matdat <- as.data.frame(df2intmatrix(as.data.frame(cut_df), 
                                          varnames = c("plant.names", "bee.names", "prob_10"),
+                                         type.out = "array",
+                                         emptylist = TRUE))
+cut_matdat.gen <- as.data.frame(df2intmatrix(as.data.frame(cut_df), 
+                                         varnames = c("genus", "bee.names", "prob_10"),
                                          type.out = "array",
                                          emptylist = TRUE))
 
@@ -81,6 +87,10 @@ colnames(bee.names)[1] <- "resolvedBeeNames"
 # using cut-off above, make uniqeu list of plant species
 plant.names <- as.data.frame(unique(cut_df$plant.names))
 colnames(plant.names)[1] <- "resolvedPlantNames"
+
+# using cut-off above, make unique list of plant genera
+plant.genera <- as.data.frame(unique(cut_df$genus))
+colnames(plant.genera)[1] <- "resolvedPlantGenus"
 
 # will need to merge these with other plant list and bee list
 # will need family names etc
@@ -106,11 +116,18 @@ list(unique(unmatched.plants$resolvedPlantNames)) # 9 species
 #"Myoporum laetum"
 
 
+
+
 # in theory could drop as low as 351
 globi_filtered1 <- filter(globi_dat, globi_dat$resolvedBeeNames %in% bee.names$resolvedBeeNames)
 # first filter drops to 373
 globi_filtered <- filter(globi_filtered1, globi_filtered1$resolvedPlantNames %in% plant.names$resolvedPlantNames)
 # second filter doesn't drop any interactions
+
+#make filtered list with genera
+globi_filtered.gen <- filter(globi_filtered1, globi_filtered1$genus %in% plant.genera$resolvedPlantGenus)
+
+
 
 
 # make interaction matrix
@@ -118,6 +135,11 @@ globi_matdat <- as.data.frame(df2intmatrix(as.data.frame(globi_filtered),
                                          varnames = c("resolvedPlantNames", "resolvedBeeNames"),
                                          type.out = "array",
                                          emptylist = TRUE))
+
+globi_matdat.gen <- as.data.frame(df2intmatrix(as.data.frame(globi_filtered.gen), 
+                                               varnames = c("genus", "resolvedBeeNames"),
+                                               type.out = "array",
+                                               emptylist = TRUE))
 
 
 
@@ -129,7 +151,8 @@ globi_matdat <- as.data.frame(df2intmatrix(as.data.frame(globi_filtered),
 model_metrics <- as.data.frame(networklevel(cut_matdat, index = c('nestedness', 
                                                  'connectance',
                                                  'interaction evenness',
-                                                 'NODF')))
+                                                 'NODF',
+                                                 'H2')))
 names(model_metrics)[1] <- "model_values"
 
 
@@ -139,7 +162,8 @@ names(model_metrics)[1] <- "model_values"
 globi_metrics <- as.data.frame(networklevel(globi_matdat, index = c('nestedness', 
                                                                   'connectance',
                                                                   'interaction evenness',
-                                                                  'NODF')))
+                                                                  'NODF',
+                                                                  'H2')))
 names(globi_metrics)[1] <- "globi_values"
 
 tglobi_metrics <- as.data.frame(t(globi_metrics))
@@ -248,6 +272,11 @@ add.pvalues = function(net.metric.zscore){
 
 
 vaz.test.nest <- add.pvalues(vaz.nest.zscore)
+qt(vaz.test.nest$pvalue, 499)
+# tstatistics: 
+#-2.5544350
+#-0.6607475
+# consider graphing these values
 
 
 # print p-values of zscores
@@ -299,6 +328,11 @@ vaz.inteve.zscore <- inteve.zscore(vaz.inteve)
 # add z scores
 
 vaz.test.inteve <- add.pvalues(vaz.inteve.zscore)
+
+qt(vaz.test.inteve$pvalue, 499)
+# tstatistics: 
+#-34.0664169
+#-0.7612433
 
 
 # print p-values of zscores
@@ -352,6 +386,10 @@ vaz.test.h2 <- add.pvalues(vaz.h2.zscore)
 
 print(vaz.test.h2)
 
+qt(vaz.test.h2$pvalue, 499)
+# tstatistics: 
+#-8.858786
+#-6.731044
 
 
 
@@ -455,7 +493,10 @@ vaz.test.nodf <- add.pvalues(vaz.nodf.zscore)
 
 print(vaz.test.nodf)
 
-
+qt(vaz.test.nodf$pvalue, 499)
+# tstatistics: 
+#-9.4598472
+#-0.7830527
 
 
 
@@ -492,6 +533,12 @@ glob_plant_order <- plant_phylog %>%
   right_join(globi_filtered, by = "plant_order") %>% 
   arrange(plant_phylog, resolvedPlantNames)
 
+#make phylogeny list for globi plant genus
+glob_plant_order.gen <- plant_phylog %>% 
+  right_join(globi_filtered, by = "plant_order") %>%
+  separate(resolvedPlantNames, into = c("genus", NA), sep = " ", remove = FALSE) %>% 
+  arrange(plant_phylog, genus)
+
 # make phylogeny list for globi bee list
 glob_bee_order <- bee_phylog %>% 
   right_join(globi_filtered, by = c("bee_family" = "sourceTaxonFamilyName")) %>% 
@@ -503,12 +550,16 @@ glob_order <- list(
   seq.low = unique(glob_plant_order$resolvedPlantNames)
 )
 
+# order by genus
+glob_order.gen <- list(
+  seq.high = unique(glob_bee_order$resolvedBeeNames),
+  seq.low = unique(glob_plant_order.gen$genus)
+)
 
 
 
 # ///// for modelled data -------
 
-# SOMETHING HAPPENING HERE WHERE LISTS AREN'T MATCHING UP
 
 # make phylogeny list for modeled plant list
 mod_plant_list <- as.data.frame(read_csv("plant_phylog_modellist.csv")) %>% 
@@ -523,6 +574,11 @@ mod_plant_order <- left_join(cut_df, mod_plant_list,
                              by = c("plant.names" = "scientificName")) %>% 
   left_join(plant_phylog, by  = c("Order" = "plant_order")) %>% 
   arrange(plant_phylog, resolvedPlantNames)
+
+mod_plant_order.gen <- left_join(cut_df, mod_plant_list, 
+                             by = c("genus" = "Genus")) %>% 
+  left_join(plant_phylog, by  = c("Order" = "plant_order")) %>% 
+  arrange(plant_phylog, genus)
 #resolvedPlantNames
 #want Family order
 
@@ -543,6 +599,11 @@ mod_order <- list(
 )
 
 
+mod_order.gen <- list(
+  seq.high = unique(mod_bee_phylog$bee.names),
+  seq.low = unique(mod_plant_order.gen$genus)
+)
+
 
 # +++++ ------
 
@@ -561,6 +622,24 @@ plotweb(cut_matdat, method = "normal", empty = TRUE, arrow = "no",
         sequence = mod_order
         #plot.axes = TRUE
 )
+
+visweb(cut_matdat)
+
+#ordered by genus
+plotweb(cut_matdat.gen, method = "normal", empty = TRUE, arrow = "no",
+        col.interaction = adjustcolor("cornsilk3"),
+        col.high = "goldenrod",
+        col.low = "olivedrab4",
+        bor.col.interaction = NA,
+        bor.col.high = NA,
+        bor.col.low = NA,
+        text.rot = 90,
+        y.lim = c(-1.55,3.25),
+        x.lim = c(0, 2.2),
+        sequence = mod_order.gen
+        #plot.axes = TRUE
+)
+
 
 
 
@@ -581,6 +660,8 @@ plotweb(globi_matdat, method = "normal", empty = TRUE, arrow = "no",
         x.lim = c(0, 2.2),
         #plot.axes = TRUE
 )
+
+visweb(globi_matdat)
 
 
 # with phylogenetic order
@@ -603,7 +684,20 @@ plotweb(globi_matdat, method = "normal", empty = TRUE, arrow = "no",
 #adjustcolor("lightgray", alpha.f = 0.75)
 
 
-
+# by genus
+plotweb(globi_matdat.gen, method = "normal", empty = TRUE, arrow = "no",
+        col.interaction = adjustcolor("cornsilk3"),
+        col.high = "goldenrod",
+        col.low = "olivedrab4",
+        bor.col.interaction = NA,
+        bor.col.high = NA,
+        bor.col.low = NA,
+        text.rot = 90,
+        y.lim = c(-1.55,3.25),
+        x.lim = c(0, 2.2),
+        #plot.axes = TRUE
+        sequence = glob_order.gen
+)
 
 
 
