@@ -68,10 +68,7 @@ cut_df <- dat %>%
   separate(plant.names, into = c("genus", NA), sep = " ", remove = FALSE)
 
 # make interaction matrix
-cut_matdat <- as.data.frame(df2intmatrix(as.data.frame(cut_df), 
-                                         varnames = c("plant.names", "bee.names", "prob_10"),
-                                         type.out = "array",
-                                         emptylist = TRUE))
+
 cut_matdat.gen <- as.data.frame(df2intmatrix(as.data.frame(cut_df), 
                                          varnames = c("genus", "bee.names", "prob_10"),
                                          type.out = "array",
@@ -129,6 +126,11 @@ globi_filtered.gen <- filter(globi_filtered1, globi_filtered1$genus %in% plant.g
 
 
 
+## EDIT 18Nov22: make list of plant names in order to filter the cutmatrix to match
+
+globi_filtered.plantlist <- as.data.frame(unique(globi_filtered$resolvedPlantNames))
+colnames(globi_filtered.plantlist)[1] <- "resolvedPlantNames"
+
 
 # make interaction matrix
 globi_matdat <- as.data.frame(df2intmatrix(as.data.frame(globi_filtered), 
@@ -140,6 +142,20 @@ globi_matdat.gen <- as.data.frame(df2intmatrix(as.data.frame(globi_filtered.gen)
                                                varnames = c("genus", "resolvedBeeNames"),
                                                type.out = "array",
                                                emptylist = TRUE))
+
+
+
+# EDIT 18Nov22: make new cutmat to match globi plant list
+cut_df_matchplant <- filter(cut_df, cut_df$plant.names %in% globi_filtered.plantlist$resolvedPlantNames)
+
+
+cut_matdat_matchplant <- as.data.frame(df2intmatrix(as.data.frame(cut_df_matchplant), 
+                                         varnames = c("plant.names", "bee.names", "prob_10"),
+                                         type.out = "array",
+                                         emptylist = TRUE))
+
+
+
 
 
 
@@ -583,6 +599,16 @@ mod_plant_order.gen <- left_join(cut_df, mod_plant_list,
 #want Family order
 
 
+mod_plant_order.matchplant <- left_join(cut_df_matchplant, mod_plant_list, 
+                                        by = c("plant.names" = "scientificName")) %>% 
+  left_join(plant_phylog, by  = c("Order" = "plant_order")) %>% 
+  arrange(plant_phylog, resolvedPlantNames)
+
+
+
+
+
+
 # make phylogeny list for modeled bee list
 mod_bee_list <- read_csv("bee_phylog_modellist.csv")
 # 23 bee species -- the same as the unique bees included in model cut off
@@ -590,6 +616,10 @@ mod_bee_list <- read_csv("bee_phylog_modellist.csv")
 mod_bee_phylog <- left_join(cut_df, mod_bee_list, by = "bee.names") %>% 
   left_join(bee_phylog, by = c("bee.family" = "bee_family")) %>% 
   arrange(bee_phylog, bee.names)
+
+
+
+
 
 
 # make list to feed to network code
@@ -602,6 +632,12 @@ mod_order <- list(
 mod_order.gen <- list(
   seq.high = unique(mod_bee_phylog$bee.names),
   seq.low = unique(mod_plant_order.gen$genus)
+)
+
+
+mod_order.matchplants <- list(
+  seq.high = unique(mod_bee_phylog$bee.names),
+  seq.low = unique(mod_plant_order.matchplant$plant.names)
 )
 
 
@@ -639,6 +675,23 @@ plotweb(cut_matdat.gen, method = "normal", empty = TRUE, arrow = "no",
         sequence = mod_order.gen
         #plot.axes = TRUE
 )
+
+
+#matching plant list to output of globi network
+plotweb(cut_matdat_matchplant, method = "normal", empty = TRUE, arrow = "no",
+        col.interaction = adjustcolor("cornsilk3"),
+        col.high = "goldenrod",
+        col.low = "olivedrab4",
+        bor.col.interaction = NA,
+        bor.col.high = NA,
+        bor.col.low = NA,
+        text.rot = 90,
+        y.lim = c(-1.55,3.25),
+        x.lim = c(0, 2.2),
+        sequence = mod_order.matchplants
+        #plot.axes = TRUE
+)
+
 
 
 
