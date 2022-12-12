@@ -50,7 +50,7 @@ dat <- read_csv("bee-plant-mod-probabilities.csv") %>%
 
 setwd("~/Desktop/globi/globi_tritrophic_networks/Data/")
 globi_dat <- read_csv("final-globi-list-clean 2022 02 01.csv") %>% 
-  select(resolvedPlantNames, resolvedBeeNames, sourceTaxonFamilyName, targetTaxonOrderName) %>% 
+  select(resolvedPlantNames, resolvedBeeNames, sourceTaxonFamilyName, targetTaxonOrderName, targetTaxonFamilyName) %>% 
   mutate(plant_order = ifelse(is.na(targetTaxonOrderName),
                               "Boraginales",
                               targetTaxonOrderName)) %>% 
@@ -547,7 +547,11 @@ bee_phylog <- read_csv("bee_phylog.csv")
 # make phylogeny list for globi plant list
 glob_plant_order <- plant_phylog %>% 
   right_join(globi_filtered, by = "plant_order") %>% 
-  arrange(plant_phylog, resolvedPlantNames)
+  arrange(plant_phylog, targetTaxonFamilyName, resolvedPlantNames)
+
+glob_plant_order1 <- glob_plant_order %>% 
+  select(resolvedPlantNames, targetTaxonFamilyName) %>% 
+  unique()
 
 #make phylogeny list for globi plant genus
 glob_plant_order.gen <- plant_phylog %>% 
@@ -589,7 +593,7 @@ mod_plant_list <- as.data.frame(read_csv("plant_phylog_modellist.csv")) %>%
 mod_plant_order <- left_join(cut_df, mod_plant_list, 
                              by = c("plant.names" = "scientificName")) %>% 
   left_join(plant_phylog, by  = c("Order" = "plant_order")) %>% 
-  arrange(plant_phylog, resolvedPlantNames)
+  arrange(plant_phylog, Family, resolvedPlantNames)
 
 mod_plant_order.gen <- left_join(cut_df, mod_plant_list, 
                              by = c("genus" = "Genus")) %>% 
@@ -602,7 +606,10 @@ mod_plant_order.gen <- left_join(cut_df, mod_plant_list,
 mod_plant_order.matchplant <- left_join(cut_df_matchplant, mod_plant_list, 
                                         by = c("plant.names" = "scientificName")) %>% 
   left_join(plant_phylog, by  = c("Order" = "plant_order")) %>% 
-  arrange(plant_phylog, resolvedPlantNames)
+  mutate( Family =
+    ifelse(resolvedPlantNames %in% c("Phacelia distans", "Phacelia ramosissima"), "Boraginaceae",Family)
+  ) %>% 
+  arrange(plant_phylog, Family, resolvedPlantNames)
 
 
 
@@ -691,6 +698,8 @@ plotweb(cut_matdat_matchplant, method = "normal", empty = TRUE, arrow = "no",
         sequence = mod_order.matchplants
         #plot.axes = TRUE
 )
+
+visweb(cut_matdat_matchplant)
 
 
 
