@@ -15,14 +15,6 @@
 # To format the covariates of the Globi model
 
 
-##################################
-######## Output of Code ##########
-##################################
-
-
-# 
-
-
 
 
 ################################## 
@@ -53,7 +45,7 @@ library(tidyverse)
 
 
 # Set working directory
-setwd("~/Dropbox/Globi/Data/")
+setwd("./Data/")
 
 
 
@@ -67,20 +59,20 @@ setwd("~/Dropbox/Globi/Data/")
 
 
 # Bee size data
-size <- read.csv("./Bee traits for checklist species - size.csv")
+size <- read.csv("Data/Bee traits for checklist species - size.csv")
 
 # Bee coloration data
-color <- read.csv("./Bee traits for checklist species - coloration_NEW.csv")[-1,]
+color <- read.csv("Data/Bee traits for checklist species - coloration_NEW.csv")[-1,]
   # First row = EXAMPLE = remove
 
 # Bee sociality data
-sociality <- read.csv("./Bee traits for checklist species - sociality.csv")[-1,]
+sociality <- read.csv("Data/Bee traits for checklist species - sociality.csv")[-1,]
   # First row = EXAMPLE = remove
 
 
 # Read in file with type of citation
-citation.type <- read.csv("~/globi_tritrophic_networks/Data/citation-list-type.csv")
-citation.list <- read.csv("~/globi_tritrophic_networks/Data/final-globi-citations-unique 2022 01 21.csv")
+citation.type <- read.csv("Data/globi_tritrophic_networks/Data/citation-list-type.csv")
+citation.list <- read.csv("Data/globi_tritrophic_networks/Data/final-globi-citations-unique 2022 01 21.csv")
 
 
 
@@ -118,13 +110,13 @@ sociality <- sociality[sociality$Species != "Apis mellifera",]
 
 
 # Upload the observed bee-plant data
-load("~/Github/globi_tritrophic_networks/Data/data_summary/globi_data_formatted_bee_plant_date_citation_2022_04_11 - short plant list - no apis.rds")
+load("/Data/data_summary/globi_data_formatted_bee_plant_date_citation_2022_04_11 - short plant list - no apis.rds")
   # object name = bee.plant.date.cite
   # 4-D array
   
 
 # Flower color
-plant.covariates <- read.csv("~/Dropbox/Globi/Data/short_noapis_resolvedplantsci_041122.csv")
+plant.covariates <- read.csv("~/Data/short_noapis_resolvedplantsci_041122.csv")
 
 
 
@@ -355,7 +347,7 @@ covariates <- list(bee.covariates = bee.covariates,
                    citation.covariates = citation.covariates)
 
 
-save(covariates, file = "~/Dropbox/Globi/Data/model_covariates - 2022 04 21 - no apis.rds")
+save(covariates, file = "Data/model_covariates - 2022 04 21 - no apis.rds")
 
 
 
@@ -375,7 +367,7 @@ ggplot(data = covariates$plant.covariates, aes(x = yellow, y = bowl))+
   ylab("Flower shape (1 = bowl)")+
   xlab("Flower color (1 = yellow)")
 
-ggsave("~/Dropbox/Globi/Figures/Covariate-relationship-1.pdf",
+ggsave("Figures/Covariate-relationship-1.pdf",
        height = 6, 
        width = 8)
 
@@ -387,7 +379,7 @@ ggplot(data = covariates$bee.covariates, aes(x = size, y = solitary))+
   ylab("Bee solitary (1 = yes)")+
   xlab("Bee size")
 
-ggsave("~/Dropbox/Globi/Figures/Covariate-relationship-2.pdf",
+ggsave("Figures/Covariate-relationship-2.pdf",
        height = 6, 
        width = 8)
 
@@ -399,7 +391,7 @@ ggplot(data = covariates$bee.covariates, aes(x = size, y = striped))+
   ylab("Bee strippiness (1 = yes)")+
   xlab("Bee size")
 
-ggsave("~/Dropbox/Globi/Figures/Covariate-relationship-3.pdf",
+ggsave("Figures/Covariate-relationship-3.pdf",
        height = 6, 
        width = 8)
 
@@ -410,7 +402,7 @@ ggplot(data = covariates$bee.covariates, aes(x = striped, y =  solitary))+
   ylab("Bee solitary  (1 = yes)")+
   xlab("Bee strippiness (1 = yes)")
 
-ggsave("~/Dropbox/Globi/Figures/Covariate-relationship-4.pdf",
+ggsave("Figures/Covariate-relationship-4.pdf",
        height = 6, 
        width = 8)
 

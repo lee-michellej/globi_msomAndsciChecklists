@@ -52,14 +52,6 @@ dat <- read_csv("Data/bee-plant-mod-probabilities.csv") %>%
 #hist(dat$max_prob)
 #hist(dat$prob_10)
 
-# what does probability of an interaction actually mean?
-# and what measure would be most equivalent to actual counts from the globi dataset?
-# max probability ranges from 0-1
-# I would either use:
-# prob_10, multiplying max_prob*10
-# prob_100, multiplying max_prob*100
-# will try visualizations with both sets and see what happens.
-
 globi_dat <- read_csv("Data/final-globi-list-clean 2022 02 01.csv") %>% 
   select(resolvedPlantNames, resolvedBeeNames, sourceTaxonFamilyName, targetTaxonOrderName, targetTaxonFamilyName) %>% 
   mutate(plant_order = ifelse(is.na(targetTaxonOrderName),
