@@ -33,8 +33,7 @@ library(Taxonstand)
 # txt file from SBBG that we will not publish on github 
 # file is sourced from google drive. titled ""
 
-setwd("~/Desktop/GradGeneral/2020-2021")
-sci.plants <- read_tsv("plants-SCI_traits_ml_2021_10_02.txt")
+sci.plants <- read_tsv("Data/plants-SCI_traits_ml_2021_10_02.txt")
 
 
 
@@ -101,8 +100,7 @@ stand_sci_3 <- anti_join(stand_sci_2, dup.sci.plants.stand, by = "resolvedPlantN
 
 # write csv for taxonstand sci list for easy use later
 
-setwd("~/Desktop/GradGeneral/2020-2021")
-write.csv(stand_sci_3, "resolvedplantsci_011722.csv", row.names = FALSE)
+write.csv(stand_sci_3, "Data/resolvedplantsci_011722.csv", row.names = FALSE)
 
 
 
@@ -119,8 +117,8 @@ write.csv(stand_sci_3, "resolvedplantsci_011722.csv", row.names = FALSE)
 # file is sourced from google drive. titled ""
 
 # using globi dataset cleaned using the capstone student workflow
-setwd("~/Downloads")
-globi.dat <- read_csv("interactions.csv")
+# NOTE: The CSV file generated from the previous workflow is too large for github. Should be pulled from a local location and called "globi.dat"
+#globi.dat <- read_csv("interactions.csv")
 
 
 
@@ -163,9 +161,8 @@ globi.dat.plantstand <- left_join(globi.dat, stand_globi_short1, by = c("targetT
 
 
 # write csv for taxonstand sci list for easy use later
-
-setwd("~/Downloads")
-write.csv(globi.dat.plantstand, "resolvedplantnamesglobi_011722.csv", row.names = FALSE)
+# this file is also very large and should be downloaded to a local location
+# write.csv(globi.dat.plantstand, "resolvedplantnamesglobi_011722.csv", row.names = FALSE)
 
 
 
@@ -188,6 +185,4 @@ failed_merge <- anti_join(globi.dat.plantstand, slice.sci.plants.stand, by = "re
 
 
 #### 7 - write new file to be added to ongoing cleaning workflow ####
-
-setwd("~/Desktop/globi_bees/Data")
-write.csv(mergedfinal, "mergedplantlists.csv", row.names = FALSE)
+write.csv(mergedfinal, "Data/mergedplantlists.csv", row.names = FALSE)
