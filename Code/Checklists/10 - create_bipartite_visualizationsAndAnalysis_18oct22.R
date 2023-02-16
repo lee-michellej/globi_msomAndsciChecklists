@@ -26,8 +26,7 @@ source("../11_createnetworks_code/interaction_matrix_function.R")
 
 
 # Main csv files for manipulation ------------------------
-setwd("~/Downloads/")
-dat <- read_csv("bee-plant-mod-probabilities.csv") %>% 
+dat <- read_csv("Data/bee-plant-mod-probabilities.csv") %>% 
   mutate(prob = max_prob * 10000,
          log_prob = log(prob),
          corrected_log_prob = ifelse(log_prob > 0, log_prob, 0),
