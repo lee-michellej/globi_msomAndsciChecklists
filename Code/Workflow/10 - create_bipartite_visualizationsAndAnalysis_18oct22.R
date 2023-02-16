@@ -72,6 +72,12 @@ cut_df <- dat %>%
 
 # make interaction matrix
 
+cut_matdat <- as.data.frame(df2intmatrix(as.data.frame(cut_df), 
+                                                    varnames = c("plant.names", "bee.names", "prob_10"),
+                                                    type.out = "array",
+                                                    emptylist = TRUE))
+
+
 cut_matdat.gen <- as.data.frame(df2intmatrix(as.data.frame(cut_df), 
                                          varnames = c("genus", "bee.names", "prob_10"),
                                          type.out = "array",
@@ -544,31 +550,11 @@ tests <- rbind(vaz.test.nest,
 plant_phylog <- read_csv("Data/plant_phylog.csv")
 bee_phylog <- read_csv("Data/bee_phylog.csv")
 
-# make phylogeny list for globi plant list
-glob_plant_order <- plant_phylog %>% 
-  right_join(globi_filtered, by = "plant_order") %>% 
-  arrange(plant_phylog, targetTaxonFamilyName, resolvedPlantNames)
-
-glob_plant_order1 <- glob_plant_order %>% 
-  select(resolvedPlantNames, targetTaxonFamilyName) %>% 
-  unique()
-
 #make phylogeny list for globi plant genus
 glob_plant_order.gen <- plant_phylog %>% 
   right_join(globi_filtered, by = "plant_order") %>%
   separate(resolvedPlantNames, into = c("genus", NA), sep = " ", remove = FALSE) %>% 
   arrange(plant_phylog, genus)
-
-# make phylogeny list for globi bee list
-glob_bee_order <- bee_phylog %>% 
-  right_join(globi_filtered, by = c("bee_family" = "sourceTaxonFamilyName")) %>% 
-  arrange(bee_phylog, resolvedBeeNames)
-
-# make list to feed to network code
-glob_order <- list(
-  seq.high = unique(glob_bee_order$resolvedBeeNames),
-  seq.low = unique(glob_plant_order$resolvedPlantNames)
-)
 
 # order by genus
 glob_order.gen <- list(
@@ -590,19 +576,6 @@ mod_plant_list <- as.data.frame(read_csv("Data/plant_phylog_modellist.csv")) %>%
 #                               mod_plant_list, 
 #                               by = c("plant.names" = "scientificName"))
 
-mod_plant_order <- left_join(cut_df, mod_plant_list, 
-                             by = c("plant.names" = "scientificName")) %>% 
-  left_join(plant_phylog, by  = c("Order" = "plant_order")) %>% 
-  arrange(plant_phylog, Family, resolvedPlantNames)
-
-mod_plant_order.gen <- left_join(cut_df, mod_plant_list, 
-                             by = c("genus" = "Genus")) %>% 
-  left_join(plant_phylog, by  = c("Order" = "plant_order")) %>% 
-  arrange(plant_phylog, genus)
-#resolvedPlantNames
-#want Family order
-
-
 mod_plant_order.matchplant <- left_join(cut_df_matchplant, mod_plant_list, 
                                         by = c("plant.names" = "scientificName")) %>% 
   left_join(plant_phylog, by  = c("Order" = "plant_order")) %>% 
@@ -610,10 +583,6 @@ mod_plant_order.matchplant <- left_join(cut_df_matchplant, mod_plant_list,
     ifelse(resolvedPlantNames %in% c("Phacelia distans", "Phacelia ramosissima"), "Boraginaceae",Family)
   ) %>% 
   arrange(plant_phylog, Family, resolvedPlantNames)
-
-
-
-
 
 
 # make phylogeny list for modeled bee list
@@ -625,22 +594,7 @@ mod_bee_phylog <- left_join(cut_df, mod_bee_list, by = "bee.names") %>%
   arrange(bee_phylog, bee.names)
 
 
-
-
-
 # make list to feed to network code
-mod_order <- list(
-  seq.high = unique(mod_bee_phylog$bee.names),
-  seq.low = unique(mod_plant_order$plant.names)
-)
-
-
-mod_order.gen <- list(
-  seq.high = unique(mod_bee_phylog$bee.names),
-  seq.low = unique(mod_plant_order.gen$genus)
-)
-
-
 mod_order.matchplants <- list(
   seq.high = unique(mod_bee_phylog$bee.names),
   seq.low = unique(mod_plant_order.matchplant$plant.names)
@@ -650,38 +604,6 @@ mod_order.matchplants <- list(
 # +++++ ------
 
 # Plot modeled network -------
-
-plotweb(cut_matdat, method = "normal", empty = TRUE, arrow = "no",
-        col.interaction = adjustcolor("cornsilk3"),
-        col.high = "goldenrod",
-        col.low = "olivedrab4",
-        bor.col.interaction = NA,
-        bor.col.high = NA,
-        bor.col.low = NA,
-        text.rot = 90,
-        y.lim = c(-1.55,3.25),
-        x.lim = c(0, 2.2),
-        sequence = mod_order
-        #plot.axes = TRUE
-)
-
-visweb(cut_matdat)
-
-#ordered by genus
-plotweb(cut_matdat.gen, method = "normal", empty = TRUE, arrow = "no",
-        col.interaction = adjustcolor("cornsilk3"),
-        col.high = "goldenrod",
-        col.low = "olivedrab4",
-        bor.col.interaction = NA,
-        bor.col.high = NA,
-        bor.col.low = NA,
-        text.rot = 90,
-        y.lim = c(-1.55,3.25),
-        x.lim = c(0, 2.2),
-        sequence = mod_order.gen
-        #plot.axes = TRUE
-)
-
 
 #matching plant list to output of globi network
 plotweb(cut_matdat_matchplant, method = "normal", empty = TRUE, arrow = "no",
@@ -707,20 +629,7 @@ visweb(cut_matdat_matchplant)
 # Plot GloBI network -------
 # with phylogenetic order
 
-plotweb(globi_matdat, method = "normal", empty = TRUE, arrow = "no",
-        col.interaction = adjustcolor("cornsilk3"),
-        col.high = "goldenrod",
-        col.low = "olivedrab4",
-        bor.col.interaction = NA,
-        bor.col.high = NA,
-        bor.col.low = NA,
-        text.rot = 90,
-        y.lim = c(-1.55,3.25),
-        x.lim = c(0, 2.2),
-        sequence = glob_order
-)
 
-# by genus
 plotweb(globi_matdat.gen, method = "normal", empty = TRUE, arrow = "no",
         col.interaction = adjustcolor("cornsilk3"),
         col.high = "goldenrod",
