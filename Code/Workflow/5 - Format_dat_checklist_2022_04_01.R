@@ -177,7 +177,7 @@ bee.names.globi <- read.csv("~/Dropbox/Globi/Data/Globi-names-not-in-discoverlif
 
 
 # Institution codes
-institution.codes <- read.csv("./Data/institutioncodes_2021_12_16.csv")
+institution.codes <- read.csv("Data/institutioncodes_2021_12_16.csv")
 
 
 
@@ -205,7 +205,7 @@ institution.codes <- read.csv("./Data/institutioncodes_2021_12_16.csv")
 
 
 # Read in plant phenology data
-plant.phenology <- read.csv("~/Dropbox/Globi/Data/short_noapis_resolvedplantsci_041122.csv")
+plant.phenology <- read.csv("Data/short_noapis_resolvedplantsci_041122.csv")
 
 
 
@@ -705,7 +705,7 @@ g.map2 <- ggmap(get_stamenmap(bbox2, zoom = 8, maptype = "terrain"))+
 
 g.map2
 
-ggsave("~/Github/globi_tritrophic_networks/Figures/2022_05_12/Globi_CA_map_2022_05_12.pdf", 
+ggsave("Figures/2022_05_12/Globi_CA_map_2022_05_12.pdf", 
        height = 10, width = 12)
 
 
@@ -971,7 +971,7 @@ length(bee.species) *
 
 
 # Use this file WITHOUT Apis
-  load("./Data/bee_plant_inter_2022_04_11 - short plant - no apis.rds")
+  load("Data/bee_plant_inter_2022_04_11 - short plant - no apis.rds")
 
 
 
