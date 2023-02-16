@@ -72,7 +72,7 @@ load("./Data/data_summary/globi_data_formatted_bee_plant_date_citation_2022_04_1
 
 
 # Load covariate data
-load("~/Dropbox/Globi/Data/model_covariates - 2022 04 21 - no apis.rds")
+load("./Data/model_covariates - 2022 04 21 - no apis.rds")
   # object = covariates
 
 
@@ -234,7 +234,7 @@ ggplot(data = det.source.size, aes(x = size_std, y = sum.det))+
 
 
 
-ggsave("~/Dropbox/Globi/Figures/DETECTIONS-by-Bee-size-by-Source.pdf",
+ggsave("Figures/DETECTIONS-by-Bee-size-by-Source.pdf",
        height = 12, 
        width = 13)
 
@@ -251,7 +251,7 @@ ggplot(data = det.source.size, aes(x = size_std, y = sum.pos))+
 
 
 
-ggsave("~/Dropbox/Globi/Figures/POSSIBLE-by-Bee-size-by-Source.pdf",
+ggsave("Figures/POSSIBLE-by-Bee-size-by-Source.pdf",
        height = 12, 
        width = 13)
 
@@ -279,7 +279,7 @@ ggplot(data = det.source.yellow, aes(x = yellow, y = sum.det))+
 
 
 
-ggsave("~/Dropbox/Globi/Figures/DETECTIONS-by-Plant-yellow-by-Source.pdf",
+ggsave("Figures/DETECTIONS-by-Plant-yellow-by-Source.pdf",
        height = 12, 
        width = 13)
 
@@ -297,7 +297,7 @@ ggplot(data = det.source.yellow, aes(x = yellow, y = sum.pos))+
 
 
 
-ggsave("~/Dropbox/Globi/Figures/POSSIBLE-by-Plant-yellow-by-Source.pdf",
+ggsave("Figures/POSSIBLE-by-Plant-yellow-by-Source.pdf",
        height = 12, 
        width = 13)
 
@@ -325,7 +325,7 @@ ggplot(data = det.source.bowl, aes(x = bowl, y = sum.det))+
 
 
 
-ggsave("~/Dropbox/Globi/Figures/DETECTIONS-by-Plant-bowl-by-Source.pdf",
+ggsave("Figures/DETECTIONS-by-Plant-bowl-by-Source.pdf",
        height = 12, 
        width = 13)
 
@@ -343,7 +343,7 @@ ggplot(data = det.source.bowl, aes(x = bowl, y = sum.pos))+
 
 
 
-ggsave("~/Dropbox/Globi/Figures/POSSIBLE-by-Plant-bowl-by-Source.pdf",
+ggsave("Figures/POSSIBLE-by-Plant-bowl-by-Source.pdf",
        height = 12, 
        width = 13)
 
