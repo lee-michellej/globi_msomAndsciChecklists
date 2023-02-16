@@ -21,8 +21,21 @@ library(ggplot2)
 library(bipartite)
 library(vegan)
 library(igraph)
-setwd("~/Desktop/palmyra_Rproject/Network_Analyses/11_createnetworks_code/")
-source("../11_createnetworks_code/interaction_matrix_function.R")
+
+
+# code from bipartite to make interaction matrix -------
+df2intmatrix <- function(dframe, varnames = c("lower", "higher", "freq"), type.out = "list", emptylist = TRUE) {
+  if (length(varnames)==3) {
+    if (any(is.na(dframe[,varnames[3]]))) warning(paste("NAs in", varnames[3], "converted to 0"))
+    webarray <- tapply(dframe[,varnames[3]],dframe[,varnames[1:2]], sum)
+  }
+  if (length(varnames)==2) webarray <- tapply(rep(1,nrow(dframe)),dframe[,varnames[1:2]], sum)
+  webarray[is.na(webarray)] <- 0   # needs to be done when using tapply: unobserved combinations always get a zero, even with na.rm=T
+  if (type.out=="array") return(webarray)
+  if (type.out=="list") {
+    weblist <- list()
+  }
+}
 
 
 # Main csv files for manipulation ------------------------
@@ -47,8 +60,7 @@ dat <- read_csv("Data/bee-plant-mod-probabilities.csv") %>%
 # prob_100, multiplying max_prob*100
 # will try visualizations with both sets and see what happens.
 
-setwd("~/Desktop/globi/globi_tritrophic_networks/Data/")
-globi_dat <- read_csv("final-globi-list-clean 2022 02 01.csv") %>% 
+globi_dat <- read_csv("Data/final-globi-list-clean 2022 02 01.csv") %>% 
   select(resolvedPlantNames, resolvedBeeNames, sourceTaxonFamilyName, targetTaxonOrderName, targetTaxonFamilyName) %>% 
   mutate(plant_order = ifelse(is.na(targetTaxonOrderName),
                               "Boraginales",
@@ -60,7 +72,7 @@ globi_dat <- read_csv("final-globi-list-clean 2022 02 01.csv") %>%
 
 # Modeled network bipartite ------
 
-# cut off here of probability of 0.03%
+# cut off here of probability of 3%
 cut_df <- dat %>% 
   dplyr::select(bee.names, plant.names, prob_10) %>% 
   dplyr::filter(prob_10 >= 3) %>% 
@@ -228,8 +240,7 @@ net.metrics.nodf <- lapply(webs, networklevel, index = 'NODF')
 
 # make nulls ------
 net.nulls.vaz <- lapply(webs, nullmodel, method = "vaznull", N = 500)
-#net.nulls.r2d <- lapply(webs, nullmodel, method = "r2dtable", N = 500)
-#net.nulls.swap <- lapply(webs, nullmodel, method = "swap.web", N = 500)
+
 
 ### +++++ nestedness --------
 
@@ -291,7 +302,6 @@ qt(vaz.test.nest$pvalue, 499)
 # tstatistics: 
 #-2.5544350
 #-0.6607475
-# consider graphing these values
 
 
 # print p-values of zscores
@@ -535,13 +545,12 @@ tests <- rbind(vaz.test.nest,
 # not completely ordered correctly:
 # ordered by family for bees: https://www.researchgate.net/figure/Family-and-subfamily-level-phylogeny-for-bees-based-on-Danforth-et-al-2013_fig1_332959316
 # ordered to order for plants: https://www.researchgate.net/publication/279592674_An_ordinal_classification_for_the_families_of_flowering_plants
-setwd("~/Desktop/globi/globi_tritrophic_networks/Data/")
 
 
 # ///// for GloBI data -------
 
-plant_phylog <- read_csv("plant_phylog.csv")
-bee_phylog <- read_csv("bee_phylog.csv")
+plant_phylog <- read_csv("Data/plant_phylog.csv")
+bee_phylog <- read_csv("Data/bee_phylog.csv")
 
 # make phylogeny list for globi plant list
 glob_plant_order <- plant_phylog %>% 
@@ -581,7 +590,7 @@ glob_order.gen <- list(
 
 
 # make phylogeny list for modeled plant list
-mod_plant_list <- as.data.frame(read_csv("plant_phylog_modellist.csv")) %>% 
+mod_plant_list <- as.data.frame(read_csv("Data/plant_phylog_modellist.csv")) %>% 
   filter(!is.na(scientificName))
 
 # check for missing species names
@@ -616,13 +625,12 @@ mod_plant_order.matchplant <- left_join(cut_df_matchplant, mod_plant_list,
 
 
 # make phylogeny list for modeled bee list
-mod_bee_list <- read_csv("bee_phylog_modellist.csv")
+mod_bee_list <- read_csv("Data/bee_phylog_modellist.csv")
 # 23 bee species -- the same as the unique bees included in model cut off
 
 mod_bee_phylog <- left_join(cut_df, mod_bee_list, by = "bee.names") %>% 
   left_join(bee_phylog, by = c("bee.family" = "bee_family")) %>% 
   arrange(bee_phylog, bee.names)
-
 
 
 
@@ -702,32 +710,11 @@ visweb(cut_matdat_matchplant)
 
 
 
-
-
 # +++++ ------
 
 # Plot GloBI network -------
-
-# without phylogenetic order
-plotweb(globi_matdat, method = "normal", empty = TRUE, arrow = "no",
-        col.interaction = adjustcolor("cornsilk3"),
-        col.high = "goldenrod",
-        col.low = "olivedrab4",
-        bor.col.interaction = NA,
-        bor.col.high = NA,
-        bor.col.low = NA,
-        text.rot = 90,
-        y.lim = c(-1.55,3.25),
-        x.lim = c(0, 2.2),
-        #plot.axes = TRUE
-)
-
-visweb(globi_matdat)
-
-
 # with phylogenetic order
 
-
 plotweb(globi_matdat, method = "normal", empty = TRUE, arrow = "no",
         col.interaction = adjustcolor("cornsilk3"),
         col.high = "goldenrod",
@@ -738,12 +725,8 @@ plotweb(globi_matdat, method = "normal", empty = TRUE, arrow = "no",
         text.rot = 90,
         y.lim = c(-1.55,3.25),
         x.lim = c(0, 2.2),
-        #plot.axes = TRUE
         sequence = glob_order
 )
-
-#adjustcolor("lightgray", alpha.f = 0.75)
-
 
 # by genus
 plotweb(globi_matdat.gen, method = "normal", empty = TRUE, arrow = "no",
@@ -756,198 +739,5 @@ plotweb(globi_matdat.gen, method = "normal", empty = TRUE, arrow = "no",
         text.rot = 90,
         y.lim = c(-1.55,3.25),
         x.lim = c(0, 2.2),
-        #plot.axes = TRUE
         sequence = glob_order.gen
 )
-
-
-
-
-
-
-
-
-# +++++ ------
-# Bipartite for individual bee species -------------------------------
-
-matrix <- frame2webs(as.data.frame(dat), 
-                     varnames = c("plant.names", "bee.names", "bee.names", "corrected_log_prob"), 
-                     type.out = "array", 
-                     emptylist = TRUE)
-
-matdat <- df2intmatrix(as.data.frame(dat), 
-                       varnames = c("plant.names", "bee.names", "prob_10"),
-                       type.out = "array",
-                       emptylist = TRUE)
-
-matdf <- as.data.frame(matdat)
-
-matrix_agopost <- matdf %>% 
-  select(`Agapostemon texanus`)
-
-plotweb(matrix_agopost, method = "normal", empty = TRUE, arrow = "no",
-        col.interaction = adjustcolor("pink", alpha.f = 0.75),
-        col.high = "goldenrod",
-        col.low = "olivedrab4",
-        bor.col.interaction = adjustcolor("lightgray", alpha.f = 0.75),
-        bor.col.high = NA,
-        bor.col.low = adjustcolor("lightgray", alpha.f = 0.75),
-        text.rot = 90,
-        y.lim = c(-5,1.5),
-        x.lim = c(0, 1),
-        text.high.col = FALSE,
-        high.plot = FALSE
-)
-
-
-
-# ////with interaction cut off ----------------
-
-cut_df <- dat %>% 
-  dplyr::select(bee.names, plant.names, prob_10) %>% 
-  dplyr::filter(prob_10 >= 3)
-
-
-cut_matdat <- as.data.frame(df2intmatrix(as.data.frame(cut_df), 
-                                         varnames = c("plant.names", "bee.names", "prob_10"),
-                                         type.out = "array",
-                                         emptylist = TRUE))
-
-cut_mat_oneSpec <- cut_matdat %>% 
-  select(`Agapostemon texanus`)
-
-plotweb(cut_mat_oneSpec, method = "normal", empty = TRUE, arrow = "no",
-        col.interaction = adjustcolor("pink", alpha.f = 0.75),
-        col.high = "goldenrod",
-        col.low = "olivedrab4",
-        bor.col.interaction = adjustcolor("lightgray", alpha.f = 0.75),
-        bor.col.high = NA,
-        bor.col.low = adjustcolor("lightgray", alpha.f = 0.75),
-        text.rot = 90,
-        y.lim = c(-5,1.5),
-        x.lim = c(0, 1),
-        text.high.col = FALSE,
-        high.plot = FALSE
-)
-
-
-
-plotweb(cut_matdat, method = "normal", empty = TRUE, arrow = "no",
-        col.interaction = adjustcolor("pink", alpha.f = 0.75),
-        col.high = "goldenrod",
-        col.low = "olivedrab4",
-        bor.col.interaction = adjustcolor("lightgray", alpha.f = 0.75),
-        bor.col.high = adjustcolor("lightgray", alpha.f = 0.75),
-        bor.col.low = adjustcolor("lightgray", alpha.f = 0.75),
-        text.rot = 90,
-        y.lim = c(-1,1),
-        #x.lim = c(0, 1),
-)
-
-
-
-
-
-
-
-# ////try igraph -------
-
-igraph_df <- dat %>% 
-  dplyr::select(bee.names, plant.names, prob_10) #%>% 
-#dplyr::filter(prob_10 >= 2)
-
-igraph_df_oneSpec <- igraph_df %>% 
-  filter(bee.names == "Agapostemon texanus")
-
-g <- graph.data.frame(igraph_df_oneSpec, directed = F)
-E(g)$weight <- igraph_df_oneSpec[,3]
-V(g)$type <- bipartite_mapping(g)$type
-
-print(g)
-
-plot(g, layout=layout.bipartite, edge.width=unlist(E(g)$weight), vertex.size=7,vertex.label.cex=0.6)
-
-
-
-
-
-
-igraph_df <- dat %>% 
-  dplyr::select(bee.names, plant.names, prob_10) %>% 
-  dplyr::filter(prob_10 >= 3)
-
-igraph_df_oneSpec <- igraph_df %>% 
-  filter(bee.names == "Agapostemon texanus")
-
-g <- graph.data.frame(igraph_df_oneSpec, directed = F)
-E(g)$weight <- igraph_df_oneSpec[,3]
-V(g)$type <- bipartite_mapping(g)$type
-
-print(g)
-
-plot(g, layout=layout.bipartite, edge.width=unlist(E(g)$weight), vertex.size=7,vertex.label.cex=0.6)
-
-
-
-
-
-
-
-# ////now with "Andrena auricoma" ------------------
-
-
-
-# bipartite
-
-cut_df <- dat %>% 
-  dplyr::select(bee.names, plant.names, prob_10) %>% 
-  dplyr::filter(prob_10 >= 2)
-
-
-cut_matdat <- as.data.frame(df2intmatrix(as.data.frame(cut_df), 
-                                         varnames = c("plant.names", "bee.names", "prob_10"),
-                                         type.out = "array",
-                                         emptylist = TRUE))
-
-cut_mat_oneSpec <- cut_matdat %>% 
-  select(`Andrena auricoma`)
-
-plotweb(cut_mat_oneSpec, method = "normal", empty = TRUE, arrow = "no",
-        col.interaction = adjustcolor("pink", alpha.f = 0.75),
-        col.high = "goldenrod",
-        col.low = "olivedrab4",
-        bor.col.interaction = adjustcolor("lightgray", alpha.f = 0.75),
-        bor.col.high = NA,
-        bor.col.low = adjustcolor("lightgray", alpha.f = 0.75),
-        text.rot = 90,
-        y.lim = c(-5,1.5),
-        x.lim = c(0, 1),
-        text.high.col = FALSE,
-        high.plot = FALSE
-)
-
-
-
-
-
-
-# igraph
-igraph_df <- dat %>% 
-  dplyr::select(bee.names, plant.names, prob_10) %>% 
-  dplyr::filter(prob_10 >= 2)
-
-igraph_df_oneSpec <- igraph_df %>% 
-  filter(bee.names == "Andrena auricoma")
-
-g <- graph.data.frame(igraph_df_oneSpec, directed = F)
-E(g)$weight <- igraph_df_oneSpec[,3]
-V(g)$type <- bipartite_mapping(g)$type
-
-print(g)
-
-plot(g, layout=layout.bipartite, edge.width=unlist(E(g)$weight), vertex.size=7,vertex.label.cex=0.6)
-
-
-
-
-
