@@ -36,16 +36,10 @@
 
 
 
-# 1. Load libraries & set working directory -------------------------------------------------------
-
-
+# 1. Load libraries -------------------------------------------------------
 
 # Load libraries
 library(tidyverse)
-
-
-# Set working directory
-setwd("./Data/")
 
 
 
@@ -116,7 +110,7 @@ load("/Data/data_summary/globi_data_formatted_bee_plant_date_citation_2022_04_11
   
 
 # Flower color
-plant.covariates <- read.csv("~/Data/short_noapis_resolvedplantsci_041122.csv")
+plant.covariates <- read.csv("/Data/short_noapis_resolvedplantsci_041122.csv")
 
 
 
