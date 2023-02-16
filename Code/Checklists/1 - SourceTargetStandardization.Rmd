@@ -4,10 +4,13 @@ author: "N. Bachelder, A. Chen, Z. Fang, M. Rapaport, S. Solomon"
 date: "18 Feb 2021"
 output: html_document
 ---
-  
+
+# To download data for this workflow, please look at our README.md file. These data accessed in September 2021 can be found here: https://zenodo.org/record/7502711#.Y-56KezMI-Q. 
+
 ```{r}
 library(tidyverse)
 library(reticulate)
+
 ```
 
 # Install python and pandas
