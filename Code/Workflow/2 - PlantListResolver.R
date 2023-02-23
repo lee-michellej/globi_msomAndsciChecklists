@@ -33,7 +33,7 @@ library(Taxonstand)
 # txt file from SBBG that we will not publish on github 
 # file is sourced from google drive. titled ""
 
-sci.plants <- read_tsv("Data/plants-SCI_traits_ml_2021_10_02.txt")
+sci.plants <- read_tsv("./Data/plants-SCI_traits_ml_2021_10_02.txt")
 
 
 
@@ -100,7 +100,7 @@ stand_sci_3 <- anti_join(stand_sci_2, dup.sci.plants.stand, by = "resolvedPlantN
 
 # write csv for taxonstand sci list for easy use later
 
-write.csv(stand_sci_3, "Data/resolvedplantsci_011722.csv", row.names = FALSE)
+write.csv(stand_sci_3, "./Data/resolvedplantsci_011722.csv", row.names = FALSE)
 
 
 
@@ -185,4 +185,4 @@ failed_merge <- anti_join(globi.dat.plantstand, slice.sci.plants.stand, by = "re
 
 
 #### 7 - write new file to be added to ongoing cleaning workflow ####
-write.csv(mergedfinal, "Data/mergedplantlists.csv", row.names = FALSE)
+write.csv(mergedfinal, "./Data/mergedplantlists.csv", row.names = FALSE)
