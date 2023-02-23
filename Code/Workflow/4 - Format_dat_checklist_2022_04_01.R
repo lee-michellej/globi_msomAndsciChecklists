@@ -29,10 +29,6 @@
 ##################################
 
 
-# We should list other outputs
-  # maps
-  # csv files etc.
-
 # This code generates 1 file: 
   # "./Data/globi_data_formatted_bee_plant_2021_04_05.rds"
   # Object names: globi.dat
@@ -140,22 +136,22 @@ setwd("~/globi_tritrophic_networks/")
   # Step 2: Add resolved plant species names (resolvedPlantName)
             # Will be done on the Globi datset
             # And on the plant phenology list
-    # File names: 2-......R
+    # File names: 2 - PlantListResolver.R
 
 # Read in data
   # Note that this is not in the github repo because the file size is too big
   # This data was downloaded from globi 
   # resolvedplantnamesglobi_011722csv.zip = This is the whole Globi csv file- with the new resolvedPLant names column
-dat <- read.csv("~/Dropbox/Globi/Data/Data_globi/resolvedplantnamesglobi_011722.csv")
+dat <- read.csv("resolvedplantnamesglobi_011722.csv")
 
 
 # Read in bee phenology data with the bee checklist names
-bee.list <- read.csv("~/Dropbox/Globi/Data/SCI checklist and phenology - SCI checklists and phenology - Seltmann 2022 04 01.csv")
+bee.list <- read.csv("./Data/SCI checklist and phenology - SCI checklists and phenology - Seltmann 2022 04 01.csv")
 
 # Other bee names = Synonyms
   # Zenodo synoynm list
   # https://zenodo.org/record/5738043#.YddffBPML0o
-bee.names <- read.csv("~/Dropbox/Globi/Data/discoverlife-Anthophila-2022 04 01.csv")
+bee.names <- read.csv("./Data/discoverlife-Anthophila-2022 04 01.csv")
 
 # Other bee names NOT on the Zenodo list but found in Globi
   # Synoynm list for bee species that do not appear in the Zenodo file
@@ -173,11 +169,11 @@ bee.names <- read.csv("~/Dropbox/Globi/Data/discoverlife-Anthophila-2022 04 01.c
     # 
     # Coelioxys octodentata
     # current valid: Coelioxys octodentatus Say, 1824
-bee.names.globi <- read.csv("~/Dropbox/Globi/Data/Globi-names-not-in-discoverlife - Sheet1 2022 04 01.csv")
+bee.names.globi <- read.csv("./Data/Globi-names-not-in-discoverlife - Sheet1 2022 04 01.csv")
 
 
 # Institution codes
-institution.codes <- read.csv("Data/institutioncodes_2021_12_16.csv")
+institution.codes <- read.csv("./Data/institutioncodes_2021_12_16.csv")
 
 
 
