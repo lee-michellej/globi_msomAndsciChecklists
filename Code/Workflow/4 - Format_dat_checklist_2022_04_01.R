@@ -116,6 +116,7 @@ library(dplyr)
 library(plyr)
 library(rgdal)
 library(sf)
+library(ggmap)
 
 # Set working directory
 setwd("~/globi_tritrophic_networks/")
@@ -178,30 +179,8 @@ institution.codes <- read.csv("./Data/institutioncodes_2021_12_16.csv")
 
 
 
-
-################
-# Determine if the run will be WITH or WITHOUT Apis mellifera
-################
-
-
-
-#--------------- WITH Apis
-
-
-
 # Read in plant phenology data
-# plant.phenology <- read.csv("~/Dropbox/Globi/Data/short_resolvedplantsci_041122.csv")
-
-
-
-
-
-#--------------- WITHOUT Apis
-
-
-
-# Read in plant phenology data
-plant.phenology <- read.csv("Data/short_noapis_resolvedplantsci_041122.csv")
+plant.phenology <- read.csv("./Data/short_noapis_resolvedplantsci_041122.csv")
 
 
 
@@ -250,7 +229,7 @@ str(bee.list)
 
 
 # Number of rows in bee.list = # of species
-  # 142
+  # 140
 nrow(bee.list)
 
 # Remove species without a species name ( == "sp.")
@@ -259,7 +238,7 @@ bee.list <- bee.list[bee.list$specificEpithet != "sp.",]
 
 # Final number of bee species
   # Removed rows not identified to species level
-  # 138
+  # 137
 nrow(bee.list)
 
 
@@ -362,7 +341,7 @@ dat1$resolvedBeeNames <- NA
 start.time <- Sys.time()
 for(i in 1:nrow(dat1)){
 
-  # 1. Identify the row in the bee.names4 dataframe that the name matches
+  # 1. Identify the row in the bee.names dataframe that the name matches
   # Zenodo list
   row.num.zenodo <- which(dat1$sourceTaxonSpeciesName[i] == bee.names$providedName)[1]
   
@@ -411,7 +390,7 @@ length(which(dat1$resolvedBeeNames == ""))
 
 
 # Number of rows that did not produce matches
-  # 396
+  # 393
 nrow(not.matched.bee.rows)
 
 # Drop unused levels
@@ -493,10 +472,12 @@ bee.list[is.na(bee.list$resolvedBeeNames) == TRUE |
 
 
 # Unique bee species
-  # 139 species
+  # 137 species
 bee.species <- unique(bee.list$resolvedBeeNames)
 bee.species <- bee.species[is.na(bee.species) == FALSE]
 bee.species <- bee.species[bee.species != "no:match"]
+
+length(bee.species)
 
 
 grep("Apis mellifera", bee.species)
@@ -505,8 +486,7 @@ length(bee.species)
 
 # Unique plant species
   # 516 species = complete list
-  # 151 species = shortened list WITH Apis
-  # 146 species = shortened list WITHOUT Apis
+  # 126 species = shortened list WITHOUT Apis
 plant.species <- unique(plant.phenology$scientificName)
 
 length(plant.species)
@@ -532,11 +512,10 @@ for(i in 1:nrow(dat1)){
 
 }
 end.time <- Sys.time()
-# beepr::beep(3)
 
 # How long did it take to run the loop?
 end.time - start.time
-
+beepr::beep(1)
 
 
 # Sum the plant & insect columns
@@ -550,12 +529,12 @@ dat1$tot <- dat1$Plant + dat1$Insect
 remove.rows <- length(which(dat1$tot < 2))
 
 # How many rows will be removed?
-  # 150,009
+  # 152,735
 remove.rows
 
 
 # How many rows will be kept?
-  # 7,884
+  # 5,158
 length(which(dat1$tot == 2))
 
 
@@ -578,7 +557,7 @@ dat2 <- droplevels(dat2)
 # View(table(dat2$sourceCitation))
 
 # Number of observations
-  #  7,884
+  #  5,158
 nrow(dat2)
 
 
@@ -605,7 +584,7 @@ dat2.5 <- dat2[is.na(dat2$decimalLatitude) == TRUE & is.na(dat2$decimalLongitude
 dat3 <- dat2[is.na(dat2$decimalLatitude) == FALSE & is.na(dat2$decimalLongitude) == FALSE,]
 
 # Number of rows
-  # 7,229
+  # 4,640
 nrow(dat3)
 
 # Add a column with 1's
@@ -662,7 +641,7 @@ dat5 <- dat4[dat4$decimalLatitude > 30 & dat4$decimalLatitude < 36 &
            dat4$decimalLongitude > -150 & dat4$decimalLongitude < -116, ]
 
 sum(dat5$total)
-  # 566
+  # 412
 
 
 # Coordinates
@@ -701,7 +680,7 @@ g.map2 <- ggmap(get_stamenmap(bbox2, zoom = 8, maptype = "terrain"))+
 
 g.map2
 
-ggsave("Figures/2022_05_12/Globi_CA_map_2022_05_12.pdf", 
+ggsave("./Figures/Globi_CA_map_2023_02_23.pdf", 
        height = 10, width = 12)
 
 
@@ -711,7 +690,7 @@ dat6 <- dat3[dat3$decimalLatitude > 30 & dat3$decimalLatitude < 36 &
              dat3$decimalLongitude > -150 & dat3$decimalLongitude < -116, ]
 
 # Number of observations
-  # 566
+  # 412
 nrow(dat6)
 
 
