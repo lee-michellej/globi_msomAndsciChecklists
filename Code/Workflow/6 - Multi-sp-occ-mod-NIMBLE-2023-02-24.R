@@ -77,7 +77,7 @@ library(coda)
 
 
 # Set working directory
-setwd("~/Github/globi_tritrophic_networks/")
+setwd("~/globi_tritrophic_networks/")
 
 
 
@@ -88,34 +88,12 @@ setwd("~/Github/globi_tritrophic_networks/")
 
 
 
-################
-# Determine if the run will be WITH or WITHOUT Apis mellifera
-################
-
-
-
-
-
-
-######### WITH Apis melifera
-
-
-
-# # Upload the data
-# load("./Data/data_summary/globi_data_formatted_bee_plant_date_citation_2022_04_05 - short plant list.rds")
-# # object name = bee.plant.date.cite
-# # 4-D array
-# 
-
-
-
-######### WITHOUT Apis melifera
 
 
 # Upload the data
   # object name = bee.plant.date.cite
   # 4-D array
-load("./Data/data_summary/globi_data_formatted_bee_plant_date_citation_2022_04_11 - short plant list - no apis.rds")
+load("./Data/data_summary/globi_data_formatted_bee_plant_date_citation_2023_02_23 - short plant list - no apis.rds")
 
 
 
@@ -129,6 +107,8 @@ load("./Data/data_summary/globi_data_formatted_bee_plant_date_citation_2022_04_1
 
 
 # 3. Calculate derived quantities of interest ------------------------------------------------
+
+
 
 
 
@@ -164,7 +144,7 @@ ggplot(data = obs.dat, aes(obs)) +
         plot.title = element_text(size = 25, color = "black", face = "bold")) 
 
 
- ggsave(file = "~/Github/globi_tritrophic_networks/Figures/2022_05_12/Bee-plant-Observation-Histogram.pdf", 
+ ggsave(file = "./Figures/2023_02_24/Bee-plant-Observation-Histogram.pdf", 
         height = 4,
         width = 6)
 
@@ -178,6 +158,9 @@ ggplot(data = obs.dat, aes(obs)) +
 
 
 
+ 
+ 
+ 
 
 # Create a function with all the needed code
 run_MCMC_allcode <- function(seed){
@@ -186,66 +169,26 @@ run_MCMC_allcode <- function(seed){
   library(nimble)
   
   
-  ################
-  # Determine if the run will be WITH or WITHOUT Apis mellifera
-  ################
-  
-  
-  
-  
-  
-  
-  ######### WITH Apis melifera
-  
-#  # List with Apis mellifera: bee_plant_inter_2022_02_28 - short plant
-#  load("./Data/bee_plant_inter_2022_04_05 - short plant.rds")
-#  # object = bee.plant.inter
-#  # 2-D matrix
-#  
-#  # Load the observed bee-plant-month by source citation interactions
-#  bee.plant.obs <- read.csv( "./Data/bee-plant-obs-long-format 2022 04 05 - short plant list.csv")
-#  # object = bee.plant.obs
-#  # 2-D matrix
-#  
-#  
-#  # Upload the data
-#  load("./Data/data_summary/globi_data_formatted_bee_plant_date_citation_2022_04_05 - short plant list#.rds")
-#  # object name = bee.plant.date.cite
-#  # 4-D array
-#  
-#  
-#  # Load covariates
-#  load("~/Dropbox/Globi/Data/model_covariates - 2022 04 05.rds")
-#  
-  
-  
-  
-  
-  
-  ######### WITHOUT Apis melifera
-  
-  
-  
   
  # Load the possible bee-plant-interactions
  # object = bee.plant.inter
  # 2-D matrix
- load("./Data/bee_plant_inter_2022_04_11 - short plant - no apis.rds")
+ load("./Data/bee_plant_inter_2023_02_24 - short plant - no apis.rds")
  
  
  # Load the observed bee-plant-month by source citation interactions
  # object = bee.plant.obs
  # 2-D matrix
-  bee.plant.obs <- read.csv( "./Data/bee-plant-obs-long-format 2022 04 11 - short plant list - no apis.csv")
+   load( "./Data/bee_plant_obs_2023_02_23 - short plant list - no apis.rds")
 
   # Upload the data
   # object name = bee.plant.date.cite
   # 4-D array
-  load("./Data/data_summary/globi_data_formatted_bee_plant_date_citation_2022_04_11 - short plant list - no apis.rds")
+  load("./Data/data_summary/globi_data_formatted_bee_plant_date_citation_2023_02_23 - short plant list - no apis.rds")
  
  
   # Load covariates
-  load("~/Dropbox/Globi/Data/model_covariates - 2022 04 21 - no apis.rds")
+  load("./Data/model_covariates - 2022 04 21 - no apis.rds")
  
  
   
@@ -362,15 +305,15 @@ run_MCMC_allcode <- function(seed){
       
       # Make the bee-plant interaction probability of function of variables
       logit(psi[bee.ID.true[i], plant.ID.true[i], month.ID.true[i]]) <- # Bee species-specific random effect/intercept
-                                                                        u[bee.ID.true[i]] +
-                                                                        # Bee size
-                                                                        beta_psi[1] * size[bee.ID.true[i]]+ 
-                                                                        # Bee solitary ( 1 = yes; 0 = no)
-                                                                        beta_psi[2] * solitary[bee.ID.true[i]]+
-                                                                        # Flower color
-                                                                        beta_psi[3] * flower_color[plant.ID.true[i]]+
-                                                                        # Flower shape
-                                                                        beta_psi[4] * flower_shape[plant.ID.true[i]]
+                                                                        u[bee.ID.true[i]] #+
+                                                                        # # Bee size
+                                                                        # beta_psi[1] * size[bee.ID.true[i]]+ 
+                                                                        # # Bee solitary ( 1 = yes; 0 = no)
+                                                                        # beta_psi[2] * solitary[bee.ID.true[i]]+
+                                                                        # # Flower color
+                                                                        # beta_psi[3] * flower_color[plant.ID.true[i]]+
+                                                                        # # Flower shape
+                                                                        # beta_psi[4] * flower_shape[plant.ID.true[i]]
                       
                                                                         
                                                                         
@@ -393,22 +336,22 @@ run_MCMC_allcode <- function(seed){
                                                                                     z[bee.ID.obs[i], plant.ID.obs[i], month.ID.obs[i]]
       
       logit(p[bee.ID.obs[i], plant.ID.obs[i], month.ID.obs[i], citation.ID.obs[i]]) <- # Bee species-specific random effect/intercept
-                                                                                        v[bee.ID.obs[i]] +
-                                                                                        # Bee Strippiness
-                                                                                        beta_p[1] * stripped[bee.ID.obs[i]]+
-                                                                                        # Bee size
-                                                                                        beta_p[2] * size[bee.ID.obs[i]]+
-                                                                                        # Quadratic term for month
-                                                                                        beta_p[3] * month.ID.obs[i]+
-                                                                                        beta_p[4] * pow(month.ID.obs[i], 2)+
-                                                                                        # source
-                                                                                        beta_p[5] * citation.code[citation.ID.obs[i]]+
-                                                                                        # Flower color
-                                                                                        beta_p[6] * flower_color[plant.ID.obs[i]]+
-                                                                                        # Flower shape
-                                                                                        beta_p[7] * flower_shape[plant.ID.obs[i]]+
-                                                                                        # Plant family
-                                                                                        beta_p[8] * plant_family[plant.ID.obs[i]]
+                                                                                        v[bee.ID.obs[i]] #+
+                                                                                       # # Bee Strippiness
+                                                                                       # beta_p[1] * stripped[bee.ID.obs[i]]+
+                                                                                       # # Bee size
+                                                                                       # beta_p[2] * size[bee.ID.obs[i]]+
+                                                                                       # # Quadratic term for month
+                                                                                       # beta_p[3] * month.ID.obs[i]+
+                                                                                       # beta_p[4] * pow(month.ID.obs[i], 2)+
+                                                                                       # # source
+                                                                                       # beta_p[5] * citation.code[citation.ID.obs[i]]+
+                                                                                       # # Flower color
+                                                                                       # beta_p[6] * flower_color[plant.ID.obs[i]]+
+                                                                                       # # Flower shape
+                                                                                       # beta_p[7] * flower_shape[plant.ID.obs[i]]+
+                                                                                       # # Plant family
+                                                                                       # beta_p[8] * plant_family[plant.ID.obs[i]]
       
     }
     
@@ -418,15 +361,6 @@ run_MCMC_allcode <- function(seed){
   
   # Bundle all the values that remain constant in the model
   MEconsts <- list(
-    
-    # Number of bee species
-    n.bee = max(bee.plant.inter$beeID),
-    
-    # Number of plant species
-    n.plant = max(bee.plant.inter$plantID),
-    
-    # Number of citations
-    n.citations = max(bee.plant.obs$sourceID),
     
     # Number of true bee-plant interactions by month
     n.row.true = nrow(bee.plant.inter),
@@ -448,7 +382,7 @@ run_MCMC_allcode <- function(seed){
     # Covariates
     stripped      = covariates$bee.covariates$striped,
     size          = covariates$bee.covariates$size_std,
-    solitary     = covariates$bee.covariates$solitary,
+    solitary      = covariates$bee.covariates$solitary,
     citation.code = covariates$citation.covariates$citation.code,
     flower_color  = covariates$plant.covariates$yellow,
     flower_shape  = covariates$plant.covariates$bowl,
@@ -464,7 +398,7 @@ run_MCMC_allcode <- function(seed){
   
   
   # List the data
-  MEdata <- list(y = bee.plant.obs$y)
+  MEdata <- list(y = bee.plant.obs$y) 
   
   
   # Initial values for the z array - latent state variable
@@ -538,15 +472,15 @@ run_MCMC_allcode <- function(seed){
                            project = cMEmodel, 
                            resetFunctions = T)
   
-  ## Run MCMC
- # results <-  runMCMC(cMEmcmc, 
- #                     nchains = 1, 
- #                     niter = 150000, 
- #                     nburnin = 50000, 
- #                     thin = 10, 
- #                     thin2 = 10,
- #                     setSeed = seed)
-  
+# ## Run MCMC
+# results <-  runMCMC(cMEmcmc, 
+#                     nchains = 1, 
+#                     niter = 150000, 
+#                     nburnin = 50000, 
+#                     thin = 10, 
+#                     thin2 = 10,
+#                     setSeed = seed)
+# 
   
  ## Run MCMC
  results <-  runMCMC(cMEmcmc, 
@@ -565,6 +499,8 @@ run_MCMC_allcode <- function(seed){
 
 
 
+ 
+ 
 
 
 # 7. Run the models --------------------------------------------------------
@@ -639,7 +575,7 @@ MCMCsummary(MCMClist)
 # Save MCMC output as table
 
 write.csv(MCMCsummary(MCMClist),
-          file = "~/Github/globi_tritrophic_networks/Tables/2022_05_12/Table-1-MCMC-output-SSVS.csv")
+          file = "./Tables/2023_02_23/Table-1-MCMC-output-SSVS.csv")
 
 
 

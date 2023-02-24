@@ -49,6 +49,10 @@
 
 # Load libraries
 library(reshape2)
+library(plyr)
+library(ggplot2)
+library(PerformanceAnalytics)
+
 
 # Set working directory
 setwd("~/")
@@ -65,7 +69,7 @@ setwd("~/")
 
 
 # Load data
-load("./Data/data_summary/globi_data_formatted_bee_plant_date_citation_2022_04_11 - short plant list - no apis.rds")
+load("./Data/data_summary/globi_data_formatted_bee_plant_date_citation_2023_02_23 - short plant list - no apis.rds")
   # object = bee.plant.date.cite
 
 
@@ -81,6 +85,8 @@ load("./Data/model_covariates - 2022 04 21 - no apis.rds")
 
 
 # 3. Summarize the data & visualize -------------------------------------------------------
+
+
 
 
 
@@ -346,5 +352,37 @@ ggplot(data = det.source.bowl, aes(x = bowl, y = sum.pos))+
 ggsave("Figures/POSSIBLE-by-Plant-bowl-by-Source.pdf",
        height = 12, 
        width = 13)
+
+
+
+
+
+# 4. Look for correlations among covaraites -------------------------------------------------------
+
+
+# # Covariates
+# stripped      = covariates$bee.covariates$striped,
+# size          = covariates$bee.covariates$size_std,
+# solitary     = covariates$bee.covariates$solitary,
+
+# citation.code = covariates$citation.covariates$citation.code,
+
+# flower_color  = 
+# flower_shape  = 
+# plant_family  = 
+
+pdf("./Figures/2023_02_24/Fig. S2 - bee covariate correlation.pdf")
+chart.Correlation(data.frame(striped = covariates$bee.covariates$striped,
+                             size   = covariates$bee.covariates$size_std,
+                             solitary = covariates$bee.covariates$solitary), histogram = TRUE, method = "pearson")
+
+dev.off()
+
+pdf("./Figures/2023_02_24/Fig. S3 - plant covariate correlation.pdf")
+chart.Correlation(data.frame(yellow = covariates$plant.covariates$yellow,
+                             bowl = covariates$plant.covariates$bowl,
+                             aster = covariates$plant.covariates$aster), histogram = TRUE, method = "pearson")
+
+dev.off()
 
 # End script

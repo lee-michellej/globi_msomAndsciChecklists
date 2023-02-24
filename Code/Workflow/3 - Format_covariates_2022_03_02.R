@@ -87,7 +87,7 @@ sociality <- sociality[sociality$Species != "Apis mellifera",]
 
 
 # Upload the observed bee-plant data
-load("./Data/data_summary/globi_data_formatted_bee_plant_date_citation_2022_04_11 - short plant list - no apis.rds")
+load("./Data/data_summary/globi_data_formatted_bee_plant_date_citation_2023_02_23 - short plant list - no apis.rds")
   # object name = bee.plant.date.cite
   # 4-D array
   
@@ -157,7 +157,10 @@ plant.covariates <- plant.covariates[which(plant.covariates$scientificName %in% 
 #            order = plant.sp.names)
 #
 
-
+nrow(size)
+nrow(color)
+nrow(sociality)
+nrow(plant.covariates)
 
 
 
@@ -175,8 +178,12 @@ plant.covariates <- plant.covariates[which(plant.covariates$scientificName %in% 
 # Summarize the bee covariates that you need into 1 file
 bee.covariates <- data.frame(species = size[,1],
                              size = size[,2],
+                             
+                             # Look at columns "StripeAbdomen" and "PatternedAbdomen" - if these > 0, then assign a 1; else = 0
                              striped = apply(color[,c(7, 15)], 1, function(x)ifelse(sum(x) > 0, 1, 0)),
                              notStriped = apply(color[,c(7, 15)], 1, function(x)ifelse(sum(x) > 0, 0, 1)),
+                             
+                             # Look at columns "Solitary" and "Parasitic" - if these > 0, then assign a 1; else = 0
                              solitary = apply(sociality[,c(6, 7)], 1, function(x)ifelse(sum(x) > 0, 1, 0)),
                              notSolitary = apply(sociality[,c(6, 7)], 1, function(x)ifelse(sum(x) > 0, 0, 1))
                              )
