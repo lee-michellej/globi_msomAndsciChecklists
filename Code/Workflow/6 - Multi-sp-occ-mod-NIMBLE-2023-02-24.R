@@ -72,6 +72,7 @@ library(doParallel)
 library(MCMCvis)
 library(mcmcOutput)
 library(coda)
+library(ggmcmc)
 
 
 
@@ -209,18 +210,18 @@ run_MCMC_allcode <- function(seed){
       # Species-specific random effect for psi
       # psi = The probability a bee species interacts with a plant species 
         # The bee-plant interaction probability is the SAME for all months that they interact
-      u[i] ~ dnorm(mu.psi, tau.psi)
+      u[i] ~ dnorm(mu.psi, sd = sigma.psi)
       
       # Species-specific random effect for p
       # p = The detection probability = the probability a source citation documented a bee-plant interaction
         # Detection probabilities are the same across all plants
-      v[i] ~ dnorm(mu.p, tau.p)
+      v[i] ~ dnorm(mu.p, sd = sigma.p )
       
     }
     
     
     # Mean bee-plant interaction probability
-    mu.psi ~ dnorm(-0.25, 2.0)
+    mu.psi ~ dnorm(-2, sd = 1)
       # dnorm(-0.25, 2.0)
       # dnorm(0, 2.5)
       # dnorm(0, 2)
@@ -228,8 +229,9 @@ run_MCMC_allcode <- function(seed){
       # dnorm(0, 0.10)
     
     # Precision and sd values for psi
-    tau.psi <- 1/(sigma.psi * sigma.psi)
-    sigma.psi ~ T(dnorm(3.75, sd = sqrt(1/2)), 0, 10)
+    # tau.psi <- 1/(sigma.psi * sigma.psi)
+    sigma.psi ~ T(dnorm(0, sd = 3), 0, 10)
+      # T(dnorm(3.75, sd = sqrt(1/2)), 0, 10)
       # dnorm(3.75, 2)T(0,)
       # dgamma(1, 1)
       # dgamma(0.1, 0.1)
@@ -238,7 +240,7 @@ run_MCMC_allcode <- function(seed){
     
     # Mean bee-plant detection probability
     # This is the prior that worked in the null model: mu.p ~ dnorm(0, 0.75)
-    mu.p ~ dnorm(-2, 2.0)
+    mu.p ~ dnorm(-2, sd = 1)
       # dnorm(-2, 2.0)
       # dnorm(0, 2.5)
       # dnorm(0, 2)
@@ -247,8 +249,9 @@ run_MCMC_allcode <- function(seed){
     
     # Precision and sd values for p
     # This is the prior that worked in the null model: sigma.p ~ dgamma(1, 1)
-    tau.p <- 1/(sigma.p * sigma.p)
-    sigma.p ~ T(dnorm(2.0, sd = sqrt(1/2)), 0, 10)
+    # tau.p <- 1/(sigma.p * sigma.p)
+    sigma.p ~ T(dnorm(0, sd = 3), 0, 10)
+      # T(dnorm(2.0, sd = sqrt(1/2)), 0, 10)
       # dnorm(2, 2)T(0,)
       # dgamma(1, 1)
       # dgamma(0.1, 0.1)
@@ -257,41 +260,45 @@ run_MCMC_allcode <- function(seed){
     # Priors for covariates
     
     # Psi
-    sd_psi ~ T(dnorm(1.0, sd = sqrt(1/2)), 0, 10)
-      # dnorm(1, 2)T(0,)
-      # dgamma(1, 1)
-      # dgamma(0.1, 0.1)
-    tau_in_psi <- pow(sd_psi, -2)
-    tau_psi[1] <- tau_in_psi            # coef effectively zero
-    tau_psi[2] <- tau_in_psi / 1000     # nonzero coef
-    p_ind_psi[1] <- 1/2
-    p_ind_psi[2] <- 1 - p_ind_psi[1]
+   # sd_psi ~ T(dnorm(1.0, sd = sqrt(1/2)), 0, 10)
+   #   # dnorm(1, 2)T(0,)
+   #   # dgamma(1, 1)
+   #   # dgamma(0.1, 0.1)
+   # tau_in_psi <- pow(sd_psi, -2)
+   # tau_psi[1] <- tau_in_psi            # coef effectively zero
+   # tau_psi[2] <- tau_in_psi / 1000     # nonzero coef
+   # p_ind_psi[1] <- 1/2
+   # p_ind_psi[2] <- 1 - p_ind_psi[1]
     
     for (j in 1:ncov_psi){
       
-      indA_psi[j] ~ dcat(p_ind_psi[1:2]) # returns 1 or 2
-      gamma_psi[j] <- indA_psi[j] - 1    # returns 0 or 1
-      beta_psi[j] ~ dnorm(0, tau_psi[indA_psi[j]])
-    
+    #  indA_psi[j] ~ dcat(p_ind_psi[1:2]) # returns 1 or 2
+    #  gamma_psi[j] <- indA_psi[j] - 1    # returns 0 or 1
+    # beta_psi[j] ~ dnorm(0, tau_psi[indA_psi[j]])
+      
+      beta_psi[j] ~ dnorm(0, 0.368)
+      
     }
     
     
     # P
-    sd_p ~ T(dnorm(0.10, sd = sqrt(1/2)), 0, 10)
-      # dnorm(0.1, 2)T(0,)
-      # dgamma(1, 1)
-      # dgamma(0.1, 0.1)
-    tau_in_p <- pow(sd_p, -2)
-    tau_p[1] <- tau_in_p            # coef effectively zero
-    tau_p[2] <- tau_in_p / 1000     # nonzero coef
-    p_ind_p[1] <- 1/2
-    p_ind_p[2] <- 1 - p_ind_p[1]
+   # sd_p ~ T(dnorm(0.10, sd = sqrt(1/2)), 0, 10)
+   #   # dnorm(0.1, 2)T(0,)
+   #   # dgamma(1, 1)
+   #   # dgamma(0.1, 0.1)
+   # tau_in_p <- pow(sd_p, -2)
+   # tau_p[1] <- tau_in_p            # coef effectively zero
+   # tau_p[2] <- tau_in_p / 1000     # nonzero coef
+   # p_ind_p[1] <- 1/2
+   # p_ind_p[2] <- 1 - p_ind_p[1]
     
     for (j in 1:ncov_p){
       
-      indA_p[j] ~ dcat(p_ind_p[1:2]) # returns 1 or 2
-      gamma_p[j] <- indA_p[j] - 1    # returns 0 or 1
-      beta_p[j] ~ dnorm(0, tau_p[indA_p[j]])
+     # indA_p[j] ~ dcat(p_ind_p[1:2]) # returns 1 or 2
+     # gamma_p[j] <- indA_p[j] - 1    # returns 0 or 1
+     # beta_p[j] ~ dnorm(0, tau_p[indA_p[j]])
+      
+      beta_p[j] ~ dnorm(0, 0.368)
       
     }
     
@@ -305,7 +312,7 @@ run_MCMC_allcode <- function(seed){
       
       # Make the bee-plant interaction probability of function of variables
       logit(psi[bee.ID.true[i], plant.ID.true[i], month.ID.true[i]]) <- # Bee species-specific random effect/intercept
-                                                                        u[bee.ID.true[i]] #+
+                                                                        u[bee.ID.true[i]] # +
                                                                         # # Bee size
                                                                         # beta_psi[1] * size[bee.ID.true[i]]+ 
                                                                         # # Bee solitary ( 1 = yes; 0 = no)
@@ -337,21 +344,21 @@ run_MCMC_allcode <- function(seed){
       
       logit(p[bee.ID.obs[i], plant.ID.obs[i], month.ID.obs[i], citation.ID.obs[i]]) <- # Bee species-specific random effect/intercept
                                                                                         v[bee.ID.obs[i]] #+
-                                                                                       # # Bee Strippiness
-                                                                                       # beta_p[1] * stripped[bee.ID.obs[i]]+
-                                                                                       # # Bee size
-                                                                                       # beta_p[2] * size[bee.ID.obs[i]]+
-                                                                                       # # Quadratic term for month
-                                                                                       # beta_p[3] * month.ID.obs[i]+
-                                                                                       # beta_p[4] * pow(month.ID.obs[i], 2)+
-                                                                                       # # source
-                                                                                       # beta_p[5] * citation.code[citation.ID.obs[i]]+
-                                                                                       # # Flower color
-                                                                                       # beta_p[6] * flower_color[plant.ID.obs[i]]+
-                                                                                       # # Flower shape
-                                                                                       # beta_p[7] * flower_shape[plant.ID.obs[i]]+
-                                                                                       # # Plant family
-                                                                                       # beta_p[8] * plant_family[plant.ID.obs[i]]
+                                                                                        # # Bee Strippiness
+                                                                                        # beta_p[1] * stripped[bee.ID.obs[i]]+
+                                                                                        # # Bee size
+                                                                                        # beta_p[2] * size[bee.ID.obs[i]]+
+                                                                                        # # Quadratic term for month
+                                                                                        # beta_p[3] * month.ID.obs[i]+
+                                                                                        # beta_p[4] * pow(month.ID.obs[i], 2)+
+                                                                                        # # source
+                                                                                        # beta_p[5] * citation.code[citation.ID.obs[i]]+
+                                                                                        # # Flower color
+                                                                                        # beta_p[6] * flower_color[plant.ID.obs[i]]+
+                                                                                        # # Flower shape
+                                                                                        # beta_p[7] * flower_shape[plant.ID.obs[i]]+
+                                                                                        # # Plant family
+                                                                                        # beta_p[8] * plant_family[plant.ID.obs[i]]
       
     }
     
@@ -361,6 +368,14 @@ run_MCMC_allcode <- function(seed){
   
   # Bundle all the values that remain constant in the model
   MEconsts <- list(
+    # Number of bee species
+    n.bee = max(bee.plant.inter$beeID),
+    
+    # Number of plant species
+    n.plant = max(bee.plant.inter$plantID),
+    
+    # Number of citations
+    n.citations = max(bee.plant.obs$sourceID),
     
     # Number of true bee-plant interactions by month
     n.row.true = nrow(bee.plant.inter),
@@ -432,14 +447,14 @@ run_MCMC_allcode <- function(seed){
                "mu.p", "sigma.p",
                
                # Psi covariates
-               "gamma_psi",
+            #  "gamma_psi",
                "beta_psi",
-               "sd_psi",
+            #   "sd_psi",
                
                # P covariates
-               "gamma_p",
-               "beta_p",
-               "sd_p"
+            #   "gamma_p",
+               "beta_p"
+            #   "sd_p"
   )
   
   MElatent <- c("u",
@@ -472,24 +487,24 @@ run_MCMC_allcode <- function(seed){
                            project = cMEmodel, 
                            resetFunctions = T)
   
-# ## Run MCMC
-# results <-  runMCMC(cMEmcmc, 
-#                     nchains = 1, 
-#                     niter = 150000, 
-#                     nburnin = 50000, 
-#                     thin = 10, 
-#                     thin2 = 10,
-#                     setSeed = seed)
-# 
-  
  ## Run MCMC
  results <-  runMCMC(cMEmcmc, 
                      nchains = 1, 
-                     niter = 5, 
-                     nburnin = 2, 
-                     thin = 1, 
-                     thin2 = 1,
+                     niter = 150000, 
+                     nburnin = 50000, 
+                     thin = 10, 
+                     thin2 = 10,
                      setSeed = seed)
+ 
+  
+ ### Run MCMC
+ #results <-  runMCMC(cMEmcmc, 
+ #                    nchains = 1, 
+ #                    niter = 5, 
+ #                    nburnin = 2, 
+ #                    thin = 1, 
+ #                    thin2 = 1,
+ #                    setSeed = seed)
  
   # Return MCMC results
   return(results)
@@ -526,7 +541,7 @@ registerDoParallel(cl)
 seeds <- 1:ncore
 
 
-# Run the model using dopar 
+# Run the model using dopar                      
 start.time <- Sys.time()
 
 result <- foreach(x = seeds, 

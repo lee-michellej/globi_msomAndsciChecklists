@@ -539,24 +539,24 @@ run_MCMC_allcode <- function(seed){
                            resetFunctions = T)
   
   ## Run MCMC
- # results <-  runMCMC(cMEmcmc, 
- #                     nchains = 1, 
- #                     niter = 150000, 
- #                     nburnin = 50000, 
- #                     thin = 10, 
- #                     thin2 = 10,
- #                     setSeed = seed)
+  results <-  runMCMC(cMEmcmc, 
+                      nchains = 1, 
+                      niter = 150000, 
+                      nburnin = 50000, 
+                      thin = 10, 
+                      thin2 = 10,
+                      setSeed = seed)
   
   
- ## Run MCMC
- results <-  runMCMC(cMEmcmc, 
-                     nchains = 1, 
-                     niter = 5, 
-                     nburnin = 2, 
-                     thin = 1, 
-                     thin2 = 1,
-                     setSeed = seed)
- 
+# ## Run MCMC
+# results <-  runMCMC(cMEmcmc, 
+#                     nchains = 1, 
+#                     niter = 5, 
+#                     nburnin = 2, 
+#                     thin = 1, 
+#                     thin2 = 1,
+#                     setSeed = seed)
+# 
   # Return MCMC results
   return(results)
   
@@ -611,6 +611,8 @@ beepr::beep(2)
 end.time - start.time
     
 
+
+# This is the original globi model
 
 
 
