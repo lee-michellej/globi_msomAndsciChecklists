@@ -33,40 +33,8 @@
   # "./Data/globi_data_formatted_bee_plant_2021_04_05.rds"
   # Object names: globi.dat
 
-
-##################################
-######## Data info ###############
-##################################
-
-
-# The data were downloaded from the Globi database
-  # https://www.globalbioticinteractions.org/
-  # Observations in Globi are uploaded from museum collections, citizen science obervers, and research studies worldwide
-  # These observations vary in terms of objectives, study design, etc.
-
-
-# The Globi database consists of presence-only data.
-  # We subsetted the data to only include bee genera and instances of bees interacting with plants (either as the "source" or "target") that occur in a specific location = Santa Cruz Island + some mainland CA area
-    # Lat from 31 - 32
-    # Long from -125 to -116
-  # We will assign non-detections by compiling a checklist of the bees and plants for Santa Cruz island and assigning a 0 when they are not observed
-  
-
-# We do not explicitly consider space in the model, but we subset the records to only include specific localities
-  
-
-# We note that databases are plagued by 3 problems:
-  # 1. Taxonomic sampling bias
-      # Particular species may be sampled more frequently than others because more is known about them or inference is desired on that species
-  # 2. Spatial sampling bias
-      # Particular areas are easier to reach or sample
-  # 3. Detection bias
-      # Species detectability changes over time and space as a result of observers or number of surveys
-      # Number of observers, quality of observers, length of survey, survey conditions varies
-
-# As a result, ecological patterns may be masked (or there are false patterns) because of observation effort
-
-
+# This code also generates the following figures:
+  # Figure S1
 
 
 
@@ -141,7 +109,7 @@ setwd("~/globi_tritrophic_networks/")
 
 # Read in data
   # Note that this is not in the github repo because the file size is too big
-  # This data was downloaded from globi 
+  # This data was origianlly downloaded from globi and the "resolvedplantnamesglobi_011722.csv" file was created in the previous 2 steps.
   # resolvedplantnamesglobi_011722csv.zip = This is the whole Globi csv file- with the new resolvedPLant names column
 dat <- read.csv("resolvedplantnamesglobi_011722.csv")
 
@@ -149,12 +117,12 @@ dat <- read.csv("resolvedplantnamesglobi_011722.csv")
 # Read in bee phenology data with the bee checklist names
 bee.list <- read.csv("./Data/SCI checklist and phenology - SCI checklists and phenology - Seltmann 2022 04 01.csv")
 
-# Other bee names = Synonyms
+# File with bee name synonyms
   # Zenodo synoynm list
   # https://zenodo.org/record/5738043#.YddffBPML0o
 bee.names <- read.csv("./Data/discoverlife-Anthophila-2022 04 01.csv")
 
-# Other bee names NOT on the Zenodo list but found in Globi
+# We created a second file with bee name synonymns for bee species that were NOT on in the Zenodo list but found in Globi
   # Synoynm list for bee species that do not appear in the Zenodo file
     # Heterosarus californicus
     # current valid: Pseudopanurgus californicus (Cresson, 1878)
@@ -244,7 +212,7 @@ nrow(bee.list)
 
 
 
-# Confirm that Apis mellifera DOES or DOESNOT appear
+# Confirm that Apis mellifera DOES NOT appear
 which(bee.list$scientificName == "Apis mellifera")
 
 
@@ -324,8 +292,8 @@ bee.names <- bee.names[bee.names$relationName != "HOMONYM_OF",]
 length(unique(bee.names$resolvedName))
 
 # Do all of the bee species in our checklist appear in the synoynm list?
-  # All listed as true
-bee.list$scientificName %in% bee.names$providedName
+  # There is 1 FALSE
+which(bee.list$scientificName %in% bee.names$providedName == FALSE)
 
 # One species (#68) does not appear - does it appear in the globi bee list
 which(bee.names.globi$sourceTaxonSpeciesName == bee.list$scientificName[68])
@@ -450,6 +418,7 @@ for(i in 1:nrow(bee.list)){
 
 # Pull out the rows in the bee.list dataset that were NOT matched with any species names in the synoynm list (from Zenodo)
   # All should have matches
+  # This should return a vector of length 0
 bee.list[is.na(bee.list$resolvedBeeNames) == TRUE |
                bee.list$resolvedBeeNames == "no:match", ]
 
@@ -680,7 +649,7 @@ g.map2 <- ggmap(get_stamenmap(bbox2, zoom = 8, maptype = "terrain"))+
 
 g.map2
 
-ggsave("./Figures/Globi_CA_map_2023_02_23.pdf", 
+ggsave("./Figures/Fig S1 - Globi_CA_map_2023_02_23.pdf", 
        height = 10, width = 12)
 
 
@@ -733,8 +702,8 @@ dat6 <- dat6 %>%
            sep = "(?<=[A-Za-z])(?=[0-9])"
   )
 
-# We get a warning for 5 rows: 487, 527, 530, 532, 533
-dat6[c(487, 527, 530, 532, 533),]
+# We get a warning for 5 rows: [359, 399, 402, 404, 405]
+dat6[c(359,399, 402, 404, 405),]
   # These rows have a code 
 dat6[c(487, 527, 530, 532, 533),]$code
   # But no num
@@ -868,7 +837,9 @@ dat7 <- dat7 %>%
 # remove any NA rows in dat7
 dat7 <- dat7[is.na(dat7$resolvedSource) == FALSE,]
 
-
+# Total number of rows
+nrow(dat7)
+  # 358
 
 
 
@@ -906,7 +877,7 @@ dimnames(bee.plant.date.cite)[[4]] <- citations
 
 
 # Total number of interactions by citations
-  # 6,631,968
+  # 1,450,008
 length(bee.species) *
   length(plant.species)* 
   12*
@@ -923,141 +894,102 @@ length(bee.species) *
 
 
 
-
-####################
-# Determine if you are running with or without apis
-####################
-
-
-
-# -------------- WITH Apis
-
-
-# Use this file WITH Apis
-  # load("./Data/bee_plant_inter_2022_04_05 - short plant.rds")
-
-
-
-
-
-
-# -------------- WITHOUT Apis
-
-
-
-# Use this file WITHOUT Apis
-  load("Data/bee_plant_inter_2022_04_11 - short plant - no apis.rds")
-
-
-
-
-
-####################
-####################
-####################
-
-
-
-
-# # Look at the number of bee species 
-# max(bee.plant.inter$beeID)
-# 
-# # Look at the number of plant species
-# max(bee.plant.inter$plantID)
-# 
-# 
-# 
-# 
-# # Next, we will be working on a long dataframe and specify which bee-plant interactions are:
-#   # possible
-#   # AND forbidden
-# #
-# # Create empty dataframe for possible bee-plant interactions
-# bee.plant.inter <- data.frame(beeID = NA,
-#                               plantID = NA,
-#                               monthID = NA)
-# 
-# # Create empty dataframe for FORBIDDEN bee-plant interactions
-# bee.plant.forbid <- data.frame(beeID = NA,
-#                                plantID = NA,
-#                                monthID = NA)
-# 
-# # These objects will serve as counters, it will make sense in the loop
-# a <- 1
-# b <- 1
-# 
-# # Start the loop
-#   # This takes 1.7 hrs to run
-# start.time <- Sys.time()
-# 
-# for(i in 1:nrow(bee.plant.date.cite)){ # For each bee species
-#   for(j in 1:ncol(bee.plant.date.cite)){ # For each plant species
-#     for(k in 1:dim(bee.plant.date.cite)[3]){ # for each month
-#       
-#       # There is a row in the plant.phenology table that is all NA - we need to kip it
-#      # if(is.na(plant.phenology[j, k + 26]) == FALSE){
-#         
-#         
-#         # Possible interactions
-#         if(# If the bee is active (bee.phenology == 1)
-#           
-#           # Start with January (column == 7)
-#           bee.list[i, k+6] == 1 &
-#           
-#           # AND if the plant is available (plant.phenology == 1)
-#           plant.phenology[j, k + 26] == 1){
-#           
-#           # Then that bee plant interaction can occur and write it in the file: ee.plant#.inter
-#           bee.plant.inter[a,1] <- i
-#           bee.plant.inter[a,2] <- j
-#           bee.plant.inter[a,3] <- k
-#           
-#           # Add 1 to the counter
-#           a <- a + 1
-#         }
-#         
-#         # Forbidden links
-#       #  if(# If the bee is NOT active
-#       #    
-#       #    # Make sure this is the right column############
-#       #    bee.list[i, k+6] == 0 |
-#       #    
-#       #    # OR if the plant is not available
-#       #    plant.phenology[j, k + 26] == 0){
-#       #    
-#       #    # This is a forbidden link, and write it here
-#       #    bee.plant.forbid[b,1] <- i
-#       #    bee.plant.forbid[b,2] <- j
-#       #    bee.plant.forbid[b,3] <- k
-#       #    
-#       #    # Add 1 to the counter
-#       #    b <- b + 1
-#       #  }
-#         
-#       }
-#       
-#     }
-#     
-#   }
-# 
-# end.time <- Sys.time()
-# beepr::beep(3)
-# 
-# # How long did the loop take?
-# end.time - start.time
-# 
-# # How many possible interactions are there?
-#   # 216,385
-# nrow(bee.plant.inter)
-# 
-# 
-# 
+ # Next, we will be working on a long dataframe and specify which bee-plant interactions are:
+   # possible
+   # AND forbidden
+ #
+ # Create empty dataframe for possible bee-plant interactions
+ bee.plant.inter <- data.frame(beeID = NA,
+                               plantID = NA,
+                               monthID = NA)
+ 
+ # Create empty dataframe for FORBIDDEN bee-plant interactions
+ bee.plant.forbid <- data.frame(beeID = NA,
+                                plantID = NA,
+                                monthID = NA)
+ 
+ # These objects will serve as counters, it will make sense in the loop
+ a <- 1
+ b <- 1
+ 
+ # Start the loop
+   # This takes 1.12 min to run
+ start.time <- Sys.time()
+ 
+ for(i in 1:nrow(bee.plant.date.cite)){ # For each bee species
+   for(j in 1:ncol(bee.plant.date.cite)){ # For each plant species
+     for(k in 1:dim(bee.plant.date.cite)[3]){ # for each month
+       
+       # There is a row in the plant.phenology table that is all NA - we need to skip it
+       if(is.na(plant.phenology[j, k + 26]) == FALSE){
+         
+         
+         # Possible interactions
+         if(# If the bee is active (bee.phenology == 1)
+           
+           # Start with January (column == 7)
+           bee.list[i, k+6] == 1 &
+           
+           # AND if the plant is available (plant.phenology == 1)
+           plant.phenology[j, k + 26] == 1){
+           
+           # Then that bee plant interaction can occur and write it in the file: bee.plant.inter
+           bee.plant.inter[a,1] <- i
+           bee.plant.inter[a,2] <- j
+           bee.plant.inter[a,3] <- k
+           
+           # Add 1 to the counter
+           a <- a + 1
+         }
+         
+         # Forbidden links
+       #  if(# If the bee is NOT active
+       #    
+       #    # Make sure this is the right column############
+       #    bee.list[i, k+6] == 0 |
+       #    
+       #    # OR if the plant is not available
+       #    plant.phenology[j, k + 26] == 0){
+       #    
+       #    # This is a forbidden link, and write it here
+       #    bee.plant.forbid[b,1] <- i
+       #    bee.plant.forbid[b,2] <- j
+       #    bee.plant.forbid[b,3] <- k
+       #    
+       #    # Add 1 to the counter
+       #    b <- b + 1
+       #  }
+         
+       }
+       
+     }
+     
+   }
+ }
+ end.time <- Sys.time()
+ beepr::beep(3)
+ 
+ # How long did the loop take?
+ end.time - start.time
+ 
+ # How many possible interactions are there?
+   # 57,374
+ nrow(bee.plant.inter)
+ 
+ 
+ # Look at the number of bee species 
+ # This should be 137
+ max(bee.plant.inter$beeID)
+ 
+ # Look at the number of plant species
+ # This should be 126
+ max(bee.plant.inter$plantID)
+ 
+ 
+ 
 # # Save the bee.plant.inter file
-#  # This file takes a while to generate - so in the future - we can just import it into this space
 #  save(bee.plant.inter, file= "./Data/bee_plant_inter_2022_04_11 - short plant - no apis.rds")
-# 
-# 
-#
+
 
 
 
@@ -1114,7 +1046,7 @@ end.time - start.time
 
 
 # Given the possible bee-plant interactions and the month that each citation went to the field, how many possible observations are there?
-  # 611,237
+  # 142,146
 length(which(bee.plant.date.cite == 0))
 
 
@@ -1139,18 +1071,12 @@ for(i in 1:nrow(dat7)){
   print(paste("Working on row ", i, "; cit = ", cit.pos, "; bee = ", bee.pos, "; plant = ", plant.pos, "; month = ", month.pos, "\r.."))
   
   # If we have a value for each of the positions, then add a 1
-# if(is.na(cit.pos) == FALSE &
-#    is.na(bee.pos) == FALSE &
-#    is.na(month.pos) == FALSE &
-#    is.na(plant.pos) == FALSE) {
-    
+
     # Add a 1
     bee.plant.date.cite[bee.pos, 
                         plant.pos, 
                         month.pos, 
                         cit.pos] <- 1
-    
- # }
   
   
 }
@@ -1162,10 +1088,15 @@ beepr::beep(3)
 end.time - start.time
 
 # How many detections are in the dataframe?
-  # 278
+  # 211
   # Note that in some cases the same citation documents the same bee and plant interactions during the same month
 length(which(bee.plant.date.cite == 1))
 
+# Confirm that there are duplicate interactions in the dat7 dataframe
+# Count the number of unique combinations of bee species, plant, source, and month
+# This should match the number of 1's in the bee.plant.date.cite array
+length(which(duplicated(data.frame(dat7$resolvedBeeNames, dat7$resolvedPlantNames, dat7$resolvedSource, dat7$month)) == FALSE))
+  # Perfect!
 
 
 
@@ -1256,7 +1187,7 @@ bee.plant.obs <- bee.plant.obs[-1,]
 
 # How many observations are there?
 nrow(bee.plant.obs)
-
+  # 142,146
 
 
 
@@ -1265,7 +1196,6 @@ nrow(bee.plant.obs)
 
 
 # Save the bee.plant.obs file
-  # This file takes a while to generate - so in the future - we can just import it into this space
 #save(bee.plant.obs, file= "./Data/bee_plant_obs_2022_04_05 - short plant list - no apis.rds")
 
 
@@ -1277,20 +1207,21 @@ nrow(bee.plant.obs)
 
 
 
-# Observation matrix:
-  # bee.plant.obs
+# Observation matrix = (all bees x all plants x ONLY months when sources went out x all citations)
+# bee.plant.obs
+head(bee.plant.obs)
+nrow(bee.plant.obs)
+  # 142,146
 
-# Interaction matrix
-  # bee.plant.inter
+# ALL possible bee-plant-month combinations (all bees x all plants x all months)
+# bee.plant.inter
+head(bee.plant.inter)
+nrow(bee.plant.inter)
+  # 57,374
 
 
-
- head(bee.plant.inter)
  
- head(bee.plant.obs)
- 
- 
- # Add a new column
+ # Add a new column to add which bee-plant month source citation interactions were observed (= 1) or not observed (=0)
  bee.plant.obs$y <- NA
  
  for(i in 1:nrow(bee.plant.obs)){
@@ -1307,7 +1238,7 @@ nrow(bee.plant.obs)
  
  
 # Save the file
-write.csv(bee.plant.obs, file = "./Data/bee-plant-obs-long-format 2022 04 11 - short plant list - no apis.csv")
+# write.csv(bee.plant.obs, file = "./Data/bee-plant-obs-long-format 2022 04 11 - short plant list - no apis.csv")
 
 
 
@@ -1390,16 +1321,8 @@ y.obs[y.obs == "-Inf"] <- NA
  
 # # Save the output
 # write.csv(y.obs.long, file = "./Data/observations-documented-but-not-possible-2022 02 18.csv")
+ 
 
-
-#y.obs.long <- read.csv("./Data/observations-documented-but-not-possible-2022 02 18.csv")
-
-
- 
- 
- 
- 
- 
  
  
  
@@ -1414,8 +1337,9 @@ y2 <- merge(y.obs.long,
 
 # Identify which bee-plant-month observations were detected BUT are not possible
 observed.but.not.possible <- y2[which(is.na(y2$inter) == TRUE),]
-nrow(observed.but.not.possible)
 
+nrow(observed.but.not.possible)
+  # 29 total
 
 
 
@@ -1431,6 +1355,8 @@ bee.plant.inter[bee.plant.inter$beeID == observed.but.not.possible[2,]$beeID &
 
 
 # View(bee.plant.inter[bee.plant.inter$beeID == observed.but.not.possible[1,]$beeID,])
+
+
 
 # Pull out the information from Globi that corresponds to this information
 # Add a column with the bee name and the plant name
@@ -1472,6 +1398,7 @@ for(i in 1:nrow(observed.but.not.possible)){
 
 # Number of rows:
 nrow(obs.not.possible.globi)
+  # 45
 
 
 obs.not.possible.globi$resolvedBeeNames
@@ -1561,50 +1488,18 @@ obs.not.possible.globi$resolvedBeeNames
  
  
  
- # I will look at these entries & decide how to proceed
+ # I will look at these entries outside of R & decide how to proceed - this information is included in the manuscript
+  # I added a new column in excel called "new.month"
 
 
  
  
  
-
-
-# To proceed, pick 1 of 2 paths:
-  # Option 1: Add in the new month information I made up
-    # For this option - run code on lines X - X
-
-  # Option 2: Replace all mismatched data with an NA
-    # For this option - run code on lines X - X
-
-
-
-# In the meantime, to get the model to work, I will assign all of these species non-detections in the observation array
-
-
-############
-# Option 1
-############
-
-
-
-
-############
-
-#----------  WITH APIS
-
-# Here is a new file with a new.month column
-new.month <- read.csv("./Data/globi-obs-not-possible 2022 04 05 - new month.csv")
-
-
-#---------- WITHOUT Apis
-
 
 # Here is a new file with a new.month column
 new.month <- read.csv("./Data/globi-obs-not-possible 2022 04 11 - no apis - new month.csv")
 
 
-
-############
 
 # First, replace the incorrect presence data with an NA in the bee.plant.date.cite array
 for(i in 1:nrow(observed.but.not.possible)){
@@ -1641,7 +1536,7 @@ a <- 1
 
 # Using a for loop - we will loop through each dimension of the y.obs array
 # If there is no NA, we will create a row with the observation in the y.obs.long # ataframe
-# This loop takes ~42 min
+# This loop takes 1.19 min
 start.time <- Sys.time()
 
 for(i in 1:dim(y.obs)[1]){
@@ -1678,6 +1573,7 @@ observed.but.not.possible <- y2[which(is.na(y2$inter) == TRUE),]
 
 # Identify the number of rows that are observed but not possible
 nrow(observed.but.not.possible)
+  # this should return 0
   # Great! Now there are no observations that are NOT possible
 
 
@@ -1738,7 +1634,7 @@ a <- 1
 
 # Using a for loop - we will loop through each dimension of the y.obs array
 # If there is no NA, we will create a row with the observation in the y.obs.long # ataframe
-# This loop takes ~42 min
+# This loop takes ~2 min
 start.time <- Sys.time()
 
 for(i in 1:dim(y.obs)[1]){
@@ -1781,57 +1677,9 @@ nrow(observed.but.not.possible)
 # 34297    81     115       8   1    NA
 
 
-#--------- End option 1
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-############
-# Option 2
-############
-
-# Now we will fill in the 4-D array with the presence data
-start.time <- Sys.time()
-for(i in 1:nrow(observed.but.not.possible)){
-  
-  # Determine which citation made the mistake
-  citID <- which(bee.plant.date.cite[observed.but.not.possible$beeID[i], 
-                      observed.but.not.possible$plantID[i], 
-                      observed.but.not.possible$monthID[i], 
-                       ] == 1)
-  
-  # Replace the 1 with an NA
-bee.plant.date.cite[observed.but.not.possible$beeID[i], 
-                    observed.but.not.possible$plantID[i], 
-                    observed.but.not.possible$monthID[i], 
-                    citID] <- NA
-  
-  
-}
-
-end.time <- Sys.time()
-# beepr::beep(3)
-
-# How long did the loop take?
-end.time - start.time
-
-#--------- End option 2
-
+# Total number of detections
+length(which(bee.plant.date.cite == 1))
+  # 202
 
 
 

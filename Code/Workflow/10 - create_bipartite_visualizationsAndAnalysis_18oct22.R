@@ -39,7 +39,7 @@ df2intmatrix <- function(dframe, varnames = c("lower", "higher", "freq"), type.o
 
 
 # Main csv files for manipulation ------------------------
-dat <- read_csv("Data/bee-plant-mod-probabilities.csv") %>% 
+dat <- read_csv("./Data/bee-plant-mod-probabilities.csv") %>% 
   mutate(prob = max_prob * 10000,
          log_prob = log(prob),
          corrected_log_prob = ifelse(log_prob > 0, log_prob, 0),
@@ -52,7 +52,7 @@ dat <- read_csv("Data/bee-plant-mod-probabilities.csv") %>%
 #hist(dat$max_prob)
 #hist(dat$prob_10)
 
-globi_dat <- read_csv("Data/final-globi-list-clean 2022 02 01.csv") %>% 
+globi_dat <- read_csv("./Data/final-globi-list-clean 2022 02 01.csv") %>% 
   select(resolvedPlantNames, resolvedBeeNames, sourceTaxonFamilyName, targetTaxonOrderName, targetTaxonFamilyName) %>% 
   mutate(plant_order = ifelse(is.na(targetTaxonOrderName),
                               "Boraginales",

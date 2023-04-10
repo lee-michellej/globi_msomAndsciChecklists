@@ -52,7 +52,7 @@ library(tidyverse)
 
 
 # Set working directory
-setwd("~/Github/globi_tritrophic_networks/")
+setwd("~/globi_tritrophic_networks/")
 
 
 
@@ -66,13 +66,13 @@ setwd("~/Github/globi_tritrophic_networks/")
 
 
 # Load the data
-load("~/Dropbox/Globi/ModelOutput/globi-short plant list- 2022 05 12 - all cov - NO apis - NIMBLE - SSVS.rds")
+load("./ModelOutput/globi-short plant list- 2022 05 12 - all cov - NO apis - NIMBLE - SSVS.rds")
 # object = out
 # MCMC object
 
 
 ## Load the entire nimble output
-# load("~/Dropbox/Globi/ModelOutput/OUTPUT - globi-short plant list- 2022 05 12 - all cov - NO apis - NIMBLE - SSVS.rds")
+# load("./ModelOutput/OUTPUT - globi-short plant list- 2022 05 12 - all cov - NO apis - NIMBLE - SSVS.rds")
 # object = result
 # MCMC object
 

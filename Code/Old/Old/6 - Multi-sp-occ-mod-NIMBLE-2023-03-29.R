@@ -28,8 +28,9 @@
 
 
 # This code generates the following files:
-  # Table 1 in the manuscript
-  # Generates model output - which is saved and processed in other files
+  # No files saved
+  # 2 plots are created at the end to compare the truth & model estimates
+
 
 
 
@@ -71,12 +72,13 @@ library(doParallel)
 library(MCMCvis)
 library(mcmcOutput)
 library(coda)
+library(ggmcmc)
 
 
 
 
 # Set working directory
-setwd("~/globi_tritrophic_networks/")
+setwd("~/Github/globi_tritrophic_networks/")
 
 
 
@@ -87,13 +89,18 @@ setwd("~/globi_tritrophic_networks/")
 
 
 
+
+
 # Upload the data
   # object name = bee.plant.date.cite
   # 4-D array
-load("./Data/data_summary/globi_data_formatted_bee_plant_date_citation_2022_04_11 - short plant list - no apis.rds")
+load("./Data/data_summary/globi_data_formatted_bee_plant_date_citation_2023_02_23 - short plant list - no apis.rds")
 
 
 
+################
+################
+################
 
 
 
@@ -101,6 +108,8 @@ load("./Data/data_summary/globi_data_formatted_bee_plant_date_citation_2022_04_1
 
 
 # 3. Calculate derived quantities of interest ------------------------------------------------
+
+
 
 
 
@@ -136,9 +145,9 @@ ggplot(data = obs.dat, aes(obs)) +
         plot.title = element_text(size = 25, color = "black", face = "bold")) 
 
 
- #ggsave(file = "~/Github/globi_tritrophic_networks/Figures/2022_05_12/Bee-plant-Observation-Histogram.pdf", 
- #       height = 4,
- #       width = 6)
+ ggsave(file = "./Figures/2023_02_24/Bee-plant-Observation-Histogram.pdf", 
+        height = 4,
+        width = 6)
 
 
 
@@ -150,6 +159,9 @@ ggplot(data = obs.dat, aes(obs)) +
 
 
 
+ 
+ 
+ 
 
 # Create a function with all the needed code
 run_MCMC_allcode <- function(seed){
@@ -162,23 +174,30 @@ run_MCMC_allcode <- function(seed){
  # Load the possible bee-plant-interactions
  # object = bee.plant.inter
  # 2-D matrix
- load("./Data/bee_plant_inter_2022_04_11 - short plant - no apis.rds")
+ load("./Data/bee_plant_inter_2023_02_24 - short plant - no apis.rds")
  
  
  # Load the observed bee-plant-month by source citation interactions
  # object = bee.plant.obs
  # 2-D matrix
-  bee.plant.obs <- read.csv( "./Data/bee-plant-obs-long-format 2022 04 11 - short plant list - no apis.csv")
+   load( "./Data/bee_plant_obs_2023_02_23 - short plant list - no apis.rds")
 
   # Upload the data
   # object name = bee.plant.date.cite
   # 4-D array
-  load("./Data/data_summary/globi_data_formatted_bee_plant_date_citation_2022_04_11 - short plant list - no apis.rds")
+  load("./Data/data_summary/globi_data_formatted_bee_plant_date_citation_2023_02_23 - short plant list - no apis.rds")
  
  
   # Load covariates
-  load("~/Dropbox/Globi/Data/model_covariates - 2022 04 21 - no apis.rds")
+  load("./Data/model_covariates - 2022 04 21 - no apis.rds")
  
+ 
+  
+  ################
+  ################
+  ################
+  
+  
   
   
   
@@ -190,12 +209,12 @@ run_MCMC_allcode <- function(seed){
       
       # Species-specific random effect for psi
       # psi = The probability a bee species interacts with a plant species 
-        # The bee-plant interaction probability is the SAME for all months that they interact
+      # The bee-plant interaction probability is the SAME for all months that they interact
       u[i] ~ dnorm(mu.psi, tau.psi)
       
       # Species-specific random effect for p
       # p = The detection probability = the probability a source citation documented a bee-plant interaction
-        # Detection probabilities are the same across all plants
+      # Detection probabilities are the same across all plants
       v[i] ~ dnorm(mu.p, tau.p)
       
     }
@@ -203,32 +222,47 @@ run_MCMC_allcode <- function(seed){
     
     # Mean bee-plant interaction probability
     mu.psi ~ dnorm(-0.25, 2.0)
-
+    # dnorm(-0.25, 2.0)
+    # dnorm(0, 2.5)
+    # dnorm(0, 2)
+    # dnorm(0, 0.75)
+    # dnorm(0, 0.10)
     
     # Precision and sd values for psi
     tau.psi <- 1/(sigma.psi * sigma.psi)
     sigma.psi ~ T(dnorm(3.75, sd = sqrt(1/2)), 0, 10)
-
+    # dnorm(3.75, 2)T(0,)
+    # dgamma(1, 1)
+    # dgamma(0.1, 0.1)
+    # x ∼ T(dnorm(0, sd = 10), 0, a),
     
     
     # Mean bee-plant detection probability
     # This is the prior that worked in the null model: mu.p ~ dnorm(0, 0.75)
     mu.p ~ dnorm(-2, 2.0)
-
+    # dnorm(-2, 2.0)
+    # dnorm(0, 2.5)
+    # dnorm(0, 2)
+    # dnorm(0, 0.10)
+    # dnorm(0, 0.75)
     
     # Precision and sd values for p
     # This is the prior that worked in the null model: sigma.p ~ dgamma(1, 1)
     tau.p <- 1/(sigma.p * sigma.p)
     sigma.p ~ T(dnorm(2.0, sd = sqrt(1/2)), 0, 10)
-
+    # dnorm(2, 2)T(0,)
+    # dgamma(1, 1)
+    # dgamma(0.1, 0.1)
     
     
     # Priors for covariates
     
     # Psi
     sd_psi ~ T(dnorm(1.0, sd = sqrt(1/2)), 0, 10)
+    # dnorm(1, 2)T(0,)
+    # dgamma(1, 1)
+    # dgamma(0.1, 0.1)
     tau_in_psi <- pow(sd_psi, -2)
-    
     tau_psi[1] <- tau_in_psi            # coef effectively zero
     tau_psi[2] <- tau_in_psi / 1000     # nonzero coef
     p_ind_psi[1] <- 1/2
@@ -239,14 +273,16 @@ run_MCMC_allcode <- function(seed){
       indA_psi[j] ~ dcat(p_ind_psi[1:2]) # returns 1 or 2
       gamma_psi[j] <- indA_psi[j] - 1    # returns 0 or 1
       beta_psi[j] ~ dnorm(0, tau_psi[indA_psi[j]])
-    
+      
     }
     
     
     # P
     sd_p ~ T(dnorm(0.10, sd = sqrt(1/2)), 0, 10)
+    # dnorm(0.1, 2)T(0,)
+    # dgamma(1, 1)
+    # dgamma(0.1, 0.1)
     tau_in_p <- pow(sd_p, -2)
-    
     tau_p[1] <- tau_in_p            # coef effectively zero
     tau_p[2] <- tau_in_p / 1000     # nonzero coef
     p_ind_p[1] <- 1/2
@@ -270,18 +306,18 @@ run_MCMC_allcode <- function(seed){
       
       # Make the bee-plant interaction probability of function of variables
       logit(psi[bee.ID.true[i], plant.ID.true[i], month.ID.true[i]]) <- # Bee species-specific random effect/intercept
-                                                                        u[bee.ID.true[i]] +
-                                                                        # Bee size
-                                                                        beta_psi[1] * size[bee.ID.true[i]]+ 
-                                                                        # Bee solitary ( 1 = yes; 0 = no)
-                                                                        beta_psi[2] * solitary[bee.ID.true[i]]+
-                                                                        # Flower color
-                                                                        beta_psi[3] * flower_color[plant.ID.true[i]]+
-                                                                        # Flower shape
-                                                                        beta_psi[4] * flower_shape[plant.ID.true[i]]
-                      
-                                                                        
-                                                                        
+        u[bee.ID.true[i]] +
+        # Bee size
+        beta_psi[1] * size[bee.ID.true[i]]+ 
+        # Bee solitary ( 1 = yes; 0 = no)
+        beta_psi[2] * solitary[bee.ID.true[i]]+
+        # Flower color
+        beta_psi[3] * flower_color[plant.ID.true[i]]+
+        # Flower shape
+        beta_psi[4] * flower_shape[plant.ID.true[i]]
+      
+      
+      
     }
     
     
@@ -298,25 +334,25 @@ run_MCMC_allcode <- function(seed){
       y[i] ~ dbern(p.eff[bee.ID.obs[i], plant.ID.obs[i], month.ID.obs[i], citation.ID.obs[i]])
       
       p.eff[bee.ID.obs[i], plant.ID.obs[i], month.ID.obs[i], citation.ID.obs[i]] <- p[bee.ID.obs[i], plant.ID.obs[i], month.ID.obs[i], citation.ID.obs[i]] * 
-                                                                                    z[bee.ID.obs[i], plant.ID.obs[i], month.ID.obs[i]]
+        z[bee.ID.obs[i], plant.ID.obs[i], month.ID.obs[i]]
       
       logit(p[bee.ID.obs[i], plant.ID.obs[i], month.ID.obs[i], citation.ID.obs[i]]) <- # Bee species-specific random effect/intercept
-                                                                                        v[bee.ID.obs[i]] +
-                                                                                        # Bee Strippiness
-                                                                                        beta_p[1] * stripped[bee.ID.obs[i]]+
-                                                                                        # Bee size
-                                                                                        beta_p[2] * size[bee.ID.obs[i]]+
-                                                                                        # Quadratic term for month
-                                                                                        beta_p[3] * month.ID.obs[i]+
-                                                                                        beta_p[4] * pow(month.ID.obs[i], 2)+
-                                                                                        # source
-                                                                                        beta_p[5] * citation.code[citation.ID.obs[i]]+
-                                                                                        # Flower color
-                                                                                        beta_p[6] * flower_color[plant.ID.obs[i]]+
-                                                                                        # Flower shape
-                                                                                        beta_p[7] * flower_shape[plant.ID.obs[i]]+
-                                                                                        # Plant family
-                                                                                        beta_p[8] * plant_family[plant.ID.obs[i]]
+        v[bee.ID.obs[i]] +
+        # Bee Strippiness
+        beta_p[1] * stripped[bee.ID.obs[i]]+
+        # Bee size
+        beta_p[2] * size[bee.ID.obs[i]]+
+        # Quadratic term for month
+        beta_p[3] * month.ID.obs[i]+
+        beta_p[4] * pow(month.ID.obs[i], 2)+
+        # source
+        beta_p[5] * citation.code[citation.ID.obs[i]]+
+        # Flower color
+        beta_p[6] * flower_color[plant.ID.obs[i]]+
+        # Flower shape
+        beta_p[7] * flower_shape[plant.ID.obs[i]]+
+        # Plant family
+        beta_p[8] * plant_family[plant.ID.obs[i]]
       
     }
     
@@ -326,7 +362,6 @@ run_MCMC_allcode <- function(seed){
   
   # Bundle all the values that remain constant in the model
   MEconsts <- list(
-    
     # Number of bee species
     n.bee = max(bee.plant.inter$beeID),
     
@@ -356,7 +391,7 @@ run_MCMC_allcode <- function(seed){
     # Covariates
     stripped      = covariates$bee.covariates$striped,
     size          = covariates$bee.covariates$size_std,
-    solitary     = covariates$bee.covariates$solitary,
+    solitary      = covariates$bee.covariates$solitary,
     citation.code = covariates$citation.covariates$citation.code,
     flower_color  = covariates$plant.covariates$yellow,
     flower_shape  = covariates$plant.covariates$bowl,
@@ -372,7 +407,7 @@ run_MCMC_allcode <- function(seed){
   
   
   # List the data
-  MEdata <- list(y = bee.plant.obs$y)
+  MEdata <- list(y = bee.plant.obs$y) 
   
   
   # Initial values for the z array - latent state variable
@@ -406,7 +441,7 @@ run_MCMC_allcode <- function(seed){
                "mu.p", "sigma.p",
                
                # Psi covariates
-               "gamma_psi",
+              "gamma_psi",
                "beta_psi",
                "sd_psi",
                
@@ -446,26 +481,25 @@ run_MCMC_allcode <- function(seed){
                            project = cMEmodel, 
                            resetFunctions = T)
   
-  ## Run MCMC
-  results <-  runMCMC(cMEmcmc, 
-                      nchains = 1, 
-                      niter = 150000, 
-                      nburnin = 50000, 
-                      thin = 10, 
-                      thin2 = 10,
-                      setSeed = seed)
+ ## Run MCMC
+ results <-  runMCMC(cMEmcmc, 
+                     nchains = 1, 
+                     niter = 150000, 
+                     nburnin = 50000, 
+                     thin = 10, 
+                     thin2 = 10,
+                     setSeed = seed)
+ 
   
-  
-# ## Run MCMC
-    ## Used for debugging code
-# results <-  runMCMC(cMEmcmc, 
-#                     nchains = 1, 
-#                     niter = 5, 
-#                     nburnin = 2, 
-#                     thin = 1, 
-#                     thin2 = 1,
-#                     setSeed = seed)
-# 
+ ### Run MCMC
+ #results <-  runMCMC(cMEmcmc, 
+ #                    nchains = 1, 
+ #                    niter = 5, 
+ #                    nburnin = 2, 
+ #                    thin = 1, 
+ #                    thin2 = 1,
+ #                    setSeed = seed)
+ 
   # Return MCMC results
   return(results)
   
@@ -474,6 +508,8 @@ run_MCMC_allcode <- function(seed){
 
 
 
+ 
+ 
 
 
 # 7. Run the models --------------------------------------------------------
@@ -499,8 +535,7 @@ registerDoParallel(cl)
 seeds <- 1:ncore
 
 
-# Run the model using dopar 
-  # Model takes 2 - 4 hrs to run
+# Run the model using dopar                      
 start.time <- Sys.time()
 
 result <- foreach(x = seeds, 
@@ -520,8 +555,6 @@ beepr::beep(2)
 # How long did the model take?
 end.time - start.time
     
-
-
 
 
 
@@ -551,7 +584,7 @@ MCMCsummary(MCMClist)
 # Save MCMC output as table
 
 write.csv(MCMCsummary(MCMClist),
-          file = "./Tables/Table-1-MCMC-output-SSVS.csv")
+          file = "./Tables/2023_02_23/Table-1-MCMC-output-SSVS.csv")
 
 
 
@@ -579,13 +612,13 @@ ggs_BYMeco %>% filter(Parameter %in% c( paste("beta_p[", 1:8, "]", sep = ""))) %
 
 # Save the model output
 save(out, 
-     file = "./ModelOutput/globi-short plant list- 2022 05 12 - all cov - NO apis - NIMBLE - SSVS.rds")
+     file = "~/Dropbox/Globi/ModelOutput/globi-short plant list- 2022 05 12 - all cov - NO apis - NIMBLE - SSVS.rds")
 
 save(result, 
-     file = "./ModelOutput/OUTPUT - globi-short plant list- 2022 05 12 - all cov - NO apis - NIMBLE - SSVS.rds")
+     file = "~/Dropbox/Globi/ModelOutput/OUTPUT - globi-short plant list- 2022 05 12 - all cov - NO apis - NIMBLE - SSVS.rds")
 
 save(MCMClist,
-     file = "./ModelOutput/MCMClist- globi-short plant list- 2022 05 12 - all cov - NO apis - NIMBLE - SSVS.rds")
+     file = "~/Dropbox/Globi/ModelOutput/MCMClist- globi-short plant list- 2022 05 12 - all cov - NO apis - NIMBLE - SSVS.rds")
 
 
 # End script

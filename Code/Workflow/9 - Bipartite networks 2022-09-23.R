@@ -52,7 +52,7 @@ library(tidyverse)
 
 
 # Set working directory
-setwd("~/Github/globi_tritrophic_networks/")
+setwd("~/globi_tritrophic_networks/")
 
 
 
@@ -66,13 +66,13 @@ setwd("~/Github/globi_tritrophic_networks/")
 
 
 # Load the data
-load("~/Dropbox/Globi/ModelOutput/globi-short plant list- 2022 05 12 - all cov - NO apis - NIMBLE - SSVS.rds")
+load("./ModelOutput/globi-short plant list- 2022 05 12 - all cov - NO apis - NIMBLE - SSVS.rds")
 # object = out
 # MCMC object
 
 
 ## Load the entire nimble output
-load("~/Dropbox/Globi/ModelOutput/OUTPUT - globi-short plant list- 2022 05 12 - all cov - NO apis - NIMBLE - SSVS.rds")
+load("./ModelOutput/OUTPUT - globi-short plant list- 2022 05 12 - all cov - NO apis - NIMBLE - SSVS.rds")
 # object = result
 # MCMC object
 
@@ -117,11 +117,9 @@ plant.names <- colnames(bee.plant.date.cite)
 # Pull out the columns with a z in the name
 z.cols <- grep("z", colnames(result[[1]]$samples2))
 
-# Then row bind all 3 MCMC chains
+# Just call the 1st MCMC chain - if you try to row bind all 3 chains, it is a LARGE object
 z.MCMC <- result[[1]]$samples2[,z.cols]
-        #bind(result[[1]]$samples2[,z.cols],
-        #      result[[2]]$samples2[,z.cols],
-        #      result[[3]]$samples2[,z.cols])
+
 
 # Collapse it down to 1 observation
   # By taking the column mean - we are converting it to a probability

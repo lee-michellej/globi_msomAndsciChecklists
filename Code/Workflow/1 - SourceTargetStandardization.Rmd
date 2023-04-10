@@ -5,8 +5,31 @@ date: "18 Feb 2021"
 output: html_document
 ---
 
-# To download data for this workflow, please look at our README.md file. These data accessed in September 2021 can be found here: https://zenodo.org/record/7502711#.Y-56KezMI-Q. 
+# To download data for this workflow, please look at our README.md file. These data accessed in September 2021 can be found here: 
+# GloBI Community, & Seltmann, Katja C. (2021). Bee Interaction Data from Global Biotic Interactions (2021-09-14_v2) [Data set]. Zenodo. https://doi.org/10.5281/zenodo.7753956
 
+# Download the data
+```{r}
+library(inborutils)
+
+# This function downloads the data as a zip file
+# The data will be downloaded to your current working directory. To check your current working directory (and the location where the data will be downloaded), use the function getwd():
+getwd()
+# You can change your current working directory (and where the data are downloaded), using the setwd() function.
+# It takes about 10 min to download the data
+download_zenodo(doi = "10.5281/zenodo.7753956")
+  # This will download 3 files:
+    # all_bee_data_unique.txt.zip
+    # globi_bee_data.sh
+    # interactions-GloBI-September-14-2021.tsv.gz
+
+# After the data are downloaded, in your browser, navigate to the all_bee_data_unique.txt.zip file that was downloaded
+# Double click on the file to unzip
+# Once it is unzipped, there will be a new file called: "all_bee_data_unique.txt"
+# We will work with that file
+```
+
+# Load libraries
 ```{r}
 library(tidyverse)
 library(reticulate)

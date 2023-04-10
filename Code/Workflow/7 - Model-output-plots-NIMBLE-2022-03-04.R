@@ -57,7 +57,7 @@ library(reshape2)
 
 
 # Set working directory
-setwd("~/Github/globi_tritrophic_networks/")
+setwd("~/globi_tritrophic_networks/")
 
 
 
@@ -70,13 +70,13 @@ setwd("~/Github/globi_tritrophic_networks/")
 
   
  # Load the data
- load("~/Dropbox/Globi/ModelOutput/globi-short plant list- 2022 05 12 - all cov - NO apis - NIMBLE - SSVS.rds")
+ load("./ModelOutput/globi-short plant list- 2022 05 12 - all cov - NO apis - NIMBLE - SSVS.rds")
  # object = out
  # MCMC object
  
  
  ## Load the entire nimble output
-load("~/Dropbox/Globi/ModelOutput/OUTPUT - globi-short plant list- 2022 05 12 - all cov - NO apis - NIMBLE - SSVS.rds")
+load("./ModelOutput/OUTPUT - globi-short plant list- 2022 05 12 - all cov - NO apis - NIMBLE - SSVS.rds")
  # object = result
  # MCMC object
  
@@ -95,7 +95,7 @@ load("./Data/bee_plant_inter_2022_04_11 - short plant - no apis.rds")
   
 
 # Load covariates
-load("~/Dropbox/Globi/Data/model_covariates - 2022 04 21 - no apis.rds")
+load("./Data/model_covariates - 2022 04 21 - no apis.rds")
   #covariates
 
 
@@ -334,7 +334,7 @@ ggplot(dat[grep("interact", dat$names),],
         plot.title = element_text(size = 25, color = "black", face = "bold")) 
 
 # Save the plot
-ggsave("~/Github/globi_tritrophic_networks/Figures/2022_05_12/Bee-plant-Interaction-prob.pdf", height = 15, width = 8)
+ggsave("./Figures/2022_05_12/Bee-plant-Interaction-prob.pdf", height = 15, width = 8)
 
 
 
@@ -370,7 +370,7 @@ ggplot(dat[grep("detect", dat$names),],
         plot.title = element_text(size = 25, color = "black", face = "bold")) 
 
 # Save the plot
-ggsave("~/Github/globi_tritrophic_networks/Figures/2022_05_12/Bee-plant-Detection-prob.pdf", height = 15, width = 8)
+ggsave("./Figures/2022_05_12/Bee-plant-Detection-prob.pdf", height = 15, width = 8)
 
 
 
@@ -410,7 +410,7 @@ ggplot(dat[is.na(dat$obs) == FALSE,],
         plot.title = element_text(size = 25, color = "black", face = "bold")) 
 
 # Save the plot
-ggsave("~/Github/globi_tritrophic_networks/Figures/2022_05_12/Bee-plant-Number.pdf", height = 15, width = 8)
+ggsave("./Figures/2022_05_12/Bee-plant-Number.pdf", height = 15, width = 8)
 
 
 
@@ -557,7 +557,7 @@ ggplot(pred.p.soc.long, aes(x = probability, y = solitary)) +
         axis.title.y = element_text(size = title.size, color = "black"))
 
 # Save the plot
-ggsave("~/Github/globi_tritrophic_networks/Figures/2022_05_12/Bee-plant-interaction-prob-V-bee-solitary.pdf", 
+ggsave("./Figures/2022_05_12/Bee-plant-interaction-prob-V-bee-solitary.pdf", 
        height = 3, width = 5)
 
 
@@ -630,7 +630,7 @@ ggsave("~/Github/globi_tritrophic_networks/Figures/2022_05_12/Bee-plant-interact
 # 
 # 
 # # Save the plot
-# ggsave("./Figures/2022_04_05/NO APIS - Bee-plant-interaction-prob-V-flower-color.pdf", height = 10, width = 11)
+# ggsave("./Figures/2022_04_05/Bee-plant-interaction-prob-V-flower-color.pdf", height = 10, width = 11)
 # 
 # 
 
@@ -779,7 +779,7 @@ ggsave("~/Github/globi_tritrophic_networks/Figures/2022_05_12/Bee-plant-interact
          axis.title.y = element_text(size = title.size, color = "black"))
  
  # Save the plot
- ggsave("~/Github/globi_tritrophic_networks/Figures/2022_05_12/Bee-plant-detection-prob-V-bee-stripes.pdf", 
+ ggsave("./Figures/2022_05_12/Bee-plant-detection-prob-V-bee-stripes.pdf", 
         height = 3, width = 5)
  
  
@@ -852,7 +852,7 @@ ggplot(pred.p.long, aes(x = probability, y = citation)) +
         axis.title.y = element_text(size = title.size, color = "black"))
 
 # Save the plot
-ggsave("~/Github/globi_tritrophic_networks/Figures/2022_05_12/Bee-plant-detection-prob-V-citation.pdf", 
+ggsave("./Figures/2022_05_12/Bee-plant-detection-prob-V-citation.pdf", 
        height = 3, width = 5)
 
 
@@ -927,7 +927,7 @@ ggplot(pred.p.col.long, aes(x = probability, y = yellow)) +
 
 
 # Save the plot
-ggsave("~/Github/globi_tritrophic_networks/Figures/2022_05_12/Bee-plant-detection-prob-V-color.pdf", 
+ggsave("./Figures/2022_05_12/Bee-plant-detection-prob-V-color.pdf", 
        height = 3, width = 5)
 
 
@@ -1000,7 +1000,7 @@ ggplot(pred.p.shape.long, aes(x = probability, y = bowl)) +
 
 
 # Save the plot
-ggsave("~/Github/globi_tritrophic_networks/Figures/2022_05_12/Bee-plant-detection-prob-V-shape.pdf", 
+ggsave("./Figures/2022_05_12/Bee-plant-detection-prob-V-shape.pdf", 
        height = 3, width = 5)
 
 
@@ -1085,7 +1085,7 @@ ggplot() +
         axis.title.y = element_text(size = title.size, color = "black"))
 
 # Save the plot
-ggsave("~/Github/globi_tritrophic_networks/Figures/2022_05_12/Bee-plant-detection-prob-V-bee-size.pdf", 
+ggsave("./Figures/2022_05_12/Bee-plant-detection-prob-V-bee-size.pdf", 
        height = 3, width = 5)
 
 
@@ -1169,7 +1169,7 @@ ggsave("~/Github/globi_tritrophic_networks/Figures/2022_05_12/Bee-plant-detectio
 #         axis.title.y = element_text(size = title.size))
 # 
 # # Save the plot
-# ggsave("./Figures/2022_04_05/NO APIS - Bee-plant-detection-prob-V-month.pdf", height = 10, width =11)
+# ggsave("./Figures/2022_04_05/Bee-plant-detection-prob-V-month.pdf", height = 10, width =11)
 # 
 
 
