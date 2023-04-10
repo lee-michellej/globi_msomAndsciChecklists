@@ -43,6 +43,7 @@ library(tidyverse)
 library(plyr)
 
 
+setwd("~/globi_tritrophic_networks/")
 
 
 
@@ -342,7 +343,44 @@ save(covariates, file = "./Data/model_covariates - 2022 04 21 - no apis.rds")
 
 
 
+## Functions for pairs correlation plot
+panel.hist <- function(x, ...){
+  usr <- par("usr"); on.exit(par(usr))
+  par(usr = c(usr[1:2], 0, 1.5) )
+  h <- hist(x, plot = FALSE)
+  breaks <- h$breaks; nB <- length(breaks)
+  y <- h$counts; y <- y/max(y)
+  rect(breaks[-nB], 0, breaks[-1], y, col = "skyblue1", ...)
+}
 
+
+panel.cor <- function(x, y, digits = 2, prefix = "", cex.cor = 1, ...)
+{
+  usr <- par("usr"); on.exit(par(usr))
+  par(usr = c(0, 1, 0, 1))
+  r <- cor(x, y, use = "complete.obs")
+  txt <- format(c(r, 0.123456789), digits = digits)[1]
+  text(0.5, 0.5, txt, cex = 1.5)
+}
+
+panel.lower <- function(x, y, ...){
+  points(x, y, col = rgb(0,0,0, .5), pch = 19)
+}
+
+
+# Pairs correlation plot ###--------- BEE data
+pairs(bee.covariates[,3:8], 
+      upper.panel = panel.cor, 
+      diag.panel = panel.hist)
+
+
+# Pairs correlation plot ###--------- PLANT data
+pairs(plant.covariates[,c("yellow", "bowl", "aster")], 
+      upper.panel = panel.cor, 
+      diag.panel = panel.hist)
+
+
+#---------------- Other plots
 
 ggplot(data = covariates$plant.covariates, aes(x = yellow, y = bowl))+
   geom_point()+
