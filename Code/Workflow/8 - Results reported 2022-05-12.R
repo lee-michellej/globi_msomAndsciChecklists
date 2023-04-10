@@ -34,7 +34,7 @@
 
 # 1. Load libraries & set working directory
 # 2. Load data
-
+# 3. Calculate values reported in the results
 
 #######################################
 #######################################

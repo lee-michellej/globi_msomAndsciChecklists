@@ -1,5 +1,5 @@
 ---
-title: "GloBI Data Cleaning"
+title: "GloBI Data Normalizing"
 author: "N. Bachelder, A. Chen, Z. Fang, M. Rapaport, S. Solomon"
 date: "18 Feb 2021"
 output: html_document

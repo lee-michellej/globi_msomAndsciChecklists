@@ -360,16 +360,7 @@ ggsave("Figures/POSSIBLE-by-Plant-bowl-by-Source.pdf",
 # 4. Look for correlations among covaraites -------------------------------------------------------
 
 
-# # Covariates
-# stripped      = covariates$bee.covariates$striped,
-# size          = covariates$bee.covariates$size_std,
-# solitary     = covariates$bee.covariates$solitary,
 
-# citation.code = covariates$citation.covariates$citation.code,
-
-# flower_color  = 
-# flower_shape  = 
-# plant_family  = 
 
 pdf("./Figures/2023_02_24/Fig. S2 - bee covariate correlation.pdf")
 chart.Correlation(data.frame(striped = covariates$bee.covariates$striped,

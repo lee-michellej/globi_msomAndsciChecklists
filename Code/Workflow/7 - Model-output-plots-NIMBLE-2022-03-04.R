@@ -20,8 +20,9 @@
 ##################################
 
 
-# 
-
+# Creates figures in the main text of manuscript
+  # Figure 1
+  # Figure 2
 
 
 
@@ -32,7 +33,20 @@
 
 # 1. Load libraries & set working directory
 # 2. Load data
-# 3. 
+# 3. Summarize the observed data, u, v, and z parameters/states
+# 4. Make the Bee - plant interaction probability plot
+# 5. Make the Bee - plant Detection probability plot 
+# 6. Plot the total number of true vs. observed bee-plant interactions
+# 7. Plot the relationship between psi and bee size
+# 8. Plot the relationship between psi and solitary
+# 9. Plot the relationship between psi and flower color
+# 10. Plot the relationship between psi and flower shape
+# 11. Plot the relationship between p and strippiness
+# 12. Plot the relationship between p and source
+# 13. Plot the relationship between p and flower color
+# 14. Plot the relationship between p and flower shape
+# 15. Plot the relationship between p and bee size
+# 16. Plot the relationship between p and quadratic month
 
 
 ################################## 
@@ -54,6 +68,7 @@ library(ggridges)
 library(plyr)
 library(coda)
 library(reshape2)
+library(mcmcr)
 
 
 # Set working directory
@@ -410,7 +425,7 @@ ggplot(dat[is.na(dat$obs) == FALSE,],
         plot.title = element_text(size = 25, color = "black", face = "bold")) 
 
 # Save the plot
-ggsave("./Figures/2022_05_12/Bee-plant-Number.pdf", height = 15, width = 8)
+ggsave("./Figures/2022_05_12/Fig 1 - Bee-plant-Number.pdf", height = 15, width = 8)
 
 
 
@@ -570,7 +585,7 @@ ggsave("./Figures/2022_05_12/Bee-plant-interaction-prob-V-bee-solitary.pdf",
 
 
 
-# 8. Plot the relationship between psi and flower color ----------------------------------------
+# 9. Plot the relationship between psi and flower color ----------------------------------------
 
 
 
@@ -642,7 +657,7 @@ ggsave("./Figures/2022_05_12/Bee-plant-interaction-prob-V-bee-solitary.pdf",
 
 
 
-# 8. Plot the relationship between psi and flower shape ----------------------------------------
+# 10. Plot the relationship between psi and flower shape ----------------------------------------
 
 
 
@@ -719,7 +734,7 @@ ggsave("./Figures/2022_05_12/Bee-plant-interaction-prob-V-bee-solitary.pdf",
 
 
 
-# 8. Plot the relationship between p and strippiness ----------------------------------------
+# 11. Plot the relationship between p and strippiness ----------------------------------------
 
 
 
@@ -790,7 +805,7 @@ ggsave("./Figures/2022_05_12/Bee-plant-interaction-prob-V-bee-solitary.pdf",
 
 
 
-# 8. Plot the relationship between p and source ----------------------------------------
+# 12. Plot the relationship between p and source ----------------------------------------
 
 
 
@@ -865,7 +880,7 @@ ggsave("./Figures/2022_05_12/Bee-plant-detection-prob-V-citation.pdf",
 
 
 
-# 8. Plot the relationship between p and flower color ----------------------------------------
+# 13. Plot the relationship between p and flower color ----------------------------------------
 
 
 
@@ -939,7 +954,7 @@ ggsave("./Figures/2022_05_12/Bee-plant-detection-prob-V-color.pdf",
 
 
 
-# 8. Plot the relationship between p and flower shape ----------------------------------------
+# 14. Plot the relationship between p and flower shape ----------------------------------------
 
 
 
@@ -1012,7 +1027,7 @@ ggsave("./Figures/2022_05_12/Bee-plant-detection-prob-V-shape.pdf",
 
 
 
-# 7. Plot the relationship between p and bee size ----------------------------------------
+# 15. Plot the relationship between p and bee size ----------------------------------------
 
 
 
@@ -1098,7 +1113,7 @@ ggsave("./Figures/2022_05_12/Bee-plant-detection-prob-V-bee-size.pdf",
 
 
 
-# 7. Plot the relationship between p and quadratic month ----------------------------------------
+# 16. Plot the relationship between p and quadratic month ----------------------------------------
 
 
 # 
