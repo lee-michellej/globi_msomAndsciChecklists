@@ -25,7 +25,13 @@ Data used from the Global Biotic Interactions website are constantly being updat
 Datasets used in this analysis are listed below.
 
 1. Bee traits for checklist species - coloration_NEW.csv
+
+A file that includes color patters of bees coded by Yolanda Diao from bee images.
+
 2. Bee traits for checklist species - size.csv
+
+A file of bee size as reported in (citations)
+
 3. Bee traits for checklist species - sociality.csv
 4. Globi-names-not-in-discoverlife - Sheet1 2022 04 01.csv
 5. SCI checklist and phenology - SCI checklists and phenology - Seltmann 2022 04 01.csv
