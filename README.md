@@ -4,7 +4,7 @@
 
 ### In prep
 
-[```Abstract```](#Abstract) / [```Methods```](#Methods) / [```Interaction Dataset```](#Interaction Dataset) / [```Other Datasets```](#Other Datasets) /  [```Repository Directory```](#Repository Directory)
+[```Abstract```](#Abstract) / [```Methods```](#Methods) / [```Interaction Dataset```](#interaction-dataset) / [```Other Datasets```](#other-datasets) /  [```Repository Directory```](#repository-directory)
 
 ### Please contact either Michelle or Grace for questions about the code or data
 __________________________________________________________________________________________________________________________________________
