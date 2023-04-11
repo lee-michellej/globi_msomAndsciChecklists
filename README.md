@@ -12,6 +12,8 @@ Background: We are trying to account for sampling bias of museum records across 
 
 Methods: We are using an N-mixture model, with bee species as our "sites" and study as out "survey replicates". The data set consist of presence-only data.
 
+# Data used from the Global Biotic Interactions website are constantly being updated. The version used for this paper were accessed on 14 September 2021. The data file can be found on https://zenodo.org/record/7502711#.Y-56KezMI-Q and can be downloaded directly. This file is not included in our github workflow as the files are too large. To run the following code, this data should be downloaded first.
+
 
 ## Repository Directory
 ### [Code](https://github.com/lee-michellej/globi_tritrophic_networks/tree/master/Code): Contains code for modeling, analysis, and results

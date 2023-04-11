@@ -1,0 +1,921 @@
+=================
+Meeting 06-Apr-22
+=================
+
+Updates from Grace:
+Using NIMBLE takes 3-4 hours
+Collinearity
+
+Will need to mention that phenology windows will be different than what is observed
+Many different microhabitats on SCI
+Continuous water (natural and irrigated)
+Phenology will be different 
+
+Michelle: make a list of manually adjusted plant phenologies
+All plants that are over 1-month different
+New sheet that Grace sends over will include Apis mellifera
+Will add three species on the list
+There may be other species with all zeros
+
+Katja:
+Zenodo publication will be updated
+
+
+Bowl shape ~ yellow color
+Doesn't seem to be a relationship (not collinear)
+
+Bee solitary ~ bee size
+Most bees are solitary
+Bombus, Halictus, Apis are slightly eusocial
+
+Strippiness~ bee size
+No pattern between variables
+
+Strippiness ~ solitary
+Again, most bees are solitary
+
+Apis definitely an outlier in terms of how many plants visited
+
+Generally graphs with Apis have similar shape to those without Apis
+All lines represent MCMC iterations
+Black line is the mean
+94% confidence interval
+
+Specialization versus generalization (pollen consumption)
+
+ === Bee-plant interaction probability ===
+What does that mean biologically?
+How specialized a bee is?
+Probability based on the species of plant, not the number of times a species in recorded
+
+
+ === Ecological Model ===
+ - Increases with bee size
+
+ - Seems to be more right skewed with sociality
+
+
+# comparative statistics between Apis and non Apis for flower traits #
+How could the impact of Apis not being on SCI impact the results we're seeing?
+ - Yellow flowers have higher probability
+
+ - No difference in flower shape (potentially different between Apis and non-Apis)
+ - counterintuitive result: that Apis doesn't increase visitation to bowl flowers
+
+ === Detection model  ===
+ - strippiness did not impact detection
+
+ - inat has higher prob of detection, more variable
+
+ - bee size detection decreases with increased size (does overlap with zero)
+ - could this be because the island doesn't support large bees?
+ - collections could go for smaller/rarer bees?
+ * source by size (Grace will look at relationship)
+ - averaged all species within a genus
+
+ - quadratic month -- no real relationship
+ - detection of bee with specific plant during a month
+
+ - flower color counterintuitive
+ * number of flower yellow and not yellow
+
+ - flower shape also counterintuitive
+ - more observations on rare plants?
+ * number of bowl versus not bowl
+
+ * compare raw data to the observation list
+How could this predict the value of the actual 
+Not enough data to inform the model on certain things?
+ - bias there
+ - we don't know if it's the bees visiting the plants or the people looking at the bees/plants
+ - no abundance data for various flower species
+
+ === moving forward ===
+ - do we include or not include Apis?
+ - would take out Apis moving forward
+ - wouldn't want to drop results overall
+
+
+ - Michelle will update plant list
+
+ - what does it mean to move forward with the shortened plant list?
+ - trimming the data based solely on recorded values
+ - how many species on the plant list have no recorded interaction
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+=================
+Meeting 23-Feb-22
+=================
+
+
+Cutting the plant list more:
+ - accounting for imperfect detection -- can still estimate interactions that might have occurred but were never observed
+ - compare plant list to whole GLOBI database
+ - can bring back the plant families after the model is being tested
+
+* trim the plant list more (by 200-300)
+* make edits to manuscript
+
+As of today 1,000 interactions takes about 15 minutes
+But not converging -- will need 10,000 interactions
+
+
+Model covariates:
+ - talk about covariates that we'd want to include in the data
+
+
+
+
+================
+Meeting 9-Feb-22
+================
+
+Updates from Katja:
+SCI checklist is most updated -- everything updated is in bold
+Zenodo checklist needs to updated accordingly (but we're not waiting on it)
+Globi names in discover life might need to be updated
+
+Grace:
+Done with writing new code for the checklist data
+Started writing the methods section based on the checklist data
+Grace trying to run the model
+In globi, source citation observed a bee-plant interaction where it is not listed as possible
+
+Katja wants a unique list of interactions
+Could throw out the data OR check with an expert
+Come up with some sort of rule
+
+
+Michelle can take a look at the "forbidden links" that have been violated
+Event date, locality, etc
+Katja has some fuzz around the bees that are 
+Can we make the are bigger
+Need to think about relative diversity 
+
+Edit manuscript to reflect your own steps
+What other checklist numbers do we want?
+
+May 17th due date
+3 months until due date
+
+
+
+
+
+=================
+Meeting 21-Jan-22
+=================
+
+ - Editing synonym list with updated 5 that Katja sent via email
+Heterosarus californicus
+current valid: Pseudopanurgus californicus (Cresson, 1878)
+Exomalopsis cerei
+current valid: Anthophorula cerei (Timberlake, 1947)
+Melissodes lupina
+current valid: Melissodes lupinus Cresson, 1879
+Triepeolus heterurus
+current valid: Triepeolus utahensis (Cockerell, 1921)
+Coelioxys octodentata
+current valid: Coelioxys octodentatus Say, 1824
+
+
+pulled Katja’s email list of more resolved bee names that were not matched in globi database
+ - this will be part of another matching 
+ - need to rename to resolvedBeeNames
+***need to send updated list of no matches — only 4 species names
+
+139 bee species from the SCI checklist
+
+Jorrit’s update to eventDate
+ - won’t run for this iteration, but should grab updated data and this list before writing manuscript
+
+
+
+***Bee phenology list
+ - update scientific names in bee phenology list to only have 2 names
+ - and to match bee.list
+ - should hopefully just be a copy and paste from the checklist
+ - will need to update bee list for covariates to make sure consistent
+
+
+sourceCollectionCode
+ - dat6$code
+ - 7 stacks of data
+Why were Seltmann et al. publications dropped
+***final-globi-list-clean
+
+
+
+
+
+
+
+=================
+Meeting 19-Jan-22
+=================
+
+* bee synonym list — 4 species that are not on the zenodo/discoverlife synonym list
+ - any synonyms for these? are these the resolved names
+
+
+* pull out list of bee species that don’t have a name into the name resolver (zenodo) — will print and give to Katja
+
+* “no-resolved-bee-names-2022 01 14.csv” file will contain entries from globi that didn’t match zenodo synonym list (3674 names, 138 unique species names)
+
+* associated list of unmatched names has also been printed “no-resolved-bee-names-list-2022 01 14.csv”
+ == send this list to Katja
+
+* using the resolver on checklist we lose 3 names, check row 113 for a no match “Coelioxys octodentata”
+ - search zenodo list for "no:match"
+
+* confirm “sourceTaxonSpeciesName” will not have parentheses
+ == what provided names in sourceTaxonSpeciesName in the globi dataset have parentheses
+
+
+
+=================
+Meeting 14-Jan-22
+=================
+Combining code Grace and Michelle
+
+Michelle ran capstone cleaning code and uploaded to the google drive folder
+We will pull the google drive to run the formatting code
+
+Subsetting the locality data
+Occupancy models define by location and time
+
+Grace has data in the GitHub repo, desktop, dropbox
+
+ - Data info section
+* Run through data info in next meeting
+
+
+
+
+Read in data:
+ - bee checklist revised
+ - SCI plant list only using scientific name
+
+
+
+
+Questions for Katja:
+* bee synonym list — 4 species that are not on the zenodo/discoverlife synonym list
+
+* pull out list of bee species that don’t have a name into the name resolver (zenodo) — will print and give to Katja
+
+* “no-resolved-bee-names-2022 01 14.csv” file will contain entries from globi that didn’t match zenodo synonym list (3674 names, 138 unique species names)
+
+* associated list of unmatched names has also been printed “no-resolved-bee-names-list-2022 01 14.csv”
+
+* using the resolver on checklist we lose 3 names, check row 113 for a no match “Coelioxys octodentata”
+
+* confirm “sourceTaxonSpeciesName” will not have parentheses
+
+
+583 observations cut down from 
+
+
+Michelle to do:
+ - updated plant names will be “resolvedPlantNames”
+ - create updated Globi dataset that will have resolvedPlantNames column
+ - create updated plant checklist that will have resolvedPlantNames column
+ - on the cleaned plant checklist — need to consolidate phenology — max phenology dates possible
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+================
+Meeting 6-Jan-22
+================
+capstone student workflow up and running:
+ - works well and will resolve some issues on the plant resolver side 
+ - will likely be helpful in the bee name resolver side of the workflow as well
+
+
+institution codes:
+ - looks like the csv file from November 2020 might have a missing column "sourceInstitutionCode"
+ - updated institution code list and matching
+ - the updated institution code matching should use the newer dataset
+		sourceInstitutionCode is able to do a lot of legwork in terms of cleaning the "sourceCatalogNumber"
+ - if some entries will not have an associated institution code -- how will this be dealt with in the following analyses
+ 
+
+
+plant standardization:
+ - used taxonstand and the plant list to create a "plant_stand" column for all datasets -- merge using this column
+ - there were some duplicates in the SCI dataset after using the name resolver
+ - not sure how we want to deal with this
+ - otherwise this workflow is ready to add to the main checklist formatting
+ - using the SCI matching, about 19,317 data points to use
+K: merge phenologies
+
+
+*rerun code with new dataset with "sourceInstitutionCode" column and new entries
+
+K: synonyms from discoverlife
+cleaned version of discoverlife has cleaned version
+https://zenodo.org/record/5738043#.YddfjRPMLdR
+
+
+
+
+
+
+
+
+
+
+
+=================
+Meeting 16-Dec-21
+=================
+notes for michelle:
+ - download new csv for all bee interactions
+ - first try the cleaning workflow that the capstone students put together to get the bees into source and the plants into target
+ - the cleaned data can be used to then figure out the issue with the institution codes
+ - then you can start going back into the plant lists and try Taxonstand with the updated list
+ - keep a list of the plants that don’t make the TPL
+ - check for the plants that don’t merge between SCI and globe dataset
+
+
+
+=================
+Meeting 15-Dec-21
+=================
+
+new institution code list
+
+how do we want to handle records from the same institution (e.g. arachnid collection versus moth collection)?
+how do we want to handle records from the same program, but housed in different collections?
+# Seems like grouping under most basic institution makes the most sense
+# group by institution -- big umbrellas
+M: will continue small edits and let everyone know when
+M: make all variations in institution codes listed
+
+K: what dataset are we currently working with?
+G: working with a file from Nov 2020
+K: continue working with Nov 2020 and then update once code etc looks good
+G: added Nov csv to the google drive "all_bee_interactions_unique"
+
+G: synonyms
+split apart columns, removed authors, removed subspecies
+without synonyms matched 29,000 records
+with synonyms matched 31,000 records
+number of species doesn't change
+convert globi names to just current names
+K: are you doing a search on names just from SCI?
+if there's a match, add it to current name
+what was the big dataset
+how many got trimmed from all available data
+based on all globi dataset
+
+bee checklist from sci == genus_species (full species name)
+K: remove species that include "sp." epithat
+plant.list == genus_species (full species name)
+
+step 4: subsetted to anything with "Plantae" record
+3035 unique bees and plant species
+
+step 5: bee synonym data
+K: some synonyms may have the parentheses in the globi dataset
+
+
+
+THOUGHTS FROM ME:
++ add PlantStandTaxon column to plant list before it goes into Grace's checklist format workflow
+
+
+
+used "matched_rows csv" from Data file from the checklist formatting workflow
+started with 5586
+1441 did not merge ~=97 unique plants
+these could just be species that aren't on SCI, but check with Grace about the checklist workflow
+maybe walk through format_dat_checklist for reference
+
+
+Potential sources for code to straighten out source and target
+https://github.com/Big-Bee-Network/Bee-Specialization-Modeling
+https://github.com/ucsb-ds-capstone-2021/ccber
+
+
+
+================
+Meeting 1-Dec-21
+================
+
+
+
+K: discover life name list
+bees in taxize package
+zenodo
+https://zenodo.org/record/5738043#.YafHGpDMJTY
+
+M: what to do with interactions that only have genus for plant name
+could be tricky 
+has to be at species
+
+- look at data for full species
+- do analysis at genus level
+- run script
+- output file (make really clear for other workflows
+
+*send Katja list of SourceCodes that need matching with instituions
+
+G: bee synonym list
+pull out synonyms from GloBI database
+
+Y&K: continue using discover life checklists for bees
+
+
+=================
+Meeting 13-Oct-21
+=================
+
+Institutions not listed:
+BBSLID
+KWC
+HOLO
+LACMENT
+PUB
+
+
+rare case where institution ID is different between source and target
+aren't separate specimen
+
+sourceTaxonId -- identifier for that specific name
+sourceCatalogNumber --
+
+
+
+keep plant names at species level
+
+
+# to do
+send Katja list of specimen missing sourceCatalogNumber
+Everything after reference citation (including reference citation)
+
+
+
+=================
+Meeting 29-Sep-21
+=================
+
+# Yolanda worked on spreadsheet of names for bees
+map of bee synonyms
+
+# Updating plant names
+taxonstand
+taxize
+good documentation and more transparent than a package that could be re-published
+* make synonym list
+
+# Missing bee names
+either hyper-rare, new etc
+just discuss and take out of the dataset
+* Katja will send updated list
+
+# phenology
+Grace -- are bees that are around year-round more generalist?
+Katja -- or are bees that are around year-round specialists on asters?
+
+# fuzzy name matching using the synonym
+how to integrate these packages into scripts
+
+# difference between source and reference
+where data was compiled
+up to 8 citations
+Symbiota collection of arthropods
+need to look for institution codes for all specimen data
+use collection/source as covariate
+
+# how to deal with the phenology
+rows as bees
+columns as plants
+different sheets as different months
+each bee and plant can interact
+different piles of those sheets depending on the citation
+collector might not be there
+occurence data unique on collectors names for SCI
+
+how to get rid of sheets
+vectorize in order to make the computation easier
+
+# phenology zeros versus NAs for plant data versus bee data
+
+
+
+to do:
+plant phenology list: change NAs to ZEROs!!!!
+institutions: work on list of codes for LARGER GEOGRAPHY
+fuzzy name matching for plants taxonstand or taxize
+
+
+
+=================
+Meeting 14-Sep-21
+=================
+
+#Confirming files
+Need to update the Globi database — Katja
+Need to update bee database
+Use new plant trait list
+
+
+
+# Names of columns
+sourceTaxonId == taxon based on name
+sourceTaxonIds == taxonomic name sources
+sourceTaxonName == 
+sourceTaxonRank == 
+sourceTaxonPathNames
+sourceTaxonPathIds == full path order to species
+sourceTaxonPathRankNames
+sourceTaxonSpeciesName
+sourceTaxonSpeciesId
+sourceTaxonGenusName
+sourceTaxonGenusId
+sourceTaxonFamilyName
+sourceTaxonFamilyId
+sourceTaxonOrderName
+sourceTaxonOrderId
+sourceTaxonClassName
+sourceTaxonClassId
+sourceTaxonPhylumName
+sourceTaxonPhylumId
+sourceTaxonKingdomName
+sourceTaxonKingdomId
+sourceId == records from natural history collections (collections export)
+sourceOccurrenceId == records from natural history collections (collections export)
+sourceCatalogNumber == specimen ID in collection
+sourceBasisOfRecordId == 
+sourceBasisOfRecordName
+sourceLifeStageId
+sourceLifeStageName
+sourceBodyPartId
+sourceBodyPartName
+sourcePhysiologicalStateId
+sourcePhysiologicalStateName
+sourceSexId
+sourceSexName
+interactionTypeName
+interactionTypeId
+targetTaxonId
+targetTaxonIds
+targetTaxonName
+targetTaxonRank
+targetTaxonPathNames
+targetTaxonPathIds
+targetTaxonPathRankName
+targetTaxonSpeciesName
+targetTaxonSpeciesId
+targetTaxonGenusName
+targetTaxonGenusId
+targetTaxonFamilyName
+targetTaxonFamilyId
+targetTaxonOrderName
+targetTaxonOrderId
+targetTaxonClassName
+targetTaxonClassId
+targetTaxonPhylumName
+targetTaxonPhylumId
+targetTaxonKingdomName
+targetTaxonKingdomId
+targetId
+targetOccurrenceId
+targetCatalogNumber
+targetBasisOfRecordId
+targetBasisOfRecordName
+targetLifeStageId
+targetLifeStageName
+targetBodyPartId
+targetBodyPartName
+targetPhysiologicalStateId
+targetPhysiologicalStateName
+targetSexId
+targetSexName
+decimalLatitude == collection location (for museum and community science)
+
+decimalLongitude
+localityId == 
+localityName
+eventDateUnixEpoch == unique number for day in earth history
+
+argumentTypeId == unclear
+referenceCitation == paper (original source)
+referenceDoi
+referenceUrl
+sourceCitation == database that its coming from
+sourceNamespace
+sourceArchiveURI
+sourceDOI
+sourceLastSeenAtUnixEpoch == last seen by globi
+
+
+
+
+
+# use a mix of reference and source citation
+Reference when it’s somebody’s paper/collection
+Source when it’s coming from a museum
+
+sourceCatalogueNumber would give collection information
+Unique list of unique part of catalog number 
+List of museums
+
+# area SLO to SD 4500 observations
+SLO county/Orange County/San Diego county
+
+# names for bees and plants
+Alternatives for each species
+
+* Send info for plant list and associated plant traits
+* ASK ISAAC PARK FOR PLANT NAME CLEANING
+* unique name of institution codes
+* https://scan-bugs.org/portal/collections/index.php
+
+
+
+
+================
+Meeting 2-Sep-21
+================
+
+Erickson and Smith 2021
+
+paper questions:
+i like the use of collector covariates
+how many records do not have collector information?
+do we think something like detection history could be helpful?
+dates and names associated with each visit
+grouping dates together based on research trips
+each kind of researcher has their own detection probability
+
+highest predictive accuracy full model
+including covariates improved accuracy more than filtering the data
+probably due to the high volume of community scientists with singleton observations
+
+big differences in collections by community scientists versus experts
+
+at least two independent visits per site
+
+Using normal occupancy model: only two parts
+Varied: covariates and data filtering
+Guzman uses multi-species occupancy model: Saroye paper should have been more careful with filtering
+geography and visits (used metadata -- and infer zeros)
+Lucky if you know other kinds of metadata
+
+ASSUMPTIONS:
+will come up naturally with looking at the model
+
+
+
+
+our data filtering:
+ - geographically SCI
+ - collector or author can be the same
+ 	- K: collector names will be messy; can use name filtering; will need to be cleaned
+ - repeated indices mostly cleaned; can check using catalogue number; insects less likely
+ - don't need to filter for data that does not have an associated date
+
+ 
+ 
+Plant traits:
+ - M: add calflora dates for phenology
+ - M: email draft of floral traits to Grace
+ 
+
+
+BEE SPECIES/PLANT SPECIES/COLLECTOR
+some spaces will be blocked out
+what proportion will be blocked out?
+what proportion will be already excluded from our dataset?
+
+K: looking at Apis mellifera removal
+to better understand species disappearance
+
+
+
+
+
+
+
+=================
+Meeting 19-Aug-21
+=================
+
+Phenology of bees and plants
+ - phenology as a covariate or some sort of limit in the analysis
+ - potential for bees and plants to not be in the same space
+ - use phenology as a filter to limit the plant list based on full range of bees
+ - how distinct are these time periods
+*****
+ - various ways of collecting phenology data based on geographic-based occurrence data or literature search
+
+Guzman and Soroye:
+ - restrictions of space and time
+ - how did they decide on the places to limit
+ - simulate data and build in restrictions and then without the restrictions in the analysis
+
+Phenology and geography
+ - how do you limit the geography that you’re taking into account?
+ - maybe compare the limits: all the data or limited filtered data based on eco-zone
+ - expanded limitation (insects can fly)
+
+
+Simulated data
+ - many decisions to be made about the data generating process and the models to be used
+ - you can ask: how does my model hold up to violations of assumptions?
+
+
+Model covariate choice:
+ - number of covariates (simplicity versus complete/complex)
+ —> depends on sample size
+
+
+Ecological model — what do we think influences the bee decision
+ - size (bigger bees can fly to more species, more generalist?)
+
+
+
+Detection model - what is limiting observability
+ - size (bigger bees detected more often)
+
+
+Visitation model - observations done
+
+
+
+*****
+Next steps:
+ - restricted occupancy models
+ - not allowing every plant-pollinator interaction to occur
+
+MICHELLE:
+ - look into papers that allow for choice or no interactions
+ - flower traits lists
+ - re-read Guzman and Soroye papers
+
+
+
+
+
+
+
+
+============
+Meeting June
+============
+Ultimate question:
+
+The GloBI database:
+ - what is the difference in interaction detection using Globi data
+ 
+What can we learn about the biological traits:
+ - what biological traits are associated with more interactions?
+ - do social bees visit more plants than eusocial?
+ - what sampling biases are we facing?
+ 
+What can we learn about the plants:
+ - what are the keystone plants that are sustaining bee diversity?
+ 
+Data quality:
+ - what holes are left in our biological thinking
+ - which bees still lack data?
+ - is there enough data to do space and time analyses?
+ 
+
+
+
+
+Plant list:
+ - SBBG will give plant list and filter for flowering species
+ - potential issue: plants that do not match might need to be updated
+
+
+
+ 
+Assumptions:
+ - time is not something that we'll think about
+ 
+
+
+
+
+Third dimension: Citations
+ - scale of aggregating citations (source citation)
+ - rather than individual IDs
+ - number of unique collectors contributing to each source citation
+
+ 
+
+ 
+
+Biological covariates:
+ - Bartomeus paper
+ - Michelle will look at "forbidden links" -- what goes into these data?
+ 	- phenology
+ 	- physiology
+ - Michelle flower color/size/type
+ - thermal range
+
+ 
+
+
+
+
+
+Detection covariate:
+ - like Robin Thorpe as a covariate (what is the impact of one person on a collection)
+ - Katja will identify very good taxonomists (confidence scale)
+ - looking at number of collectors: what do they predominantly collect?
+ - relationship between collector and rare/common bee collection
+ 
+ - seasonality (more detectible in the spring than in the summer)
+ - verbatim event date -- should be scaled
+ 
+ - weather (yearly temp and precipitation)
+ - take weather and bin for each aggregation (into each season)
+
+
+ 
+ 
+
+Unique covariate sets for both the biological and detection covariates:
+- flower size/shape
+- bee physiology
+
+
+
+
+
+
+1-June-2021
+
+Yolanda’s research:
+ - will continue to use other papers and resources
+ - will likely have size and sociality ready by August
+ - will highlight for areas of questions/concerns
+
+
+Michelle’s research:
+ - will put together similar work to Yolanda’s for flowers
+ - phenology
+ - flower shape/size/color
+
+
+
+
+
+
+
+Assumptions related to Soroye paper:
+ - cut-offs to include a bee species (minimum citation count)
+ - divided each intervals
+ - Grace: can we assume that citations are separate replicate datasets? Repeated surveys? Simulate dataset 
+ - Katja: major pulses of surveys (Robin Thorpe ’05, ’96, arthropod surveys of California, UCSB surveys ’19, ’21), look at clustered collection times/dates and relate to known surveys
+ - proportion of literature/inaturalist
+ - try surveys as another way estimate repeated surveys
+ - comparing output from multiple ways of data aggregation (where data is not always included in these larger databases like GloBI versus )
+
+
+
+
+
+Single species versus multiple-species (Soroye versus Guzman papers):
+- all of the species datasets run independently, no info is shared
+- multi-species info is shared: assume parameters estimated for all species come from the same distribution
+- species x and y are not so independent — have common origins and characteristics, they will be more similar to one another rather than independent
+- stronger information to rare species
+- single species — not perpetuating uncertainties
+
+
+
+
+
+
