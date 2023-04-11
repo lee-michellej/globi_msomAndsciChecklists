@@ -3,7 +3,7 @@
 # Email: enicospilus@gmail
 # Date: November, 2020
 # Purpose: Download data from https://www.globalbioticinteractions.org/ and select rows based on taxonomy or word match
-# Data: https://doi.org/10.5281/zenodo.3950590
+# Data accessed from GloBI on September 14, 2021
 # GloBI citation: Jorrit H. Poelen, James D. Simons and Chris J. Mungall. (2014). Global Biotic Interactions: An open infrastructure to share and analyze species-interaction datasets. Ecological Informatics. https://doi.org/10.1016/j.ecoinf.2014.08.005.
 # Run in command line from globi_tritrophic_networks/Code folder: sh Globi_bee_data.sh
 ################################## 
@@ -34,6 +34,7 @@ echo Sorting unique records
 sort -r ../Data/raw_globi_data/Andrenidae_data.tsv | uniq > ../Data/raw_globi_data/Andrenidae_data_unique.tsv
 wc -l ../Data/raw_globi_data/Andrenidae_data_unique.tsv
 #####################################
+
 #find all Apidae and write one file with all data and a second file only with unique records
 
 echo Finding all Apidae
@@ -44,6 +45,7 @@ echo Sorting unique records
 sort -r ../Data/raw_globi_data/Apidae_data.tsv | uniq > ../Data/raw_globi_data/Apidae_data_unique.tsv
 wc -l ../Data/raw_globi_data/Apidae_data_unique.tsv
 #####################################
+
 #find all Colletidae and write one file with all data and a second file only with unique records
 
 echo Finding all Colletidae
@@ -54,6 +56,7 @@ echo Sorting unique records
 sort -r ../Data/raw_globi_data/Colletidae_data.tsv | uniq > ../Data/raw_globi_data/Colletidae_data_unique.tsv
 wc -l ../Data/raw_globi_data/Colletidae_data_unique.tsv
 #####################################
+
 #find all Halictidae and write one file with all data and a second file only with unique records
 
 echo Finding all Halictidae
@@ -64,6 +67,7 @@ echo Sorting unique records
 sort -r ../Data/raw_globi_data/Halictidae_data.tsv | uniq > ../Data/raw_globi_data/Halictidae_data_unique.tsv
 wc -l ../Data/raw_globi_data/Halictidae_data_unique.tsv
 #####################################
+
 #find all Megachilidae and write one file with all data and a second file only with unique records
 
 echo Finding all Megachilidae
@@ -74,6 +78,7 @@ echo Sorting unique records
 sort -r ../Data/raw_globi_data/Megachilidae_data.tsv | uniq >../Data/raw_globi_data/Megachilidae_data_unique.tsv
 wc -l ../Data/raw_globi_data/Megachilidae_data_unique.tsv
 #####################################
+
 #find all Melittidae and write one file with all data and a second file only with unique records
 
 echo Finding all Melittidae
@@ -84,6 +89,7 @@ echo Sorting unique records
 sort -r ../Data/raw_globi_data/Melittidae_data.tsv | uniq > ../Data/raw_globi_data/Melittidae_data_unique.tsv
 wc -l ../Data/raw_globi_data/Melittidae_data_unique.tsv
 #####################################
+
 #find all Stenotritidae and write one file with all data and a second file only with unique records
 
 echo Finding all Stenotritidae
@@ -93,16 +99,8 @@ wc -l ../Data/raw_globi_data/Stenotritidae_data.tsv
 echo Sorting unique records
 sort -r ../Data/raw_globi_data/Stenotritidae_data.tsv | uniq > ../Data/raw_globi_data/Stenotritidae_data_unique.tsv
 wc -l ../Data/raw_globi_data/Stenotritidae_data_unique.tsv
-
 #####################################
+
 #create one large bee file
 cat ../Data/raw_globi_data/*unique.tsv >> ../Data/raw_globi_data/all_bee_data.txt
 sort -r ../Data/raw_globi_data/all_bee_data.txt | uniq > ../Data/raw_globi_data/all_bee_data_unique.txt
-#remove unsorted file
-rm ../Data/raw_globi_data/all_bee_data.txt
-wc -l ../Data/raw_globi_data/all_bee_data_unique.txt
-
-
-#get list of unique interaction types
-cat ../Data/raw_globi_data/all_bee_data_unique.txt | cut -f 35 | sort -u > ../Data/raw_globi_data/interaction_types.txt
-
