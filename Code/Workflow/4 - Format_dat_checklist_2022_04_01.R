@@ -581,21 +581,21 @@ bbox <- c(left = min.vals[1] - 0.02,
 
 names(bbox) <- c("left", "bottom", "right", "top")
 
-#g.map <- ggmap(get_stamenmap(bbox, zoom = 3, maptype = "terrain"))+
-#  geom_point(data = dat4, aes(y = decimalLatitude, x = decimalLongitude, #size = log10(total)))+
-#  ylab("Latitude")+
-#  xlab("Longitude")+
-#  theme_bw()+ 
-#  theme(axis.text.x = element_text(size = 17, color = "black"), 
-#        axis.text.y = element_text(size = 17, color = "black"), 
-#        axis.title.y = element_text(size = 17, color = "black"), 
-#        axis.title.x =element_text(size = 17, color = "black"),
-#        legend.title =element_text(size = 17, color = "black"),
-#        legend.text =element_text(size = 17, color = "black"),
-#        panel.grid.major = element_blank(), 
-#        panel.grid.minor = element_blank())
-#
-#g.map
+g.map <- ggmap(get_stamenmap(bbox, zoom = 3, maptype = "terrain"))+
+  geom_point(data = dat4, aes(y = decimalLatitude, x = decimalLongitude, size = log10(total)))+
+  ylab("Latitude")+
+  xlab("Longitude")+
+  theme_bw()+ 
+  theme(axis.text.x = element_text(size = 17, color = "black"), 
+        axis.text.y = element_text(size = 17, color = "black"), 
+        axis.title.y = element_text(size = 17, color = "black"), 
+        axis.title.x =element_text(size = 17, color = "black"),
+        legend.title =element_text(size = 17, color = "black"),
+        legend.text =element_text(size = 17, color = "black"),
+        panel.grid.major = element_blank(), 
+        panel.grid.minor = element_blank())
+
+g.map
 
 #ggsave("./Figures/Globi_map_2022_01_14.pdf", height = 12, width = 15)
 
@@ -628,9 +628,19 @@ bbox2 <- c(left = min.vals2[1] - 0.02,
 
 names(bbox2) <- c("left", "bottom", "right", "top")
 
+library(ggsn)
+my_scalebar <- edit(scalebar)
+
+
+# copy data
+dat5.1 <- dat5
+
+colnames(dat5.1)[which(colnames(dat5.1) == "decimalLatitude")] <- "lat"
+colnames(dat5.1)[which(colnames(dat5.1) == "decimalLongitude")] <- "long"
+
 g.map2 <- ggmap(get_stamenmap(bbox2, zoom = 8, maptype = "terrain"))+
-  geom_point(data = dat5, aes(y = decimalLatitude, 
-                              x = decimalLongitude, 
+  geom_point(data = dat5.1, aes(y = lat, 
+                              x = long, 
                               size = total),
              fill = "darkgoldenrod3",
              pch = 21)+
@@ -645,12 +655,42 @@ g.map2 <- ggmap(get_stamenmap(bbox2, zoom = 8, maptype = "terrain"))+
         legend.text =element_text(size = 17, color = "black"),
         panel.grid.major = element_blank(), 
         panel.grid.minor = element_blank())+
-  guides(size=guide_legend(title="Total \nsample \nsize"))
+  ggsn::scalebar(data = dat5.1, location = "bottomleft",
+           dist = 50, dist_unit = "km",
+           transform = TRUE, model = "WGS84")
 
-g.map2
+north2(g.map2, .7)
 
-ggsave("./Figures/Fig S1 - Globi_CA_map_2023_02_23.pdf", 
+# I used adobe illustrator to add numbers to scale bar and add the north arrow
+ggsave("./Figures/Fig S1 - Globi_CA_map_2023_02_23 - map.pdf", 
        height = 10, width = 12)
+
+
+
+# Make inset map
+bbox3 <- c(left = -125,
+          bottom = 20, 
+          right = -65, 
+          top = 50)
+
+names(bbox3) <- c("left", "bottom", "right", "top")
+
+ggmap(get_stamenmap(bbox3, zoom = 3, maptype = "terrain"))+
+  theme_bw()+ 
+  theme(axis.text.x = element_blank(), 
+        axis.text.y = element_blank(), 
+        axis.title.y = element_blank(), 
+        axis.title.x =element_blank(),
+        legend.title =element_blank(),
+        legend.text = element_blank(),
+        panel.grid.major = element_blank(), 
+        panel.grid.minor = element_blank())
+
+ggsave("./Figures/USA map.pdf", 
+       height = 10, width = 12)
+
+
+
 
 
 

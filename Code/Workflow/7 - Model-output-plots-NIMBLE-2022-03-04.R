@@ -341,7 +341,7 @@ ggplot(dat[grep("interact", dat$names),],
  # ggtitle("Bee-plant interaction probability")+
   theme_bw()+ 
   theme(axis.text.x = element_text(size = 17, color = "black"), 
-        axis.text.y = element_text(size = 10, color = "black", face = "italic"), 
+        axis.text.y = element_text(size = 17, color = "black", face = "italic"), 
         axis.title.y = element_text(size = 17, color = "black"), 
         axis.title.x =element_text(size = 17, color = "black"),
         legend.title =element_text(size = 17, color = "black"),
@@ -349,7 +349,8 @@ ggplot(dat[grep("interact", dat$names),],
         plot.title = element_text(size = 25, color = "black", face = "bold")) 
 
 # Save the plot
-ggsave("./Figures/2022_05_12/Bee-plant-Interaction-prob.pdf", height = 15, width = 8)
+ggsave("./Figures/2023_02_24/Fig S3 - Bee-plant-Interaction-prob.pdf", 
+       height = 27, width = 8)
 
 
 
@@ -377,7 +378,7 @@ ggplot(dat[grep("detect", dat$names),],
  # ggtitle("Detection estimates")+
   theme_bw()+ 
   theme(axis.text.x = element_text(size = 17, color = "black"), 
-        axis.text.y = element_text(size = 10, color = "black", face = "italic"), 
+        axis.text.y = element_text(size = 17, color = "black", face = "italic"), 
         axis.title.y = element_text(size = 17, color = "black"), 
         axis.title.x =element_text(size = 17, color = "black"),
         legend.title =element_text(size = 17, color = "black"),
@@ -385,7 +386,8 @@ ggplot(dat[grep("detect", dat$names),],
         plot.title = element_text(size = 25, color = "black", face = "bold")) 
 
 # Save the plot
-ggsave("./Figures/2022_05_12/Bee-plant-Detection-prob.pdf", height = 15, width = 8)
+ggsave("./Figures/2023_02_24/Fig. S3 - Bee-plant-Detection-prob.pdf", 
+       height = 27, width = 8)
 
 
 
