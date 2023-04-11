@@ -7,3 +7,6 @@ Data/interactions.tsv
 Data/raw_globi_data/
 *.zip
 .httr-oauth
+interactions.tsv.gz
+Data/interactions-GloBI-September-14-2021.tsv
+Data/interactions-GloBI-September-14-2021.tsv.gz
