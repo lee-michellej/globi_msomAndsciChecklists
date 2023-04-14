@@ -51,7 +51,7 @@ _A file that includes the published (as of October 17, 2022) Santa Cruz Island b
 
 Citations for SCI bee checklist (SCI checklist and phenology - SCI checklists and phenology - Seltmann 2022 04 01.csv)  
 a. Seltmann, K. C., Dewey, D., McLaren, L., & Thrift, C. (2022). Native and non-native bees (Anthophila) of Santa Cruz Island: An annotated checklist. Zenodo. https://doi.org/10.5281/zenodo.7216845  
-b. GBIF citation  
+b. GBIF.org (25 November 2020) GBIF Occurrence Download https://doi.org/10.15468/dl.2ebjjd  
   
   
 6. citation-list-type.csv  
@@ -248,8 +248,7 @@ Citations for bee trait datasets:
 160. Cockerell, Theodore D. A. (Theodore Dru Alison). 1911. “LXXXIX.—Descriptions and Records of Bees—XL.” The Annals and Magazine of Natural History; Zoology, Botany, and Geology 8: 763 - 770.  
 161. Cockerell, Theodore D. A. (Theodore Dru Alison). 1907. “LXIV.—Descriptions and Records of Bees—XIV.” The Annals and Magazine of Natural History; Zoology, Botany, and Geology 19: 531 - 540.  
 162. Michener, Charles D. 1937. "The Bees of the Genera Chelostomopsis, Formicapis, Robertsonella and Prochelostoma.(Hymen: Megachilidae)" Entomological News, and Proceedings of the Entomological Section of the Academy of Natural Sciences of Philadelphia 48: 127 - 32.  
-163. "Descriptions of new North American Hymenopters, and observations on some already described." American Entomology : A Description of the Insects of North American, with Illustrations Drawn and Colored after Nature 2: 642 - 766.  ![image](https://user-images.githubusercontent.com/38988221/232168319-cec6d90c-9376-48ab-be26-ebd6026c611c.png)
-  
+163. "Descriptions of new North American Hymenopters, and observations on some already described." American Entomology : A Description of the Insects of North American, with Illustrations Drawn and Colored after Nature 2: 642 - 766.  
   
 ## Repository Directory
 ### [Code](https://github.com/lee-michellej/globi_tritrophic_networks/tree/master/Code): Contains code for modeling, analysis, and results
