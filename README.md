@@ -30,23 +30,23 @@ Data used from the Global Biotic Interactions website are constantly being updat
 ## Other Datasets: 
 Datasets used in this analysis are listed below.
 
-1. Bee traits for checklist species - coloration_NEW.csv  
+1.**Bee traits for checklist species - coloration_NEW.csv** 
 _A file that includes color patterns of bees coded by Yolanda Diao from bee images, using references 1-81._
   
   
-2. Bee traits for checklist species - size.csv  
+2. **Bee traits for checklist species - size.csv** 
 _A file of bee size compiled by Yolanda Diao, using references 82-83._
   
   
-3. Bee traits for checklist species - sociality.csv  
+3. **Bee traits for checklist species - sociality.csv**
 _A file of bee sociality compiled by Yolanda Diao, using references 84-163._
   
   
-4. Globi-names-not-in-discoverlife - Sheet1 2022 04 01.csv  
+4. **Globi-names-not-in-discoverlife - Sheet1 2022 04 01.csv**
 _A list of bees included in the GloBI interaction dataset that were not included in the Discover Life bee name synonym list._
   
   
-5. SCI checklist and phenology - SCI checklists and phenology - Seltmann 2022 04 01.csv  
+5.**SCI checklist and phenology - SCI checklists and phenology - Seltmann 2022 04 01.csv** 
 _A file that includes the published (as of October 17, 2022) Santa Cruz Island bee checklist. Phenology data was compiled using the bee checklist and searching for every occurrence of each species in GBIF. An binary observation/no observation was established for every month of the year based on these occurrence data._
 
 Citations for SCI bee checklist (SCI checklist and phenology - SCI checklists and phenology - Seltmann 2022 04 01.csv)  
@@ -54,43 +54,41 @@ a. Seltmann, K. C., Dewey, D., McLaren, L., & Thrift, C. (2022). Native and non-
 b. GBIF.org (25 November 2020) GBIF Occurrence Download https://doi.org/10.15468/dl.2ebjjd  
   
   
-6. citation-list-type.csv  
+6. **citation-list-type.csv**  
 _A file that includes a list of citation type for each interaction._
   
   
-7. discoverlife-Anthophila-2022 04 01.csv  
+7. **discoverlife-Anthophila-2022 04 01.csv** 
 _A file that includes bee species names, resolved names, and relevant sources._
 
 Citations for bee names (discoverlife-Anthophila-2022 04 01.csv)  
 a. Ascher, J. S., & Pickering, J. (2020). Discover Life bee species guide and world checklist (Hymenoptera: Apoidea: Anthophila). https://www.discoverlife.org/mp/20q?guide=Apoidea_species
   
   
-8. final-globi-citations-unique 2022 01 21.csv  
+8. **final-globi-citations-unique 2022 01 21.csv**  
 _A file that includes the filtered down list of unique citations that have contributed entries to the final interaction dataset used for analyses._
   
   
-9. institutioncodes_2021_12_16.csv  
+9. **institutioncodes_2021_12_16.csv**
 _A file that includes all institutions included in the Symbiota Collections of Arthropods Network (SCAN) that can be merged with contributed entries in GloBI dataset. This matches allow us to attribute collections to different organizations._
 
 SCAN website: https://scan-bugs.org/portal/
   
   
-10. short_noapis_resolvedplantsci_041122.csv  
+10. **short_noapis_resolvedplantsci_041122.csv**  
 _A file that includes the published (as of 2022) Santa Cruz Island plant checklist. Additional phenology data was collected from Calflora and addiitonal trait data were coded using photographs on Calflora and the Jepson eFlora by Michelle Lee. The full plant list was then filtered down to only include plant species in genera that had a recorded interaction with the bees in our GloBI dataset._
 
 Citations for plantlist (short_noapis_resolvedplantsci_041122.csv)  
 a. Hasenstab-Lehman, K.E., Guilliams, C.M., & Junak, S.A. (2022). Checklist of the Vascular Flora of Santa Cruz Island, California, Version 2  
 b. Calflora: Information on California plants for education, research and conservation. (2022). Berkeley, California: The Calflora Database [a Non-Profit Organization]. https://www.calflora.org  
 c. Jepson Flora Project (eds.) 2022. Jepson eFlora, https://ucjeps.berkeley.edu/eflora/   
-
-  
-  
-Citations for bee trait datasets:  
-1. LaBerge, W. E. 1989. A revision of the bees of the genus Andrena of the Western Hemisphere. Part XIII. Subgenera Simandrena and Taeniandrena. Transactions of the American Entomological Society 115: 1-56.  
-2. LaBerge, W. E. 1985. A revision of the bees of the genus Andrena of the Western Hemisphere. Part XI. Minor subgenera and subgeneric key. Transactions of the American Entomological Society 111: 440-567.  
-3. LaBerge, W. E., Ribble, D. W. 1975. A revision of the bees of the genus Andrena of the Western Hemisphere. Part VII. Subgenus Euandrena. Transactions of the American Entomological Society 101: 371-446.  
-4. Thorp, R. W., LaBerge, W. E., 2005. A revision of the bees of the genus Andrena of the Western Hemisphere. Part XV. Subgenus Hesperandrena. Illinois Natural History Survey Bulletin 37: 65-93.  
-5. LaBerge, W. E. 1977. A revision of the bees of the genus Andrena of the Western Hemisphere. Part VIII. Subgenera Thysandrena, Dasyandrena, Psammandrena, Rhacandrena, Euandrena, Oxyandrena. Transactions of the American Entomological Society 103: 1-144.  
+ 
+**Citations for bee trait datasets: ** 
+1. LaBerge, W. E. 1989. A revision of the bees of the genus _Andrena_ of the Western Hemisphere. Part XIII. Subgenera Simandrena and Taeniandrena. Transactions of the American Entomological Society 115: 1-56.  
+2. LaBerge, W. E. 1985. A revision of the bees of the genus _Andrena_ of the Western Hemisphere. Part XI. Minor subgenera and subgeneric key. Transactions of the American Entomological Society 111: 440-567.  
+3. LaBerge, W. E., Ribble, D. W. 1975. A revision of the bees of the genus _Andrena_ of the Western Hemisphere. Part VII. Subgenus Euandrena. Transactions of the American Entomological Society 101: 371-446.  
+4. Thorp, R. W., LaBerge, W. E., 2005. A revision of the bees of the genus _Andrena_ of the Western Hemisphere. Part XV. Subgenus Hesperandrena. Illinois Natural History Survey Bulletin 37: 65-93.  
+5. LaBerge, W. E. 1977. A revision of the bees of the genus _Andrena_ of the Western Hemisphere. Part VIII. Subgenera _Thysandrena_, _Dasyandrena_, Psammandrena, Rhacandrena, Euandrena, Oxyandrena. Transactions of the American Entomological Society 103: 1-144.  
 6. Ribble, D. W. 1968. Revisions of two subgenera of Andrena, Micrandrena Ashmead and Derandrena new subgenus (Hymenoptera: Apoidea). Bulletin of the University of Nebraska State Museum 8: 1-124.  
 7. Thorp, R. W. 1969. Systematics and ecology of bees of the subgenus Diandrena (Hymenoptera: Andrenidae). University of California Publications in Entomology 52: 1-146.  
 8. Bouseman, J. K., LaBerge, W. E. 1978. A revision of the bees of the genus Andrena of the Western Hemisphere. Part IX. Subgenus Melandrena. Transactions of the American Entomological Society 104: 275-390.  
