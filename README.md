@@ -31,11 +31,11 @@ Data used from the Global Biotic Interactions website are constantly being updat
 Datasets used in this analysis are listed below.
 
 1. Bee traits for checklist species - coloration_NEW.csv  
-_A file that includes color patterns of bees coded by Yolanda Diao from bee images, using references 1-80._
+_A file that includes color patterns of bees coded by Yolanda Diao from bee images, using references 1-81._
   
   
 2. Bee traits for checklist species - size.csv  
-_A file of bee size compiled by Yolanda Diao._
+_A file of bee size compiled by Yolanda Diao, using references 82-83._
 
 Citations for bee size trait (Bee traits for checklist species - size.csv)  
 Wilson, Joseph S., and Olivia Messinger Carril.  2016. The Bees in Your Backyard: A Guide to North America’s Bees. Princeton University Press. http://www.jstor.org/stable/j.ctt15hvxqg.  
