@@ -39,11 +39,18 @@ A file of bee size as reported in (citations)
 7. discoverlife-Anthophila-2022 04 01.csv
 8. final-globi-citations-unique 2022 01 21.csv
 9. institutioncodes_2021_12_16.csv
+
+SCAN website: https://scan-bugs.org/portal/
+
+
 10. short_noapis_resolvedplantsci_041122.csv
 
-Citations for plantlist (short_noapis_resolvedplantsci_041122.csv)
-1. Hasenstab-Lehman, K. E., Guilliams, C. M., & Junak, S. A. (2022). Checklist of the Vascular Flora of Santa Cruz Island, California, Version 2
-2. Calflora: Information on California plants for education, research and conservation. (2022). Berkeley, California: The Calflora Database [a Non-Profit Organization]. https://www.calflora.org
+A file that includes the published (as of 2022) Santa Cruz Island plant checklist. Additional phenology data was collected from Calflora and addiitonal trait data were coded using photographs on Calflora and the Jepson eFlora by Michelle Lee. The full plant list was then filtered down to only include plant species in genera that had a recorded interaction with the bees in our GloBI dataset.
+
+Citations for plantlist (short_noapis_resolvedplantsci_041122.csv)  
+a. Hasenstab-Lehman, K. E., Guilliams, C. M., & Junak, S. A. (2022). Checklist of the Vascular Flora of Santa Cruz Island, California, Version 2  
+b. Calflora: Information on California plants for education, research and conservation. (2022). Berkeley, California: The Calflora Database [a Non-Profit Organization]. https://www.calflora.org  
+c. Jepson Flora Project (eds.) 2022. Jepson eFlora, https://ucjeps.berkeley.edu/eflora/  
 
 ## Repository Directory
 ### [Code](https://github.com/lee-michellej/globi_tritrophic_networks/tree/master/Code): Contains code for modeling, analysis, and results
