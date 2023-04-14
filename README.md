@@ -30,7 +30,7 @@ Data used from the Global Biotic Interactions website are constantly being updat
 ## Other Datasets: 
 Datasets used in this analysis are listed below.
 
-1.**Bee traits for checklist species - coloration_NEW.csv** 
+1. **Bee traits for checklist species - coloration_NEW.csv** 
 _A file that includes color patterns of bees coded by Yolanda Diao from bee images, using references 1-81._
   
   
