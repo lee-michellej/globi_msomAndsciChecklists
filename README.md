@@ -30,6 +30,10 @@ _A file that includes color patters of bees coded by Yolanda Diao from bee image
   
 2. Bee traits for checklist species - size.csv  
 _A file of bee size compiled by Yolanda Diao._
+
+Citations for bee size trait (Bee traits for checklist species - size.csv)  
+Wilson, Joseph S., and Olivia Messinger Carril.  2016. The Bees in Your Backyard: A Guide to North America’s Bees. Princeton University Press. http://www.jstor.org/stable/j.ctt15hvxqg.  
+Griswold, T. 1986. Notes on the nesting biology of Protosmia (Chelostomopsis) rubifloris (Cockerell) (Hymenoptera: Megachilidae). The Pan-Pacific Entomologist 62: 84–87.  
   
   
 3. Bee traits for checklist species - sociality.csv  
