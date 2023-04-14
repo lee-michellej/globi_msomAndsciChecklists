@@ -108,7 +108,7 @@ Cockerell, T.D.A. 1910. "New and Little-known Western Bees." Entomological News,
 Cockerell, Theodore D. A. (Theodore Dru Alison). 1911. “LXXXIX.—Descriptions and Records of Bees—XL.” The Annals and Magazine of Natural History; Zoology, Botany, and Geology 8: 763 - 770.  
 Cockerell, Theodore D. A. (Theodore Dru Alison). 1907. “LXIV.—Descriptions and Records of Bees—XIV.” The Annals and Magazine of Natural History; Zoology, Botany, and Geology 19: 531 - 540.  
 Michener, Charles D. 1937. "The Bees of the Genera Chelostomopsis, Formicapis, Robertsonella and Prochelostoma.(Hymen: Megachilidae)" Entomological News, and Proceedings of the Entomological Section of the Academy of Natural Sciences of Philadelphia 48: 127 - 32.  
-"Descriptions of new North American Hymenopters, and observations on some already described." American Entomology : A Description of the Insects of North American, with Illustrations Drawn and Colored after Nature 2: 642 - 766.  
+"Descriptions of new North American Hymenopters, and observations on some already described." American Entomology : A Description of the Insects of North American, with Illustrations Drawn and Colored after Nature 2: 642 - 766.
   
   
 2. Bee traits for checklist species - size.csv  
