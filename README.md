@@ -46,7 +46,7 @@ _A file of bee sociality compiled by Yolanda Diao, using references 84-163._
 _A list of bees included in the GloBI interaction dataset that were not included in the Discover Life bee name synonym list._
   
   
-5.**SCI checklist and phenology - SCI checklists and phenology - Seltmann 2022 04 01.csv**  
+5. **SCI checklist and phenology - SCI checklists and phenology - Seltmann 2022 04 01.csv**  
 _A file that includes the published (as of October 17, 2022) Santa Cruz Island bee checklist. Phenology data was compiled using the bee checklist and searching for every occurrence of each species in GBIF. An binary observation/no observation was established for every month of the year based on these occurrence data._
 
 Citations for SCI bee checklist (SCI checklist and phenology - SCI checklists and phenology - Seltmann 2022 04 01.csv)  
