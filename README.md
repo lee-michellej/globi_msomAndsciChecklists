@@ -4,7 +4,7 @@
 
 ### In prep
 DOI for release  
-[![DOI](https://zenodo.org/badge/295513071.svg)](https://zenodo.org/badge/latestdoi/295513071)
+[![DOI](https://zenodo.org/badge/DOI/10.5281/zenodo.7830204.svg)](https://doi.org/10.5281/zenodo.7830204)
   
 [```Abstract```](#Abstract) / [```Methods```](#Methods) / [```Interaction Dataset```](#interaction-dataset) / [```Other Datasets```](#other-datasets) /  [```Repository Directory```](#repository-directory)
 
