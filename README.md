@@ -3,7 +3,9 @@
 ### [MICHELLE J. LEE](https://michelleleelifesci.weebly.com/), [GRAZIELLA V. DIRENZO](https://grazielladirenzo.weebly.com), & [KATJA C. SELTMANN](https://orcid.org/0000-0001-5354-6048)
 
 ### In prep
-
+DOI for release  
+[![DOI](https://zenodo.org/badge/295513071.svg)](https://zenodo.org/badge/latestdoi/295513071)
+  
 [```Abstract```](#Abstract) / [```Methods```](#Methods) / [```Interaction Dataset```](#interaction-dataset) / [```Other Datasets```](#other-datasets) /  [```Repository Directory```](#repository-directory)
 
 ### Please contact either Michelle or Grace for questions about the code or data
