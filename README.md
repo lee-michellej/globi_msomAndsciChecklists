@@ -167,7 +167,7 @@ _A file that includes the published (as of 2022) Santa Cruz Island plant checkli
 Citations for plantlist (short_noapis_resolvedplantsci_041122.csv)  
 a. Hasenstab-Lehman, K.E., Guilliams, C.M., & Junak, S.A. (2022). Checklist of the Vascular Flora of Santa Cruz Island, California, Version 2  
 b. Calflora: Information on California plants for education, research and conservation. (2022). Berkeley, California: The Calflora Database [a Non-Profit Organization]. https://www.calflora.org  
-c. Jepson Flora Project (eds.) 2022. Jepson eFlora, https://ucjeps.berkeley.edu/eflora/  
+c. Jepson Flora Project (eds.) 2022. Jepson eFlora, https://ucjeps.berkeley.edu/eflora/   
 
 ## Repository Directory
 ### [Code](https://github.com/lee-michellej/globi_tritrophic_networks/tree/master/Code): Contains code for modeling, analysis, and results
