@@ -114,6 +114,11 @@ setwd("~/globi_tritrophic_networks/")
 dat <- read.csv("resolvedplantnamesglobi_011722.csv")
 
 
+
+# Covariate data files can be found here:
+# Michelle Lee, & Katja Seltmann. (2023). lee-michellej/globi_msomAndsciChecklists: Manuscript release (1.0.1). Zenodo. https://doi.org/10.5281/zenodo.7830204
+
+
 # Read in bee phenology data with the bee checklist names
 bee.list <- read.csv("./Data/SCI checklist and phenology - SCI checklists and phenology - Seltmann 2022 04 01.csv")
 

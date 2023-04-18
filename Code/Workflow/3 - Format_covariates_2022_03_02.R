@@ -51,6 +51,8 @@ setwd("~/globi_tritrophic_networks/")
 
 
 
+# Covariate data files can be found here:
+# Michelle Lee, & Katja Seltmann. (2023). lee-michellej/globi_msomAndsciChecklists: Manuscript release (1.0.1). Zenodo. https://doi.org/10.5281/zenodo.7830204
 
 
 
