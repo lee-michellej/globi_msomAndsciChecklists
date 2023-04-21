@@ -1,14 +1,12 @@
 ## LEVERAGING LOCAL EFFORTS TO SOLVE REGIONAL-SCALE ECOLOGICAL QUESTIONS: USING MULTIPLE SOURCES OF DATA AND A MULTI-SPECIES OCCUPANCY MODEL TO EXPLORE BEE-PLANT INTERACTIONS
 
-### [MICHELLE J. LEE](https://michelleleelifesci.weebly.com/), [GRAZIELLA V. DIRENZO](https://grazielladirenzo.weebly.com), & [KATJA C. SELTMANN](https://orcid.org/0000-0001-5354-6048)
+### [Michelle J. Lee](https://michelleleelifesci.weebly.com/), Chengyi Diao & [Katja C. Seltmann](https://orcid.org/0000-0001-5354-6048)
 
-### In prep
-DOI for release  
-[![DOI](https://zenodo.org/badge/DOI/10.5281/zenodo.7830204.svg)](https://doi.org/10.5281/zenodo.7830204)
+### Note
+This repository contains the other dataset files, including phenology, bee traits and plant trait files. We also include a link to the full interaction dataset from Global Biotic Interactions. These files should be downloaded before running the code associated with this manuscript. Please contact either Michelle or Katja for questions about the data contained within this archive.
+
   
-[```Abstract```](#Abstract) / [```Methods```](#Methods) / [```Interaction Dataset```](#interaction-dataset) / [```Other Datasets```](#other-datasets) /  [```Repository Directory```](#repository-directory)
-
-### Please contact either Michelle or Grace for questions about the code or data
+[```Abstract```](#abstract) / [```Methods```](#methods) / [```Interaction Dataset```](#interaction-dataset) / [```Other Datasets```](#other-datasets)
 __________________________________________________________________________________________________________________________________________
 
 ### Abstract: 
@@ -27,7 +25,6 @@ We are using an N-mixture model, with bee species as our "sites" and study as ou
 Data used from the Global Biotic Interactions website are constantly being updated. The version used for this paper were accessed on 14 September 2021. The data file can be found on https://zenodo.org/record/7753956 and can be downloaded directly. This file is not included in our github workflow as the files are too large. To run the following code, this data should be downloaded first.
 
 [![DOI](https://zenodo.org/badge/DOI/10.5281/zenodo.7753956.svg)](https://doi.org/10.5281/zenodo.7753956)
-
 
 ## Other Datasets: 
 Datasets used in this analysis are listed below.
@@ -250,8 +247,3 @@ c. Jepson Flora Project (eds.) 2022. Jepson eFlora, https://ucjeps.berkeley.edu/
 162. Michener, Charles D. 1937. "The Bees of the Genera Chelostomopsis, Formicapis, Robertsonella and Prochelostoma.(Hymen: Megachilidae)" Entomological News, and Proceedings of the Entomological Section of the Academy of Natural Sciences of Philadelphia 48: 127 - 32.  
 163. "Descriptions of new North American Hymenopters, and observations on some already described." American Entomology : A Description of the Insects of North American, with Illustrations Drawn and Colored after Nature 2: 642 - 766.  
   
-## Repository Directory
-### [Code](https://github.com/lee-michellej/globi_tritrophic_networks/tree/master/Code): Contains code for modeling, analysis, and results
-### [Data](https://github.com/lee-michellej/globi_tritrophic_networks/tree/master/Data): Contains CSV file of raw data
-### [Model](https://github.com/lee-michellej/globi_tritrophic_networks/tree/master/Model): Contains all material published online
-### [ModelOutput](https://github.com/lee-michellej/globi_tritrophic_networks/tree/master/ModelOutput): Contains all material published online
