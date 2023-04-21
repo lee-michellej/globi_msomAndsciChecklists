@@ -2,6 +2,9 @@
 
 ### [Michelle J. Lee](https://michelleleelifesci.weebly.com/), Chengyi Diao & [Katja C. Seltmann](https://orcid.org/0000-0001-5354-6048)
 
+[![DOI](https://zenodo.org/badge/DOI/10.5281/zenodo.7853396.svg)](https://doi.org/10.5281/zenodo.7853396)
+
+
 ### Note
 This repository contains the other dataset files, including phenology, bee traits and plant trait files. We also include a link to the full interaction dataset from Global Biotic Interactions. These files should be downloaded before running the code associated with this manuscript. Please contact either Michelle or Katja for questions about the data contained within this archive.
 
