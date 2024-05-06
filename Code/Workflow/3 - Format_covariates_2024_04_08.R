@@ -377,13 +377,13 @@ plant.covariates$aster <- ifelse(plant.covariates$Family == "Asteraceae", 1, 0)
 
 
 
-# Save all covaritates in a single object
+# Save all covariates in a single object
 covariates <- list(bee.covariates = bee.covariates,
                    plant.covariates = plant.covariates,
                    citation.covariates = citation.covariates)
 
 
-save(covariates, file = "./Data/model_covariates - 2024 04 08 - no apis.rds")
+save(covariates, file = "./Data/model_covariates - 2024 05 01 - no apis.rds")
 
 
 

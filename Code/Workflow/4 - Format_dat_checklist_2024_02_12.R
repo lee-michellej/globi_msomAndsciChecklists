@@ -144,14 +144,14 @@ setwd("~/globi_tritrophic_networks/")
   # This data was downloaded from globi 
   # resolvedplantnamesglobi_011722csv.zip = This is the whole Globi csv file- with the new resolvedPLant names column
 dat <- read.csv("./Data/resolvedplantnamesglobi_12feb24.csv")
-
+#dat <- read.csv("/Volumes/SanDisk/LARGE_globiDataFiles/resolvedplantnamesglobi_12feb24.csv")
 
 # Read in bee phenology data with the bee checklist names
 bee.list <- read.csv("./Data/SCI checklist and phenology - SCI checklists and phenology - Seltmann 2022 04 01.csv")
 
 
-bee.names <- read_tsv("~/Downloads/bee-taxonomy.tsv")
-bee.names.jan24 <- read_tsv("~/Downloads/discoverlife-January-05-2024.tsv") %>% 
+bee.names <- read_tsv("/Volumes/SanDisk/LARGE_globiDataFiles/bee-taxonomy.tsv")
+bee.names.jan24 <- read_tsv("/Volumes/SanDisk/LARGE_globiDataFiles/discoverlife-January-05-2024.tsv") %>% 
   dplyr::select(1:11)
 colnames(bee.names.jan24) <- c("providedExternalId",
                                "providedName",
@@ -177,7 +177,7 @@ bee.names.globi <- read.csv("./Data/Globi-names-not-in-discoverlife - Sheet1 202
 # these are names that were manually edited by Katja
 # sourceTaxonSpeciesName --> resolvedBeeNames 
 
-bee.names.bigbeenetwork <- read.csv("~/Downloads/names-aligned.csv")
+bee.names.bigbeenetwork <- read.csv("/Volumes/SanDisk/LARGE_globiDataFiles/names-aligned.csv")
 # providedName --> alignedSpeciesName
 
 bee.names.editmar24 <- read.csv("./Data/globibees_namesmissing_26mar24.csv")
@@ -416,57 +416,10 @@ end.time <- Sys.time()
 #beepr::beep(1)
 
 
-# tidyverse to replace name ========
-
-# take the needed columns from all of the databases
-beename1 <- bee.names.orig %>% 
-  dplyr::select(providedName, resolvedName) %>% 
-  dplyr::rename(name = "providedName",
-                resolvedBeeNames = "resolvedName") %>% 
-  mutate(ds = "orig")
-
-beename2 <- bee.names.bigbeenetwork %>% 
-  dplyr::select(providedName, alignedSpeciesName) %>% 
-  dplyr::rename(name = "providedName",
-                resolvedBeeNames = "alignedSpeciesName")%>% 
-  mutate(ds = "bigbee")
-
-beename3 <- bee.names.globi %>% 
-  dplyr::select(sourceTaxonSpeciesName, resolvedBeeNames) %>% 
-  dplyr::rename(name = "sourceTaxonSpeciesName")%>% 
-  mutate(ds = "katedit")
-
-beename4 <- bee.names.editmar24 %>% 
-  dplyr::select(name, resolvedName) %>% 
-  dplyr::rename(resolvedBeeNames = "resolvedName") %>% 
-  mutate(ds = "micedit")
-
-# rbind them
-beenamesALL <- rbind(beename1, beename2, beename3, beename4) %>% 
-  distinct()
-
-# check which names are repeated
-checkrepeats <- beenamesALL %>% 
-  group_by(name) %>% 
-  mutate(rep = duplicated(name)) %>% 
-  filter(rep == "TRUE") %>% 
-  arrange(name)
-  
-
-
-# then left join
-dat2 <- dat1 %>% 
-  dplyr::select(-resolvedBeeNames) %>% 
-  left_join(beenamesALL, by = c("sourceTaxonSpeciesName" = "name"))
-
-
-
-
-
 
 
 # Determine amount of time to run for loop =======
-end.time - start.time
+end.time - start.time # 5 min
 
 
 # Pull out the rows in the GLobi dataset that were NOT matched with any species names in the synoynm list (from Zenodo) - i.e., produced an NA, a "no:match" or a blank
@@ -526,8 +479,6 @@ unique.rows <- not.matched.bee.rows %>%
 
 
 
-
-
 # Next we need to update our bee checklist/phenology object with the resolvedNames
 
 # Make a new column for the resolvedBeeNames
@@ -555,14 +506,18 @@ for(i in 1:nrow(bee.list)){
     
     bee.list$resolvedBeeNames[i] <- as.character(bee.names.globi$resolvedBeeNames[row.num.kat])
     
-    }
+  }
   
 }
 
 # Pull out the rows in the bee.list dataset that were NOT matched with any species names in the synoynm list (from Zenodo)
-  # All should have matches
+# All should have matches
+# This should return a vector of length 0
 bee.list[is.na(bee.list$resolvedBeeNames) == TRUE |
-               bee.list$resolvedBeeNames == "no:match", ]
+           bee.list$resolvedBeeNames == "no:match", ]
+
+
+
 
 
 
@@ -602,8 +557,8 @@ plant.species <- unique(plant.phenology$scientificName)
 plant.phenology2 <- filter(plant.phenology, plant.phenology$resolvedPlantNames %in% dat3$resolvedPlantNames)
 plant.species2 <- unique(plant.phenology2$scientificName)
 
-length(plant.species)
-
+length(plant.species) # 566 plants
+length(plant.species2) # 164 plants as of 2024
 
 
 # Add 2 empty columns to fill in  
@@ -627,7 +582,7 @@ for(i in 1:nrow(dat1)){
 end.time <- Sys.time()
 
 # How long did it take to run the loop?
-end.time - start.time
+end.time - start.time # 3 min
 beepr::beep(1)
 
 
@@ -675,140 +630,9 @@ nrow(dat2)
 
 
 
-
-
-
-
-# 7. Visualize the data - Make a map with the data point -------------------------------------------------------
-
-
-
-
-# Look at the first few rows
-head(dat2)
-
-
-# Determine which rows do not have lat long data
-dat2.5 <- dat2[is.na(dat2$decimalLatitude) == TRUE & is.na(dat2$decimalLongitude) == TRUE,]
-
-
-
-# Remove rows with NA in Lat long
-dat3 <- dat2[is.na(dat2$decimalLatitude) == FALSE & is.na(dat2$decimalLongitude) == FALSE,]
-
-# Number of rows
-  # 4,640
-nrow(dat3)
-
-# Add a column with 1's
-dat3$Prez <- 1
-
-# Summarize the data by lat/long
-dat4 <- ddply(.data = dat3, 
-      .variable = c("decimalLongitude", "decimalLatitude"), 
-      .fun = summarize,
-      total = sum(Prez))
-
-
-# Coordinates
-longlats <- SpatialPoints(dat3[, c("decimalLongitude", "decimalLatitude")], 
-                         proj4string=CRS("+proj=longlat +datum=WGS84")) 
-
-names(longlats) <- NULL
-min.vals <- apply(as.data.frame(longlats), 2, min)
-max.vals <- apply(as.data.frame(longlats), 2, max)
-
-bbox <- c(left = min.vals[1] - 0.02,
-          bottom = min.vals[2]- 0.02, 
-          right = max.vals[1] + 0.02, 
-          top = max.vals[2] + 0.02)
-
-names(bbox) <- c("left", "bottom", "right", "top")
-
-#g.map <- ggmap(get_stamenmap(bbox, zoom = 3, maptype = "terrain"))+
-#  geom_point(data = dat4, aes(y = decimalLatitude, x = decimalLongitude, #size = log10(total)))+
-#  ylab("Latitude")+
-#  xlab("Longitude")+
-#  theme_bw()+ 
-#  theme(axis.text.x = element_text(size = 17, color = "black"), 
-#        axis.text.y = element_text(size = 17, color = "black"), 
-#        axis.title.y = element_text(size = 17, color = "black"), 
-#        axis.title.x =element_text(size = 17, color = "black"),
-#        legend.title =element_text(size = 17, color = "black"),
-#        legend.text =element_text(size = 17, color = "black"),
-#        panel.grid.major = element_blank(), 
-#        panel.grid.minor = element_blank())
-#
-#g.map
-
-#ggsave("./Figures/Globi_map_2022_01_14.pdf", height = 12, width = 15)
-
-
-
-
-# Subset the data from SLO to SD
-  # Lat from 31 - 36
-  # Long from -125 to -116
-
-dat5 <- dat4[dat4$decimalLatitude > 30 & dat4$decimalLatitude < 36 &
-           dat4$decimalLongitude > -150 & dat4$decimalLongitude < -116, ]
-
-sum(dat5$total)
-  # 412
-
-
-# Coordinates
-longlats2 <- SpatialPoints(dat5[, c("decimalLongitude", "decimalLatitude")], 
-                          proj4string=CRS("+proj=longlat +datum=WGS84")) 
-
-names(longlats2) <- NULL
-min.vals2 <- apply(as.data.frame(longlats2), 2, min)
-max.vals2 <- apply(as.data.frame(longlats2), 2, max)
-
-bbox2 <- c(left = min.vals2[1] - 0.02,
-          bottom = min.vals2[2]- 0.02, 
-          right = max.vals2[1] + 0.02, 
-          top = max.vals2[2] + 0.02)
-
-names(bbox2) <- c("left", "bottom", "right", "top")
-
-g.map2 <- ggmap(get_stamenmap(bbox2, zoom = 8, maptype = "terrain"))+
-  geom_point(data = dat5, aes(y = decimalLatitude, 
-                              x = decimalLongitude, 
-                              size = total),
-             fill = "darkgoldenrod3",
-             pch = 21)+
-  ylab("Latitude")+
-  xlab("Longitude")+
-  theme_bw()+ 
-  theme(axis.text.x = element_text(size = 17, color = "black"), 
-        axis.text.y = element_text(size = 17, color = "black"), 
-        axis.title.y = element_text(size = 17, color = "black"), 
-        axis.title.x =element_text(size = 17, color = "black"),
-        legend.title =element_text(size = 17, color = "black"),
-        legend.text =element_text(size = 17, color = "black"),
-        panel.grid.major = element_blank(), 
-        panel.grid.minor = element_blank())+
-  guides(size=guide_legend(title="Total \nsample \nsize"))
-
-g.map2
-
-ggsave("./Figures/Globi_CA_map_2023_02_23.pdf", 
-       height = 10, width = 12)
-
-
-
-# Now subset the actual checklist database to the lat/long indicated here
-dat6 <- dat3[dat3$decimalLatitude > 30 & dat3$decimalLatitude < 36 &
-             dat3$decimalLongitude > -150 & dat3$decimalLongitude < -116, ]
-
-# Number of observations
-  # 412
-nrow(dat6)
-
-
-
-
+# 7. HAS BEEN REMOVED WITH THIS WORKFLOW --------------------
+# To see the previous code used for this step, look at the older version.
+# We have removed this geography filter step in order to increase the overall sample size.
 
 
 # 8. Add a new column to globi data with the institution codes to replace SCAN citation -------------------------------------------------------
@@ -821,11 +645,11 @@ nrow(dat6)
 
 # The institution codes can be found in this column of the Globi database:
   # sourceInstitutionCode
-  # the previous dataset used sourceCatalogNumber to split into institution code segments, but this column has become much less succinct in the latest upload of data
+  # the previous dataset used sourceCatalogNumber to split into institution code segments, 
+  # but this column has become much less succinct in the latest upload of data
 
 # Here, we subset the data to those that have a SCAN sourceCitation
 # after looking at scan-specific data, it looks like there is only one source that should be split: ESSIG-UTB
-
 
 # The column sourceInstitutionCode does not need to be modified
 
@@ -904,9 +728,6 @@ citations <- levels(as.factor(dat2$resolvedSource))
 
 # Write the file with the final list of source names
 #write.csv(citations, "./Data/final-globi-citations-unique 2024 04 07.csv")
-
-
-
 
 
 # 9. Format the date column in globi data -------------------------------------------------------
@@ -1029,7 +850,7 @@ length(bee.species) *
 
 
 # Use this file WITHOUT Apis
-  load("Data/bee_plant_inter_2022_04_11 - short plant - no apis.rds")
+  load("Data/bee_plant_inter_2024_04_07 - short plant - no apis.rds")
 
 
 
@@ -1073,12 +894,12 @@ b <- 1
   # This takes 1.7 hrs to run
 start.time <- Sys.time()
 
-for(i in 1:nrow(bee.plant.date.cite)){ # For each bee species
+ for(i in 1:nrow(bee.plant.date.cite)){ # For each bee species
   for(j in 1:ncol(bee.plant.date.cite)){ # For each plant species
     for(k in 1:dim(bee.plant.date.cite)[3]){ # for each month
 
       # There is a row in the plant.phenology table that is all NA - we need to kip it
-     # if(is.na(plant.phenology[j, k + 26]) == FALSE){
+      #if(is.na(plant.phenology[j, k + 26]) == FALSE){
 
 
         # Possible interactions
@@ -1394,8 +1215,6 @@ save(bee.plant.obs, file= "./Data/bee_plant_obs_2024_04_07 - short plant list - 
  
 # Save the file
 write.csv(bee.plant.obs, file = "./Data/bee-plant-obs-long-format 2024 04 07 - short plant list - no apis.csv")
-
-
 
 
 
