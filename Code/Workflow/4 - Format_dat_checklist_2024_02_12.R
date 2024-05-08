@@ -149,8 +149,10 @@ dat <- read.csv("./Data/resolvedplantnamesglobi_12feb24.csv")
 # Read in bee phenology data with the bee checklist names
 bee.list <- read.csv("./Data/SCI checklist and phenology - SCI checklists and phenology - Seltmann 2022 04 01.csv")
 
-
+# Bee name list from Dorey et al. paper
 bee.names <- read_tsv("/Volumes/SanDisk/LARGE_globiDataFiles/bee-taxonomy.tsv")
+
+# Bee name list from Discover Life (published on Zenodo:https://zenodo.org/records/10463762)
 bee.names.jan24 <- read_tsv("/Volumes/SanDisk/LARGE_globiDataFiles/discoverlife-January-05-2024.tsv") %>% 
   dplyr::select(1:11)
 colnames(bee.names.jan24) <- c("providedExternalId",
@@ -167,19 +169,21 @@ colnames(bee.names.jan24) <- c("providedExternalId",
                                )
 # providedName --> relationName
 
-
-
-
+# Bee name list from Discover Life that was used in previous script
 bee.names.orig <- read.csv("./Data/discoverlife-Anthophila-2022 04 01.csv")
 # providedName --> resolvedName
 
+# Bee name list that Katja generated previously for Globi Names not included in Discover Life
 bee.names.globi <- read.csv("./Data/Globi-names-not-in-discoverlife - Sheet1 2022 04 01.csv")
 # these are names that were manually edited by Katja
 # sourceTaxonSpeciesName --> resolvedBeeNames 
 
+# Bee name list from the Big Bee Network that Katja and others.
+# This file deals with a lot of the typos we were having issues with.
 bee.names.bigbeenetwork <- read.csv("/Volumes/SanDisk/LARGE_globiDataFiles/names-aligned.csv")
 # providedName --> alignedSpeciesName
 
+# Bee name list from Michelle that was a manual edit to match the last few names that were unmatched by above lists.
 bee.names.editmar24 <- read.csv("./Data/globibees_namesmissing_26mar24.csv")
 # name --> resolvedName
 
@@ -361,6 +365,7 @@ for(i in 1:nrow(dat1)){
 
   # big bee network name resolver: providedName --> alignedSpeciesName
   row.num.bigbee <- which(dat1$sourceTaxonSpeciesName[i] == bee.names.bigbeenetwork$providedName)[1]
+  # using another column from the big bee list
   row.num.bigbee2 <- which(dat1$sourceTaxonSpeciesName[i] == bee.names.bigbeenetwork$parsedName)[1]
   
   
@@ -370,6 +375,7 @@ for(i in 1:nrow(dat1)){
   # michelle's manual edit march 24: name --> resolvedName
   row.num.mic <- which(dat1$sourceTaxonSpeciesName[i] == bee.names.editmar24$name)[1]
   
+  # Discover life download from the start of January 2024
   row.num.jan <- which(dat1$sourceTaxonSpeciesName[i] == bee.names.jan24$providedName)[1]
   
   # The previous line needs to come back with a number to do the next command
@@ -382,7 +388,6 @@ for(i in 1:nrow(dat1)){
   }
 
   if (is.na(row.num.kat) == FALSE ) {
-
     dat1$resolvedBeeNames[i] <- as.character(bee.names.globi$resolvedBeeNames[row.num.kat])
 
   }
