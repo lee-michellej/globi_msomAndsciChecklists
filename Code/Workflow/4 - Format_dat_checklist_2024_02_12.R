@@ -116,9 +116,7 @@ library(tidyverse)
 library(ggplot2)
 library(dplyr)
 library(plyr)
-library(rgdal)
-library(sf)
-library(ggmap)
+
 
 # Set working directory
 setwd("~/globi_tritrophic_networks/")
@@ -166,12 +164,9 @@ bee.list <- read.csv("./Data/SCI checklist and phenology - SCI checklists and ph
 # To do this - we need to load several files, which were compiled from different sources with scientific bee name synonyms 
 #----- We need 6 separate files that store bee names 
 
-# Bee name list from Dorey et al. paper
-# bee.names <- read_tsv("/Volumes/SanDisk/LARGE_globiDataFiles/bee-taxonomy.tsv")
-bee.names <- read_tsv("/Users/gdirenzo/OneDrive - University of Massachusetts/_My-Projects/GloBi/Data/bee-taxonomy.tsv")
-
 # Bee name list from Discover Life (published on Zenodo:https://zenodo.org/records/10463762)
-#bee.names.jan24 <- read_tsv("/Volumes/SanDisk/LARGE_globiDataFiles/discoverlife-January-05-2024.tsv") %>% 
+# bee.names.jan24 <- read_tsv("/Volumes/SanDisk/LARGE_globiDataFiles/discoverlife-January-05-2024.tsv") %>% 
+#   dplyr::select(1:11)
 bee.names.jan24 <- read_tsv("/Users/gdirenzo/OneDrive - University of Massachusetts/_My-Projects/GloBi/Data/discoverlife-January-05-2024.tsv") %>% 
   dplyr::select(1:11)
 colnames(bee.names.jan24) <- c("providedExternalId",
@@ -354,11 +349,6 @@ length(globi.sp)
 colnames(bee.names.globi)[grep("Accepted.Name", colnames(bee.names.globi))] <- "resolvedBeeNames"
 
 
-# Look at the structure of the bee synonym list
-str(bee.names)
-  # canonical = latest name
-  # validName = list of all possible synoynms
- 
 str(bee.names.globi)
    # resolvedBeeNames = latest name
    # sourceTaxonSpeciesName = list of all possible synoynms
