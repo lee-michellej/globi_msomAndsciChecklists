@@ -114,9 +114,6 @@ library(tidyverse)
 library(ggplot2)
 library(dplyr)
 library(plyr)
-library(rgdal)
-library(sf)
-library(ggmap)
 
 # Set working directory
 setwd("~/globi_tritrophic_networks/")
@@ -163,10 +160,6 @@ bee.list <- read.csv("./Data/SCI checklist and phenology - SCI checklists and ph
 # In this code, we will go through all of the scientific bee names and identify synonyms & update them all to the latest nomenclature
 # To do this - we need to load several files, which were compiled from different sources with scientific bee name synonyms 
 #----- We need 6 separate files that store bee names 
-
-# Bee name list from Dorey et al. paper
-# bee.names <- read_tsv("/Volumes/SanDisk/LARGE_globiDataFiles/bee-taxonomy.tsv")
-bee.names <- read_tsv("/Users/gdirenzo/OneDrive - University of Massachusetts/_My-Projects/GloBi/Data/bee-taxonomy.tsv")
 
 # Bee name list from Discover Life (published on Zenodo:https://zenodo.org/records/10463762)
 #bee.names.jan24 <- read_tsv("/Volumes/SanDisk/LARGE_globiDataFiles/discoverlife-January-05-2024.tsv") %>% 
@@ -353,11 +346,6 @@ length(globi.sp)
 colnames(bee.names.globi)[grep("Accepted.Name", colnames(bee.names.globi))] <- "resolvedBeeNames"
 
 
-# Look at the structure of the bee synonym list
-str(bee.names)
-  # canonical = latest name
-  # validName = list of all possible synoynms
- 
 str(bee.names.globi)
    # resolvedBeeNames = latest name
    # sourceTaxonSpeciesName = list of all possible synoynms
@@ -371,8 +359,6 @@ dat1$sourceTaxonSpeciesName <- trimws(dat1$sourceTaxonSpeciesName, "both")
 
 
 # loop to replace bee synonym names =========
-
-# ? # Why doesn't this loop include the object bee.names?
 
 
 # Use a loop to go through each globi bee species list and try to find a match in the synonym list - if there is a match, then assign the resolvedName
@@ -473,23 +459,19 @@ write.csv(not.matched, "~/Downloads/globibees_namesmissing_30may24.csv", row.nam
 
 
 # Are there any no matches?
-  # 0 
   # May 2024 = 26
 length(which(dat1$resolvedBeeNames == "no:match"))
 
 # How many have NAs?
-  # 0 
   # May 2024 = 743
 length(which(is.na(dat1$resolvedBeeNames) == TRUE))
 
 # Are there any blanks?
-  # 393
   # May 2024 = 201
 length(which(dat1$resolvedBeeNames == ""))
 
 
 # Number of rows that did not produce matches
-  # 393
   # May 2024 = 970
 nrow(not.matched.bee.rows)
 
@@ -510,11 +492,13 @@ unique.rows <- not.matched.bee.rows %>%
 
 
 
-# ? # I will remove the species names that were not resolved
+# After reviewing the names that didn't match,
+# they were mostly sp. names or morphospecies descriptions. 
+# We remove the species names that were not resolved.
 dat1 <- dat1[-c(which(is.na(dat1$resolvedBeeNames) == TRUE |
                             dat1$resolvedBeeNames == "no:match" |
                             dat1$resolvedBeeNames == "")), ]
-
+# file now is 292473 rows
 
 
 
@@ -599,7 +583,7 @@ length(bee.species)
   # 516 species = complete list
   # 126 species = shortened list WITHOUT Apis
 plant.species <- unique(plant.phenology$scientificName)
-plant.phenology2 <- filter(plant.phenology, plant.phenology$resolvedPlantNames %in% dat1$resolvedPlantNames) # ? # This said dat3 - I changed to dat1
+plant.phenology2 <- filter(plant.phenology, plant.phenology$resolvedPlantNames %in% dat1$resolvedPlantNames)
 plant.species2 <- unique(plant.phenology2$scientificName)
 
 length(plant.species) # 566 plants
@@ -642,13 +626,12 @@ dat1$tot <- dat1$Plant + dat1$Insect
 remove.rows <- length(which(dat1$tot < 2))
 
 # How many rows will be removed?
-  # 152,735 --> 6 apr 2024, 283 888 rows will be removed
   # 28,2918 --> 28 May 2024
 remove.rows
 
 
 # How many rows will be kept?
-  # 5,158 --> 6 april 2024, 9 555 rows will be kept (of 292 473 records)
+  # 11068 rows will be kept (of 292 473 records)
 length(which(dat1$tot == 2))
 
 
@@ -671,8 +654,7 @@ dat2 <- droplevels(dat2)
 ##View(table(dat2$sourceCitation))
 
 # Number of observations
-  #  5,158 -->> 6 april 2024
-  # May 2024 = 9,555
+  # 11068
 nrow(dat2)
 
 nrow(dat1)
@@ -791,7 +773,7 @@ for(i in 1:nrow(dat2)){
 
 # Look at the numnber of unique citations
 citations <- levels(as.factor(dat2$resolvedSource))
-  # 48 unique citations
+  # 50 unique citations
 
 # Write the file with the final list of source names
 # write.csv(citations, "./Data/final-globi-citations-unique 2024 04 07.csv")
@@ -827,7 +809,7 @@ dat3 <- dat3[dat3$month != "",]
 
 # Save month as numeric
 dat3$month <- as.numeric(dat3$month)
-dat3 <- dat3[is.na(dat3$month) == FALSE,] # this brings down to 8590 observations
+dat3 <- dat3[is.na(dat3$month) == FALSE,] # this brings down to 9956 observations
 
 
 # Remove repeat observations
@@ -839,7 +821,7 @@ dat3 <- dat3 %>%
 dat3 <- dat3[is.na(dat3$resolvedSource) == FALSE,]
 
 nrow(dat3)
-  # this brings down to 8,281 observations
+  # this brings down to 9605 observations
 
 
 
@@ -907,9 +889,7 @@ end.time - start.time
 
 # How many possible interactions are there?
   # 129, 945
-  # although previous length of bee.plant.inter is 57 374
 nrow(bee.plant.inter)
- # this has decreased now to 88 665
 
 # Save the bee.plant.inter file
  # This file takes a while to generate - so in the future - we can just import it into this space
@@ -939,14 +919,10 @@ nrow(bee.plant.inter)
  
 
  # Total number of interactions by citations
- # 6,631,968
  length(bee.species) *
    length(plant.phenology2$resolvedPlantNames)* 
    12*
    length(citations)
- # updated 46 525 200 with all plant species
- # with shorted plant species list 13 480 800 
- 
  # May 2024 = 24 824 400
 
  
@@ -1001,9 +977,7 @@ end.time - start.time
 
 
 # Given the possible bee-plant interactions and the month that each citation went to the field, how many possible observations are there?
-  # 611,237 --> 
-# april 2024 954 270
-# May 2024 = 2 278 441
+# 2 278 441
 length(which(bee.plant.date.cite == 0))
 
 
@@ -1047,11 +1021,9 @@ beepr::beep(3)
 end.time - start.time
 
 # How many detections are in the dataframe?
-  # 278
   # Note that in some cases the same citation documents the same bee and plant interactions during the same month
 length(which(bee.plant.date.cite == 1))
-  # 2107 detections as of april 2024
-  # 2 746 detection as of May 2024 === Great! This matches nrow(dat5)
+  # 2 746 detection
 
 
 
@@ -1150,8 +1122,7 @@ head(y2)
 observed.but.not.possible <- y2[which(y2$y == 1 & is.na(y2$inter) == TRUE),]
 
 nrow(observed.but.not.possible) 
-  # 17 133
-  # 834 = May 2024
+  # 834
 
 
 
