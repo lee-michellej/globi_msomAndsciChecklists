@@ -884,12 +884,14 @@ start.time <- Sys.time()
 end.time <- Sys.time()
 beepr::beep(3)
 
+
 # How long did the loop take?
 end.time - start.time
 
 # How many possible interactions are there?
   # 129, 945
 nrow(bee.plant.inter)
+
 
 # Save the bee.plant.inter file
  # This file takes a while to generate - so in the future - we can just import it into this space
@@ -968,6 +970,7 @@ for(j in 1:length(citations)){
 
     
 }
+ # 9jun24 first bee species pulled is #138 when there should only be 137
 
 end.time <- Sys.time()
 beepr::beep(3)
@@ -1230,10 +1233,68 @@ write.csv(observed.but.not.possible,
 
 
 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 #------ GVD ended here
 
  
- 
+
+
+
+
+# MJL pick up 9 june 2024=======
+# You don't need to read in this file if you are already in the workflow
+# I read in the data to work with the file without running the above
+observed.but.not.possibleCHECK <- read_csv("./Data/globi-obs-not-possible 2024 05 30 - no apis.csv") %>% 
+  dplyr::select(beeID, plantID, monthID, Bee.Jan:Plant.Dec) %>% 
+  pivot_longer(Bee.Jan:Plant.Dec,
+               names_to = "month",
+               values_to = "yesno"
+               ) %>% 
+  separate_wider_delim(month, ".", names = c("beeplant", "monthlet")) %>% 
+  pivot_wider(names_from = beeplant,
+              values_from = beeplant) %>% 
+  filter(yesno == 1 & !is.na(Bee) & !is.na(Plant)) %>% 
+  mutate(monthphen = ifelse(monthlet == "Jan", 1,
+                            ifelse(monthlet == "Feb", 2,
+                                   ifelse(monthlet == "Mar", 3,
+                                          ifelse(monthlet == "Apr", 4,
+                                                 ifelse(monthlet == "May", 5,
+                                                        ifelse(monthlet == "Jun", 6,
+                                                               ifelse(monthlet == "Jul", 7,
+                                                                      ifelse(monthlet == "Aug", 8,
+                                                                             ifelse(monthlet == "Sep", 9,
+                                                                                    ifelse(monthlet == "Oct", 10, 
+                                                                                           ifelse(monthlet == "Nov", 11, 12)))))))))))) %>% 
+  mutate(diff = monthphen - monthID) %>% 
+  filter(diff > -3 & diff < 3)
+
+distinctoptions <- observed.but.not.possibleCHECK %>% 
+  dplyr::select(1:3) %>% 
+  distinct()
+  
+
+# 1 month wiggle = 317 observations that can be added back in
+# 2 month wiggle = 491 observations that can be added back in
+
+
  
  # I will look at these entries & decide how to proceed
 
