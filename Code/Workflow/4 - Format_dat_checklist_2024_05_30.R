@@ -1263,7 +1263,7 @@ write.csv(observed.but.not.possible,
 # You don't need to read in this file if you are already in the workflow
 # I read in the data to work with the file without running the above
 observed.but.not.possibleCHECK <- read_csv("./Data/globi-obs-not-possible 2024 05 30 - no apis.csv") %>% 
-  dplyr::select(beeID, plantID, monthID, Bee.Jan:Plant.Dec) %>% 
+  dplyr::select(beeName, plantName, beeID, plantID, monthID, Bee.Jan:Plant.Dec) %>% 
   pivot_longer(Bee.Jan:Plant.Dec,
                names_to = "month",
                values_to = "yesno"
@@ -1287,15 +1287,112 @@ observed.but.not.possibleCHECK <- read_csv("./Data/globi-obs-not-possible 2024 0
   filter(diff > -3 & diff < 3)
 
 distinctoptions <- observed.but.not.possibleCHECK %>% 
-  dplyr::select(1:3) %>% 
+  dplyr::select(beeID, beeName, plantID, plantName, monthID) %>% 
   distinct()
   
 
 # 1 month wiggle = 317 observations that can be added back in
 # 2 month wiggle = 491 observations that can be added back in
+# 3 month wiggle = 639 observations that can be added back in
+# 4 month wiggle = 717 observations that can be added back in
+# 5 month wiggle = 770 observations that can be added back in
+# 6 month wiggle = 793 observations that can be added back in
+# 7 month wiggle = 807 observations that can be added back in
 
 
  
+
+# Can we tell which geographic areas these observations are from?
+
+
+# dat5 has all observed combinations of beeplantcitationmonth:
+# columns of interest: resolvedBeeNames, resolvedPlantNames, resolvedSource, month
+
+# dat3 still has latitude and longitude data
+# columns of interest: resolvedBeeNames, resolvedPlantNames, resolvedSource, month, decimalLatitude, decimalLongitude
+
+
+# observed.but.not.possible also has these combinations
+# columns of interest: beeName, plantName, monthID
+
+
+
+# steps:
+# select the columns of interest from dat3
+dat.map.test <- dat3 %>% 
+  dplyr::select(resolvedBeeNames, resolvedPlantNames, resolvedSource, month, decimalLatitude, decimalLongitude) %>% 
+  distinct() %>% 
+  # create column in which bee-plant-date info is merged
+  dplyr::mutate(matchColumn = paste(resolvedBeeNames, resolvedPlantNames, month))
+# 4755 datapoints (more than dat5 because of the columns related to location)
+
+# create the same column in observed.but.not.possible
+impossibleDat <- observed.but.not.possible %>% 
+  dplyr::mutate(matchColumn = paste(beeName, plantName, monthID))
+
+
+# filter dat3 for rows that match combinations of observed.but.not.possible
+map.testdata <- filter(dat.map.test, dat.map.test$matchColumn %in% impossibleDat$matchColumn)
+# filtered 4755 to 1409
+
+
+# map these out
+
+library(sf)
+library(tmap)
+data("World")
+ca.shp <- read_sf("~/Downloads/ca_counties/CA_Counties.shp")
+
+
+coords <- map.testdata %>% 
+  filter(!is.na(decimalLatitude)) %>% 
+  st_as_sf(coords = c("decimalLongitude", "decimalLatitude"), crs = 4326)
+
+map1 <- tm_shape(ca.shp) +  # basemap
+  tm_borders() +
+  tm_shape(coords) + # dots shape
+  tm_dots(size = .3, col = "month")
+map1
+
+map <- tm_shape(World) +  # basemap
+  tm_borders() +
+  tm_shape(coords) + # dots shape
+  tm_dots(size = .3, col = "month")
+map
+
+
+# map 2 month wiggle
+
+wiggledat <- distinctoptions %>% 
+  dplyr::mutate(matchColumn = paste(beeName, plantName, monthID))
+  
+map.testwiggledata <- filter(dat.map.test, dat.map.test$matchColumn %in% wiggledat$matchColumn)
+
+coords2 <- map.testwiggledata %>% 
+  filter(!is.na(decimalLatitude)) %>% 
+  st_as_sf(coords = c("decimalLongitude", "decimalLatitude"), crs = 4326)
+
+map2.1 <- tm_shape(World) +  # basemap
+  tm_borders() +
+  tm_shape(coords2) + # dots shape
+  tm_dots(size = .3, col = "month")
+map2.1
+
+map2 <- tm_shape(ca.shp) +  # basemap
+  tm_borders() +
+  tm_shape(coords2) + # dots shape
+  tm_dots(size = .3, col = "month")
+map2
+
+
+
+
+
+
+
+
+
+
  # I will look at these entries & decide how to proceed
 
 
