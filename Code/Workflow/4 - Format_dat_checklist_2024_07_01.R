@@ -904,20 +904,23 @@ length(which(bee.plant.cite == 1))
 # Determine the number of unique bee-plant detections per citation
 tot.bee.plant <- apply(bee.plant.cite, c(3), sum, na.rm = TRUE)
 
-hist(tot.bee.plant, xlim = c(0, 100), breaks = 100)
+hist(tot.bee.plant, breaks = 100)
 
 sort(tot.bee.plant)
 
 # We will remove the sourceCitations with < 10 unique bee-plant interactions
-sourceCit.10.plus <- which(tot.bee.plant > 9)
+# sourceCit.10.plus <- which(tot.bee.plant > 9)
+
+# We will remove the sourceCitations with < 100 unique bee-plant interactions
+sourceCit.100.plus <- which(tot.bee.plant > 99)
 
 
-# Keeping the dimensions with tot.bee.plant 10 +
-bee.plant.cite <- bee.plant.cite[ , , sourceCit.10.plus]
+# Keeping the dimensions with tot.bee.plant 100 +
+bee.plant.cite <- bee.plant.cite[ , , sourceCit.100.plus]
 
 
 # List of soures we kept
-citations[sourceCit.10.plus]
+citations[sourceCit.100.plus]
 
 # Write csv file
 # write.csv(citations[sourceCit.10.plus],"./Data/sources.kept.2024.07.01.csv")
@@ -927,15 +930,26 @@ dim(bee.plant.cite)
 
 # Total number of unique bee-plant observations across all source citations
 sum(bee.plant.cite)
-  # 1,788
+  # 1,432
 
 # Number of unique combinations
 dim(bee.plant.cite)[1]*
   dim(bee.plant.cite)[2]*
   dim(bee.plant.cite)[3]
-  # 744,732
+  # 289,618
 
 
+# Create a list with other info about the data and the species order
+dat_info <- list()
+
+dat_info[[1]] <- bee.species
+
+dat_info[[2]] <- plant.species2
+
+dat_info[[3]] <- citations[sourceCit.100.plus]
+
+
+names(dat_info) <- c("bee.species", "plant.species", "citations")
 
 
 # 15. Save the data -------------------------------------------------------
@@ -943,7 +957,12 @@ dim(bee.plant.cite)[1]*
 
 # Save the 3-D array
 save(bee.plant.cite, 
-     file= "./Data/data_summary/globi_data_formatted_bee_plant_date_citation_2024_07_01 - short plant list - no apis.rds")
+     file= "./Data/data_summary/globi_data_formatted_bee_plant_date_citation_2024_07_11 - short plant list - no apis.rds")
+
+
+# Save the dat_info
+save(dat_info,
+     file = "./Data/dat_info_2024_07_11.rds")
 
 
 ## Save the subsetted Globi data

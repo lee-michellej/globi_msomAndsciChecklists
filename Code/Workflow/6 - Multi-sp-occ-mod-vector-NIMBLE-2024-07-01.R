@@ -88,9 +88,9 @@ setwd("~/globi_tritrophic_networks/")
 
 
 # Upload the data
-  # object name = bee.plant.date.cite
-  # 4-D array
-load("./Data/data_summary/globi_data_formatted_bee_plant_date_citation_2024_07_01 - short plant list - no apis.rds")
+  # object name = bee.plant.cite
+  # 3-D array
+load("./Data/data_summary/globi_data_formatted_bee_plant_date_citation_2024_07_11 - short plant list - no apis.rds")
 
 
 
@@ -165,13 +165,14 @@ run_MCMC_allcode <- function(seed){
   
   
   # Upload the data
-  # object name = bee.plant.date.cite
+  # object name = bee.plant.cite
   # 3-D array
-  load("./Data/data_summary/globi_data_formatted_bee_plant_date_citation_2024_07_01 - short plant list - no apis.rds")
+  load("./Data/data_summary/globi_data_formatted_bee_plant_date_citation_2024_07_11 - short plant list - no apis.rds")
  
  
   # Load covariates
-  load("./Data/model_covariates - 2024 07 01 - no apis.rds")
+  load("./Data/model_covariates - 2024 07 11 - no apis.rds")
+
   
   # Flatten the array
   dat_long <- melt(bee.plant.cite) 
@@ -182,34 +183,34 @@ run_MCMC_allcode <- function(seed){
   MEcode <- nimbleCode({
     
     # Priors
-    for(i in 1:n_bee_plant){ # For each bee species
+    for(i in 1:n_bee){ # For each bee species
       
       # Species-specific random effect for psi
         # psi = The bee-plant interaction probability
-      u[bee_ID[i], plant_ID[i]] ~ dnorm(mu_psi, tau_psi)
+      u[bee_ID[i]] ~ dnorm(0, sd = sigma_psi)
       
       # Species-specific random effect for p
         # p = The detection probability of documented a bee-plant interaction
-      v[bee_ID[i], plant_ID[i]] ~ dnorm(mu_p, tau_p)
+      v[bee_ID[i]] ~ dnorm(0, sd = sigma_p)
       
       
     }
     
     
     # Mean bee-plant interaction probability
-    mu_psi ~ dnorm(0, 0.368)
-
+    # mu_psi ~ dnorm(0, sd = 1.0)
+    
     # Precision and sd values for psi
-    tau_psi <- 1/(sigma_psi * sigma_psi)
-    sigma_psi ~ T(dnorm(0, sd = sqrt(1/2)), 0, 10)
+    # tau_psi <- 1/(sigma_psi * sigma_psi)
+    sigma_psi ~ T(dnorm(0.0, sd = 2.0), 0, 10)
 
     
     # Mean bee-plant detection probability
-    mu_p ~ dnorm(0, 0.368)
+    # mu_p ~dnorm(0, sd = 2.0)
     
     # Precision and sd values for p
-    tau_p <- 1/(sigma_p * sigma_p)
-    sigma_p ~ T(dnorm(0, sd = sqrt(1/2)), 0, 10)
+    # tau_p <- 1/(sigma_p * sigma_p)
+    sigma_p ~  T(dnorm(0.0, sd = 2.0), 0, 10)
 
     
     
@@ -217,13 +218,13 @@ run_MCMC_allcode <- function(seed){
     
     for (j in 1:ncov_psi){
 
-     beta_psi[j] ~ dnorm(0, 0.368)
+     beta_psi[j] ~ dnorm(0, sd = sqrt(1/0.368))
       
     }
     
     for (j in 1:ncov_p){
       
-      beta_p[j] ~ dnorm(0, 0.368)
+      beta_p[j] ~ dnorm(0, sd = sqrt(1/0.368))
       
     }
     
@@ -237,7 +238,7 @@ run_MCMC_allcode <- function(seed){
       # Make the bee-plant interaction probability of function of variables
       logit(psi[bee_ID[i], plant_ID[i]]) <- 
                           # Bee-plant species-specific random effect
-                          u[bee_ID[i], plant_ID[i]] +
+                          u[bee_ID[i]] +
         
                           # Intercept
                             # Average size bee
@@ -249,10 +250,11 @@ run_MCMC_allcode <- function(seed){
                           # Bee size
                           beta_psi[2] * size[bee_ID[i]]+ 
         
-                          # Bee solitary (1 = yes; 0 = no)
+                         # Bee solitary (1 = yes; 0 = no)
                           beta_psi[3] * solitary[bee_ID[i]]+ 
                           
-                          # Flower color
+                    # Flower color
+                        # Different bee genus have different probabilities of interacting with different plant colors
                           beta_psi[4] * yellow_flower_color[plant_ID[i]]+
                           beta_psi[5] * blue_flower_color[plant_ID[i]]+
                           beta_psi[6] * white_flower_color[plant_ID[i]]+
@@ -271,7 +273,7 @@ run_MCMC_allcode <- function(seed){
       
       logit(p[bee_ID[i], plant_ID[i], cite_ID[i]]) <-  
                             # Bee-plant species-specific random effect
-                            v[bee_ID[i], plant_ID[i]] +
+                            v[bee_ID[i]] +
         
                             # Intercept
                               # Not stripped
@@ -279,29 +281,31 @@ run_MCMC_allcode <- function(seed){
                               # Aggregated data type
                               # Flower color = other
                               # Flower shape = no bowl
-                              beta_p[1] +
-        
-                            # Bee Strippiness (1 = yes stripped; 0 = no stripped)
-                              beta_p[2] * stripped[bee_ID[i]]+
-        
-                            # Bee size
-                              beta_p[3] * size[bee_ID[i]]+
-        
-                            # sourceCitation type
-                              # Literature (1 = yes; 0 = no)
-                              beta_p[4] * citation_lit[cite_ID[i]]+
-                              # Collection (1 = yes; 0 = no)
-                              beta_p[5] * citation_col[cite_ID[i]]+
-        
-                            # Flower color (1 = yes yellow; 0 = no yellow)
-                              beta_p[6] * yellow_flower_color[plant_ID[i]]+
-                              # blue
-                              beta_p[7] * blue_flower_color[plant_ID[i]]+
-                              # white
-                              beta_p[8] * white_flower_color[plant_ID[i]]+            
-        
-                            # Flower shape (1 = yes bowl; 0 = no bowl)
-                              beta_p[9] * flower_shape[plant_ID[i]]
+                             beta_p[1] +
+      
+                           # Bee Strippiness (1 = yes stripped; 0 = no stripped)
+                             beta_p[2] * stripped[bee_ID[i]]+
+      
+                           # Bee size
+                             beta_p[3] * size[bee_ID[i]]+
+      
+                           # sourceCitation type
+                             # Literature (1 = yes; 0 = no)
+                             beta_p[4] * citation_lit[cite_ID[i]]+
+                             # Collection (1 = yes; 0 = no)
+                             beta_p[5] * citation_col[cite_ID[i]]+
+                             # Observation (1 = yes; 0 = no)
+                             beta_p[6] * citation_obs[cite_ID[i]]+
+      
+                           # Flower color (1 = yes yellow; 0 = no yellow)
+                             beta_p[7] * yellow_flower_color[plant_ID[i]]+
+                             # blue
+                             beta_p[8] * blue_flower_color[plant_ID[i]]+
+                             # white
+                             beta_p[9] * white_flower_color[plant_ID[i]]+            
+      
+                           # Flower shape (1 = yes bowl; 0 = no bowl)
+                             beta_p[10] * flower_shape[plant_ID[i]]
   
          
     }   
@@ -322,7 +326,6 @@ run_MCMC_allcode <- function(seed){
     # Total number of bees
     n_bee = dim(bee.plant.cite)[1],
     
-
     # bee * plant total
     n_bee_plant  = dim(bee.plant.cite)[1] * dim(bee.plant.cite)[2],
 
@@ -336,6 +339,7 @@ run_MCMC_allcode <- function(seed){
     # sourceCitation covariates
     citation_lit = covariates$citation.covariates$literature, 
     citation_col = covariates$citation.covariates$collection, 
+    citation_obs = covariates$citation.covariates$observation, 
     
     # Flower covariates - color
     yellow_flower_color  = covariates$plant.covariates$yellow,
@@ -347,7 +351,7 @@ run_MCMC_allcode <- function(seed){
     
     # Number of covariates
     ncov_psi = 7,
-    ncov_p = 9,
+    ncov_p = 10,
     
     # ID index
     bee_ID = dat_long$bee_ID,
@@ -374,12 +378,12 @@ run_MCMC_allcode <- function(seed){
     
     # Parameters
     # Occupancy
-    mu_psi = runif(1, -10 , -1),
+   # mu_psi = runif(1, -10 , -1),
     sigma_psi = runif(1, 0 , 1),
     beta_psi = runif(MEconsts$ncov_psi, -3 , -3),
     
     # Detection
-    mu_p = runif(1, -10 , -1),
+    #mu_p = runif(1, -10 , -1),
     sigma_p = runif(1, 0 , 1),
     beta_p = runif(MEconsts$ncov_p, -3 , -3)
     
@@ -389,8 +393,10 @@ run_MCMC_allcode <- function(seed){
   
   
   # List parameters to monitor
-  MEmons <- c( "mu_psi", "sigma_psi",
-               "mu_p", "sigma_p",
+  MEmons <- c( #"mu_psi", 
+               "sigma_psi",
+               #"mu_p", 
+               "sigma_p",
                
                # Psi covariates
                "beta_psi",
@@ -399,6 +405,11 @@ run_MCMC_allcode <- function(seed){
                "beta_p"
   )
   
+  # Latent variables to monitor:
+    # Previously monitoring u, v, z
+    # These are large matrices now
+    # Only monitoring the total number of plants per bee
+  # May need to monitor u for network analysis
   MElatent <- c("n_plants_per_bee")
   
   
@@ -429,25 +440,25 @@ run_MCMC_allcode <- function(seed){
                            resetFunctions = T)
   
   ## Run MCMC
+ results <-  runMCMC(cMEmcmc, 
+                     nchains = 1, 
+                     niter = 150000, 
+                     nburnin = 50000, 
+                     thin = 10, 
+                     thin2 = 10,
+                     setSeed = seed)
+ 
+  
+# ## Run MCMC
+    ## Used for debugging code
  # results <-  runMCMC(cMEmcmc, 
  #                     nchains = 1, 
- #                     niter = 150000, 
- #                     nburnin = 50000, 
+ #                     niter = 100000, 
+ #                     nburnin = 20000, 
  #                     thin = 10, 
  #                     thin2 = 10,
  #                     setSeed = seed)
  # 
-  
-# ## Run MCMC
-    ## Used for debugging code
- results <-  runMCMC(cMEmcmc, 
-                     nchains = 1, 
-                     niter = 5, 
-                     nburnin = 2, 
-                     thin = 1, 
-                     thin2 = 1,
-                     setSeed = seed)
- 
   # Return MCMC results
   return(results)
   
@@ -502,9 +513,6 @@ beepr::beep(2)
 # How long did the model take?
 end.time - start.time
     
-
-# Started at:
-  # 12:57 - all data with 5 iterations
 
 
 
@@ -563,13 +571,13 @@ ggs_BYMeco %>% filter(Parameter %in% c( paste("beta_p[", 1:8, "]", sep = ""))) %
 
 # Save the model output
 save(out, 
-     file = "./ModelOutput/globi-short plant list- 2022 05 12 - all cov - NO apis - NIMBLE - SSVS.rds")
+     file = "./ModelOutput/globi-short plant list- 2024 07 01 - all cov - NO apis - NIMBLE - SSVS.rds")
 
 save(result, 
-     file = "./ModelOutput/OUTPUT - globi-short plant list- 2022 05 12 - all cov - NO apis - NIMBLE - SSVS.rds")
+     file = "./ModelOutput/OUTPUT - globi-short plant list- 2024 07 01 - all cov - NO apis - NIMBLE - SSVS.rds")
 
 save(MCMClist,
-     file = "./ModelOutput/MCMClist- globi-short plant list- 2022 05 12 - all cov - NO apis - NIMBLE - SSVS.rds")
+     file = "./ModelOutput/MCMClist- globi-short plant list- 2024 07 01 - all cov - NO apis - NIMBLE - SSVS.rds")
 
 
 # End script

@@ -66,10 +66,10 @@ sociality <- read.csv("./Data/Bee traits for checklist species - sociality.csv")
 
 
 # Read in file with type of citation
-citation.list <- read.csv("./Data/sources.kept.2024.07.01.csv")
+citation.list <- read.csv("./Data/KS-sources.kept.2024.07.01.csv")
 
 
-
+View(citation.list)
 
 
 
@@ -86,10 +86,17 @@ sociality <- sociality[sociality$Species != "Apis mellifera",]
 
 
 # Upload the observed bee-plant data
-load("./Data/data_summary/globi_data_formatted_bee_plant_date_citation_2023_02_23 - short plant list - no apis.rds")
-  # object name = bee.plant.date.cite
-  # 4-D array
+load("./Data/data_summary/globi_data_formatted_bee_plant_date_citation_2024_07_11 - short plant list - no apis.rds")
+  # object name = bee.plant.cite
+  # 3-D array
   
+
+
+
+# Read in the dat_info
+load("./Data/dat_info_2024_07_11.rds")
+  # object name = dat_info
+
 
 # Flower color
 plant.covariates <- plant.phenology2 # this file was created in 4 - Format_dat_checklist_2024_02_24.R
@@ -114,12 +121,12 @@ plant.covariates <- plant.phenology2 # this file was created in 4 - Format_dat_c
 
 
 # Save the order in which the bee species are listed
-bee.sp.names <- rownames(bee.plant.date.cite)
+bee.sp.names <- dat_info$bee.species
 
 
 
 # Save the order in which the bee species are listed
-plant.sp.names <- colnames(bee.plant.date.cite)
+plant.sp.names <- dat_info$plant.species
 
 
 
@@ -262,6 +269,7 @@ length(bee.covariates$size)
 citation.list$aggregated <- ifelse(citation.list$citationType == "Aggregated", 1, 0)
 citation.list$literature <- ifelse(citation.list$citationType == "Literature", 1, 0)
 citation.list$collection <- ifelse(citation.list$citationType == "Collection", 1, 0)
+citation.list$observation <- ifelse(citation.list$citationType == "Observation", 1, 0)
 
 
 
@@ -297,7 +305,7 @@ covariates <- list(bee.covariates = bee.covariates,
                    citation.covariates = citation.list)
 
 
-save(covariates, file = "./Data/model_covariates - 2024 07 01 - no apis.rds")
+save(covariates, file = "./Data/model_covariates - 2024 07 11 - no apis.rds")
 
 
 
@@ -317,9 +325,9 @@ ggplot(data = covariates$plant.covariates, aes(x = yellow, y = bowl))+
   ylab("Flower shape (1 = bowl)")+
   xlab("Flower color (1 = yellow)")
 
-ggsave("./Figures/Covariate-relationship-1.pdf",
-       height = 6, 
-       width = 8)
+#ggsave("./Figures/Covariate-relationship-1.pdf",
+#       height = 6, 
+#       width = 8)
 
 
 ggplot(data = covariates$bee.covariates, aes(x = size, y = solitary))+
@@ -329,9 +337,9 @@ ggplot(data = covariates$bee.covariates, aes(x = size, y = solitary))+
   ylab("Bee solitary (1 = yes)")+
   xlab("Bee size")
 
-ggsave("./Figures/Covariate-relationship-2.pdf",
-       height = 6, 
-       width = 8)
+#ggsave("./Figures/Covariate-relationship-2.pdf",
+#       height = 6, 
+#       width = 8)
 
 
 ggplot(data = covariates$bee.covariates, aes(x = size, y = striped))+
@@ -341,9 +349,9 @@ ggplot(data = covariates$bee.covariates, aes(x = size, y = striped))+
   ylab("Bee strippiness (1 = yes)")+
   xlab("Bee size")
 
-ggsave("./Figures/Covariate-relationship-3.pdf",
-       height = 6, 
-       width = 8)
+# ggsave("./Figures/Covariate-relationship-3.pdf",
+#        height = 6, 
+#        width = 8)
 
 ggplot(data = covariates$bee.covariates, aes(x = striped, y =  solitary))+
   geom_point()+
@@ -352,9 +360,179 @@ ggplot(data = covariates$bee.covariates, aes(x = striped, y =  solitary))+
   ylab("Bee solitary  (1 = yes)")+
   xlab("Bee strippiness (1 = yes)")
 
-ggsave("./Figures/Covariate-relationship-4.pdf",
-       height = 6, 
+# ggsave("./Figures/Covariate-relationship-4.pdf",
+#        height = 6, 
+#        width = 8)
+
+
+
+# 7. Check some sample sizes -------------------------------------------------------
+
+
+
+# -- How many total observations are there for each bee species? Are some bees/genus over-represented in the dataset?
+
+bee.samp <- data.frame(bee.species = bee.species,
+           number_obs_per_bee = apply(bee.plant.cite, 1, sum)
+           )
+
+ggplot(bee.samp, aes(y = bee.species, x = number_obs_per_bee)) +
+  geom_bar(stat = "identity")+ 
+  theme_bw(6)+
+  scale_x_continuous(trans = 'log10')+
+  xlab("Total number of observations across plants + sourceCitations")+
+  ylab("Bee species")
+
+ggsave("./Figures/2024 07 11 - Bee-sample-size.png",
+       height = 12, 
        width = 8)
+
+
+#--- Make the plot by genus
+
+bee.samp$genus <- str_split_fixed(bee.samp$bee.species, n = 2, pattern = " ")[,1]
+
+ggplot(bee.samp, aes(y = bee.species, x = number_obs_per_bee)) +
+  geom_bar(stat = "identity")+ 
+  facet_wrap(~genus, scale = "free") +
+  theme_bw(10)+
+  scale_x_continuous(trans = 'log10')+
+  xlab("Total number of observations across plants + sourceCitations")+
+  ylab("Bee species")
+
+ggsave("./Figures/2024 07 11 - Bee-sample-size-genus.png",
+       height = 12, 
+       width = 18)
+
+
+
+
+#--- Remove sourceCitations - which bees have the most interactions with plants?
+
+# Take the max across sourceCitations for each bee plant (i.e., if it was ever observed interacting, it receives a 1, if not then a 0)
+bee_plant = apply(bee.plant.cite, c(1, 2), max)
+
+bee_plant_sum <- data.frame(bee.species = bee.species,
+                            number_plants_per_bee = apply(bee_plant, 1, sum)
+)
+
+bee_plant_sum$genus <- str_split_fixed(bee_plant_sum$bee.species, n = 2, pattern = " ")[,1]
+
+ggplot(bee_plant_sum, aes(y = bee.species, x = number_plants_per_bee)) +
+  geom_bar(stat = "identity")+ 
+  facet_wrap(~genus, scale = "free") +
+  theme_bw(10)+
+  scale_x_continuous(trans = 'log10')+
+  xlab("Total number of plant interactions")+
+  ylab("Bee species")
+
+
+ggsave("./Figures/2024 07 11 - Bee-plant-interactions.png",
+       height = 12, 
+       width = 18)
+
+
+
+
+
+
+#----- Are bigger bees seen more often?
+
+
+bee.samp$size <- bee.covariates$size
+
+
+ggplot(data = bee.samp, aes(x = size, y = number_obs_per_bee))+
+  geom_point()+
+  geom_smooth(se = F)+
+  theme_bw(17)+
+  #scale_y_continuous(trans = "log10")+
+  ylab("Total number of observations across plants + sourceCitations")+
+  xlab("Bee size")
+
+ggsave("./Figures/2024 07 11 - Bee-size_vs_obs.png",
+       height = 8, 
+       width = 10)
+
+
+
+bee_plant_sum$size <- bee.covariates$size
+
+ggplot(data = bee_plant_sum, aes(x = size, y = number_plants_per_bee))+
+  geom_point()+
+  geom_smooth(se = F)+
+  theme_bw(17)+
+  #scale_y_continuous(trans = "log10")+
+  ylab("Total number of plant interactions")+
+  xlab("Bee size")
+
+ggsave("./Figures/2024 07 11 - Bee-size_vs_plants.png",
+       height = 8, 
+       width = 10)
+
+#---- Are social bees seen more often?
+
+
+bee.samp$solitary <- bee.covariates$solitary
+
+
+ggplot(data = bee.samp, aes(x = as.factor(solitary), y = number_obs_per_bee))+
+  geom_boxplot()+
+  theme_bw(17)+
+  scale_y_continuous(trans = "log10")+
+  ylab("Total number of observations across plants + sourceCitations")+
+  xlab("Bee sociality")+
+  scale_x_discrete(labels = c("Social", "Solitary"))
+
+ggsave("./Figures/2024 07 11 - Bee-solitary_vs_obs.png",
+       height = 8, 
+       width = 10)
+
+
+
+bee_plant_sum$solitary <- bee.covariates$solitary
+
+ggplot(data = bee_plant_sum, aes(x = as.factor(solitary), y = number_plants_per_bee))+
+  geom_boxplot()+
+  theme_bw(17)+
+  scale_y_continuous(trans = "log10")+
+  ylab("Total number of plant interactions")+
+  xlab("Bee sociality")+
+  scale_x_discrete(labels = c("Social", "Solitary"))
+
+ggsave("./Figures/2024 07 11 - Bee-solitary_vs_plants.png",
+       height = 8, 
+       width = 10)
+
+
+
+
+#------- Number of observations per bee-plant combination
+
+bee.plant.total <- apply(bee.plant.cite, c(1,2), sum)
+
+rownames(bee.plant.total) <- bee.sp.names
+
+colnames(bee.plant.total) <- plant.sp.names
+
+bee.plant.tot.long <- melt(bee.plant.total)
+
+colnames(bee.plant.tot.long) <- c("bee.name", "plant.name", "total")
+
+ggplot(data = bee.plant.tot.long, aes(x = reorder(bee.name, total, decreasing = T), y = reorder(plant.name, total, decreasing = T), fill = total))+
+  geom_tile()+
+  viridis::scale_fill_viridis(discrete = FALSE)+
+  theme_bw(4)+ 
+  theme(axis.text.x = element_text(angle = 90, vjust = 0.5, hjust=1))+
+  xlab("Bee species")+
+  ylab("Plant species")
+
+ggsave("./Figures/2024 07 11 - Bee-plant-heat-map.png",
+       height = 15, 
+       width = 10)
+
+
+
 
 
 # End script
