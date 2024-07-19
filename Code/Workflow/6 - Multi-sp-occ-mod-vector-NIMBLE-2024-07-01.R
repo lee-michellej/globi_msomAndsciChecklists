@@ -306,9 +306,28 @@ run_MCMC_allcode <- function(seed){
       
                            # Flower shape (1 = yes bowl; 0 = no bowl)
                              beta_p[10] * flower_shape[plant_ID[i]]
-  
+
+      
+      
+      #Create simulated dataset to calculate the Bayesian p-value
+      y.sim[i] ~ dbern(p.eff[bee_ID[i], plant_ID[i], cite_ID[i]])
+      
+      d[i]<-  abs(y[i] - p.eff[bee_ID[i], plant_ID[i], cite_ID[i]]) 
+      
+      dnew[i]<- abs(y.sim[i] - p.eff[bee_ID[i], plant_ID[i], cite_ID[i]]) 
+      
+      d2[i]<- pow(d[i], 2)  
+      
+      dnew2[i]<- pow(dnew[i], 2) 
          
     }   
+    
+    # Calculate the discrepancy measure, defined as the mean(p.fit > p.fitnew) 
+    p.fit <- sum(d2[1:n_bee_plant_cite]) 
+    p.fitnew <- sum(dnew2[1:n_bee_plant_cite])
+    
+    p.diff <- nimStep(p.fit - p.fitnew)
+      # step function at 0 = function returns 0 if 𝑥 < 0, 1 if 𝑥 >= 0
     
     # Calculate the total number of plants that each bee interacts with
     for(i in 1:n_bee){
@@ -406,11 +425,8 @@ run_MCMC_allcode <- function(seed){
   )
   
   # Latent variables to monitor:
-    # Previously monitoring u, v, z
-    # These are large matrices now
-    # Only monitoring the total number of plants per bee
-  # May need to monitor u for network analysis
-  MElatent <- c("n_plants_per_bee")
+  MElatent <- c("n_plants_per_bee", "z", "u", "v",
+                "p.fit", "p.fitnew", "p.diff")
   
   
   # Start creating/compiling the nimble model
@@ -442,10 +458,10 @@ run_MCMC_allcode <- function(seed){
   ## Run MCMC
  results <-  runMCMC(cMEmcmc, 
                      nchains = 1, 
-                     niter = 150000, 
-                     nburnin = 50000, 
-                     thin = 10, 
-                     thin2 = 10,
+                     niter = 5, #250000, 
+                     nburnin = 2, #50000, 
+                     thin = 1, #10, 
+                     thin2 = 1, #10,
                      setSeed = seed)
  
   
@@ -474,6 +490,10 @@ run_MCMC_allcode <- function(seed){
 
 
 
+# 150,000 iterations = 21.18633 hours
+# 250,000 iterations = 1.459393 days
+
+
 
 start.time <- Sys.time()
 
@@ -493,7 +513,6 @@ seeds <- 1:ncore
 
 
 # Run the model using dopar 
-  # Model takes 2 - 4 hrs to run
 start.time <- Sys.time()
 
 result <- foreach(x = seeds, 
@@ -543,7 +562,7 @@ MCMCsummary(MCMClist)
 # Save MCMC output as table
 
 write.csv(MCMCsummary(MCMClist),
-          file = "./Tables/Table-1-MCMC-output-SSVS.csv")
+          file = "./Tables/Table-1-MCMC-output-2024 07 17.csv")
 
 
 
@@ -571,13 +590,13 @@ ggs_BYMeco %>% filter(Parameter %in% c( paste("beta_p[", 1:8, "]", sep = ""))) %
 
 # Save the model output
 save(out, 
-     file = "./ModelOutput/globi-short plant list- 2024 07 01 - all cov - NO apis - NIMBLE - SSVS.rds")
+     file = "./ModelOutput/globi-short plant list- 2024 07 17 - all cov - NO apis - NIMBLE.rds")
 
 save(result, 
-     file = "./ModelOutput/OUTPUT - globi-short plant list- 2024 07 01 - all cov - NO apis - NIMBLE - SSVS.rds")
+     file = "./ModelOutput/OUTPUT - globi-short plant list- 2024 07 17 - all cov - NO apis - NIMBLE.rds")
 
 save(MCMClist,
-     file = "./ModelOutput/MCMClist- globi-short plant list- 2024 07 01 - all cov - NO apis - NIMBLE - SSVS.rds")
+     file = "./ModelOutput/MCMClist- globi-short plant list- 2024 07 17 - all cov - NO apis - NIMBLE.rds")
 
 
 # End script

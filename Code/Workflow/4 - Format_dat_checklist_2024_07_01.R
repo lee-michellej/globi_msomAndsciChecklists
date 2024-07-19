@@ -589,6 +589,7 @@ plant.species <- unique(plant.phenology$scientificName)
 plant.phenology2 <- filter(plant.phenology, plant.phenology$resolvedPlantNames %in% dat1$resolvedPlantNames)
 plant.species2 <- unique(plant.phenology2$scientificName)
 
+
 length(plant.species) # 566 plants
 length(plant.species2) # 302 plants
 
@@ -745,7 +746,7 @@ for(i in 1:nrow(dat2)){
 
 
 # Looks good!
- View(dat2[,c("resolvedSource", "sourceInstitutionCode", "sourceCitation")])
+# View(dat2[,c("resolvedSource", "sourceInstitutionCode", "sourceCitation")])
 
 # Determine how many rows have an institution
 length(which(is.na(dat2$resolvedSource)== FALSE))
@@ -757,6 +758,7 @@ dat2 <- droplevels(dat2)
 dat2$sourceCitation <- as.factor(dat2$sourceCitation)
 
 levels(dat2$sourceCitation)
+  # 33 sources
 
 # Now we need to merge the resolvedSource column (which replaces the SCAN names) and the sourceCitation column
 for(i in 1:nrow(dat2)){
@@ -775,8 +777,6 @@ for(i in 1:nrow(dat2)){
 # Write the file with the final globi dataset
 #write.csv(dat2, "./Data/final-globi-list-clean 2024 04 07.csv")
 
-
-
 # Look at the number of samples per source citation
 citation.sampl.size <- data.frame(table(dat2$resolvedSource))
 citation.sampl.size
@@ -784,34 +784,15 @@ citation.sampl.size
 # Add row names
 rownames(citation.sampl.size) <- names(table(dat2$resolvedSource))
 
-# Write a csv file
-# write.csv(citation.sampl.size, "./Data/sample_size_per_citation.csv")
+# View(citation.sampl.size)
 
-
-# We will use sources with 10+ samples
-# Here, we identify which sourceCitations have 10+ observations
-citations.w.10.plus <- citation.sampl.size[which(citation.sampl.size[,2] > 9),]
-
-# Look at the number of sourceCitations with 10+ observations
-nrow(citations.w.10.plus)
-  # 27 sourceCitations
-
-# Subset the Globi data to use the sourceCitations with 10 + observations
-dat3 <- dat2[dat2$resolvedSource %in% citations.w.10.plus[,1],]
-
-# Number of samples remaining
-nrow(dat3)
-  # 10,627
-
-# Original sample size with all sourceCitations
-nrow(dat2)
-
+colnames(citation.sampl.size) <- c("citation", "total-obs")
 
 
 # Look at the numnber of unique citations
-citations <- levels(as.factor(dat3$resolvedSource))
-length(levels(as.factor(dat3$resolvedSource)))
-  # 27 unique citations
+citations <- levels(as.factor(dat2$resolvedSource))
+length(levels(as.factor(dat2$resolvedSource)))
+  # 50 unique citations
 
 # Write the file with the final list of source names
 # write.csv(citations, "./Data/final-globi-citations-unique 2024 04 07.csv")
@@ -844,7 +825,7 @@ length(levels(as.factor(dat3$resolvedSource)))
  length(bee.species) *
    length(plant.phenology2$resolvedPlantNames)* 
    length(citations)
- # = 1,117,098
+ # = 2 068 700
 
  
  
@@ -858,33 +839,32 @@ length(levels(as.factor(dat3$resolvedSource)))
 
 # Now we will fill in the 3-D array with the detection data
 start.time <- Sys.time()
-for(i in 1:nrow(dat3)){
+for(i in 1:nrow(dat2)){
+  
+  if(is.na(dat2$resolvedSource[i]) == FALSE){
   
   # Determine which citation
-  cit.pos <- which(citations %in% dat3$resolvedSource[i] == TRUE)
+  cit.pos <- which(citations %in% dat2$resolvedSource[i] == TRUE)
   
   # Determine which bee
-  bee.pos <- which(bee.species %in% dat3$resolvedBeeNames[i]  == TRUE)
+  bee.pos <- which(bee.species %in% dat2$resolvedBeeNames[i]  == TRUE)
   
-
   # Make sure that each observation is accounted for
   if(length(cit.pos) == 0 |
      length(bee.pos) == 0 ) break
   
   # Determine which plant
-  plant.pos <- which(plant.phenology2$resolvedPlantNames %in% dat3$resolvedPlantNames[i]  == TRUE)
-  
-  print(paste("Working on row ", i, "; cit = ", cit.pos, "; bee = ", bee.pos, "; plant = ", plant.pos, "; \r.."))
+  plant.pos <- which(plant.phenology2$resolvedPlantNames %in% dat2$resolvedPlantNames[i]  == TRUE)
     
     # Add a 1
     bee.plant.cite[bee.pos, 
                    plant.pos, 
                    cit.pos] <- 1
-  
+  }
 }
 
 end.time <- Sys.time()
-beepr::beep(3)
+#beepr::beep(3)
 
 # How long did the loop take?
 end.time - start.time
@@ -892,7 +872,18 @@ end.time - start.time
 # How many detections are in the dataframe?
   # Note that in some cases the same citation documents the same bee and plant interactions during the same month
 length(which(bee.plant.cite == 1))
-  # 1,847 unique bee-plant-citation detection
+  # 1,159 unique bee-plant-citation detection
+
+unique_obs_per_source <- data.frame(citation = citations, 
+                                    unique_obs = apply(bee.plant.cite, 3, sum))
+
+table_S1 <- merge(unique_obs_per_source, citation.sampl.size, by = "citation")
+
+
+# Write a csv file
+# write.csv(table_S1, "./Tables/2023_07_18/Table-S1-citations.csv")
+
+
 
 
 

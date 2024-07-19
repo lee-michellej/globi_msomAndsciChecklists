@@ -50,6 +50,8 @@ library(plyr)
 
 
 
+# Set working directory
+setwd("Users/gdirenzo/Documents/GitHub/globi_msomAndsciChecklists/")
 
 
 
@@ -69,7 +71,7 @@ sociality <- read.csv("./Data/Bee traits for checklist species - sociality.csv")
 citation.list <- read.csv("./Data/KS-sources.kept.2024.07.01.csv")
 
 
-View(citation.list)
+#View(citation.list)
 
 
 
@@ -99,7 +101,7 @@ load("./Data/dat_info_2024_07_11.rds")
 
 
 # Flower color
-plant.covariates <- plant.phenology2 # this file was created in 4 - Format_dat_checklist_2024_02_24.R
+plant.covariates <- read.csv("./Data/plant.phenology2.csv")
 
 
 
@@ -376,6 +378,9 @@ bee.samp <- data.frame(bee.species = bee.species,
            number_obs_per_bee = apply(bee.plant.cite, 1, sum)
            )
 
+bee.samp$genus <- str_split_fixed(bee.samp$bee.species, n = 2, pattern = " ")[,1]
+
+
 ggplot(bee.samp, aes(y = bee.species, x = number_obs_per_bee)) +
   geom_bar(stat = "identity")+ 
   theme_bw(6)+
@@ -390,7 +395,6 @@ ggsave("./Figures/2024 07 11 - Bee-sample-size.png",
 
 #--- Make the plot by genus
 
-bee.samp$genus <- str_split_fixed(bee.samp$bee.species, n = 2, pattern = " ")[,1]
 
 ggplot(bee.samp, aes(y = bee.species, x = number_obs_per_bee)) +
   geom_bar(stat = "identity")+ 
@@ -478,6 +482,7 @@ bee.samp$solitary <- bee.covariates$solitary
 
 ggplot(data = bee.samp, aes(x = as.factor(solitary), y = number_obs_per_bee))+
   geom_boxplot()+
+  geom_jitter()+
   theme_bw(17)+
   scale_y_continuous(trans = "log10")+
   ylab("Total number of observations across plants + sourceCitations")+
@@ -494,6 +499,7 @@ bee_plant_sum$solitary <- bee.covariates$solitary
 
 ggplot(data = bee_plant_sum, aes(x = as.factor(solitary), y = number_plants_per_bee))+
   geom_boxplot()+
+  geom_jitter()+
   theme_bw(17)+
   scale_y_continuous(trans = "log10")+
   ylab("Total number of plant interactions")+
@@ -515,7 +521,7 @@ rownames(bee.plant.total) <- bee.sp.names
 
 colnames(bee.plant.total) <- plant.sp.names
 
-bee.plant.tot.long <- melt(bee.plant.total)
+bee.plant.tot.long <- reshape2::melt(bee.plant.total)
 
 colnames(bee.plant.tot.long) <- c("bee.name", "plant.name", "total")
 
@@ -534,6 +540,155 @@ ggsave("./Figures/2024 07 11 - Bee-plant-heat-map.png",
 
 
 
+##------- Bee strippness
+
+
+bee.samp$strips <- bee.covariates$striped
+
+
+ggplot(data = bee.samp, aes(x = as.factor(strips), y = number_obs_per_bee))+
+  geom_boxplot()+
+  geom_jitter()+
+  theme_bw(17)+
+  scale_y_continuous(trans = "log10")+
+  ylab("Total number of observations across plants + sourceCitations")+
+  xlab("Bee strippiness")+
+  scale_x_discrete(labels = c("No strips", "Yes strips"))
+
+ggsave("./Figures/2024 07 11 - Bee-strips_vs_obs.png",
+       height = 8, 
+       width = 10)
+
+
+
+bee_plant_sum$strips <- bee.covariates$striped
+
+ggplot(data = bee_plant_sum, aes(x = as.factor(strips), y = number_plants_per_bee))+
+  geom_boxplot()+
+  geom_jitter()+
+  theme_bw(17)+
+  scale_y_continuous(trans = "log10")+
+  ylab("Total number of plant interactions")+
+  xlab("Bee strippiness")+
+  scale_x_discrete(labels = c("No strips", "Yes strips"))
+
+ggsave("./Figures/2024 07 11 - Bee-strips_vs_plants.png",
+       height = 8, 
+       width = 10)
+
+
+
+
+#---- Exploring plant color
+
+plant.samp <- data.frame(plant.species = plant.sp.names,
+                         number_obs_per_plant = apply(bee.plant.cite, 2, sum)
+)
+
+bee_plant_sum <- data.frame(plant.sp.names = plant.sp.names,
+                            number_bees_per_plant = apply(bee_plant, 2, sum)
+)
+
+# Add color covariate
+plant.samp$color <- ifelse(plant.covariates$yellow == 1, "yellow", 
+                           ifelse(plant.covariates$blue == 1, "blue", 
+                                  ifelse(plant.covariates$white == 1, "white",
+                                         "other")))
+
+
+bee_plant_sum$color <- ifelse(plant.covariates$yellow == 1, "yellow", 
+                           ifelse(plant.covariates$blue == 1, "blue", 
+                                  ifelse(plant.covariates$white == 1, "white",
+                                         "other")))
+
+
+
+
+ggplot(data = plant.samp, aes(x = as.factor(color), y = number_obs_per_plant))+
+  geom_boxplot()+
+  geom_jitter()+
+  theme_bw(17)+
+  scale_y_continuous(trans = "log10")+
+  ylab("Total number of observations across bees + sourceCitations")+
+  xlab("Plant color")
+
+ggsave("./Figures/2024 07 11 - Plant color_vs_obs.png",
+       height = 8, 
+       width = 10)
+
+
+ggplot(data = bee_plant_sum, aes(x = as.factor(color), y = number_bees_per_plant))+
+  geom_boxplot()+
+  geom_jitter()+
+  theme_bw(17)+
+  scale_y_continuous(trans = "log10")+
+  ylab("Total number of bee interactions")+
+  xlab("Plant color")
+
+ggsave("./Figures/2024 07 11 - Plant color_vs_bees.png",
+       height = 8, 
+       width = 10)
+
+# 
+
+
+
+
+
+# 7. Calculate some species richness metrics -------------------------------------------------------
+
+
+# collapse across plants to calculate bee species richness by source citation type
+bee_cite <- as.data.frame(apply(bee.plant.cite, c(1, 3), max))
+
+# Total number of species by source citation
+colSums(bee_cite)
+
+colnames(bee_cite) <- dat_info$citations
+
+bee_cite$bee.species <- dat_info$bee.species
+
+# add solitary bee info
+bee_cite$solitary <- c(unlist(bee.covariates$solitary))
+
+bee_cite_long <- reshape2::melt(bee_cite, id.vars = c("solitary"))
+
+View(bee_cite_long)
+
+sp_rich_solitary_cite <- bee_cite_long %>% 
+  group_by(variable, solitary) %>% 
+  dplyr::summarize(total_sp = sum(as.numeric(value), na.rm = TRUE))
+
+
+ggplot(data = sp_rich_solitary_cite, aes(y = total_sp, 
+                                         x = variable,
+                                         fill = as.factor(solitary)))+
+  geom_bar(stat = "identity", position="dodge")+
+  ylab("Total bee species richness")+
+  xlab("Citation") +
+  scale_x_discrete(labels = function(x) str_wrap(x, width = 10))
+  
+
+ggsave("./Figures/2024 07 11 - Citation - solitary - richness.png",
+       height = 8, 
+       width = 10)
+
+
+
+
+# 7. Save the sample sizes you've calculated -------------------------------------------------------
+
+
+
+
+
+# Save the number of observation into a list and then as a R object
+
+obs_dat <- list(bee.samp = bee.samp,
+                bee_plant_sum = bee_plant_sum)
+
+
+save(obs_dat, file = "./Data/obs_dat.rds")
 
 # End script
 
