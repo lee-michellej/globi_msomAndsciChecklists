@@ -64,43 +64,39 @@ setwd("~/globi_tritrophic_networks/")
 
 
 
-
 # Load the data
-load("./ModelOutput/globi-short plant list- 2022 05 12 - all cov - NO apis - NIMBLE - SSVS.rds")
+load("./ModelOutput/globi-short plant list- 2024 07 17 - all cov - NO apis - NIMBLE.rds")
 # object = out
 # MCMC object
 
 
 ## Load the entire nimble output
-load("./ModelOutput/OUTPUT - globi-short plant list- 2022 05 12 - all cov - NO apis - NIMBLE - SSVS.rds")
+load("./ModelOutput/OUTPUT - globi-short plant list- 2024 07 17 - all cov - NO apis - NIMBLE.rds")
 # object = result
 # MCMC object
 
 
 
 # Upload the data
-load("./Data/data_summary/globi_data_formatted_bee_plant_date_citation_2022_04_11 - short plant list - no apis.rds")
-# object name = bee.plant.date.cite
-# 4-D array
+load("./Data/data_summary/globi_data_formatted_bee_plant_date_citation_2024_07_11 - short plant list - no apis.rds")
+# object name = bee.plant.cite
+# 3-D array
 
 
-# Load the possible bee-plant-interactions
-load("./Data/bee_plant_inter_2022_04_11 - short plant - no apis.rds")
-# object = bee.plant.inter
-# 2-D matrix
+# Read in the dat_info
+load("./Data/dat_info_2024_07_11.rds")
+# object name = dat_info
 
 
+# Load in the number of observations
+load("./Data/obs_dat.rds")
+# object name = obs_dat.rds
 
-# Upload the data
-  # object name = bee.plant.date.cite
-  # 4-D array
-  # Used for bee and plant names
-load("./Data/data_summary/globi_data_formatted_bee_plant_date_citation_2022_04_11 - short plant list - no apis.rds")
 
 
 # Extract bee and plant names
-bee.names <- rownames(bee.plant.date.cite)
-plant.names <- colnames(bee.plant.date.cite)
+bee.names <- dat_info$bee.species
+plant.names <- dat_info$plant.species
 
 
 
@@ -117,43 +113,41 @@ plant.names <- colnames(bee.plant.date.cite)
 # Pull out the columns with a z in the name
 z.cols <- grep("z", colnames(result[[1]]$samples2))
 
+
+# Determine how many MCMC iterations to keep
+row.subset <- 1000
+
 # Just call the 1st MCMC chain - if you try to row bind all 3 chains, it is a LARGE object
-z.MCMC <- result[[1]]$samples2[,z.cols]
+z.MCMC <- data.frame(rbind(result[[1]]$samples2[1:row.subset,z.cols],
+                           result[[2]]$samples2[1:row.subset,z.cols],
+                           result[[3]]$samples2[1:row.subset,z.cols]))
 
 
-# Collapse it down to 1 observation
-  # By taking the column mean - we are converting it to a probability
+
+dim(z.MCMC)
+
+# Collapse it down to 1 observation by taking the column mean
 z.prob <- colMeans(z.MCMC, na.rm = TRUE)
 
 library(reshape2)
+
 z.long <- melt(z.prob)
 z.long$names <- rownames(z.long)
 
 
-str_split_fixed(z.long$names, pattern = "[", n = 6)
-
-
-
 library(splitstackshape)
-z.long2 <- cSplit(z.long, "names", sep=", ", type.convert=FALSE)
-
-colnames(z.long2) <- c("probability", "bee.species", "plant.species", "month")
-
-for(i in 1:nrow(z.long2)){
-  z.long2$bee.species[i] <- str_replace_all(z.long2$bee.species[i], "[[:punct:]]", "")
-  z.long2$bee.species[i] <- str_replace_all(z.long2$bee.species[i], "z", "")
-  z.long2$month[i] <- str_replace_all(z.long2$month[i], "[[:punct:]]", "")
-}
-
-
+z.long2 <- cSplit(z.long, "names", sep=".", type.convert=FALSE)
 
 head(z.long2)
 
+colnames(z.long2) <- c("probability", "z", "bee.species", "empty", "plant.species")
 
+head(z.long2)
 
+library(tidyverse)
 z.long3 <- z.long2 %>%
   group_by(bee.species, plant.species) %>%
-  summarize(max_prob = max(probability))
+  dplyr::summarize(max_prob = max(probability))
 
 View(z.long3)
 
@@ -182,7 +176,7 @@ for(i in 1:length(plant.names)){
 
 
 # Save file
-write.csv(z.long3, "./Data/bee-plant-mod-probabilities.csv")
+write.csv(z.long3, "./Data/2024 07 19 - bee-plant-mod-probabilities.csv")
 
 
 

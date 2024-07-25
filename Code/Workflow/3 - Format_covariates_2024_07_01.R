@@ -680,6 +680,8 @@ ggsave("./Figures/2024 07 11 - Citation - solitary - richness.png",
 
 
 
+length(which(obs_dat$bee_plant_sum$number_plants_per_bee == 0))
+
 
 
 # Save the number of observation into a list and then as a R object

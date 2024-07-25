@@ -236,7 +236,7 @@ obs.dat <- data.frame(obs = y.bee.plant)
 
 
 # Calcilate the total number of POSSIBLE bee-plant interactions (regardless of month & citation)
-bee.plant.pos <- apply(bee.plant.date.cite, c(1, 2), max, na.rm = TRUE)
+bee.plant.pos <- apply(bee.plant.cite, c(1, 2), max, na.rm = TRUE)
 bee.plant.pos[bee.plant.pos == "-Inf"] <- NA
 bee.plant.pos[bee.plant.pos == 0] <- 1
 bee.plant.pos <- apply(bee.plant.pos, 1, sum, na.rm = TRUE)
@@ -244,71 +244,22 @@ bee.plant.pos <- apply(bee.plant.pos, 1, sum, na.rm = TRUE)
 
 
 # Determine how many MCMC iterations to keep
-row.subset <- 200
+row.subset <- 1:200
 
 
 # Summarize z
 # # Latent state variables
-out_z <- as.mcmc(data.frame(rbind(result[[1]]$samples2[row.subset,grep("z", colnames(result[[1]]$samples2))],
-                                  result[[2]]$samples2[row.subset,grep("z", colnames(result[[1]]$samples2))],
-                                  result[[3]]$samples2[row.subset,grep("z", colnames(result[[1]]$samples2))])))
+out_n <- as.mcmc(data.frame(rbind(result[[1]]$samples2[row.subset,grep("n_", colnames(result[[1]]$samples2))],
+                                  result[[2]]$samples2[row.subset,grep("n_", colnames(result[[1]]$samples2))],
+                                  result[[3]]$samples2[row.subset,grep("n_", colnames(result[[1]]$samples2))])))
 
 
-
-# Extract the mean values for z = true bee, plant, by month interactions
-# Look at the number of dimensions
-dim(out_z)
-
-# Number of MCMC iterations
-MCMC <- nrow(out_z)
-
-# We will put those values in an array
-out2_array <- array(out_z[,grep("z", colnames(out_z))], 
-                    dim = c(MCMC, 
-                            dim(bee.plant.cite)[1:3]))
-
-# look at dimensions
-dim(out2_array)
-
-
-# Row names - MCMC iterations
-rownames(out2_array) <- 1:MCMC
-  
-# column names - bee species
-colnames(out2_array) <- dat_info$bee.species
-
-# sheet names - plant species
-dimnames(out2_array)[[3]] <- dat_info$plant.species
-
-# 4th dimension - 
-dimnames(out2_array)[[4]] <- dat_info$citations
-
-
-# Now, we want to sum the number of unique plants per bee per month
-# First - we will calculate the mean 
-
-# To do this, first we will determine if the bee EVER interacts with the plant
-bee.plant.mean<- apply(out2_array, c(2, 3, 4), mean, na.rm = TRUE)
-bee.plant <- apply(bee.plant.mean, c(1, 2), max, na.rm = TRUE)
-bee.plant[bee.plant == "-Inf"] <- NA
 # And then, we will sum across plant IDs
-bee.interactions <- apply(bee.plant, 1, sum, na.rm = TRUE)
-
+bee.interactions <- apply(out_n, 2, mean, na.rm = TRUE)
 
 # Repeat steps for 95% CI - lower & upper
-# Calculate the lower 95% CI across MCMC iterations
-  # bee x plant x month
-bee.plant.lower.95 <- apply(out2_array, c(2, 3, 4), function(x)quantile(x, probs = c(0.025, 0.975), na.rm = TRUE)[1])
-  # bee x plant
-bee.plant.lower <- apply(bee.plant.lower.95, c(1, 2), max, na.rm = TRUE)
-bee.plant.lower[bee.plant.lower == "-Inf"] <- NA
-  # bee
-bee.interactions.lower <- apply(bee.plant.lower, 1, sum, na.rm = TRUE)
-
-bee.plant.upper.95 <- apply(out2_array, c(2, 3, 4), function(x)quantile(x, probs = c(0.025, 0.975), na.rm = TRUE)[2])
-bee.plant.upper <- apply(bee.plant.upper.95, c(1, 2), max, na.rm = TRUE)
-bee.plant.upper[bee.plant.upper == "-Inf"] <- NA
-bee.interactions.upper <- apply(bee.plant.upper, 1, sum, na.rm = TRUE)
+bee.interactions.lower <- apply(out_n, 2, function(x)quantile(x, probs = c(0.025, 0.975), na.rm = TRUE)[1])
+bee.interactions.upper <- apply(out_n, 2, function(x)quantile(x, probs = c(0.025, 0.975), na.rm = TRUE)[2])
 
 
 
@@ -319,7 +270,6 @@ bee.interactions.upper <- apply(bee.plant.upper, 1, sum, na.rm = TRUE)
                                    result[[2]]$samples2[row.subset,grep("u", colnames(result[[1]]$samples2))],
                                    result[[3]]$samples2[row.subset,grep("u", colnames(result[[1]]$samples2))])))
  
-
 
 # Extract the mean values for z = true bee, plant, by month interactions
 # Look at the number of dimensions
@@ -374,12 +324,12 @@ ggplot(dat[grep("interact prob", dat$names),],
        aes(x= species, y=plogis(mod.mean), 
                        ymin=plogis(mod.q2.5), 
                        ymax=plogis(mod.q97.5)))+ 
-  geom_linerange(size = 1) +
+  geom_linerange(linewidth = 1) +
   geom_point(size = 1) +
   scale_colour_manual("Values", values=cols)+
   geom_hline(yintercept = 0, lty=2) +
   coord_flip() + 
-  ylab('Bee-plant interaction probability') +
+  ylab('Probability of interacting with a plant') +
   xlab("Species names") +
  # ggtitle("Bee-plant interaction probability")+
   theme_bw()+ 
@@ -392,7 +342,7 @@ ggplot(dat[grep("interact prob", dat$names),],
 
 # Save the plot
 ggsave(paste0("./Figures/", date_folder, "/Fig-S2-Bee-plant-Interaction-prob.png"), 
-       height = 17, width = 12)
+       height = 17, width = 10)
 
 
 
@@ -429,7 +379,7 @@ ggplot(dat[grep("Num-interact", dat$names),],
 
 # Save the plot
 ggsave(paste0("./Figures/", date_folder, "/Fig-1-Bee-plant-Interactions.png"), 
-       height = 17, width = 12)
+       height = 17, width = 10)
 
 
 
@@ -444,15 +394,15 @@ text.size <- 12
 title.size <- 12
 
 
+out_df <- as.data.frame(out)
+
+
+
 # What proportion of the mass is > 0?
 mean(out_df$beta_psi.2. > 0)
 
 # What proportion of the mass is < 0?
 mean(out_df$beta_psi.2. < 0)
-
-
-out_df <- as.data.frame(out)
-
 
 # # Create a dataframe with the parameter estimates from each MCMC iteraction
  param_df <- data.frame(beta_psi_B_size = out_df$beta_psi.2., 
@@ -497,7 +447,7 @@ out_df <- as.data.frame(out)
              alpha = .4) +
    geom_line(data = mean_psi_size, aes(x = Size.scaled,
                                        y = pred), col = "black")+
-   ylab("Bee-plant interaction \nprobability")+
+   ylab("Probability of interacting \nwith a plant")+
    xlab("Bee size standardized")+
    theme(legend.position = "none",
          strip.background = element_rect(colour = "black", fill = "white"),
@@ -575,7 +525,7 @@ solitary.plot <- ggplot(pred.p.soc.long, aes(x = probability, y = solitary)) +
   geom_vline(data=mu, aes(xintercept=grp.mean, color=solitary),
              linetype="dashed")+
   scale_color_manual(values = wes_palette("GrandBudapest2", 2, type = c("discrete")))+
-  xlab("Bee-plant interaction probability")+
+  xlab("Probability of interacting \nwith a plant")+
   ylab("Solitary")+
   theme_bw()+ 
   theme(legend.position = "none",
@@ -684,7 +634,7 @@ mean(out_df$beta_psi.4. > out_df$beta_psi.1.)
    geom_vline(data=mu, aes(xintercept=grp.mean, color=color),
               linetype="dashed")+
    scale_color_manual(values = c("#E7B800","#00AFBB", "grey", "black"))+
-   xlab("Bee-plant interaction probability")+
+   xlab("Probability of interacting \nwith a bee")+
    ylab("Flower color")+
    theme(legend.position = "none",
          strip.background = element_rect(colour = "black", fill = "white"),
@@ -774,7 +724,7 @@ mean(out_df$beta_psi.4. > out_df$beta_psi.1.)
    geom_vline(data=mu, aes(xintercept=grp.mean, color=bowl),
               linetype="dashed")+
    scale_color_manual(values = wes_palette("GrandBudapest1", 2, type = c("discrete")))+
-   xlab("Bee-plant interaction probability")+
+   xlab("Probability of interacting \nwith a bee")+
    ylab("Flower shape")+
    theme(legend.position = "none",
          strip.background = element_rect(colour = "black", fill = "white"),
@@ -864,7 +814,7 @@ ggsave(paste0("./Figures/", date_folder, "/Fig-2-Bee-plant-interaction-prob.png"
    geom_vline(data=mu, aes(xintercept=grp.mean, color=stripe),
               linetype="dashed")+
    scale_color_manual(values = wes_palette("Moonrise3", 2, type = c("discrete")))+
-   xlab("Bee-plant detection probability")+
+   xlab("Probability of detecting \nthe bee on a plant")+
    ylab("Stripiness")+
  theme_bw()+ 
    theme(legend.position = "none",
@@ -941,7 +891,7 @@ citation.plot <- ggplot(pred.p.long, aes(x = probability, y = citation)) +
   geom_vline(data=mu, aes(xintercept=grp.mean, color=citation),
              linetype="dashed")+
   scale_color_manual(values = wes_palette("Moonrise2", 4, type = c("discrete")))+
-  xlab("Bee-plant detection probability")+
+  xlab("Probability of detecting a \nbee-plant interaction")+
   ylab("Source type")+
   theme_bw()+ 
   theme(legend.position = "none",
@@ -1021,7 +971,7 @@ flow.col.plot.p <- ggplot(pred.p.col.long, aes(x = probability, y = color)) +
   geom_vline(data=mu, aes(xintercept=grp.mean, color=color),
              linetype="dashed")+
   scale_color_manual(values = c("#E7B800","#00AFBB", "grey", "black"))+
-  xlab("Bee-plant detection probability")+
+  xlab("Probability of detecting a \nbee interacting on the plant")+
   ylab("Flower color")+
   theme_bw()+ 
   theme(legend.position = "none",
@@ -1090,7 +1040,7 @@ flow.shape.plot.p <- ggplot(pred.p.shape.long, aes(x = probability, y = bowl)) +
   geom_vline(data=mu, aes(xintercept=grp.mean, color=bowl),
              linetype="dashed")+
   scale_color_manual(values = wes_palette("Darjeeling1", 2, type = c("discrete")))+
-  xlab("Bee-plant detection probability")+
+  xlab("Probability of detecting a \nbee interacting on the plant")+
   ylab("Flower shape")+
   theme_bw()+ 
   theme(legend.position = "none",
@@ -1168,7 +1118,7 @@ bee.size.plot.p <- ggplot() +
   geom_line(data = mean_p_size, aes(x = Size.scaled,
                                       y = pred), col = "black", lwd = 1)+
 
-  ylab("Bee-plant detection \nprobability")+
+  ylab("Probability of detecting \nthe bee on a plant")+
   xlab("Bee size standardized")+
   theme_bw()+ 
   theme(legend.position = "none",

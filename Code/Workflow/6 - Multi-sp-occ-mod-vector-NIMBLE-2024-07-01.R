@@ -237,7 +237,7 @@ run_MCMC_allcode <- function(seed){
       
       # Make the bee-plant interaction probability of function of variables
       logit(psi[bee_ID[i], plant_ID[i]]) <- 
-                          # Bee-plant species-specific random effect
+                          # Bee species-specific random effect
                           u[bee_ID[i]] +
         
                           # Intercept
@@ -272,7 +272,7 @@ run_MCMC_allcode <- function(seed){
       p.eff[bee_ID[i], plant_ID[i], cite_ID[i]] <- p[bee_ID[i], plant_ID[i], cite_ID[i]] * z[bee_ID[i], plant_ID[i]]
       
       logit(p[bee_ID[i], plant_ID[i], cite_ID[i]]) <-  
-                            # Bee-plant species-specific random effect
+                            # Bee species-specific random effect
                             v[bee_ID[i]] +
         
                             # Intercept
