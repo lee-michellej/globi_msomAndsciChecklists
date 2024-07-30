@@ -157,6 +157,9 @@ getwd()
 bee.list <- read.csv("./Data/SCI checklist and phenology - SCI checklists and phenology - Seltmann 2022 04 01.csv")
 
 
+
+
+
 # In this code, we will go through all of the scientific bee names and identify synonyms & update them all to the latest nomenclature
 # To do this - we need to load several files, which were compiled from different sources with scientific bee name synonyms 
 #----- We need 6 separate files that store bee names 
@@ -844,8 +847,265 @@ nrow(dat5)
 # 10. Determine which bee-plant interactions are possible based on phenology -------------------------------------------------------
 
 
+# EDIT TO bee.list TO EXTEND PHENOLOGY ======
+
+# Extend bee phenology in both directions by 1 month
+
+bee.list_extend1mo <- bee.list %>% 
+  # extend 1 month backward
+  mutate(# extend Jan
+    Jan = ifelse(bee.list$Jan == "0" & bee.list$Feb == "1",1,bee.list$Jan),
+    # extend Feb
+    Feb = ifelse(bee.list$Feb == "0" & bee.list$Mar == "1",1,bee.list$Feb),
+    # extend Mar
+    Mar = ifelse(bee.list$Mar == "0" & bee.list$Apr == "1",1,bee.list$Mar),
+    # extend Apr
+    Apr = ifelse(bee.list$Apr == "0" & bee.list$May == "1",1,bee.list$Apr),
+    # extend May
+    May = ifelse(bee.list$May == "0" & bee.list$Jun == "1",1,bee.list$May),
+    # extend Jun
+    Jun = ifelse(bee.list$Jun == "0" & bee.list$Jul == "1",1,bee.list$Jun),
+    # extend Jul
+    Jul = ifelse(bee.list$Jul == "0" & bee.list$Aug == "1",1,bee.list$Jul),
+    # extend Aug
+    Aug = ifelse(bee.list$Aug == "0" & bee.list$Sep == "1",1,bee.list$Aug),
+    # extend Sep
+    Sep = ifelse(bee.list$Sep == "0" & bee.list$Oct == "1",1,bee.list$Sep),
+    # extend Oct
+    Oct = ifelse(bee.list$Oct == "0" & bee.list$Nov == "1",1,bee.list$Oct),
+    # extend Nov
+    Nov = ifelse(bee.list$Nov == "0" & bee.list$Dec == "1",1,bee.list$Nov),
+    # extend Dec
+    Dec = ifelse(bee.list$Dec == "0" & bee.list$Jan == "1",1,bee.list$Dec))
+
+bee.list_extend1mo2 <- bee.list_extend1mo %>% 
+  mutate(
+    # extend Jan
+    Jan = ifelse(bee.list_extend1mo$Jan == "0" & bee.list_extend1mo$Dec == "1",1,bee.list_extend1mo$Jan),
+    # extend Feb
+    Feb = ifelse(bee.list_extend1mo$Feb == "0" & bee.list_extend1mo$Jan == "1",1,bee.list_extend1mo$Feb),
+    # extend Mar
+    Mar = ifelse(bee.list_extend1mo$Mar == "0" & bee.list_extend1mo$Feb == "1",1,bee.list_extend1mo$Mar),
+    # extend Apr
+    Apr = ifelse(bee.list_extend1mo$Apr == "0" & bee.list_extend1mo$Mar == "1",1,bee.list_extend1mo$Apr),
+    # extend May
+    May = ifelse(bee.list_extend1mo$May == "0" & bee.list_extend1mo$Apr == "1",1,bee.list_extend1mo$May),
+    # extend Jun
+    Jun = ifelse(bee.list_extend1mo$Jun == "0" & bee.list_extend1mo$May == "1",1,bee.list_extend1mo$Jun),
+    # extend Jul
+    Jul = ifelse(bee.list_extend1mo$Jul == "0" & bee.list_extend1mo$Jun == "1",1,bee.list_extend1mo$Jul),
+    # extend Aug
+    Aug = ifelse(bee.list_extend1mo$Aug == "0" & bee.list_extend1mo$Jul == "1",1,bee.list_extend1mo$Aug),
+    # extend Sep
+    Sep = ifelse(bee.list_extend1mo$Sep == "0" & bee.list_extend1mo$Aug == "1",1,bee.list_extend1mo$Sep),
+    # extend Oct
+    Oct = ifelse(bee.list_extend1mo$Oct == "0" & bee.list_extend1mo$Sep == "1",1,bee.list_extend1mo$Oct),
+    # extend Nov
+    Nov = ifelse(bee.list_extend1mo$Nov == "0" & bee.list_extend1mo$Oct == "1",1,bee.list_extend1mo$Nov),
+    # extend Dec
+    Dec = ifelse(bee.list_extend1mo$Dec == "0" & bee.list_extend1mo$Nov == "1",1,bee.list_extend1mo$Dec))
+# long but it works
 
 
+
+
+# Extend the bee phenology by 2 months in either direction 
+
+bee.list_extend2mo <- bee.list_extend1mo2 %>% 
+  # extend 1 month backward
+  mutate(# extend Jan
+    Jan = ifelse(bee.list_extend1mo2$Jan == "0" & bee.list_extend1mo2$Feb == "1",1,bee.list_extend1mo2$Jan),
+    # extend Feb
+    Feb = ifelse(bee.list_extend1mo2$Feb == "0" & bee.list_extend1mo2$Mar == "1",1,bee.list_extend1mo2$Feb),
+    # extend Mar
+    Mar = ifelse(bee.list_extend1mo2$Mar == "0" & bee.list_extend1mo2$Apr == "1",1,bee.list_extend1mo2$Mar),
+    # extend Apr
+    Apr = ifelse(bee.list_extend1mo2$Apr == "0" & bee.list_extend1mo2$May == "1",1,bee.list_extend1mo2$Apr),
+    # extend May
+    May = ifelse(bee.list_extend1mo2$May == "0" & bee.list_extend1mo2$Jun == "1",1,bee.list_extend1mo2$May),
+    # extend Jun
+    Jun = ifelse(bee.list_extend1mo2$Jun == "0" & bee.list_extend1mo2$Jul == "1",1,bee.list_extend1mo2$Jun),
+    # extend Jul
+    Jul = ifelse(bee.list_extend1mo2$Jul == "0" & bee.list_extend1mo2$Aug == "1",1,bee.list_extend1mo2$Jul),
+    # extend Aug
+    Aug = ifelse(bee.list_extend1mo2$Aug == "0" & bee.list_extend1mo2$Sep == "1",1,bee.list_extend1mo2$Aug),
+    # extend Sep
+    Sep = ifelse(bee.list_extend1mo2$Sep == "0" & bee.list_extend1mo2$Oct == "1",1,bee.list_extend1mo2$Sep),
+    # extend Oct
+    Oct = ifelse(bee.list_extend1mo2$Oct == "0" & bee.list_extend1mo2$Nov == "1",1,bee.list_extend1mo2$Oct),
+    # extend Nov
+    Nov = ifelse(bee.list_extend1mo2$Nov == "0" & bee.list_extend1mo2$Dec == "1",1,bee.list_extend1mo2$Nov),
+    # extend Dec
+    Dec = ifelse(bee.list_extend1mo2$Dec == "0" & bee.list_extend1mo2$Jan == "1",1,bee.list_extend1mo2$Dec))
+
+bee.list_extend2mo2 <- bee.list_extend2mo %>% 
+  mutate(
+    # extend Jan
+    Jan = ifelse(bee.list_extend2mo$Jan == "0" & bee.list_extend2mo$Dec == "1",1,bee.list_extend2mo$Jan),
+    # extend Feb
+    Feb = ifelse(bee.list_extend2mo$Feb == "0" & bee.list_extend2mo$Jan == "1",1,bee.list_extend2mo$Feb),
+    # extend Mar
+    Mar = ifelse(bee.list_extend2mo$Mar == "0" & bee.list_extend2mo$Feb == "1",1,bee.list_extend2mo$Mar),
+    # extend Apr
+    Apr = ifelse(bee.list_extend2mo$Apr == "0" & bee.list_extend2mo$Mar == "1",1,bee.list_extend2mo$Apr),
+    # extend May
+    May = ifelse(bee.list_extend2mo$May == "0" & bee.list_extend2mo$Apr == "1",1,bee.list_extend2mo$May),
+    # extend Jun
+    Jun = ifelse(bee.list_extend2mo$Jun == "0" & bee.list_extend2mo$May == "1",1,bee.list_extend2mo$Jun),
+    # extend Jul
+    Jul = ifelse(bee.list_extend2mo$Jul == "0" & bee.list_extend2mo$Jun == "1",1,bee.list_extend2mo$Jul),
+    # extend Aug
+    Aug = ifelse(bee.list_extend2mo$Aug == "0" & bee.list_extend2mo$Jul == "1",1,bee.list_extend2mo$Aug),
+    # extend Sep
+    Sep = ifelse(bee.list_extend2mo$Sep == "0" & bee.list_extend2mo$Aug == "1",1,bee.list_extend2mo$Sep),
+    # extend Oct
+    Oct = ifelse(bee.list_extend2mo$Oct == "0" & bee.list_extend2mo$Sep == "1",1,bee.list_extend2mo$Oct),
+    # extend Nov
+    Nov = ifelse(bee.list_extend2mo$Nov == "0" & bee.list_extend2mo$Oct == "1",1,bee.list_extend2mo$Nov),
+    # extend Dec
+    Dec = ifelse(bee.list_extend2mo$Dec == "0" & bee.list_extend2mo$Nov == "1",1,bee.list_extend2mo$Dec))
+# long but it works
+
+
+
+# EXTEND PLANT PHENOLOGY BY 1 MONTH
+
+plant.phen.extend1mo <- plant.phenology2 %>% 
+  # extend 1 month backward
+  mutate(# extend Jan
+    jan = ifelse(plant.phenology2$jan == "0" & plant.phenology2$feb == "1",1,plant.phenology2$jan),
+    # extend Feb
+    feb = ifelse(plant.phenology2$feb == "0" & plant.phenology2$mar == "1",1,plant.phenology2$feb),
+    # extend Mar
+    mar = ifelse(plant.phenology2$mar == "0" & plant.phenology2$apr == "1",1,plant.phenology2$mar),
+    # extend Apr
+    apr = ifelse(plant.phenology2$apr == "0" & plant.phenology2$may == "1",1,plant.phenology2$apr),
+    # extend May
+    may = ifelse(plant.phenology2$may == "0" & plant.phenology2$jun == "1",1,plant.phenology2$may),
+    # extend Jun
+    jun = ifelse(plant.phenology2$jun == "0" & plant.phenology2$jul == "1",1,plant.phenology2$jun),
+    # extend Jul
+    jul = ifelse(plant.phenology2$jul == "0" & plant.phenology2$aug == "1",1,plant.phenology2$jul),
+    # extend Aug
+    aug = ifelse(plant.phenology2$aug == "0" & plant.phenology2$sep == "1",1,plant.phenology2$aug),
+    # extend Sep
+    sep = ifelse(plant.phenology2$sep == "0" & plant.phenology2$oct == "1",1,plant.phenology2$sep),
+    # extend Oct
+    oct = ifelse(plant.phenology2$oct == "0" & plant.phenology2$nov == "1",1,plant.phenology2$oct),
+    # extend Nov
+    nov = ifelse(plant.phenology2$nov == "0" & plant.phenology2$dec == "1",1,plant.phenology2$nov),
+    # extend Dec
+    dec = ifelse(plant.phenology2$dec == "0" & plant.phenology2$jan == "1",1,plant.phenology2$dec))
+
+plant.phen.extend1mo2 <- plant.phen.extend1mo %>% 
+  mutate(
+    # extend Jan
+    jan = ifelse(plant.phen.extend1mo$jan == "0" & plant.phen.extend1mo$dec == "1",1,plant.phen.extend1mo$jan),
+    # extend Feb
+    feb = ifelse(plant.phen.extend1mo$feb == "0" & plant.phen.extend1mo$jan == "1",1,plant.phen.extend1mo$feb),
+    # extend Mar
+    mar = ifelse(plant.phen.extend1mo$mar == "0" & plant.phen.extend1mo$feb == "1",1,plant.phen.extend1mo$mar),
+    # extend Apr
+    apr = ifelse(plant.phen.extend1mo$apr == "0" & plant.phen.extend1mo$mar == "1",1,plant.phen.extend1mo$apr),
+    # extend May
+    may = ifelse(plant.phen.extend1mo$may == "0" & plant.phen.extend1mo$apr == "1",1,plant.phen.extend1mo$may),
+    # extend Jun
+    jun = ifelse(plant.phen.extend1mo$jun == "0" & plant.phen.extend1mo$may == "1",1,plant.phen.extend1mo$jun),
+    # extend Jul
+    jul = ifelse(plant.phen.extend1mo$jul == "0" & plant.phen.extend1mo$jun == "1",1,plant.phen.extend1mo$jul),
+    # extend Aug
+    aug = ifelse(plant.phen.extend1mo$aug == "0" & plant.phen.extend1mo$jul == "1",1,plant.phen.extend1mo$aug),
+    # extend Sep
+    sep = ifelse(plant.phen.extend1mo$sep == "0" & plant.phen.extend1mo$aug == "1",1,plant.phen.extend1mo$sep),
+    # extend Oct
+    oct = ifelse(plant.phen.extend1mo$oct == "0" & plant.phen.extend1mo$sep == "1",1,plant.phen.extend1mo$oct),
+    # extend Nov
+    nov = ifelse(plant.phen.extend1mo$nov == "0" & plant.phen.extend1mo$oct == "1",1,plant.phen.extend1mo$nov),
+    # extend Dec
+    dec = ifelse(plant.phen.extend1mo$dec == "0" & plant.phen.extend1mo$nov == "1",1,plant.phen.extend1mo$dec))
+# long but it works
+
+
+
+# EXTEND PLANT PHENOLOGY BY 2 MONTHS
+
+plant.phen.extend2mo <- plant.phen.extend1mo2 %>% 
+  # extend 1 month backward
+  mutate(# extend Jan
+    jan = ifelse(plant.phen.extend1mo2$jan == "0" & plant.phen.extend1mo2$feb == "1",1,plant.phen.extend1mo2$jan),
+    # extend Feb
+    feb = ifelse(plant.phen.extend1mo2$feb == "0" & plant.phen.extend1mo2$mar == "1",1,plant.phen.extend1mo2$feb),
+    # extend Mar
+    mar = ifelse(plant.phen.extend1mo2$mar == "0" & plant.phen.extend1mo2$apr == "1",1,plant.phen.extend1mo2$mar),
+    # extend Apr
+    apr = ifelse(plant.phen.extend1mo2$apr == "0" & plant.phen.extend1mo2$may == "1",1,plant.phen.extend1mo2$apr),
+    # extend May
+    may = ifelse(plant.phen.extend1mo2$may == "0" & plant.phen.extend1mo2$jun == "1",1,plant.phen.extend1mo2$may),
+    # extend Jun
+    jun = ifelse(plant.phen.extend1mo2$jun == "0" & plant.phen.extend1mo2$jul == "1",1,plant.phen.extend1mo2$jun),
+    # extend Jul
+    jul = ifelse(plant.phen.extend1mo2$jul == "0" & plant.phen.extend1mo2$aug == "1",1,plant.phen.extend1mo2$jul),
+    # extend Aug
+    aug = ifelse(plant.phen.extend1mo2$aug == "0" & plant.phen.extend1mo2$sep == "1",1,plant.phen.extend1mo2$aug),
+    # extend Sep
+    sep = ifelse(plant.phen.extend1mo2$sep == "0" & plant.phen.extend1mo2$oct == "1",1,plant.phen.extend1mo2$sep),
+    # extend Oct
+    oct = ifelse(plant.phen.extend1mo2$oct == "0" & plant.phen.extend1mo2$nov == "1",1,plant.phen.extend1mo2$oct),
+    # extend Nov
+    nov = ifelse(plant.phen.extend1mo2$nov == "0" & plant.phen.extend1mo2$dec == "1",1,plant.phen.extend1mo2$nov),
+    # extend Dec
+    dec = ifelse(plant.phen.extend1mo2$dec == "0" & plant.phen.extend1mo2$jan == "1",1,plant.phen.extend1mo2$dec))
+
+plant.phen.extend2mo2 <- plant.phen.extend2mo %>% 
+  mutate(
+    # extend Jan
+    jan = ifelse(plant.phen.extend2mo$jan == "0" & plant.phen.extend2mo$dec == "1",1,plant.phen.extend2mo$jan),
+    # extend Feb
+    feb = ifelse(plant.phen.extend2mo$feb == "0" & plant.phen.extend2mo$jan == "1",1,plant.phen.extend2mo$feb),
+    # extend Mar
+    mar = ifelse(plant.phen.extend2mo$mar == "0" & plant.phen.extend2mo$feb == "1",1,plant.phen.extend2mo$mar),
+    # extend Apr
+    apr = ifelse(plant.phen.extend2mo$apr == "0" & plant.phen.extend2mo$mar == "1",1,plant.phen.extend2mo$apr),
+    # extend May
+    may = ifelse(plant.phen.extend2mo$may == "0" & plant.phen.extend2mo$apr == "1",1,plant.phen.extend2mo$may),
+    # extend Jun
+    jun = ifelse(plant.phen.extend2mo$jun == "0" & plant.phen.extend2mo$may == "1",1,plant.phen.extend2mo$jun),
+    # extend Jul
+    jul = ifelse(plant.phen.extend2mo$jul == "0" & plant.phen.extend2mo$jun == "1",1,plant.phen.extend2mo$jul),
+    # extend Aug
+    aug = ifelse(plant.phen.extend2mo$aug == "0" & plant.phen.extend2mo$jul == "1",1,plant.phen.extend2mo$aug),
+    # extend Sep
+    sep = ifelse(plant.phen.extend2mo$sep == "0" & plant.phen.extend2mo$aug == "1",1,plant.phen.extend2mo$sep),
+    # extend Oct
+    oct = ifelse(plant.phen.extend2mo$oct == "0" & plant.phen.extend2mo$sep == "1",1,plant.phen.extend2mo$oct),
+    # extend Nov
+    nov = ifelse(plant.phen.extend2mo$nov == "0" & plant.phen.extend2mo$oct == "1",1,plant.phen.extend2mo$nov),
+    # extend Dec
+    dec = ifelse(plant.phen.extend2mo$dec == "0" & plant.phen.extend2mo$nov == "1",1,plant.phen.extend2mo$dec))
+# long but it works
+
+
+
+
+
+
+
+# Saving these different versions of phenology to compare the results, but with quick access to change back to other versions.
+bee.list.orig <- bee.list
+bee.list.1mo <- bee.list_extend1mo2
+bee.list.2mo <- bee.list_extend2mo2
+
+plant.phenology2.orig <- plant.phenology2
+plant.phen.1mo <- plant.phen.extend1mo2
+plant.phen.2mo <- plant.phen.extend2mo2
+
+
+
+
+# 23JUN24 TRY WITH 1 MONTH EXTENSION
+
+bee.list <- bee.list.orig
+plant.phenology2 <- plant.phen.2mo
 
 
 
@@ -892,6 +1152,11 @@ end.time - start.time
   # 129, 945
 nrow(bee.plant.inter)
 
+# with 1 month bee phenology extension: 155 053
+# with 2 month bee phenology extension: 171 709
+# with 1 month bee and plant phenology extension: 209 906
+# with 1 month bee and 2 month plant phenology extension: 256 069
+# with 2 month plant phenology extension: 205 909
 
 # Save the bee.plant.inter file
  # This file takes a while to generate - so in the future - we can just import it into this space
@@ -970,8 +1235,8 @@ for(j in 1:length(citations)){
 
     
 }
- # 9jun24 first bee species pulled is #138 when there should only be 137
 
+ 
 end.time <- Sys.time()
 beepr::beep(3)
 
@@ -983,7 +1248,11 @@ end.time - start.time
 # 2 278 441
 length(which(bee.plant.date.cite == 0))
 
-
+# with 1 month bee phenology extension: 2 645 393
+# with 2 month bee phenology extension: 2 870 933
+# with 1 month bee and plant phenology extension: 3 487 376
+# with 1 month bee and 2 mo plant phenology extension: 4 105 141
+# with 2 month plant phenology extension: 3 469 975
 
 
 # Now we will fill in the 4-D array with the detection data
@@ -1126,7 +1395,11 @@ observed.but.not.possible <- y2[which(y2$y == 1 & is.na(y2$inter) == TRUE),]
 
 nrow(observed.but.not.possible) 
   # 834
-
+  # 812 with 1 month bee phenology extension
+  # 807 with 2 month bee phenology extension 
+  # 507 with 1 month bee and plant phenology extension
+  # 330 with 1 month bee and 2 mo plant phenology extension
+  # 373 with 2 month plant phenology extension
 
 
 # Look at the first row
@@ -1226,6 +1499,8 @@ for(i in 1:nrow(observed.but.not.possible)){
 
 nrow(observed.but.not.possible)
   # 834
+
+
 
 # ## # Write the file
 write.csv(observed.but.not.possible,
