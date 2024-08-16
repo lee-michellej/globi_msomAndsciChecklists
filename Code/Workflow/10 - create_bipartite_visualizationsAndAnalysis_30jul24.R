@@ -20,7 +20,6 @@ library(tidyverse)
 library(ggplot2)
 library(bipartite)
 library(vegan)
-library(igraph)
 
 
 # code from bipartite to make interaction matrix -------
@@ -46,6 +45,9 @@ dat <- read_csv("./Data/2024 07 19 - bee-plant-mod-probabilities.csv") %>%
          corrected_log_prob = ifelse(log_prob > 0, log_prob, 0),
          prob_100 = max_prob * 100,
          prob_10 = max_prob * 10)
+# 41374 interactions
+# 137 bee species
+# 302 plant species
 
 hist(dat$prob)
 hist(dat$log_prob)
@@ -59,6 +61,9 @@ globi_dat <- read_csv("./Data/final-globi-list-clean 2024 04 07.csv") %>%
                               "Boraginales",
                               targetTaxonOrderName)) %>% 
   separate(resolvedPlantNames, into = c("genus", NA), sep = " ", remove = FALSE)
+# 9555 interactions
+# 89 bee species
+# 172 plant species
 
 
 
@@ -68,8 +73,33 @@ globi_dat <- read_csv("./Data/final-globi-list-clean 2024 04 07.csv") %>%
 # cut off here of probability of 3%
 cut_df <- dat %>% 
   dplyr::select(bee.names, plant.names, prob_10) %>% 
-  dplyr::filter(prob_10 >= 3) %>% 
+  dplyr::filter(prob_10 >= 8) %>% 
   separate(plant.names, into = c("genus", NA), sep = " ", remove = FALSE)
+length(unique(cut_df$bee.names))
+length(unique(cut_df$plant.names))
+
+# as of Aug 1 using probability cut offs
+# total df is 41,374 interactions
+# 30% cut off 18,063
+# 50% cut off 10,458 int, 90 bees, 302 plants
+# 70% cut off 
+# 80% cut off 3213 int, 90 bees, 270 plants
+
+# this may not be the way to proceed. Rather, it may be better to select a subset of interactions
+# and compare it with the modeled outputs of those bees
+
+
+
+
+
+
+apis_df <- dat %>% 
+  separate(bee.names, into = c("bee.genus", NA), sep = " ", remove = FALSE) %>% 
+  filter()
+
+
+
+
 
 # make interaction matrix
 
@@ -170,7 +200,7 @@ cut_matdat_matchplant <- as.data.frame(df2intmatrix(as.data.frame(cut_df_matchpl
 # +++++ ------
 
 # calculate some basic metrics for the model
-model_metrics <- as.data.frame(networklevel(cut_matdat, index = c('nestedness', 
+model_metrics <- as.data.frame(networklevel(dat, index = c('nestedness', 
                                                  'connectance',
                                                  'interaction evenness',
                                                  'NODF',
@@ -181,7 +211,7 @@ names(model_metrics)[1] <- "model_values"
 
 
 # calculate some basic metrics for the globi data
-globi_metrics <- as.data.frame(networklevel(globi_matdat, index = c('nestedness', 
+globi_metrics <- as.data.frame(networklevel(globi_dat, index = c('nestedness', 
                                                                   'connectance',
                                                                   'interaction evenness',
                                                                   'NODF',
@@ -611,8 +641,8 @@ plotweb(cut_matdat_matchplant, method = "normal", empty = TRUE, arrow = "no",
         bor.col.high = NA,
         bor.col.low = NA,
         text.rot = 90,
-        y.lim = c(-1.55,3.25),
-        x.lim = c(0, 2.2),
+        #y.lim = c(-1.55,3.25),
+        #x.lim = c(0, 2.2),
         #sequence = mod_order.matchplants
         #plot.axes = TRUE
 )

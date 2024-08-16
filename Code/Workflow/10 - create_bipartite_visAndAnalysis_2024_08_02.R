@@ -1,15 +1,24 @@
 # ### Create example network visualizations for GloBI manuscript ###
 # created by M. Lee 26 Sep 2022
-# updated by M. Lee 12 Oct 2022
-
+# updated by M. Lee 02 Aug 2024
 
 
 
 
 # This code does the following ---------------------------------------
-# download cleaned interaction and network metric data
-# look at spread of network metrics to choose networks to print
-# print networks for a spread of islets (maybe ~4)
+# 1 - download cleaned interaction and network metric data
+
+# 2 - compare networks
+# calculate network metrics for modeled data
+# calculate network metric for globi data
+# calculate null models
+# calculate network metrics for null models
+# compare results
+
+# 3 - create visualization
+# subset the modeled and globi data to only one family
+# create network visualizations
+
 
 
 
@@ -20,7 +29,6 @@ library(tidyverse)
 library(ggplot2)
 library(bipartite)
 library(vegan)
-library(igraph)
 
 
 # code from bipartite to make interaction matrix -------
@@ -38,20 +46,25 @@ df2intmatrix <- function(dframe, varnames = c("lower", "higher", "freq"), type.o
 }
 
 
-# Main csv files for manipulation ------------------------
+# 1 - Main csv files for manipulation ------------------------
 dat <- read_csv("./Data/2024 07 19 - bee-plant-mod-probabilities.csv") %>% 
   dplyr::select(-1) %>% 
   mutate(prob = max_prob * 10000,
-         log_prob = log(prob),
-         corrected_log_prob = ifelse(log_prob > 0, log_prob, 0),
          prob_100 = max_prob * 100,
          prob_10 = max_prob * 10)
+# 41374 interactions
+# 137 bee species
+# 302 plant species
 
 hist(dat$prob)
-hist(dat$log_prob)
-hist(dat$prob_100)
 hist(dat$max_prob)
 hist(dat$prob_10)
+
+cut_df <- dat %>% 
+  dplyr::select(bee.names, plant.names, prob_10) %>% 
+  dplyr::filter(prob_10 >= 1) %>% 
+  separate(plant.names, into = c("genus", NA), sep = " ", remove = FALSE)
+
 
 globi_dat <- read_csv("./Data/final-globi-list-clean 2024 04 07.csv") %>% 
   select(resolvedPlantNames, resolvedBeeNames, sourceTaxonFamilyName, targetTaxonOrderName, targetTaxonFamilyName) %>% 
@@ -59,30 +72,13 @@ globi_dat <- read_csv("./Data/final-globi-list-clean 2024 04 07.csv") %>%
                               "Boraginales",
                               targetTaxonOrderName)) %>% 
   separate(resolvedPlantNames, into = c("genus", NA), sep = " ", remove = FALSE)
+# 9555 interactions
+# 89 bee species
+# 172 plant species
 
 
 
 
-# Modeled network bipartite ------
-
-# cut off here of probability of 3%
-cut_df <- dat %>% 
-  dplyr::select(bee.names, plant.names, prob_10) %>% 
-  dplyr::filter(prob_10 >= 3) %>% 
-  separate(plant.names, into = c("genus", NA), sep = " ", remove = FALSE)
-
-# make interaction matrix
-
-cut_matdat <- as.data.frame(df2intmatrix(as.data.frame(cut_df), 
-                                                    varnames = c("plant.names", "bee.names", "prob_10"),
-                                                    type.out = "array",
-                                                    emptylist = TRUE))
-
-
-cut_matdat.gen <- as.data.frame(df2intmatrix(as.data.frame(cut_df), 
-                                         varnames = c("genus", "bee.names", "prob_10"),
-                                         type.out = "array",
-                                         emptylist = TRUE))
 
 
 # Make list of cut-off species -----
@@ -99,82 +95,50 @@ colnames(plant.names)[1] <- "resolvedPlantNames"
 plant.genera <- as.data.frame(unique(cut_df$genus))
 colnames(plant.genera)[1] <- "resolvedPlantGenus"
 
-# will need to merge these with other plant list and bee list
-# will need family names etc
-
-
-# +++++ ------
-
-
-# GloBI network bipartite ------
 
 # filter by cut off species lists above
 unmatched.bees <- anti_join(globi_dat, bee.names, by = "resolvedBeeNames")
-list(unique(unmatched.bees$resolvedBeeNames)) # 4 species
-# 10 observations should drop
-# "Eucera edwardsii"         "Dioxys productus"         "Lasioglossum channelense" "Diadasia nitidifrons"    
-
+list(unique(unmatched.bees$resolvedBeeNames)) 
 
 unmatched.plants <- anti_join(globi_dat, plant.names, by = "resolvedPlantNames")
-list(unique(unmatched.plants$resolvedPlantNames)) # 0 species
+list(unique(unmatched.plants$resolvedPlantNames))
 
 
 
 
-# in theory could drop as low as 351
-globi_filtered1 <- filter(globi_dat, globi_dat$resolvedBeeNames %in% bee.names$resolvedBeeNames)
-# first filter drops to 373
-globi_filtered <- filter(globi_filtered1, globi_filtered1$resolvedPlantNames %in% plant.names$resolvedPlantNames)
-# second filter doesn't drop any interactions
-
-#make filtered list with genera
-globi_filtered.gen <- filter(globi_filtered1, globi_filtered1$genus %in% plant.genera$resolvedPlantGenus)
 
 
 
-## EDIT 18Nov22: make list of plant names in order to filter the cutmatrix to match
-
-globi_filtered.plantlist <- as.data.frame(unique(globi_filtered$resolvedPlantNames))
-colnames(globi_filtered.plantlist)[1] <- "resolvedPlantNames"
-
-
-# make interaction matrix
-globi_matdat <- as.data.frame(df2intmatrix(as.data.frame(globi_filtered), 
-                                         varnames = c("resolvedPlantNames", "resolvedBeeNames"),
-                                         type.out = "array",
-                                         emptylist = TRUE))
-
-globi_matdat.gen <- as.data.frame(df2intmatrix(as.data.frame(globi_filtered.gen), 
-                                               varnames = c("genus", "resolvedBeeNames"),
-                                               type.out = "array",
-                                               emptylist = TRUE))
 
 
 
-# EDIT 18Nov22: make new cutmat to match globi plant list
-cut_df_matchplant <- filter(cut_df, cut_df$plant.names %in% globi_filtered.plantlist$resolvedPlantNames)
 
+# Convert data into matrices =========
 
-cut_matdat_matchplant <- as.data.frame(df2intmatrix(as.data.frame(cut_df_matchplant), 
+cut_matdat <- as.data.frame(df2intmatrix(as.data.frame(cut_df), 
                                          varnames = c("plant.names", "bee.names", "prob_10"),
                                          type.out = "array",
                                          emptylist = TRUE))
 
 
 
+globi_matdat <- as.data.frame(df2intmatrix(as.data.frame(globi_filtered), 
+                                           varnames = c("resolvedPlantNames", "resolvedBeeNames"),
+                                           type.out = "array",
+                                           emptylist = TRUE))
 
 
 
-# +++++ ------
-# Network metric differences -------
-# +++++ ------
+# 2 - network measures ------------------------------
+
+# Aug 2 2024 note: There must be a cut off as there is no 0% probability of interactions in the modeled network
 
 # calculate some basic metrics for the model
 model_metrics <- as.data.frame(networklevel(cut_matdat, index = c('nestedness', 
-                                                 'connectance',
-                                                 'interaction evenness',
-                                                 'NODF',
-                                                 'H2')))
+                                                           'connectance',
+                                                           'interaction evenness',
+                                                           'NODF',
+                                                           'H2')))
 names(model_metrics)[1] <- "model_values"
 
 
@@ -182,10 +146,10 @@ names(model_metrics)[1] <- "model_values"
 
 # calculate some basic metrics for the globi data
 globi_metrics <- as.data.frame(networklevel(globi_matdat, index = c('nestedness', 
-                                                                  'connectance',
-                                                                  'interaction evenness',
-                                                                  'NODF',
-                                                                  'H2')))
+                                                                 'connectance',
+                                                                 'interaction evenness',
+                                                                 'NODF',
+                                                                 'H2')))
 names(globi_metrics)[1] <- "globi_values"
 
 tglobi_metrics <- as.data.frame(t(globi_metrics))
@@ -199,20 +163,15 @@ metrics <- cbind(model_metrics, globi_metrics)
 
 
 
+# 3 - null networks -------------
 
-
-
-# +++++ ------
-# Null models -------
-
-# rewrite files as not dataframes ------
 model_matrix <- df2intmatrix(as.data.frame(cut_df), 
-                                         varnames = c("plant.names", "bee.names", "prob_10"),
-                                         type.out = "array",
-                                         emptylist = TRUE)
+                             varnames = c("plant.names", "bee.names", "prob_10"),
+                             type.out = "array",
+                             emptylist = TRUE)
 
 
-globi_matrix <- df2intmatrix(as.data.frame(globi_filtered), 
+globi_matrix <- df2intmatrix(as.data.frame(globi_dat), 
                              varnames = c("resolvedPlantNames", "resolvedBeeNames"),
                              type.out = "array",
                              emptylist = TRUE)
@@ -222,7 +181,7 @@ webs <- list(model_matrix, globi_matrix)
 
 webs.names <- c("model", "globi")
 names(webs) <- webs.names
-             
+
 
 # calculate network measures -------
 net.metrics.nest <- lapply(webs, networklevel, index = 'nestedness')
@@ -336,7 +295,7 @@ inteve.zscore = function(nulltype){
   net.inteve.zscore <- list() 
   for(i in 1:length(net.metrics.evenness)){
     net.inteve.zscore[[i]] = net.zscore(net.metrics.evenness[[i]]['interaction evenness'], 
-                                      nulltype[[i]][ ,'interaction evenness'])
+                                        nulltype[[i]][ ,'interaction evenness'])
   }
   names(net.inteve.zscore) <- webs.names
   return(net.inteve.zscore)
@@ -388,7 +347,7 @@ h2.zscore = function(nulltype){
   net.h2.zscore <- list() 
   for(i in 1:length(net.metrics.h2)){
     net.h2.zscore[[i]] = net.zscore(net.metrics.h2[[i]]['H2'], 
-                                        nulltype[[i]][ ,'H2'])
+                                    nulltype[[i]][ ,'H2'])
   }
   names(net.h2.zscore) <- webs.names
   return(net.h2.zscore)
@@ -441,7 +400,7 @@ connectance.zscore = function(nulltype){
   net.connectance.zscore <- list() 
   for(i in 1:length(net.metrics.connect)){
     net.connectance.zscore[[i]] = net.zscore(net.metrics.connect[[i]]['connectance'], 
-                                    nulltype[[i]][ ,'connectance'])
+                                             nulltype[[i]][ ,'connectance'])
   }
   names(net.connectance.zscore) <- webs.names
   return(net.connectance.zscore)
@@ -495,7 +454,7 @@ nodf.zscore = function(nulltype){
   net.nodf.zscore <- list() 
   for(i in 1:length(net.metrics.nodf)){
     net.nodf.zscore[[i]] = net.zscore(net.metrics.nodf[[i]]['NODF'], 
-                                    nulltype[[i]][ ,'NODF'])
+                                      nulltype[[i]][ ,'NODF'])
   }
   names(net.nodf.zscore) <- webs.names
   return(net.nodf.zscore)
@@ -533,77 +492,32 @@ tests <- rbind(vaz.test.nest,
 
 
 
-# +++++ ------
-# Visualizations-------
-
-# Order of species list by phylogenetic order ----
-# not completely ordered correctly:
-# ordered by family for bees: https://www.researchgate.net/figure/Family-and-subfamily-level-phylogeny-for-bees-based-on-Danforth-et-al-2013_fig1_332959316
-# ordered to order for plants: https://www.researchgate.net/publication/279592674_An_ordinal_classification_for_the_families_of_flowering_plants
-
-
-# ///// for GloBI data -------
-
-plant_phylog <- read_csv("Data/plant_phylog.csv")
-bee_phylog <- read_csv("Data/bee_phylog.csv")
-
-#make phylogeny list for globi plant genus
-glob_plant_order.gen <- plant_phylog %>% 
-  right_join(globi_filtered, by = "plant_order") %>%
-  separate(resolvedPlantNames, into = c("genus", NA), sep = " ", remove = FALSE) %>% 
-  arrange(plant_phylog, genus)
-
-# order by genus
-glob_order.gen <- list(
-  seq.high = unique(glob_bee_order$resolvedBeeNames),
-  seq.low = unique(glob_plant_order.gen$genus)
-)
 
 
 
-# ///// for modelled data -------
 
 
-# make phylogeny list for modeled plant list
-mod_plant_list <- as.data.frame(read_csv("Data/plant_phylog_modellist.csv")) %>% 
-  filter(!is.na(scientificName))
 
-# check for missing species names
-# mod_plant_missing <- anti_join(cut_df,
-#                               mod_plant_list, 
-#                               by = c("plant.names" = "scientificName"))
+# 4 - make visualizations ------------
 
-mod_plant_order.matchplant <- left_join(cut_df_matchplant, mod_plant_list, 
-                                        by = c("plant.names" = "scientificName")) %>% 
-  left_join(plant_phylog, by  = c("Order" = "plant_order")) %>% 
-  mutate( Family =
-    ifelse(resolvedPlantNames %in% c("Phacelia distans", "Phacelia ramosissima"), "Boraginaceae",Family)
-  ) %>% 
-  arrange(plant_phylog, Family, resolvedPlantNames)
+# first attempt with only apidae family
+# this file is likely not complete -- maybe check with Katja if missing anything major
+apis <- read_csv("./Data/apidae.csv")
 
+apis_df <- cut_df %>% 
+  left_join(bee.list, by = c("bee.names" = "resolvedBeeNames")) %>% 
+  dplyr::rename(plant.genus = genus.x,
+                bee.genus = genus.y) %>% 
+  left_join(apis, by = c("bee.genus" = "genus")) %>% 
+  filter(!is.na(family)) %>% 
+  filter(prob_10 == 10)
 
-# make phylogeny list for modeled bee list
-mod_bee_list <- read_csv("Data/bee_phylog_modellist.csv")
-# 23 bee species -- the same as the unique bees included in model cut off
+apid_matdat <- as.data.frame(df2intmatrix(as.data.frame(apis_df), 
+                                         varnames = c("plant.names", "bee.names", "prob_10"),
+                                         type.out = "array",
+                                         emptylist = TRUE))
 
-mod_bee_phylog <- left_join(cut_df, mod_bee_list, by = "bee.names") %>% 
-  left_join(bee_phylog, by = c("bee.family" = "bee_family")) %>% 
-  arrange(bee_phylog, bee.names)
-
-
-# make list to feed to network code
-mod_order.matchplants <- list(
-  seq.high = unique(mod_bee_phylog$bee.names),
-  seq.low = unique(mod_plant_order.matchplant$plant.names)
-)
-
-
-# +++++ ------
-
-# Plot modeled network -------
-
-#matching plant list to output of globi network
-plotweb(cut_matdat_matchplant, method = "normal", empty = TRUE, arrow = "no",
+plotweb(apid_matdat, method = "normal", empty = TRUE, arrow = "no",
         col.interaction = adjustcolor("cornsilk3"),
         col.high = "goldenrod",
         col.low = "olivedrab4",
@@ -617,17 +531,22 @@ plotweb(cut_matdat_matchplant, method = "normal", empty = TRUE, arrow = "no",
         #plot.axes = TRUE
 )
 
-visweb(cut_matdat_matchplant)
 
 
+# take the globi_dat dataset
+# join with santa cruz island bee list
+# filter for bees in apidae
+# may need to filter for plants in the cut model network as well
 
-# +++++ ------
+visglobi <- filter(globi_dat, 
+                   globi_dat$resolvedBeeNames %in% apis_df$bee.names)
 
-# Plot GloBI network -------
-# with phylogenetic order
+visglobi_matdat <- as.data.frame(df2intmatrix(as.data.frame(visglobi), 
+                                          varnames = c("resolvedPlantNames", "resolvedBeeNames"),
+                                          type.out = "array",
+                                          emptylist = TRUE))
 
-
-plotweb(globi_matdat.gen, method = "normal", empty = TRUE, arrow = "no",
+plotweb(visglobi_matdat, method = "normal", empty = TRUE, arrow = "no",
         col.interaction = adjustcolor("cornsilk3"),
         col.high = "goldenrod",
         col.low = "olivedrab4",
@@ -635,7 +554,36 @@ plotweb(globi_matdat.gen, method = "normal", empty = TRUE, arrow = "no",
         bor.col.high = NA,
         bor.col.low = NA,
         text.rot = 90,
-        #y.lim = c(-1.55,3.25),
-        #x.lim = c(0, 2.2),
-        #sequence = glob_order.gen
+        y.lim = c(-1.55,3.25),
+        x.lim = c(0, 2.2),
+        #sequence = mod_order.matchplants
+        #plot.axes = TRUE
 )
+# make visualizations
+
+
+
+
+
+# # 5 - make heat map visualization ----------
+# 
+# # use the full dataset
+# # continue filtering down until legible
+# library(viridis)
+# 
+# globi_dat <- read_csv("./Data/final-globi-list-clean 2024 04 07.csv") %>% 
+#   select(resolvedPlantNames, resolvedBeeNames, sourceTaxonFamilyName, targetTaxonOrderName, targetTaxonFamilyName) %>% 
+#   mutate(plant_order = ifelse(is.na(targetTaxonOrderName),
+#                               "Boraginales",
+#                               targetTaxonOrderName)) %>% 
+#   separate(resolvedPlantNames, into = c("genus", NA), sep = " ", remove = FALSE)
+# 
+# sum_globi_dat <- 
+# 
+# ggplot(globi_dat, aes(reorder(bee.names, -max_prob), 
+#                 reorder(plant.names, -max_prob), 
+#                 fill= max_prob)) + 
+#   geom_tile() +
+#   scale_fill_viridis_c() +
+#   theme(axis.text.x = element_text(angle = 90, vjust = 0.5, hjust=1))
+
