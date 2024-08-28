@@ -1,0 +1,567 @@
+"resolvedPlantNames","Family","Genus","Species","scientificName","inf_type","indeterminate","determinate","compound","inf_more","morph","radial","bilateral","cor_shape","bowl","tube","restrictive","color","white","pink","yellow","green","purple","orange","red","blue","jan","feb","mar","apr","may","jun","jul","aug","sep","oct","nov","dec","notes"
+"Anemopsis californica","Saururaceae","Anemopsis","californica","Anemopsis californica","indeterminate",1,0,0,"head","radial",1,0,"bowl",1,0,0,"white",1,0,0,0,0,0,0,0,0,1,1,0,0,0,0,0,0,0,0,0,NA
+"Sambucus nigra","Adoxaceae","Sambucus","nigra","Sambucus nigra subsp. caerulea","determinate",0,1,0,"umbel","radial",1,0,"bowl",1,0,0,"white",1,0,0,0,0,0,0,0,0,0,1,1,1,1,1,0,0,0,0,0,NA
+"Carpobrotus chilensis","Aizoaceae","Carpobrotus","chilensis","Carpobrotus chilensis","determinate",0,1,0,"solitary","radial",1,0,"bowl",1,0,0,"pink",0,1,0,0,0,0,0,0,1,1,1,1,1,1,1,1,1,1,1,1,NA
+"Carpobrotus edulis","Aizoaceae","Carpobrotus","edulis","Carpobrotus edulis","determinate",0,1,0,"solitary","radial",1,0,"bowl",1,0,0,"yellow",0,0,1,0,0,0,0,0,0,1,1,1,1,1,1,1,1,1,0,0,NA
+"Mesembryanthemum crystallinum","Aizoaceae","Mesembryanthemum","crystallinum","Mesembryanthemum crystallinum","determinate",0,1,0,"solitary","radial",1,0,"bowl",1,0,0,"white",1,0,0,0,0,0,0,0,0,0,1,1,1,1,1,1,1,1,0,0,NA
+"Mesembryanthemum nodiflorum","Aizoaceae","Mesembryanthemum","nodiflorum","Mesembryanthemum nodiflorum","determinate",0,1,0,"solitary","radial",1,0,"bowl",1,0,0,"white",1,0,0,0,0,0,0,0,0,0,0,0,1,1,1,1,0,0,0,0,NA
+"Tetragonia tetragonoides","Aizoaceae","Tetragonia","tetragonioides","Tetragonia tetragonioides","determinate",0,1,0,"solitary","radial",1,0,"bowl",1,0,0,"yellow",0,0,1,0,0,0,0,0,0,0,0,1,1,1,1,1,1,0,0,0,NA
+"Amaranthus albus","Amaranthaceae","Amaranthus","albus","Amaranthus albus","indeterminate",1,0,0,"spike","bilateral",0,1,"bowl",1,0,0,"green",0,0,0,1,0,0,0,0,0,0,0,1,1,1,1,1,1,1,0,0,NA
+"Amaranthus blitoides","Amaranthaceae","Amaranthus","blitoides","Amaranthus blitoides","indeterminate",1,0,0,"spike","bilateral",0,1,"bowl",1,0,0,"green",0,0,0,1,0,0,0,0,0,0,0,0,1,1,1,1,1,1,1,0,NA
+"Amaranthus deflexus","Amaranthaceae","Amaranthus","deflexus","Amaranthus deflexus","indeterminate",1,0,0,"spike","bilateral",0,1,"bowl",1,0,0,"green",0,0,0,1,0,0,0,0,0,0,0,0,1,1,1,1,1,1,1,0,NA
+"Amaranthus powellii","Amaranthaceae","Amaranthus","powellii","Amaranthus powellii","indeterminate",1,0,0,"spike","bilateral",0,1,"bowl",1,0,0,"green",0,0,0,1,0,0,0,0,0,0,0,0,0,1,1,1,1,1,0,0,NA
+"Rhus integrifolia","Anacardiaceae","Rhus","integrifolia","Rhus integrifolia","determinate",0,1,0,"spike","radial",1,0,"bowl",1,0,0,"pink",0,1,0,0,0,0,0,0,0,1,1,1,1,0,0,0,0,0,0,0,NA
+"Rhus ovata","Anacardiaceae","Rhus","ovata","Rhus ovata","determinate",0,1,0,"spike","radial",1,0,"bowl",1,0,0,"pink",0,1,0,0,0,0,0,0,0,0,0,1,1,0,0,0,0,0,0,0,NA
+"Schinus molle","Anacardiaceae","Schinus","molle","Schinus molle","determinate",0,1,0,"pedicel","radial",1,0,"bowl",1,0,0,"white",1,0,0,0,0,0,0,0,0,0,1,1,1,1,0,0,0,0,0,0,NA
+"Toxicodendron diversilobum","Anacardiaceae","Toxicodendron","diversilobum","Toxicodendron diversilobum","determinate",0,1,0,"pedicel","radial",1,0,"bowl",1,0,0,"white",1,0,0,0,0,0,0,0,0,0,1,1,1,1,0,0,0,0,0,0,NA
+"Apiastrum angustifolium","Apiaceae","Apiastrum","angustifolium","Apiastrum angustifolium","indeterminate",1,0,0,"umbel","radial",1,0,"bowl",1,0,0,"white",1,0,0,0,0,0,0,0,0,0,1,1,0,0,0,0,0,0,0,0,NA
+"Apium graveolens","Apiaceae","Apium","graveolens","Apium graveolens","indeterminate",1,0,0,"umbel","radial",1,0,"bowl",1,0,0,"white",1,0,0,0,0,0,0,0,0,0,0,0,1,1,1,0,0,0,0,0,NA
+"Berula erecta","Apiaceae","Berula","erecta","Berula erecta","indeterminate",1,0,0,"umbel","radial",1,0,"bowl",1,0,0,"white",1,0,0,0,0,0,0,0,0,0,0,0,0,0,1,1,0,0,0,0,NA
+"Bowlesia incana","Apiaceae","Bowlesia","incana","Bowlesia incana","determinate",0,1,0,"solitary","radial",1,0,"bowl",1,0,0,"white",1,0,0,0,0,0,0,0,0,0,1,1,0,0,0,0,0,0,0,0,NA
+"Conium maculatum","Apiaceae","Conium","maculatum","Conium maculatum","indeterminate",1,0,0,"umbel","radial",1,0,"bowl",1,0,0,"white",1,0,0,0,0,0,0,0,0,0,0,1,1,1,1,1,1,0,0,0,NA
+"Daucus pusillus","Apiaceae","Daucus","pusillus","Daucus pusillus","indeterminate",1,0,0,"umbel","radial",1,0,"bowl",1,0,0,"white",1,0,0,0,0,0,0,0,0,0,0,1,1,1,0,0,0,0,0,0,NA
+"Foeniculum vulgare","Apiaceae","Foeniculum","vulgare","Foeniculum vulgare","indeterminate",1,0,0,"umbel","radial",1,0,"bowl",1,0,0,"yellow",0,0,1,0,0,0,0,0,0,0,0,0,1,1,1,1,1,0,0,0,NA
+"Lomatium caruifolium","Apiaceae","Lomatium","caruifolium","Lomatium caruifolium","indeterminate",1,0,0,"umbel","radial",1,0,"bowl",1,0,0,"yellow",0,0,1,0,0,0,0,0,0,0,1,1,1,0,0,0,0,0,0,0,NA
+"Lomatium utriculatum","Apiaceae","Lomatium","utriculatum","Lomatium utriculatum","indeterminate",1,0,0,"umbel","radial",1,0,"bowl",1,0,0,"yellow",0,0,1,0,0,0,0,0,0,0,1,1,0,0,0,0,0,0,0,0,NA
+"Sanicula arguta","Apiaceae","Sanicula","arguta","Sanicula arguta","compound",0,0,1,"umbel","radial",1,0,"bowl",1,0,0,"yellow",0,0,1,0,0,0,0,0,0,0,1,1,0,0,0,0,0,0,0,0,NA
+"Sanicula hoffmannii","Apiaceae","Sanicula","hoffmannii","Sanicula hoffmannii","compound",0,0,1,"umbel","radial",1,0,"bowl",1,0,0,"pink",0,1,0,0,0,0,0,0,0,0,1,1,1,0,0,0,0,0,0,0,NA
+"Torilis arvensis","Apiaceae","Torilis","arvensis","Torilis arvensis","indeterminate",1,0,0,"umbel","radial",1,0,"bowl",1,0,0,"white",1,0,0,0,0,0,0,0,0,0,0,0,1,1,1,1,0,0,0,0,NA
+"Torilis nodosa","Apiaceae","Torilis","nodosa","Torilis nodosa","indeterminate",1,0,0,"umbel","radial",1,0,"bowl",1,0,0,"white",1,0,0,0,0,0,0,0,0,0,0,1,1,1,0,0,0,0,0,0,NA
+"Yabea microcarpa","Apiaceae","Yabea","microcarpa","Yabea microcarpa","determinate",0,1,0,"cyme","radial",1,0,"bowl",1,0,0,"white",1,0,0,0,0,0,0,0,0,0,0,1,1,1,0,0,0,0,0,0,NA
+"Asclepias fascicularis","Apocynaceae","Asclepias","fascicularis","Asclepias fascicularis","determinate",0,1,0,"umbel","radial",1,0,"bowl",1,0,0,"white",1,0,0,0,0,0,0,0,0,0,0,0,0,1,1,1,1,0,0,0,NA
+"Vinca major","Apocynaceae","Vinca","major","Vinca major","determinate",0,1,0,"solitary","radial",1,0,"tube",0,1,0,"purple",0,0,0,0,1,0,0,0,1,1,1,1,1,0,0,0,0,0,0,0,NA
+"Achillea millefolium","Asteraceae","Achillea","millefolium","Achillea millefolium","compound",0,0,1,"corymb","radial",1,0,"bowl",1,0,0,"white",1,0,0,0,0,0,0,0,0,0,0,1,1,1,1,1,0,0,0,0,NA
+"Achyrachaena mollis","Asteraceae","Achyrachaena","mollis","Achyrachaena mollis","compound",0,0,1,"head","radial",1,0,"bowl",1,0,0,"yellow",0,0,1,0,0,0,0,0,0,0,0,1,1,0,0,0,0,0,0,0,NA
+"Acourtia microcephala","Asteraceae","Acourtia","microcephala","Acourtia microcephala","compound",0,0,1,"umbel","radial",1,0,"bowl",1,0,0,"purple",0,0,0,0,1,0,0,0,0,0,0,0,0,1,1,1,0,0,0,0,NA
+"Agoseris grandiflora","Asteraceae","Agoseris","grandiflora","Agoseris grandiflora var. grandiflora","compound",0,0,1,"head","radial",1,0,"bowl",1,0,0,"yellow",0,0,1,0,0,0,0,0,0,0,1,1,1,0,0,0,0,0,0,0,NA
+"Amblyopappus pusillus","Asteraceae","Amblyopappus","pusillus","Amblyopappus pusillus","compound",0,0,1,"head","radial",1,0,"bowl",1,0,0,"yellow",0,0,1,0,0,0,0,0,0,0,1,1,1,1,0,0,0,0,0,0,NA
+"Ambrosia chamissonis","Asteraceae","Ambrosia","chamissonis","Ambrosia chamissonis","compound",0,0,1,"spike","radial",1,0,"bowl",1,0,0,"yellow",0,0,1,0,0,0,0,0,0,0,0,0,0,1,1,0,0,0,0,0,NA
+"Ambrosia psilostachya","Asteraceae","Ambrosia","psilostachya","Ambrosia psilostachya","compound",0,0,1,"raceme","radial",1,0,"bowl",1,0,0,"yellow",0,0,1,0,0,0,0,0,0,0,0,0,0,0,1,1,1,1,1,0,NA
+"Anthemis cotula","Asteraceae","Anthemis","cotula","Anthemis cotula","compound",0,0,1,"solitary","radial",1,0,"bowl",1,0,0,"white",1,0,0,0,0,0,0,0,0,0,0,0,1,1,1,1,1,0,0,0,NA
+"Artemisia californica","Asteraceae","Artemisia","californica","Artemisia californica","compound",0,0,1,"raceme","radial",1,0,"bowl",1,0,0,"green",0,0,0,1,0,0,0,0,0,0,0,1,1,1,1,1,1,1,0,0,NA
+"Artemisia douglasiana","Asteraceae","Artemisia","douglasiana","Artemisia douglasiana","compound",0,0,1,"raceme","radial",1,0,"bowl",1,0,0,"yellow",0,0,1,0,0,0,0,0,0,0,0,0,1,1,1,1,1,1,0,0,NA
+"Baccharis glutinosa","Asteraceae","Baccharis","glutinosa","Baccharis glutinosa","compound",0,0,1,"umbel","radial",1,0,"bowl",1,0,0,"white",1,0,0,0,0,0,0,0,0,0,0,0,0,1,1,1,1,1,0,0,NA
+"Baccharis pilularis","Asteraceae","Baccharis","pilularis","Baccharis pilularis ssp. consanguinea","compound",0,0,1,"spike","radial",1,0,"bowl",1,0,0,"white",1,0,0,0,0,0,0,0,1,0,0,0,0,0,0,0,0,1,1,1,NA
+"Baccharis plummerae","Asteraceae","Baccharis","plummerae","Baccharis plummerae ssp. plummerae","compound",0,0,1,"head","radial",1,0,"bowl",1,0,0,"white",1,0,0,0,0,0,0,0,0,0,0,0,1,1,1,1,1,1,0,0,NA
+"Baccharis salicifolia","Asteraceae","Baccharis","salicifolia","Baccharis salicifolia subsp. salicifolia","compound",0,0,1,"umbel","radial",1,0,"bowl",1,0,0,"white",1,0,0,0,0,0,0,0,0,0,0,0,1,1,0,0,0,0,0,0,NA
+"Blennosperma nanum","Asteraceae","Blennosperma","nanum","Blennosperma nanum var. nanum","compound",0,0,1,"head","radial",1,0,"bowl",1,0,0,"yellow",0,0,1,0,0,0,0,0,0,1,1,1,0,0,0,0,0,0,0,0,NA
+"Brickellia californica","Asteraceae","Brickellia","californica","Brickellia californica","compound",0,0,1,"spike","radial",1,0,"tube",0,1,0,"white",1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1,1,1,1,0,NA
+"Carduus pycnocephalus","Asteraceae","Carduus","pycnocephalus","Carduus pycnocephalus subsp. pycnocephalus","compound",0,0,1,"head","radial",1,0,"bowl",1,0,0,"purple",0,0,0,0,1,0,0,0,0,1,1,1,1,1,0,0,0,0,0,0,NA
+"Centaurea benedicta","Asteraceae","Centaurea","benedicta","Centaurea benedicta","compound",0,0,1,"head","radial",1,0,"bowl",1,0,0,"yellow",0,0,1,0,0,0,0,0,0,0,0,1,1,1,0,0,0,0,0,0,NA
+"Centaurea melitensis","Asteraceae","Centaurea","melitensis","Centaurea melitensis","compound",0,0,1,"head","radial",1,0,"bowl",1,0,0,"yellow",0,0,1,0,0,0,0,0,0,0,0,1,1,1,1,1,0,0,0,0,NA
+"Centaurea solstitialis","Asteraceae","Centaurea","solstitialis","Centaurea solstitialis","compound",0,0,1,"head","radial",1,0,"bowl",1,0,0,"yellow",0,0,1,0,0,0,0,0,0,0,0,1,1,1,1,1,1,0,0,0,NA
+"Centromadia fitchii","Asteraceae","Centromadia","fitchii","Centromadia fitchii","compound",0,0,1,"head","radial",1,0,"bowl",1,0,0,"yellow",0,0,1,0,0,0,0,0,0,0,0,0,1,1,1,1,1,1,0,0,NA
+"Cichorium intybus","Asteraceae","Cichorium","intybus","Cichorium intybus","compound",0,0,1,"head","radial",1,0,"bowl",1,0,0,"blue",0,0,0,0,0,0,0,1,0,0,0,0,0,0,1,1,0,0,0,0,NA
+"Cirsium brevistylum","Asteraceae","Cirsium","brevistylum","Cirsium brevistylum","compound",0,0,1,"head","radial",1,0,"bowl",1,0,0,"purple",0,0,0,0,1,0,0,0,0,0,0,1,1,1,1,0,0,0,0,0,NA
+"Cirsium vulgare","Asteraceae","Cirsium","vulgare","Cirsium vulgare","compound",0,0,1,"head","radial",1,0,"bowl",1,0,0,"purple",0,0,0,0,1,0,0,0,0,0,0,0,0,1,1,1,1,0,0,0,NA
+"Corethrogyne filaginifolia","Asteraceae","Corethrogyne","filaginifolia","Corethrogyne filaginifolia","compound",0,0,1,"head","radial",1,0,"bowl",1,0,0,"purple",0,0,0,0,1,0,0,0,0,0,0,0,0,1,1,1,1,1,0,0,NA
+"Cotula australis","Asteraceae","Cotula","australis","Cotula australis","compound",0,0,1,"head","radial",1,0,"bowl",1,0,0,"green",0,0,0,1,0,0,0,0,1,1,1,1,1,0,0,0,0,0,0,0,NA
+"Cotula coronopifolia","Asteraceae","Cotula","coronopifolia","Cotula coronopifolia","compound",0,0,1,"head","radial",1,0,"bowl",1,0,0,"yellow",0,0,1,0,0,0,0,0,0,0,0,0,1,1,1,1,1,1,0,0,NA
+"Cynara cardunculus","Asteraceae","Cynara","cardunculus","Cynara cardunculus subsp. flavescens","compound",0,0,1,"head","radial",1,0,"bowl",1,0,0,"purple",0,0,0,0,1,0,0,0,0,0,0,1,1,1,1,0,0,0,0,0,NA
+"Deinandra clementina","Asteraceae","Deinandra","clementina","Deinandra clementina","compound",0,0,1,"head","radial",1,0,"bowl",1,0,0,"yellow",0,0,1,0,0,0,0,0,0,0,0,0,1,1,1,0,0,0,0,0,NA
+"Deinandra fasciculata","Asteraceae","Deinandra","fasciculata","Deinandra fasciculata","compound",0,0,1,"spike","radial",1,0,"bowl",1,0,0,"yellow",0,0,1,0,0,0,0,0,0,0,0,0,1,1,1,1,1,1,0,0,NA
+"Deinandra increscens","Asteraceae","Deinandra","increscens","Deinandra increscens ssp. increscens","compound",0,0,1,"head","radial",1,0,"bowl",1,0,0,"yellow",0,0,1,0,0,0,0,0,0,0,0,0,0,1,1,1,1,0,0,0,NA
+"Encelia californica","Asteraceae","Encelia","californica","Encelia californica","compound",0,0,1,"head","radial",1,0,"bowl",1,0,0,"yellow",0,0,1,0,0,0,0,0,0,1,1,1,1,1,0,0,0,0,0,0,NA
+"Ericameria ericoides","Asteraceae","Ericameria","ericoides","Ericameria ericoides","compound",0,0,1,"spike","radial",1,0,"bowl",1,0,0,"yellow",0,0,1,0,0,0,0,0,0,0,0,0,0,0,0,0,1,1,1,0,NA
+"Erigeron bonariensis","Asteraceae","Erigeron","bonariensis","Erigeron bonariensis","compound",0,0,1,"head","radial",1,0,"bowl",1,0,0,"white",1,0,0,0,0,0,0,0,0,0,0,0,0,1,1,1,0,0,0,0,NA
+"Erigeron canadensis","Asteraceae","Erigeron","canadensis","Erigeron canadensis","compound",0,0,1,"head","radial",1,0,"bowl",1,0,0,"white",1,0,0,0,0,0,0,0,0,0,0,0,0,1,1,1,1,0,0,0,NA
+"Erigeron foliosus","Asteraceae","Erigeron","foliosus","Erigeron foliosus var. foliosus","compound",0,0,1,"head","radial",1,0,"bowl",1,0,0,"purple",0,0,0,0,1,0,0,0,0,0,0,0,1,1,1,1,1,0,0,0,"calflora without subspp"
+"Erigeron glaucus","Asteraceae","Erigeron","glaucus","Erigeron glaucus","compound",0,0,1,"head","radial",1,0,"bowl",1,0,0,"purple",0,0,0,0,1,0,0,0,1,1,1,1,1,1,1,1,0,0,0,0,NA
+"Erigeron sanctarum","Asteraceae","Erigeron","sanctarum","Erigeron sanctarum",NA,0,0,0,NA,NA,0,0,NA,0,0,0,NA,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,"no sanctarum"
+"Erigeron sumatrensis","Asteraceae","Erigeron","sumatrensis","Erigeron sumatrensis","compound",0,0,1,"spike","radial",1,0,"bowl",1,0,0,"white",1,0,0,0,0,0,0,0,0,0,0,0,1,1,1,1,1,1,0,0,NA
+"Eriophyllum confertiflorum","Asteraceae","Eriophyllum","confertiflorum","Eriophyllum confertiflorum var. confertiflorum","compound",0,0,1,"umbel","radial",1,0,"bowl",1,0,0,"yellow",0,0,1,0,0,0,0,0,0,0,0,1,1,1,1,1,0,0,0,0,"no subspecies"
+"Eriophyllum staechadifolium","Asteraceae","Eriophyllum","staechadifolium","Eriophyllum staechadifolium","compound",0,0,1,"umbel","radial",1,0,"bowl",1,0,0,"yellow",0,0,1,0,0,0,0,0,0,0,0,0,1,1,1,1,0,0,0,0,NA
+"Eurybia radulina","Asteraceae","Eurybia","radulina","Eurybia radulina","compound",0,0,1,"spike","radial",1,0,"bowl",1,0,0,"white",1,0,0,0,0,0,0,0,0,0,0,0,0,0,1,1,1,1,0,0,NA
+"Gamochaeta ustulata","Asteraceae","Gamochaeta","ustulata","Gamochaeta ustulata","compound",0,0,1,"spike","radial",1,0,"bowl",1,0,0,"green",0,0,0,1,0,0,0,0,0,0,0,1,1,1,1,0,0,0,0,0,NA
+"Glebionis coronaria","Asteraceae","Glebionis","coronaria","Glebionis coronaria","compound",0,0,1,"head","radial",1,0,"bowl",1,0,0,"yellow",0,0,1,0,0,0,0,0,0,0,1,1,1,1,1,0,0,0,0,0,NA
+"Gnaphalium palustre","Asteraceae","Gnaphalium","palustre","Gnaphalium palustre","compound",0,0,1,"spike","radial",1,0,"bowl",1,0,0,"white",1,0,0,0,0,0,0,0,0,0,0,0,1,1,1,1,1,0,0,0,NA
+"Hazardia detonsa","Asteraceae","Hazardia","detonsa","Hazardia detonsa","compound",0,0,1,"spike","radial",1,0,"bowl",1,0,0,"yellow",0,0,1,0,0,0,0,0,0,0,1,1,1,1,1,1,1,1,1,0,NA
+"Hazardia squarrosa","Asteraceae","Hazardia","squarrosa","Hazardia squarrosa var. grindelioides","compound",0,0,1,"spike","radial",1,0,"bowl",1,0,0,"yellow",0,0,1,0,0,0,0,0,0,0,0,0,0,1,1,1,1,1,0,0,NA
+"Helianthus annuus","Asteraceae","Helianthus","annuus","Helianthus annuus","compound",0,0,1,"head","radial",1,0,"bowl",1,0,0,"yellow",0,0,1,0,0,0,0,0,0,0,0,0,0,1,1,1,0,0,0,0,NA
+"Helminthotheca echioides","Asteraceae","Helminthotheca","echioides","Helminthotheca echioides","compound",0,0,1,"head","radial",1,0,"bowl",1,0,0,"yellow",0,0,1,0,0,0,0,0,0,0,0,0,0,1,1,1,1,1,1,1,NA
+"Heterotheca grandiflora","Asteraceae","Heterotheca","grandiflora","Heterotheca grandiflora","compound",0,0,1,"head","radial",1,0,"bowl",1,0,0,"yellow",0,0,1,0,0,0,0,0,1,1,1,1,1,1,1,1,1,1,1,1,NA
+"Hieracium argutum","Asteraceae","Hieracium","argutum","Hieracium argutum","compound",0,0,1,"head","radial",1,0,"bowl",1,0,0,"yellow",0,0,1,0,0,0,0,0,0,0,0,0,0,1,1,1,1,1,0,0,NA
+"Hypochaeris glabra","Asteraceae","Hypochaeris","glabra","Hypochaeris glabra","compound",0,0,1,"head","radial",1,0,"bowl",1,0,0,"yellow",0,0,1,0,0,0,0,0,0,0,1,1,1,1,0,0,0,0,0,0,NA
+"Jaumea carnosa","Asteraceae","Jaumea","carnosa","Jaumea carnosa","compound",0,0,1,"head","radial",1,0,"bowl",1,0,0,"yellow",0,0,1,0,0,0,0,0,0,0,0,0,1,1,1,0,0,0,0,0,NA
+"Lactuca saligna","Asteraceae","Lactuca","saligna","Lactuca saligna","compound",0,0,1,"spike","radial",1,0,"bowl",1,0,0,"yellow",0,0,1,0,0,0,0,0,0,0,0,0,0,0,1,1,1,1,0,0,NA
+"Lactuca serriola","Asteraceae","Lactuca","serriola","Lactuca serriola","compound",0,0,1,"spike","radial",1,0,"bowl",1,0,0,"yellow",0,0,1,0,0,0,0,0,0,0,0,0,1,1,1,1,1,0,0,0,NA
+"Laennecia coulteri","Asteraceae","Laennecia","coulteri","Laennecia coulteri","compound",0,0,1,"spike","radial",1,0,"bowl",1,0,0,"white",1,0,0,0,0,0,0,0,0,0,0,0,1,1,1,1,1,1,1,0,NA
+"Lasthenia gracilis","Asteraceae","Lasthenia","gracilis","Lasthenia gracilis","compound",0,0,1,"head","radial",1,0,"bowl",1,0,0,"yellow",0,0,1,0,0,0,0,0,0,1,1,1,1,1,0,0,0,0,0,0,NA
+"Layia platyglossa","Asteraceae","Layia","platyglossa","Layia platyglossa","compound",0,0,1,"head","radial",1,0,"bowl",1,0,0,"yellow",0,0,1,0,0,0,0,0,0,1,1,1,1,0,0,0,0,0,0,0,NA
+"Lepidospartum squamatum","Asteraceae","Lepidospartum","squamatum","Lepidospartum squamatum","compound",0,0,1,"spike","radial",1,0,"bowl",1,0,0,"yellow",0,0,1,0,0,0,0,0,0,0,0,0,0,0,0,1,1,1,1,0,NA
+"Leptosyne gigantea","Asteraceae","Leptosyne","gigantea","Leptosyne gigantea","compound",0,0,1,"head","radial",1,0,"bowl",1,0,0,"yellow",0,0,1,0,0,0,0,0,1,1,1,1,1,0,0,0,0,0,0,0,NA
+"Logfia arizonica","Asteraceae","Logfia","arizonica","Logfia arizonica","compound",0,0,1,"spike","radial",1,0,"bowl",1,0,0,"green",0,0,0,1,0,0,0,0,0,1,1,1,1,0,0,0,0,0,0,0,NA
+"Logfia filaginoides","Asteraceae","Logfia","filaginoides","Logfia filaginoides","compound",0,0,1,"spike","radial",1,0,"bowl",1,0,0,"green",0,0,0,1,0,0,0,0,0,0,1,1,1,1,0,0,0,0,0,0,NA
+"Logfia gallica","Asteraceae","Logfia","gallica","Logfia gallica","compound",0,0,1,"spike","radial",1,0,"bowl",1,0,0,"green",0,0,0,1,0,0,0,0,0,0,0,1,1,1,0,0,0,0,0,0,NA
+"Madia exigua","Asteraceae","Madia","exigua","Madia exigua","compound",0,0,1,"spike","radial",1,0,"bowl",1,0,0,"yellow",0,0,1,0,0,0,0,0,0,0,0,1,1,1,0,0,0,0,0,0,NA
+"Madia gracilis","Asteraceae","Madia","gracilis","Madia gracilis","compound",0,0,1,"spike","radial",1,0,"bowl",1,0,0,"yellow",0,0,1,0,0,0,0,0,0,0,0,1,1,1,1,0,0,0,0,0,NA
+"Madia sativa","Asteraceae","Madia","sativa","Madia sativa","compound",0,0,1,"spike","radial",1,0,"bowl",1,0,0,"yellow",0,0,1,0,0,0,0,0,0,0,0,0,1,1,1,1,0,0,0,0,NA
+"Malacothrix coulteri","Asteraceae","Malacothrix","coulteri","Malacothrix coulteri","compound",0,0,1,"spike","radial",1,0,"bowl",1,0,0,"white",1,0,0,0,0,0,0,0,0,0,1,1,1,0,0,0,0,0,0,0,NA
+"Malacothrix indecora","Asteraceae","Malacothrix","indecora","Malacothrix indecora","compound",0,0,1,"head","radial",1,0,"bowl",1,0,0,"yellow",0,0,1,0,0,0,0,0,0,0,0,1,1,1,1,1,1,0,0,0,NA
+"Malacothrix saxatilis","Asteraceae","Malacothrix","saxatilis","Malacothrix saxatilis var. implicata","compound",0,0,1,"head","radial",1,0,"bowl",1,0,0,"white",1,0,0,0,0,0,0,0,0,0,0,0,0,1,1,1,1,1,1,1,NA
+"Malacothrix similis","Asteraceae","Malacothrix","similis","Malacothrix similis","compound",0,0,1,"head","radial",1,0,"bowl",1,0,0,"yellow",0,0,1,0,0,0,0,0,0,0,0,1,1,0,0,0,0,0,0,0,NA
+"Malacothrix squalida","Asteraceae","Malacothrix","squalida","Malacothrix squalida","compound",0,0,1,"head","radial",1,0,"bowl",1,0,0,"yellow",0,0,1,0,0,0,0,0,0,0,0,1,1,1,1,0,0,0,0,0,NA
+"Matricaria discoidea","Asteraceae","Matricaria","discoidea","Matricaria discoidea","compound",0,0,1,"head","radial",1,0,"bowl",1,0,0,"yellow",0,0,1,0,0,0,0,0,0,0,0,0,1,1,1,1,1,0,0,0,NA
+"Micropus californicus","Asteraceae","Micropus","californicus","Micropus californicus var. californicus","compound",0,0,1,"spike","radial",1,0,"bowl",1,0,0,"white",1,0,0,0,0,0,0,0,0,0,0,1,1,0,0,0,0,0,0,0,NA
+"Microseris douglasii","Asteraceae","Microseris","douglasii","Microseris douglasii subsp. tenella","compound",0,0,1,"head","radial",1,0,"bowl",1,0,0,"yellow",0,0,1,0,0,0,0,0,0,0,1,1,1,0,0,0,0,0,0,0,NA
+"Microseris elegans","Asteraceae","Microseris","elegans","Microseris elegans","compound",0,0,1,"head","radial",1,0,"bowl",1,0,0,"yellow",0,0,1,0,0,0,0,0,0,0,0,1,1,0,0,0,0,0,0,0,NA
+"Perityle emoryi","Asteraceae","Perityle","emoryi","Perityle emoryi","compound",0,0,1,"head","radial",1,0,"bowl",1,0,0,"white",1,0,0,0,0,0,0,0,1,1,1,1,1,1,0,0,0,0,0,0,NA
+"Pluchea odorata","Asteraceae","Pluchea","odorata","Pluchea odorata var. odorata","compound",0,0,1,"umbel","radial",1,0,"bowl",1,0,0,"pink",0,1,0,0,0,0,0,0,0,0,0,0,0,1,1,1,1,1,1,0,NA
+"Pseudognaphalium beneolens","Asteraceae","Pseudognaphalium","beneolens","Pseudognaphalium beneolens","compound",0,0,1,"umbel","radial",1,0,"bowl",1,0,0,"white",1,0,0,0,0,0,0,0,0,0,0,0,0,1,1,1,1,1,0,0,NA
+"Pseudognaphalium biolettii","Asteraceae","Pseudognaphalium","biolettii","Pseudognaphalium biolettii","compound",0,0,1,"umbel","radial",1,0,"bowl",1,0,0,"white",1,0,0,0,0,0,0,0,1,1,1,1,1,0,0,0,0,0,0,0,NA
+"Pseudognaphalium californicum","Asteraceae","Pseudognaphalium","californicum","Pseudognaphalium californicum","compound",0,0,1,"umbel","radial",1,0,"bowl",1,0,0,"white",1,0,0,0,0,0,0,0,1,1,1,1,1,1,1,0,0,0,0,0,NA
+"Pseudognaphalium luteoalbum","Asteraceae","Pseudognaphalium","luteoalbum","Pseudognaphalium luteoalbum","compound",0,0,1,"umbel","radial",1,0,"bowl",1,0,0,"pink",0,1,0,0,0,0,0,0,0,0,1,1,1,1,1,1,0,0,0,0,NA
+"Pseudognaphalium microcephalum","Asteraceae","Pseudognaphalium","microcephalum","Pseudognaphalium microcephalum","compound",0,0,1,"umbel","radial",1,0,"bowl",1,0,0,"white",1,0,0,0,0,0,0,0,0,0,0,0,0,0,1,1,1,1,0,0,NA
+"Pseudognaphalium ramosissimum","Asteraceae","Pseudognaphalium","ramosissimum","Pseudognaphalium ramosissimum","compound",0,0,1,"spike","radial",1,0,"bowl",1,0,0,"pink",0,1,0,0,0,0,0,0,0,0,0,0,0,1,1,1,0,0,0,0,NA
+"Pseudognaphalium stramineum","Asteraceae","Pseudognaphalium","stramineum","Pseudognaphalium stramineum","compound",0,0,1,"umbel","radial",1,0,"bowl",1,0,0,"yellow",0,0,1,0,0,0,0,0,0,0,0,0,1,1,1,1,1,1,0,0,NA
+"Psilocarphus tenellus","Asteraceae","Psilocarphus","tenellus","Psilocarphus tenellus","compound",0,0,1,"umbel","radial",1,0,"bowl",1,0,0,"white",1,0,0,0,0,0,0,0,0,0,0,1,1,1,0,0,0,0,0,0,NA
+"Rafinesquia californica","Asteraceae","Rafinesquia","californica","Rafinesquia californica","compound",0,0,1,"spike","radial",1,0,"bowl",1,0,0,"white",1,0,0,0,0,0,0,0,0,0,0,1,1,1,1,0,0,0,0,0,NA
+"Senecio aphanactis","Asteraceae","Senecio","aphanactis","Senecio aphanactis","compound",0,0,1,"head","radial",1,0,"bowl",1,0,0,"yellow",0,0,1,0,0,0,0,0,1,1,1,1,0,0,0,0,0,0,0,0,NA
+"Senecio flaccidus","Asteraceae","Senecio","flaccidus","Senecio flaccidus var. douglasii","compound",0,0,1,"head","radial",1,0,"bowl",1,0,0,"yellow",0,0,1,0,0,0,0,0,0,0,0,0,0,1,1,1,1,1,0,0,NA
+"Senecio glomeratus","Asteraceae","Senecio","glomeratus","Senecio glomeratus","compound",0,0,1,"head","radial",1,0,"bowl",1,0,0,"yellow",0,0,1,0,0,0,0,0,0,0,0,1,1,1,1,1,1,0,0,0,NA
+"Senecio vulgaris","Asteraceae","Senecio","vulgaris","Senecio vulgaris","compound",0,0,1,"head","radial",1,0,"bowl",1,0,0,"yellow",0,0,1,0,0,0,0,0,1,1,1,1,1,1,1,1,1,1,1,1,NA
+"Solidago velutina","Asteraceae","Solidago","velutina","Solidago velutina subsp. californica","compound",0,0,1,"umbel","radial",1,0,"bowl",1,0,0,"yellow",0,0,1,0,0,0,0,0,0,0,0,0,0,0,1,1,1,1,0,0,NA
+"Sonchus asper","Asteraceae","Sonchus","asper","Sonchus asper subsp. asper","compound",0,0,1,"spike","radial",1,0,"bowl",1,0,0,"yellow",0,0,1,0,0,0,0,0,0,1,1,1,1,1,1,1,1,1,0,0,NA
+"Sonchus oleraceus","Asteraceae","Sonchus","oleraceus","Sonchus oleraceus","compound",0,0,1,"head","radial",1,0,"bowl",1,0,0,"yellow",0,0,1,0,0,0,0,0,1,1,1,1,1,1,1,1,1,1,1,1,NA
+"Stebbinsoseris heterocarpa","Asteraceae","Stebbinsoseris","heterocarpa","Stebbinsoseris heterocarpa","compound",0,0,1,"head","radial",1,0,"bowl",1,0,0,"white",1,0,0,0,0,0,0,0,0,0,0,1,1,1,0,0,0,0,0,0,NA
+"Stephanomeria cichoriacea","Asteraceae","Stephanomeria","cichoriacea","Stephanomeria cichoriacea","compound",0,0,1,"head","radial",1,0,"bowl",1,0,0,"purple",0,0,0,0,1,0,0,0,0,0,0,0,1,1,1,1,1,1,1,0,NA
+"Stephanomeria diegensis","Asteraceae","Stephanomeria","diegensis","Stephanomeria diegensis","compound",0,0,1,"head","radial",1,0,"bowl",1,0,0,"pink",0,1,0,0,0,0,0,0,0,0,0,0,0,0,0,1,1,1,1,0,NA
+"Stephanomeria exigua","Asteraceae","Stephanomeria","exigua","Stephanomeria exigua ssp. coronaria","compound",0,0,1,"head","radial",1,0,"bowl",1,0,0,"pink",0,1,0,0,0,0,0,0,0,0,0,0,0,1,1,1,1,1,1,0,NA
+"Stephanomeria virgata","Asteraceae","Stephanomeria","virgata","Stephanomeria virgata subsp. virgata","compound",0,0,1,"head","radial",1,0,"bowl",1,0,0,"purple",0,0,0,0,1,0,0,0,0,0,0,0,0,0,0,1,1,1,0,0,NA
+"Stylocline gnaphaloides","Asteraceae","Stylocline","gnaphaloides","Stylocline gnaphaloides","compound",0,0,1,"head","radial",1,0,"bowl",1,0,0,"white",1,0,0,0,0,0,0,0,0,0,1,1,1,0,0,0,0,0,0,0,NA
+"Symphyotrichum chilense","Asteraceae","Symphyotrichum","chilense","Symphyotrichum chilense","compound",0,0,1,"head","radial",1,0,"bowl",1,0,0,"purple",0,0,0,0,1,0,0,0,0,0,0,0,0,0,1,1,0,0,0,0,NA
+"Symphyotrichum subulatum","Asteraceae","Symphyotrichum","subulatum","Symphyotrichum subulatum","compound",0,0,1,"head","radial",1,0,"bowl",1,0,0,"purple",0,0,0,0,1,0,0,0,0,0,0,0,0,0,1,1,1,1,0,0,NA
+"Taraxacum erythrospermum","Asteraceae","Taraxacum","erythrospermum","Taraxacum erythrospermum","compound",0,0,1,"head","radial",1,0,"bowl",1,0,0,"yellow",0,0,1,0,0,0,0,0,1,1,1,1,1,1,1,1,1,1,1,1,NA
+"Taraxacum officinale","Asteraceae","Taraxacum","officinale","Taraxacum officinale","compound",0,0,1,"head","radial",1,0,"bowl",1,0,0,"yellow",0,0,1,0,0,0,0,0,0,1,1,0,0,0,0,0,0,0,0,0,NA
+"Tragopogon porrifolius","Asteraceae","Tragopogon","porrifolius","Tragopogon porrifolius","compound",0,0,1,"head","radial",1,0,"bowl",1,0,0,"purple",0,0,0,0,1,0,0,0,0,0,0,1,1,0,0,0,0,0,0,0,NA
+"Uropappus lindleyi","Asteraceae","Uropappus","lindleyi","Uropappus lindleyi","compound",0,0,1,"head","radial",1,0,"bowl",1,0,0,"yellow",0,0,1,0,0,0,0,0,0,0,1,1,1,0,0,0,0,0,0,0,NA
+"Urospermum picroides","Asteraceae","Urospermum","picroides","Urospermum picroides","compound",0,0,1,"head","radial",1,0,"bowl",1,0,0,"yellow",0,0,1,0,0,0,0,0,0,0,0,1,1,1,1,0,0,0,0,0,NA
+"Venegasia carpesioides","Asteraceae","Venegasia","carpesioides","Venegasia carpesioides","compound",0,0,1,"head","radial",1,0,"bowl",1,0,0,"yellow",0,0,1,0,0,0,0,0,0,1,1,1,1,0,0,0,0,0,0,0,NA
+"Xanthium spinosum","Asteraceae","Xanthium","spinosum","Xanthium spinosum","compound",0,0,1,"head","radial",1,0,"bowl",1,0,0,"green",0,0,0,1,0,0,0,0,0,0,0,0,0,0,1,1,1,1,0,0,NA
+"Xanthium strumarium","Asteraceae","Xanthium","strumarium","Xanthium strumarium","compound",0,0,1,"head","radial",1,0,"bowl",1,0,0,"green",0,0,0,1,0,0,0,0,0,0,0,0,0,0,1,1,1,1,0,0,NA
+"Berberis pinnata","Berberidaceae","Berberis","pinnata","Berberis pinnata ssp. insularis","determinate",0,1,0,"botryoid","radial",1,0,"bowl",1,0,0,"yellow",0,0,1,0,0,0,0,0,0,1,1,1,1,0,0,0,0,0,0,0,NA
+"Amsinckia spectabilis","Boraginaceae","Amsinckia","spectabilis","Amsinckia spectabilis var. spectabilis","determinate",0,1,0,"cincinnus","radial",1,0,"tube",0,1,0,"yellow",0,0,1,0,0,0,0,0,0,0,0,1,1,0,0,0,0,0,0,0,NA
+"Cryptantha clevelandii","Boraginaceae","Cryptantha","clevelandii","Cryptantha clevelandii","determinate",0,1,0,"cyme","radial",1,0,"tube",0,1,0,"white",1,0,0,0,0,0,0,0,0,0,1,1,1,0,0,0,0,0,0,0,NA
+"Cryptantha leiocarpa","Boraginaceae","Cryptantha","leiocarpa","Cryptantha leiocarpa","determinate",0,1,0,"cyme","radial",1,0,"tube",0,1,0,"white",1,0,0,0,0,0,0,0,0,0,1,1,1,1,1,1,0,0,0,0,NA
+"Cryptantha muricata","Boraginaceae","Cryptantha","muricata","Cryptantha muricata","determinate",0,1,0,"cincinnus","radial",1,0,"tube",0,1,0,"white",1,0,0,0,0,0,0,0,0,0,0,1,1,1,1,1,0,0,0,0,NA
+"Johnstonella micromeres","Boraginaceae","Johnstonella","micromeres","Johnstonella micromeres","determinate",0,1,0,"cincinnus","radial",1,0,"tube",0,1,0,"white",1,0,0,0,0,0,0,0,0,0,0,0,0,0,1,0,0,0,0,0,NA
+"Pectocarya heterocarpa","Boraginaceae","Pectocarya","heterocarpa","Pectocarya heterocarpa","determinate",0,1,0,"spike","radial",1,0,"tube",0,1,0,"white",1,0,0,0,0,0,0,0,0,1,1,1,1,0,0,0,0,0,0,0,NA
+"Pectocarya linearis","Boraginaceae","Pectocarya","linearis","Pectocarya linearis subsp. ferocula","determinate",0,1,0,"spike","radial",1,0,"tube",0,1,0,"white",1,0,0,0,0,0,0,0,0,0,1,1,1,0,0,0,0,0,0,0,NA
+"Pectocarya penicillata","Boraginaceae","Pectocarya","penicillata","Pectocarya penicillata","determinate",0,1,0,"solitary","radial",1,0,"tube",0,1,0,"white",1,0,0,0,0,0,0,0,0,0,1,1,1,1,0,0,0,0,0,0,NA
+"Plagiobothrys acanthocarpus","Boraginaceae","Plagiobothrys","acanthocarpus","Plagiobothrys acanthocarpus","determinate",0,1,0,"solitary","radial",1,0,"tube",0,1,0,"white",1,0,0,0,0,0,0,0,0,1,1,0,0,0,0,0,0,0,0,0,NA
+"Plagiobothrys canescens","Boraginaceae","Plagiobothrys","canescens","Plagiobothrys canescens var. catalinensis","determinate",0,1,0,"solitary","radial",1,0,"tube",0,1,0,"white",1,0,0,0,0,0,0,0,0,0,1,1,0,0,0,0,0,0,0,0,NA
+"Athysanus pusillus","Brassicaceae","Athysanus","pusillus","Athysanus pusillus","indeterminate",1,0,0,"raceme","radial",1,0,"bowl",1,0,0,"white",1,0,0,0,0,0,0,0,0,1,1,1,0,0,0,0,0,0,0,0,NA
+"Boechera hoffmannii","Brassicaceae","Boechera","hoffmannii","Boechera hoffmannii","indeterminate",1,0,0,"raceme","radial",1,0,"tube",0,1,0,"purple",0,0,0,0,1,0,0,0,0,1,1,1,0,0,0,0,0,0,0,0,NA
+"Brassica nigra","Brassicaceae","Brassica","nigra","Brassica nigra","indeterminate",1,0,0,"raceme","radial",1,0,"bowl",1,0,0,"yellow",0,0,1,0,0,0,0,0,0,0,0,1,1,1,1,0,0,0,0,0,NA
+"Brassica rapa","Brassicaceae","Brassica","rapa","Brassica rapa","indeterminate",1,0,0,"raceme","radial",1,0,"bowl",1,0,0,"yellow",0,0,1,0,0,0,0,0,1,1,1,1,1,1,0,0,0,0,0,0,NA
+"Cakile maritima","Brassicaceae","Cakile","maritima","Cakile maritima","indeterminate",1,0,0,"raceme","radial",1,0,"bowl",1,0,0,"purple",0,0,0,0,1,0,0,0,1,1,1,1,1,1,1,1,1,1,1,1,NA
+"Capsella bursa-pastoris","Brassicaceae","Capsella","bursa-pastoris","Capsella bursa-pastoris","indeterminate",1,0,0,"raceme","radial",1,0,"bowl",1,0,0,"white",1,0,0,0,0,0,0,0,1,1,1,1,1,1,1,1,1,1,1,1,NA
+"Cardamine californica","Brassicaceae","Cardamine","californica","Cardamine californica","indeterminate",1,0,0,"raceme","radial",1,0,"bowl",1,0,0,"white",1,0,0,0,0,0,0,0,0,1,1,1,0,0,0,0,0,0,0,0,NA
+"Cardamine oligosperma","Brassicaceae","Cardamine","oligosperma","Cardamine oligosperma","indeterminate",1,0,0,"cluster","radial",1,0,"bowl",1,0,0,"white",1,0,0,0,0,0,0,0,0,1,1,0,0,0,0,0,0,0,0,0,NA
+"Caulanthus lasiophyllus","Brassicaceae","Caulanthus","lasiophyllus","Caulanthus lasiophyllus","indeterminate",1,0,0,"raceme","radial",1,0,"tube",0,1,0,"white",1,0,0,0,0,0,0,0,0,0,1,1,1,1,0,0,0,0,0,0,NA
+"Descurainia pinnata","Brassicaceae","Descurainia","pinnata","Descurainia pinnata","indeterminate",1,0,0,"raceme","radial",1,0,"bowl",1,0,0,"yellow",0,0,1,0,0,0,0,0,0,1,1,1,1,1,0,0,0,0,0,0,NA
+"Draba cuneifolia","Brassicaceae","Draba","cuneifolia","Draba cuneifolia","indeterminate",1,0,0,"raceme","radial",1,0,"bowl",1,0,0,"white",1,0,0,0,0,0,0,0,1,1,1,1,1,0,0,0,0,0,0,0,NA
+"Erysimum insulare","Brassicaceae","Erysimum","insulare","Erysimum insulare","indeterminate",1,0,0,"raceme","radial",1,0,"tube",0,1,0,"yellow",0,0,1,0,0,0,0,0,0,0,1,1,1,1,1,0,0,0,0,0,NA
+"Hirschfeldia incana","Brassicaceae","Hirschfeldia","incana","Hirschfeldia incana","indeterminate",1,0,0,"cluster","radial",1,0,"tube",0,1,0,"yellow",0,0,1,0,0,0,0,0,1,1,1,1,1,1,1,1,1,1,1,1,NA
+"Hornungia procumbens","Brassicaceae","Hornungia","procumbens","Hornungia procumbens","indeterminate",1,0,0,"cluster","radial",1,0,"bowl",1,0,0,"white",1,0,0,0,0,0,0,0,0,0,1,1,1,0,0,0,0,0,0,0,NA
+"Lepidium draba","Brassicaceae","Lepidium","draba","Lepidium draba","indeterminate",1,0,0,"umbel","radial",1,0,"bowl",1,0,0,"white",1,0,0,0,0,0,0,0,0,0,1,1,1,1,1,1,0,0,0,0,NA
+"Lepidium latipes","Brassicaceae","Lepidium","latipes","Lepidium latipes","indeterminate",1,0,0,"spike","radial",1,0,"bowl",1,0,0,"white",1,0,0,0,0,0,0,0,0,0,1,1,1,0,0,0,0,0,0,0,NA
+"Lepidium nitidum","Brassicaceae","Lepidium","nitidum","Lepidium nitidum","indeterminate",1,0,0,"raceme","radial",1,0,"bowl",1,0,0,"white",1,0,0,0,0,0,0,0,0,1,1,1,1,0,0,0,0,0,0,0,NA
+"Lepidium oblongum","Brassicaceae","Lepidium","oblongum","Lepidium oblongum","indeterminate",1,0,0,"raceme","radial",1,0,"bowl",1,0,0,"green",0,0,0,1,0,0,0,0,0,0,1,1,1,1,1,1,0,0,0,0,NA
+"Lepidium virginicum","Brassicaceae","Lepidium","virginicum","Lepidium virginicum subsp. menziesii","indeterminate",1,0,0,"raceme","radial",1,0,"bowl",1,0,0,"white",1,0,0,0,0,0,0,0,1,1,1,1,1,1,1,0,0,0,0,0,NA
+"Nasturtium officinale","Brassicaceae","Nasturtium","officinale","Nasturtium officinale","indeterminate",1,0,0,"racemose","radial",1,0,"bowl",1,0,0,"white",1,0,0,0,0,0,0,0,0,0,0,0,1,1,1,1,1,0,0,0,NA
+"Sibara filifolia","Brassicaceae","Sibara","filifolia","Sibara filifolia","determinate",0,1,0,"cluster","radial",1,0,"tube",0,1,0,"purple",0,0,0,0,1,0,0,0,0,0,1,1,0,0,0,0,0,0,0,0,NA
+"Sinapis arvensis","Brassicaceae","Sinapis","arvensis","Sinapis arvensis","indeterminate",1,0,0,"racemose","radial",1,0,"tube",0,1,0,"yellow",0,0,1,0,0,0,0,0,0,0,1,1,1,1,1,1,1,1,0,0,NA
+"Sisymbrium officinale","Brassicaceae","Sisymbrium","officinale","Sisymbrium officinale","indeterminate",1,0,0,"raceme","radial",1,0,"tube",0,1,0,"yellow",0,0,1,0,0,0,0,0,0,0,0,1,1,1,1,0,0,0,0,0,NA
+"Thysanocarpus conchuliferus","Brassicaceae","Thysanocarpus","conchuliferus","Thysanocarpus conchuliferus","indeterminate",1,0,0,"raceme","radial",1,0,"bowl",1,0,0,"pink",0,1,0,0,0,0,0,0,0,0,1,1,0,0,0,0,0,0,0,0,NA
+"Thysanocarpus curvipes","Brassicaceae","Thysanocarpus","curvipes","Thysanocarpus curvipes","indeterminate",1,0,0,"raceme","radial",1,0,"bowl",1,0,0,"white",1,0,0,0,0,0,0,0,0,1,1,1,0,0,0,0,0,0,0,0,NA
+"Thysanocarpus laciniatus","Brassicaceae","Thysanocarpus","laciniatus","Thysanocarpus laciniatus","indeterminate",1,0,0,"raceme","radial",1,0,"bowl",1,0,0,"white",1,0,0,0,0,0,0,0,0,0,1,1,1,0,0,0,0,0,0,0,NA
+"Turritis glabra","Brassicaceae","Turritis","glabra","Turritis glabra","indeterminate",1,0,0,"racemose","radial",1,0,"tube",0,1,0,"white",1,0,0,0,0,0,0,0,0,0,1,1,1,1,0,0,0,0,0,0,NA
+"Cylindropuntia prolifera","Cactaceae","Cylindropuntia","prolifera","Cylindropuntia prolifera","determinate",0,1,0,"solitary","radial",1,0,"bowl",1,0,0,"pink",0,1,0,0,0,0,0,0,0,0,0,1,1,1,1,0,0,0,0,0,NA
+"Opuntia ficus-indica","Cactaceae","Opuntia","ficus-indica","Opuntia ficus-indica","determinate",0,1,0,"solitary","radial",1,0,"bowl",1,0,0,"yellow",0,0,1,0,0,0,0,0,0,0,0,0,0,0,1,1,0,0,0,0,NA
+"Opuntia littoralis","Cactaceae","Opuntia","littoralis","Opuntia littoralis","determinate",0,1,0,"solitary","radial",1,0,"bowl",1,0,0,"yellow",0,0,1,0,0,0,0,0,0,0,0,0,1,1,0,0,0,0,0,0,NA
+"Opuntia oricola","Cactaceae","Opuntia","oricola","Opuntia oricola","determinate",0,1,0,"solitary","radial",1,0,"bowl",1,0,0,"yellow",0,0,1,0,0,0,0,0,0,0,0,1,1,1,0,0,0,0,0,0,NA
+"Githopsis diffusa","Campanulaceae","Githopsis","diffusa","Githopsis diffusa ssp. diffusa","determinate",0,1,0,"solitary","radial",1,0,"bowl",1,0,0,"purple",0,0,0,0,1,0,0,0,0,0,0,1,1,1,0,0,0,0,0,0,NA
+"Triodanis biflora","Campanulaceae","Triodanis","biflora","Triodanis biflora","determinate",0,1,0,"solitary","radial",1,0,"tube",0,1,0,"purple",0,0,0,0,1,0,0,0,0,0,0,1,1,1,0,0,0,0,0,0,NA
+"Lonicera hispidula","Caprifoliaceae","Lonicera","hispidula","Lonicera hispidula","determinate",0,1,0,"cluster","bilateral",0,1,"tube",0,1,0,"pink",0,1,0,0,0,0,0,0,0,0,0,1,1,1,1,0,0,0,0,0,NA
+"Lonicera interrupta","Caprifoliaceae","Lonicera","interrupta","Lonicera interrupta","determinate",0,1,0,"cluster","bilateral",0,1,"tube",0,1,0,"yellow",0,0,1,0,0,0,0,0,0,0,0,1,1,1,1,1,0,0,0,0,NA
+"Symphoricarpos mollis","Caprifoliaceae","Symphoricarpos","mollis","Symphoricarpos mollis","determinate",0,1,0,"botryoid","radial",1,0,"tube",0,1,0,"pink",0,1,0,0,0,0,0,0,0,0,0,1,1,1,1,0,0,0,0,0,NA
+"Cardionema ramosissimum","Caryophyllaceae","Cardionema","ramosissimum","Cardionema ramosissimum","determinate",0,1,0,"solitary","radial",1,0,"bowl",1,0,0,"white",1,0,0,0,0,0,0,0,0,0,0,1,1,1,1,1,0,0,0,0,NA
+"Cerastium glomeratum","Caryophyllaceae","Cerastium","glomeratum","Cerastium glomeratum","determinate",0,1,0,"racemose","radial",1,0,"bowl",1,0,0,"white",1,0,0,0,0,0,0,0,0,1,1,1,1,0,0,0,0,0,0,0,NA
+"Minuartia douglasii","Caryophyllaceae","Minuartia","douglasii","Minuartia douglasii","determinate",0,1,0,"solitary","radial",1,0,"bowl",1,0,0,"white",1,0,0,0,0,0,0,0,0,0,0,1,1,1,0,0,0,0,0,0,NA
+"Polycarpon depressum","Caryophyllaceae","Polycarpon","depressum","Polycarpon depressum","determinate",0,1,0,"solitary","radial",1,0,"bowl",1,0,0,"green",0,0,0,1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,"unavailable from calflora"
+"Polycarpon tetraphyllum","Caryophyllaceae","Polycarpon","tetraphyllum","Polycarpon tetraphyllum var. tetraphyllum","determinate",0,1,0,"cluster","radial",1,0,"bowl",1,0,0,"white",1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,"unavailable from calflora"
+"Sagina apetala","Caryophyllaceae","Sagina","apetala","Sagina apetala","determinate",0,1,0,"solitary","radial",1,0,"bowl",1,0,0,"green",0,0,0,1,0,0,0,0,0,0,0,1,1,1,0,0,0,0,0,0,NA
+"Sagina decumbens","Caryophyllaceae","Sagina","decumbens","Sagina decumbens subsp. occidentalis","determinate",0,1,0,"solitary","radial",1,0,"bowl",1,0,0,"white",1,0,0,0,0,0,0,0,0,0,1,1,0,0,0,0,0,0,0,0,NA
+"Silene antirrhina","Caryophyllaceae","Silene","antirrhina","Silene antirrhina","determinate",0,1,0,"solitary","radial",1,0,"tube",0,1,0,"pink",0,1,0,0,0,0,0,0,0,0,0,1,1,1,1,1,0,0,0,0,NA
+"Silene gallica","Caryophyllaceae","Silene","gallica","Silene gallica","determinate",0,1,0,"drepanium","radial",1,0,"tube",0,1,0,"white",1,0,0,0,0,0,0,0,1,1,1,1,1,1,0,0,0,0,0,0,NA
+"Silene laciniata","Caryophyllaceae","Silene","laciniata","Silene laciniata ssp. laciniata","determinate",0,1,0,"cluster","radial",1,0,"tube",0,1,0,"red",0,0,0,0,0,0,1,0,0,0,0,1,1,1,1,0,0,0,0,0,NA
+"Silene multinervia","Caryophyllaceae","Silene","multinervia","Silene multinervia","determinate",0,1,0,"cluster","radial",1,0,"tube",0,1,0,"white",1,0,0,0,0,0,0,0,0,0,0,1,1,1,0,0,0,0,0,0,NA
+"Spergularia bocconi","Caryophyllaceae","Spergularia","bocconi","Spergularia bocconi","determinate",0,1,0,"cluster","radial",1,0,"bowl",1,0,0,"purple",0,0,0,0,1,0,0,0,0,0,0,1,1,0,0,0,0,0,0,0,NA
+"Spergularia macrotheca","Caryophyllaceae","Spergularia","macrotheca","Spergularia macrotheca var. macrotheca","determinate",0,1,0,"cluster","radial",1,0,"bowl",1,0,0,"purple",0,0,0,0,1,0,0,0,0,1,1,1,1,0,0,0,0,0,0,0,NA
+"Spergularia marina","Caryophyllaceae","Spergularia","marina","Spergularia marina","determinate",0,1,0,"cluster","radial",1,0,"bowl",1,0,0,"purple",0,0,0,0,1,0,0,0,0,0,0,1,1,1,1,1,1,0,0,0,NA
+"Spergularia villosa","Caryophyllaceae","Spergularia","villosa","Spergularia villosa","determinate",0,1,0,"cluster","radial",1,0,"bowl",1,0,0,"white",1,0,0,0,0,0,0,0,0,0,0,1,1,0,0,0,0,0,0,0,NA
+"Stellaria media","Caryophyllaceae","Stellaria","media","Stellaria media","determinate",0,1,0,"solitary","radial",1,0,"bowl",1,0,0,"white",1,0,0,0,0,0,0,0,0,1,1,1,1,1,1,1,1,0,0,0,NA
+"Stellaria nitens","Caryophyllaceae","Stellaria","nitens","Stellaria nitens","determinate",0,1,0,"solitary","radial",1,0,"bowl",1,0,0,"white",1,0,0,0,0,0,0,0,1,1,0,0,0,0,0,0,0,0,0,1,NA
+"Stellaria pallida","Caryophyllaceae","Stellaria","pallida","Stellaria pallida","determinate",0,1,0,"solitary","radial",1,0,"bowl",1,0,0,"white",1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,"unavailable from calflora"
+"Aphanisma blitoides","Chenopodiaceae","Aphanisma","blitoides","Aphanisma blitoides",NA,0,0,0,NA,NA,0,0,NA,0,0,0,NA,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,NA
+"Arthrocnemum subterminale","Chenopodiaceae","Arthrocnemum","subterminale","Arthrocnemum subterminale",NA,0,0,0,NA,NA,0,0,NA,0,0,0,NA,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,NA
+"Atriplex argentea","Chenopodiaceae","Atriplex","argentea","Atriplex argentea var. expansa",NA,0,0,0,NA,NA,0,0,NA,0,0,0,NA,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,NA
+"Atriplex coulteri","Chenopodiaceae","Atriplex","coulteri","Atriplex coulteri",NA,0,0,0,NA,NA,0,0,NA,0,0,0,NA,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,NA
+"Atriplex lentiformis","Chenopodiaceae","Atriplex","lentiformis","Atriplex lentiformis",NA,0,0,0,NA,NA,0,0,NA,0,0,0,NA,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,NA
+"Atriplex leucophylla","Chenopodiaceae","Atriplex","leucophylla","Atriplex leucophylla",NA,0,0,0,NA,NA,0,0,NA,0,0,0,NA,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,NA
+"Atriplex pacifica","Chenopodiaceae","Atriplex","pacifica","Atriplex pacifica",NA,0,0,0,NA,NA,0,0,NA,0,0,0,NA,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,NA
+"Atriplex prostrata","Chenopodiaceae","Atriplex","prostrata","Atriplex prostrata",NA,0,0,0,NA,NA,0,0,NA,0,0,0,NA,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,NA
+"Atriplex semibaccata","Chenopodiaceae","Atriplex","semibaccata","Atriplex semibaccata",NA,0,0,0,NA,NA,0,0,NA,0,0,0,NA,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,NA
+"Atriplex watsonii","Chenopodiaceae","Atriplex","watsonii","Atriplex watsonii",NA,0,0,0,NA,NA,0,0,NA,0,0,0,NA,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,NA
+"Beta vulgaris","Chenopodiaceae","Beta","vulgaris","Beta vulgaris subsp. maritima","determinate",0,1,0,"fascicle","radial",1,0,"bowl",1,0,0,"green",0,0,0,1,0,0,0,0,0,1,1,1,1,1,1,1,1,0,0,0,NA
+"Chenopodium berlandieri","Chenopodiaceae","Chenopodium","berlandieri","Chenopodium berlandieri","indeterminate",1,0,0,"spike","radial",1,0,"bowl",1,0,0,"red",0,0,0,0,0,0,1,0,0,0,0,0,0,0,1,1,0,0,0,0,NA
+"Chenopodium californicum","Chenopodiaceae","Chenopodium","californicum","Chenopodium californicum","indeterminate",1,0,0,"spike","radial",1,0,"bowl",1,0,0,"green",0,0,0,1,0,0,0,0,0,0,1,1,1,1,0,0,0,0,0,0,NA
+"Chenopodium murale","Chenopodiaceae","Chenopodium","murale","Chenopodium murale","indeterminate",1,0,0,"spike","radial",1,0,"bowl",1,0,0,"green",0,0,0,1,0,0,0,0,1,1,1,1,1,1,1,1,1,1,1,1,NA
+"Dysphania ambrosioides","Chenopodiaceae","Dysphania","ambrosioides","Dysphania ambrosioides","indeterminate",1,0,0,"spike","radial",1,0,"bowl",1,0,0,"white",1,0,0,0,0,0,0,0,0,0,0,0,0,1,1,1,1,1,0,0,NA
+"Extriplex californica","Chenopodiaceae","Extriplex","californica","Extriplex californica","determinate",0,1,0,"fascicle","radial",1,0,"bowl",1,0,0,"white",1,0,0,0,0,0,0,0,0,0,1,1,1,0,0,0,0,0,0,0,NA
+"Monolepis nuttalliana","Chenopodiaceae","Monolepis","nuttalliana","Monolepis nuttalliana","determinate",0,1,0,"fascicle","radial",1,0,"bowl",1,0,0,"green",0,0,0,1,0,0,0,0,0,0,0,1,1,0,0,0,0,0,0,0,NA
+"Salicornia pacifica","Chenopodiaceae","Salicornia","pacifica","Salicornia pacifica",NA,0,0,0,NA,NA,0,0,NA,0,0,0,NA,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,NA
+"Salsola australis","Chenopodiaceae","Salsola","australis","Salsola australis","determinate",0,1,0,"solitary","radial",1,0,"bowl",1,0,0,"white",1,0,0,0,0,0,0,0,1,0,1,1,1,1,1,1,1,1,1,1,NA
+"Suaeda taxifolia","Chenopodiaceae","Suaeda","taxifolia","Suaeda taxifolia","determinate",0,1,0,"solitary","radial",1,0,"bowl",1,0,0,"white",1,0,0,0,0,0,0,0,1,1,1,1,1,1,1,1,1,1,1,1,NA
+"Crocanthemum greenei","Cistaceae","Crocanthemum","greenei","Crocanthemum greenei","determinate",0,1,0,"cluster","radial",1,0,"bowl",1,0,0,"yellow",0,0,1,0,0,0,0,0,0,0,1,1,1,1,1,0,0,0,0,0,NA
+"Crocanthemum scoparium","Cistaceae","Crocanthemum","scoparium","Crocanthemum scoparium","determinate",0,1,0,"raceme","radial",1,0,"bowl",1,0,0,"yellow",0,0,1,0,0,0,0,0,0,0,1,1,1,1,0,0,0,0,0,0,NA
+"Calystegia macrostegia","Convolvulaceae","Calystegia","macrostegia","Calystegia macrostegia subsp. macrostegia","determinate",0,1,0,"solitary","radial",1,0,"bowl",1,0,0,"white",1,0,0,0,0,0,0,0,0,1,1,1,1,1,1,0,0,0,0,0,NA
+"Calystegia soldanella","Convolvulaceae","Calystegia","soldanella","Calystegia soldanella","determinate",0,1,0,"solitary","radial",1,0,"bowl",1,0,0,"pink",0,1,0,0,0,0,0,0,0,0,1,1,1,1,0,0,0,0,0,0,NA
+"Convolvulus arvensis","Convolvulaceae","Convolvulus","arvensis","Convolvulus arvensis","determinate",0,1,0,"solitary","radial",1,0,"bowl",1,0,0,"pink",0,1,0,0,0,0,0,0,0,0,0,1,1,1,1,1,1,0,0,0,NA
+"Convolvulus simulans","Convolvulaceae","Convolvulus","simulans","Convolvulus simulans","determinate",0,1,0,"solitary","radial",1,0,"bowl",1,0,0,"purple",0,0,0,0,1,0,0,0,0,0,1,1,1,1,1,0,0,0,0,0,NA
+"Cressa truxillensis","Convolvulaceae","Cressa","truxillensis","Cressa truxillensis","indeterminate",1,0,0,"spike","radial",1,0,"bowl",1,0,0,"white",1,0,0,0,0,0,0,0,0,0,0,0,1,1,0,0,0,0,0,0,NA
+"Cuscuta pacifica","Convolvulaceae","Cuscuta","pacifica","Cuscuta pacifica var. pacifica","determinate",0,1,0,"cluster","radial",1,0,"bowl",1,0,0,"white",1,0,0,0,0,0,0,0,0,0,0,0,0,0,1,1,1,1,0,0,NA
+"Cuscuta subinclusa","Convolvulaceae","Cuscuta","subinclusa","Cuscuta subinclusa","determinate",0,1,0,"cluster","radial",1,0,"bowl",1,0,0,"white",1,0,0,0,0,0,0,0,0,0,1,1,1,1,1,1,1,1,0,0,NA
+"Dichondra occidentalis","Convolvulaceae","Dichondra","occidentalis","Dichondra occidentalis","determinate",0,1,0,"solitary","radial",1,0,"bowl",1,0,0,"pink",0,1,0,0,0,0,0,0,0,0,1,1,1,1,1,0,0,0,0,0,NA
+"Crassula connata","Crassulaceae","Crassula","connata","Crassula connata","determinate",0,1,0,"solitary","radial",1,0,"bowl",1,0,0,"pink",0,1,0,0,0,0,0,0,0,1,1,1,1,0,0,0,0,0,0,0,NA
+"Dudleya blochmaniae","Crassulaceae","Dudleya","blochmaniae","Dudleya blochmaniae ssp. blochmaniae","determinate",0,1,0,"double cyme","radial",1,0,"bowl",1,0,0,"white",1,0,0,0,0,0,0,0,0,0,0,1,1,1,0,0,0,0,0,0,NA
+"Dudleya candelabrum","Crassulaceae","Dudleya","candelabrum","Dudleya candelabrum","determinate",0,1,0,"cluster","radial",1,0,"bowl",1,0,0,"yellow",0,0,1,0,0,0,0,0,0,0,0,1,1,1,1,0,0,0,0,0,NA
+"Dudleya greenei","Crassulaceae","Dudleya","greenei","Dudleya greenei","determinate",0,1,0,"cluster","radial",1,0,"bowl",1,0,0,"yellow",0,0,1,0,0,0,0,0,0,0,0,0,1,1,1,0,0,0,0,0,NA
+"Dudleya nesiotica","Crassulaceae","Dudleya","nesiotica","Dudleya nesiotica","determinate",0,1,0,"umbel","radial",1,0,"bowl",1,0,0,"white",1,0,0,0,0,0,0,0,0,0,0,1,1,1,0,0,0,0,0,0,NA
+"Cucurbita foetidissima","Cucurbitaceae","Cucurbita","foetidissima","Cucurbita foetidissima","determinate",0,1,0,"solitary","radial",1,0,"tube",0,1,0,"yellow",0,0,1,0,0,0,0,0,0,0,0,0,0,1,1,1,0,0,0,0,NA
+"Marah fabacea","Cucurbitaceae","Marah","fabacea","Marah fabacea","indeterminate",1,0,0,"racemose","radial",1,0,"bowl",1,0,0,"white",1,0,0,0,0,0,0,0,0,0,1,1,0,0,0,0,0,0,0,0,NA
+"Marah macrocarpa","Cucurbitaceae","Marah","macrocarpa","Marah macrocarpa","indeterminate",1,0,0,"racemose","radial",1,0,"tube",0,1,0,"white",1,0,0,0,0,0,0,0,1,1,1,1,0,0,0,0,0,0,0,0,NA
+"Arbutus menziesii","Ericaceae","Arbutus","menziesii","Arbutus menziesii","determinate",0,1,0,"botryoid","radial",1,0,"tube",0,1,0,"white",1,0,0,0,0,0,0,0,0,0,0,1,1,0,0,0,0,0,0,0,NA
+"Arctostaphylos insularis","Ericaceae","Arctostaphylos","insularis","Arctostaphylos insularis","determinate",0,1,0,"botryoid","radial",1,0,"tube",0,1,0,"white",1,0,0,0,0,0,0,0,1,1,1,1,1,1,0,0,0,0,0,1,NA
+"Arctostaphylos viridissima","Ericaceae","Arctostaphylos","viridissima","Arctostaphylos viridissima","determinate",0,1,0,"botryoid","radial",1,0,"tube",0,1,0,"white",1,0,0,0,0,0,0,0,1,1,1,1,1,0,0,0,0,0,0,1,NA
+"Comarostaphylis diversifolia","Ericaceae","Comarostaphylis","diversifolia","Comarostaphylis diversifolia subsp. planifolia","determinate",0,1,0,"botryoid","radial",1,0,"tube",0,1,0,"white",1,0,0,0,0,0,0,0,0,0,0,1,1,1,0,0,0,0,0,0,NA
+"Vaccinium ovatum","Ericaceae","Vaccinium","ovatum","Vaccinium ovatum","determinate",0,1,0,"botryoid","radial",1,0,"tube",0,1,0,"white",1,0,0,0,0,0,0,0,0,1,1,1,1,1,0,0,0,0,0,0,NA
+"Croton setiger","Euphorbiaceae","Croton","setiger","Croton setiger","indeterminate",1,0,0,"umbel","radial",1,0,"bowl",1,0,0,"white",1,0,0,0,0,0,0,0,0,0,0,0,1,1,1,1,1,1,0,0,NA
+"Euphorbia maculata","Euphorbiaceae","Euphorbia","maculata","Euphorbia maculata","determinate",0,1,0,"fascicle","radial",1,0,"bowl",1,0,0,"white",1,0,0,0,0,0,0,0,0,0,0,0,0,1,1,1,0,0,0,0,NA
+"Euphorbia misera","Euphorbiaceae","Euphorbia","misera","Euphorbia misera","determinate",0,1,0,"solitary","radial",1,0,"bowl",1,0,0,"red",0,0,0,0,0,0,1,0,1,1,1,1,1,1,1,1,0,0,0,1,NA
+"Euphorbia peplus","Euphorbiaceae","Euphorbia","peplus","Euphorbia peplus","determinate",0,1,0,"fascicle","radial",1,0,"bowl",1,0,0,"green",0,0,0,1,0,0,0,0,0,1,1,1,1,1,1,1,0,0,0,0,NA
+"Euphorbia spathulata","Euphorbiaceae","Euphorbia","spathulata","Euphorbia spathulata","determinate",0,1,0,"fascicle","radial",1,0,"bowl",1,0,0,"yellow",0,0,1,0,0,0,0,0,0,0,1,1,1,0,0,0,0,0,0,0,NA
+"Acacia melanoxylon","Fabaceae","Acacia","melanoxylon","Acacia melanoxylon","compound",0,0,1,"racemose","radial",1,0,NA,0,0,0,"yellow",0,0,1,0,0,0,0,0,0,1,1,0,0,0,0,0,0,0,0,0,NA
+"Acmispon americanus","Fabaceae","Acmispon","americanus","Acmispon americanus var. americanus","determinate",0,1,0,"solitary","bilateral",0,1,"restricted",0,0,1,"pink",0,1,0,0,0,0,0,0,0,0,0,1,1,1,1,0,0,0,0,0,NA
+"Acmispon argophyllus","Fabaceae","Acmispon","argophyllus","Acmispon argophyllus var. niveus","determinate",0,1,0,"fascicle","bilateral",0,1,"restricted",0,0,1,"yellow",0,0,1,0,0,0,0,0,0,0,1,1,1,1,1,0,0,0,0,0,NA
+"Acmispon brachycarpus","Fabaceae","Acmispon","brachycarpus","Acmispon brachycarpus","determinate",0,1,0,"solitary","bilateral",0,1,"restricted",0,0,1,"yellow",0,0,1,0,0,0,0,0,0,0,1,1,1,1,0,0,0,0,0,0,NA
+"Acmispon dendroideus","Fabaceae","Acmispon","dendroideus","Acmispon dendroideus var. dendroideus","determinate",0,1,0,"fascicle","bilateral",0,1,"restricted",0,0,1,"yellow",0,0,1,0,0,0,0,0,1,1,1,1,1,1,1,1,0,0,0,0,NA
+"Acmispon grandiflorus","Fabaceae","Acmispon","grandiflorus","Acmispon grandiflorus var. grandiflorus","determinate",0,1,0,"cluster","bilateral",0,1,"restricted",0,0,1,"yellow",0,0,1,0,0,0,0,0,0,0,0,1,1,1,1,0,0,0,0,0,NA
+"Acmispon maritimus","Fabaceae","Acmispon","maritimus","Acmispon maritimus var. maritimus","determinate",0,1,0,"cluster","bilateral",0,1,"restricted",0,0,1,"yellow",0,0,1,0,0,0,0,0,0,0,1,1,1,1,0,0,0,0,0,0,NA
+"Acmispon micranthus","Fabaceae","Acmispon","micranthus","Acmispon micranthus","determinate",0,1,0,"fascicle","bilateral",0,1,"restricted",0,0,1,"yellow",0,0,1,0,0,0,0,0,0,0,1,1,1,1,0,0,0,0,0,0,NA
+"Acmispon parviflorus","Fabaceae","Acmispon","parviflorus","Acmispon parviflorus","determinate",0,1,0,"solitary","bilateral",0,1,"restricted",0,0,1,"yellow",0,0,1,0,0,0,0,0,0,0,1,1,1,1,0,0,0,0,0,0,NA
+"Acmispon strigosus","Fabaceae","Acmispon","strigosus","Acmispon strigosus","determinate",0,1,0,"solitary","bilateral",0,1,"restricted",0,0,1,"yellow",0,0,1,0,0,0,0,0,0,1,1,1,1,1,0,0,0,0,0,0,NA
+"Acmispon wrangelianus","Fabaceae","Acmispon","wrangelianus","Acmispon wrangelianus","determinate",0,1,0,"solitary","bilateral",0,1,"restricted",0,0,1,"yellow",0,0,1,0,0,0,0,0,0,0,1,1,0,0,0,0,0,0,0,0,NA
+"Albizia lophantha","Fabaceae","Albizia","lophantha","Albizia lophantha","indeterminate",1,0,0,"racemose","bilateral",0,1,NA,0,0,0,"yellow",0,0,1,0,0,0,0,0,0,0,0,0,1,1,1,0,0,0,0,0,NA
+"Astragalus didymocarpus","Fabaceae","Astragalus","didymocarpus","Astragalus didymocarpus var. didymocarpus","indeterminate",1,0,0,"head","bilateral",0,1,"restricted",0,0,1,"purple",0,0,0,0,1,0,0,0,0,0,1,1,1,1,0,0,0,0,0,0,NA
+"Astragalus gambelianus","Fabaceae","Astragalus","gambelianus","Astragalus gambelianus","indeterminate",1,0,0,"raceme","bilateral",0,1,"restricted",0,0,1,"white",1,0,0,0,0,0,0,0,0,0,1,1,1,1,0,0,0,0,0,0,NA
+"Astragalus miguelensis","Fabaceae","Astragalus","miguelensis","Astragalus miguelensis","indeterminate",1,0,0,"raceme","bilateral",0,1,"restricted",0,0,1,"white",1,0,0,0,0,0,0,0,0,0,1,1,1,1,1,0,0,0,0,0,NA
+"Astragalus trichopodus","Fabaceae","Astragalus","trichopodus","Astragalus trichopodus var. lonchus","indeterminate",1,0,0,"raceme","bilateral",0,1,"restricted",0,0,1,"white",1,0,0,0,0,0,0,0,0,1,1,1,1,1,0,0,0,0,0,0,NA
+"Lathyrus vestitus","Fabaceae","Lathyrus","vestitus","Lathyrus vestitus var. vestitus","indeterminate",1,0,0,"raceme","bilateral",0,1,"restricted",0,0,1,"purple",0,0,0,0,1,0,0,0,0,0,1,1,1,0,0,0,0,0,0,0,NA
+"Lotus corniculatus","Fabaceae","Lotus","corniculatus","Lotus corniculatus","determinate",0,1,0,"fascicle","bilateral",0,1,"restricted",0,0,1,"yellow",0,0,1,0,0,0,0,0,0,0,0,0,1,1,1,0,0,0,0,0,NA
+"Lupinus arboreus","Fabaceae","Lupinus","arboreus","Lupinus arboreus","indeterminate",1,0,0,"raceme","bilateral",0,1,"restricted",0,0,1,"yellow",0,0,1,0,0,0,0,0,0,0,0,1,1,0,0,0,0,0,0,0,NA
+"Lupinus bicolor","Fabaceae","Lupinus","bicolor","Lupinus bicolor","indeterminate",1,0,0,"raceme","bilateral",0,1,"restricted",0,0,1,"purple",0,0,0,0,1,0,0,0,0,0,1,1,1,1,0,0,0,0,0,0,NA
+"Lupinus concinnus","Fabaceae","Lupinus","concinnus","Lupinus concinnus","indeterminate",1,0,0,"raceme","bilateral",0,1,"restricted",0,0,1,"pink",0,1,0,0,0,0,0,0,0,0,1,1,1,0,0,0,0,0,0,0,NA
+"Lupinus hirsutissimus","Fabaceae","Lupinus","hirsutissimus","Lupinus hirsutissimus","indeterminate",1,0,0,"raceme","bilateral",0,1,"restricted",0,0,1,"purple",0,0,0,0,1,0,0,0,0,0,1,1,1,0,0,0,0,0,0,0,NA
+"Lupinus microcarpus","Fabaceae","Lupinus","microcarpus","Lupinus microcarpus var. microcarpus","indeterminate",1,0,0,"raceme","bilateral",0,1,"restricted",0,0,1,"purple",0,0,0,0,1,0,0,0,0,0,0,0,1,1,0,0,0,0,0,0,NA
+"Lupinus succulentus","Fabaceae","Lupinus","succulentus","Lupinus succulentus","indeterminate",1,0,0,"raceme","bilateral",0,1,"restricted",0,0,1,"purple",0,0,0,0,1,0,0,0,0,1,1,1,1,0,0,0,0,0,0,0,NA
+"Lupinus truncatus","Fabaceae","Lupinus","truncatus","Lupinus truncatus","indeterminate",1,0,0,"raceme","bilateral",0,1,"restricted",0,0,1,"purple",0,0,0,0,1,0,0,0,0,0,1,1,1,0,0,0,0,0,0,0,NA
+"Medicago polymorpha","Fabaceae","Medicago","polymorpha","Medicago polymorpha","determinate",0,1,0,"cluster","bilateral",0,1,"restricted",0,0,1,"yellow",0,0,1,0,0,0,0,0,0,1,1,1,1,1,0,0,0,0,0,0,NA
+"Medicago sativa","Fabaceae","Medicago","sativa","Medicago sativa","indeterminate",1,0,0,"racemose","bilateral",0,1,"restricted",0,0,1,"purple",0,0,0,0,1,0,0,0,0,0,0,0,0,1,1,1,0,0,0,0,NA
+"Melilotus albus","Fabaceae","Melilotus","albus","Melilotus albus","indeterminate",1,0,0,"raceme","bilateral",0,1,"restricted",0,0,1,"white",1,0,0,0,0,0,0,0,0,0,0,0,1,1,1,1,1,0,0,0,NA
+"Melilotus indicus","Fabaceae","Melilotus","indicus","Melilotus indicus","indeterminate",1,0,0,"raceme","bilateral",0,1,"restricted",0,0,1,"yellow",0,0,1,0,0,0,0,0,0,0,0,1,1,1,1,1,1,1,0,0,NA
+"Pickeringia montana","Fabaceae","Pickeringia","montana","Pickeringia montana var. montana","determinate",0,1,0,"cluster","bilateral",0,1,"restricted",0,0,1,"purple",0,0,0,0,1,0,0,0,0,0,0,0,1,1,1,1,0,0,0,0,NA
+"Pisum sativum","Fabaceae","Pisum","sativum","Pisum sativum","determinate",0,1,0,"solitary","bilateral",0,1,"restricted",0,0,1,"white",1,0,0,0,0,0,0,0,0,1,1,1,1,0,0,0,0,0,0,0,NA
+"Robinia pseudoacacia","Fabaceae","Robinia","pseudoacacia","Robinia pseudoacacia","determinate",0,1,0,"botryoid","bilateral",0,1,"restricted",0,0,1,"white",1,0,0,0,0,0,0,0,0,0,1,1,1,1,0,0,0,0,0,0,NA
+"Spartium junceum","Fabaceae","Spartium","junceum","Spartium junceum","indeterminate",1,0,0,"raceme","bilateral",0,1,"restricted",0,0,1,"yellow",0,0,1,0,0,0,0,0,0,0,0,1,1,1,0,0,0,0,0,0,NA
+"Trifolium albopurpureum","Fabaceae","Trifolium","albopurpureum","Trifolium albopurpureum","compound",0,0,1,"head","bilateral",0,1,"restricted",0,0,1,"purple",0,0,0,0,1,0,0,0,0,0,1,1,1,1,0,0,0,0,0,0,NA
+"Trifolium ciliolatum","Fabaceae","Trifolium","ciliolatum","Trifolium ciliolatum","compound",0,0,1,"head","bilateral",0,1,"restricted",0,0,1,"purple",0,0,0,0,1,0,0,0,0,0,0,1,1,0,0,0,0,0,0,0,NA
+"Trifolium depauperatum","Fabaceae","Trifolium","depauperatum","Trifolium depauperatum var. truncatum","compound",0,0,1,"head","bilateral",0,1,"restricted",0,0,1,"white",1,0,0,0,0,0,0,0,0,1,1,1,1,0,0,0,0,0,0,0,NA
+"Trifolium fucatum","Fabaceae","Trifolium","fucatum","Trifolium fucatum","compound",0,0,1,"head","bilateral",0,1,"restricted",0,0,1,"white",1,0,0,0,0,0,0,0,0,0,0,1,1,1,0,0,0,0,0,0,NA
+"Trifolium gracilentum","Fabaceae","Trifolium","gracilentum","Trifolium gracilentum","compound",0,0,1,"head","bilateral",0,1,"restricted",0,0,1,"purple",0,0,0,0,1,0,0,0,0,0,0,1,1,1,0,0,0,0,0,0,NA
+"Trifolium macraei","Fabaceae","Trifolium","macraei","Trifolium macraei","compound",0,0,1,"head","bilateral",0,1,"restricted",0,0,1,"purple",0,0,0,0,1,0,0,0,0,0,1,1,1,0,0,0,0,0,0,0,NA
+"Trifolium microcephalum","Fabaceae","Trifolium","microcephalum","Trifolium microcephalum","compound",0,0,1,"head","bilateral",0,1,"restricted",0,0,1,"pink",0,1,0,0,0,0,0,0,0,0,0,1,1,1,0,0,0,0,0,0,NA
+"Trifolium variegatum","Fabaceae","Trifolium","variegatum","Trifolium variegatum var. major","compound",0,0,1,"head","bilateral",0,1,"restricted",0,0,1,"purple",0,0,0,0,1,0,0,0,0,0,1,1,1,1,1,0,0,0,0,0,NA
+"Trifolium willdenovii","Fabaceae","Trifolium","willdenovii","Trifolium willdenovii","compound",0,0,1,"head","bilateral",0,1,"restricted",0,0,1,"purple",0,0,0,0,1,0,0,0,0,0,0,1,1,0,0,0,0,0,0,0,NA
+"Vicia americana","Fabaceae","Vicia","americana","Vicia americana subsp. americana","determinate",0,1,0,"cluster","bilateral",0,1,"restricted",0,0,1,"purple",0,0,0,0,1,0,0,0,0,0,0,0,1,1,0,0,0,0,0,0,NA
+"Vicia benghalensis","Fabaceae","Vicia","benghalensis","Vicia benghalensis","determinate",0,1,0,"drepanium","bilateral",0,1,"restricted",0,0,1,"purple",0,0,0,0,1,0,0,0,0,0,1,1,1,1,0,0,0,0,0,0,NA
+"Vicia hassei","Fabaceae","Vicia","hassei","Vicia hassei","determinate",0,1,0,"cyme","bilateral",0,1,"restricted",0,0,1,"purple",0,0,0,0,1,0,0,0,0,0,1,1,1,0,0,0,0,0,0,0,NA
+"Vicia ludoviciana","Fabaceae","Vicia","ludoviciana","Vicia ludoviciana subsp. ludoviciana","determinate",0,1,0,"cyme","bilateral",0,1,"restricted",0,0,1,"purple",0,0,0,0,1,0,0,0,0,0,1,1,1,1,0,0,0,0,0,0,NA
+"Vicia sativa","Fabaceae","Vicia","sativa","Vicia sativa subsp. sativa","determinate",0,1,0,"fascicle","bilateral",0,1,"restricted",0,0,1,"purple",0,0,0,0,1,0,0,0,0,1,1,0,0,0,0,0,0,0,0,0,NA
+"Quercus agrifolia","Fagaceae","Quercus","agrifolia","Quercus agrifolia var. agrifolia",NA,0,0,0,NA,NA,0,0,NA,0,0,0,NA,0,0,0,0,0,0,0,0,0,1,1,1,0,0,0,0,0,0,0,0,NA
+"Quercus kelloggii","Fagaceae","Quercus","kelloggii","Quercus kelloggii",NA,0,0,0,NA,NA,0,0,NA,0,0,0,NA,0,0,0,0,0,0,0,0,0,0,0,0,1,1,0,0,0,0,0,0,NA
+"Quercus lobata","Fagaceae","Quercus","lobata","Quercus lobata",NA,0,0,0,NA,NA,0,0,NA,0,0,0,NA,0,0,0,0,0,0,0,0,0,1,1,0,0,0,0,0,0,0,0,0,NA
+"Quercus pacifica","Fagaceae","Quercus","pacifica","Quercus pacifica",NA,0,0,0,NA,NA,0,0,NA,0,0,0,NA,0,0,0,0,0,0,0,0,0,0,1,1,0,0,0,0,0,0,0,0,NA
+"Quercus parvula","Fagaceae","Quercus","parvula","Quercus parvula var. parvula",NA,0,0,0,NA,NA,0,0,NA,0,0,0,NA,0,0,0,0,0,0,0,0,0,0,0,1,1,1,0,0,0,0,0,0,NA
+"Quercus tomentella","Fagaceae","Quercus","tomentella","Quercus tomentella",NA,0,0,0,NA,NA,0,0,NA,0,0,0,NA,0,0,0,0,0,0,0,0,0,0,1,1,1,1,1,0,0,0,0,0,NA
+"Frankenia salina","Frankeniaceae","Frankenia","salina","Frankenia salina","determinate",0,1,0,"solitary","radial",1,0,"bowl",1,0,0,"pink",0,1,0,0,0,0,0,0,0,0,0,0,1,1,1,1,1,1,0,0,NA
+"Garrya veatchii","Garryaceae","Garrya","veatchii","Garrya veatchii","indeterminate",1,0,0,"racemose",NA,0,0,NA,0,0,0,"white",1,0,0,0,0,0,0,0,0,1,1,1,0,0,0,0,0,0,0,0,NA
+"Zeltnera davyi","Gentianaceae","Zeltnera","davyi","Zeltnera davyi","determinate",0,1,0,"solitary","radial",1,0,"bowl",1,0,0,"pink",0,1,0,0,0,0,0,0,0,0,0,0,1,1,1,0,0,0,0,0,NA
+"California macrophylla","Geraniaceae","California","macrophylla","California macrophylla","determinate",0,1,0,"cluster","radial",1,0,"bowl",1,0,0,"white",1,0,0,0,0,0,0,0,0,0,1,1,1,0,0,0,0,0,0,0,NA
+"Erodium botrys","Geraniaceae","Erodium","botrys","Erodium botrys","determinate",0,1,0,"cluster","radial",1,0,"bowl",1,0,0,"pink",0,1,0,0,0,0,0,0,0,1,1,1,1,0,0,0,0,0,0,0,NA
+"Erodium brachycarpum","Geraniaceae","Erodium","brachycarpum","Erodium brachycarpum","determinate",0,1,0,"cluster","radial",1,0,"bowl",1,0,0,"purple",0,0,0,0,1,0,0,0,0,0,1,1,1,1,1,1,0,0,0,0,NA
+"Erodium cicutarium","Geraniaceae","Erodium","cicutarium","Erodium cicutarium","determinate",0,1,0,"cluster","radial",1,0,"bowl",1,0,0,"purple",0,0,0,0,1,0,0,0,0,1,1,1,1,1,0,0,0,0,0,0,NA
+"Erodium moschatum","Geraniaceae","Erodium","moschatum","Erodium moschatum","determinate",0,1,0,"cluster","radial",1,0,"bowl",1,0,0,"purple",0,0,0,0,1,0,0,0,0,1,1,1,1,0,0,0,0,0,0,0,NA
+"Geranium carolinianum","Geraniaceae","Geranium","carolinianum","Geranium carolinianum","determinate",0,1,0,"cluster","radial",1,0,"bowl",1,0,0,"pink",0,1,0,0,0,0,0,0,0,0,0,1,1,1,0,0,0,0,0,0,NA
+"Geranium dissectum","Geraniaceae","Geranium","dissectum","Geranium dissectum","determinate",0,1,0,"solitary","radial",1,0,"bowl",1,0,0,"pink",0,1,0,0,0,0,0,0,0,0,1,1,1,1,1,1,1,1,0,0,NA
+"Geranium molle","Geraniaceae","Geranium","molle","Geranium molle","determinate",0,1,0,"cluster","radial",1,0,"bowl",1,0,0,"purple",0,0,0,0,1,0,0,0,0,1,1,1,1,1,1,0,0,0,0,0,NA
+"Pelargonium hortorum","Geraniaceae","Pelargonium","xhortorum","Pelargonium xhortorum","determinate",0,1,0,"cyme","radial",1,0,"bowl",1,0,0,"red",0,0,0,0,0,0,1,0,0,0,0,0,0,0,0,0,0,0,0,0,"unavailable from calflora"
+"Ribes malvaceum","Grossulariaceae","Ribes","malvaceum","Ribes malvaceum var. malvaceum","indeterminate",1,0,0,"raceme","radial",1,0,"bowl",1,0,0,"pink",0,1,0,0,0,0,0,0,1,1,1,0,0,0,0,0,0,0,0,1,NA
+"Ribes thacherianum","Grossulariaceae","Ribes","thacherianum","Ribes thacherianum","determinate",0,1,0,"solitary","radial",1,0,"tube",0,1,0,"pink",0,1,0,0,0,0,0,0,0,1,1,1,1,1,0,0,0,0,0,0,NA
+"Heliotropium curassavicum","Heliotropiaceae","Heliotropium","curassavicum","Heliotropium curassavicum var. oculatum","determinate",0,1,0,"drepanium","radial",1,0,"bowl",1,0,0,"white",1,0,0,0,0,0,0,0,0,0,0,0,1,1,0,0,0,0,0,0,NA
+"Emmenanthe penduliflora","Hydrophyllaceae","Emmenanthe","penduliflora","Emmenanthe penduliflora var. penduliflora","determinate",0,1,0,"solitary","radial",1,0,"bowl",1,0,0,"yellow",0,0,1,0,0,0,0,0,0,1,1,1,1,0,0,0,0,0,0,0,NA
+"Eucrypta chrysanthemifolia","Hydrophyllaceae","Eucrypta","chrysanthemifolia","Eucrypta chrysanthemifolia var. chrysanthemifolia","determinate",0,1,0,"solitary","radial",1,0,"bowl",1,0,0,"white",1,0,0,0,0,0,0,0,0,0,1,1,1,1,0,0,0,0,0,0,NA
+"Nemophila pedunculata","Hydrophyllaceae","Nemophila","pedunculata","Nemophila pedunculata","determinate",0,1,0,"solitary","radial",1,0,"bowl",1,0,0,"white",1,0,0,0,0,0,0,0,0,1,1,1,1,1,1,0,0,0,0,0,NA
+"Phacelia cicutaria","Hydrophyllaceae","Phacelia","cicutaria","Phacelia cicutaria var. hispida","determinate",0,1,0,"drepanium","radial",1,0,"bowl",1,0,0,"pink",0,1,0,0,0,0,0,0,0,0,1,1,1,0,0,0,0,0,0,0,NA
+"Phacelia distans","Hydrophyllaceae","Phacelia","distans","Phacelia distans","determinate",0,1,0,"drepanium","radial",1,0,"bowl",1,0,0,"blue",0,0,0,0,0,0,0,1,0,0,1,1,1,1,0,0,0,0,0,0,NA
+"Phacelia grandiflora","Hydrophyllaceae","Phacelia","grandiflora","Phacelia grandiflora","determinate",0,1,0,"drepanium","radial",1,0,"bowl",1,0,0,"purple",0,0,0,0,1,0,0,0,0,1,1,1,1,1,0,0,0,0,0,0,NA
+"Phacelia hubbyi","Hydrophyllaceae","Phacelia","hubbyi","Phacelia hubbyi","determinate",0,1,0,"drepanium","radial",1,0,"bowl",1,0,0,"purple",0,0,0,0,1,0,0,0,0,0,0,1,1,1,0,0,0,0,0,0,NA
+"Phacelia ramosissima","Hydrophyllaceae","Phacelia","ramosissima","Phacelia ramosissima","determinate",0,1,0,"drepanium","radial",1,0,"bowl",1,0,0,"white",1,0,0,0,0,0,0,0,0,0,0,0,1,1,1,1,0,0,0,0,NA
+"Phacelia viscida","Hydrophyllaceae","Phacelia","viscida","Phacelia viscida var. viscida","determinate",0,1,0,"solitary","radial",1,0,"bowl",1,0,0,"purple",0,0,0,0,1,0,0,0,0,0,1,1,1,1,0,0,0,0,0,0,NA
+"Pholistoma auritum","Hydrophyllaceae","Pholistoma","auritum","Pholistoma auritum var. auritum","determinate",0,1,0,"solitary","radial",1,0,"tube",0,1,0,"purple",0,0,0,0,1,0,0,0,0,0,1,1,1,0,0,0,0,0,0,0,NA
+"Pholistoma racemosum","Hydrophyllaceae","Pholistoma","racemosum","Pholistoma racemosum","determinate",0,1,0,"solitary","radial",1,0,"bowl",1,0,0,"white",1,0,0,0,0,0,0,0,0,1,1,1,1,0,0,0,0,0,0,0,NA
+"Clinopodium douglasii","Lamiaceae","Clinopodium","douglasii","Clinopodium douglasii","determinate",0,1,0,"solitary","bilateral",0,1,"tube",0,1,0,"white",1,0,0,0,0,0,0,0,0,0,0,0,1,1,1,0,0,0,0,0,NA
+"Lamium amplexicaule","Lamiaceae","Lamium","amplexicaule","Lamium amplexicaule","determinate",0,1,0,"fascicle","bilateral",0,1,"tube",0,1,0,"purple",0,0,0,0,1,0,0,0,0,1,1,1,1,1,1,1,1,0,0,0,NA
+"Lepechinia fragrans","Lamiaceae","Lepechinia","fragrans","Lepechinia fragrans","determinate",0,1,0,"fascicle","bilateral",0,1,"tube",0,1,0,"white",1,0,0,0,0,0,0,0,0,0,1,1,1,1,1,1,1,1,0,0,NA
+"Marrubium vulgare","Lamiaceae","Marrubium","vulgare","Marrubium vulgare","determinate",0,1,0,"fascicle","bilateral",0,1,"tube",0,1,0,"white",1,0,0,0,0,0,0,0,0,0,0,0,1,1,1,1,0,0,0,0,NA
+"Mentha spicata","Lamiaceae","Mentha","spicata","Mentha spicata","determinate",0,1,0,"fascicle","bilateral",0,1,"tube",0,1,0,"purple",0,0,0,0,1,0,0,0,0,0,0,0,0,1,1,1,1,1,0,0,NA
+"Salvia columbariae","Lamiaceae","Salvia","columbariae","Salvia columbariae","determinate",0,1,0,"fascicle","bilateral",0,1,"tube",0,1,0,"purple",0,0,0,0,1,0,0,0,0,0,1,1,1,1,0,0,0,0,0,0,NA
+"Salvia leucophylla","Lamiaceae","Salvia","leucophylla","Salvia leucophylla","determinate",0,1,0,"fascicle","bilateral",0,1,"tube",0,1,0,"purple",0,0,0,0,1,0,0,0,0,0,0,1,1,1,1,0,0,0,0,0,NA
+"Salvia mellifera","Lamiaceae","Salvia","mellifera","Salvia mellifera","determinate",0,1,0,"fascicle","bilateral",0,1,"tube",0,1,0,"white",1,0,0,0,0,0,0,0,0,0,1,1,1,1,1,0,0,0,0,0,NA
+"Scutellaria tuberosa","Lamiaceae","Scutellaria","tuberosa","Scutellaria tuberosa","determinate",0,1,0,"fascicle","bilateral",0,1,"tube",0,1,0,"purple",0,0,0,0,1,0,0,0,0,0,1,1,1,1,1,0,0,0,0,0,NA
+"Stachys bullata","Lamiaceae","Stachys","bullata","Stachys bullata","determinate",0,1,0,"fascicle","bilateral",0,1,"tube",0,1,0,"pink",0,1,0,0,0,0,0,0,0,0,0,1,1,1,1,1,1,0,0,0,NA
+"Mentzelia affinis","Loasaceae","Mentzelia","affinis","Mentzelia affinis","determinate",0,1,0,"solitary","radial",1,0,"bowl",1,0,0,"yellow",0,0,1,0,0,0,0,0,0,0,0,1,1,0,0,0,0,0,0,0,NA
+"Mentzelia micrantha","Loasaceae","Mentzelia","micrantha","Mentzelia micrantha","determinate",0,1,0,"cluster","radial",1,0,"bowl",1,0,0,"yellow",0,0,1,0,0,0,0,0,0,0,0,1,1,1,0,0,0,0,0,0,NA
+"Lythrum californicum","Lythraceae","Lythrum","californicum","Lythrum californicum","determinate",0,1,0,"fascicle","radial",1,0,"tube",0,1,0,"pink",0,1,0,0,0,0,0,0,0,0,0,0,1,1,1,1,1,1,0,0,NA
+"Lythrum hyssopifolia","Lythraceae","Lythrum","hyssopifolia","Lythrum hyssopifolia","determinate",0,1,0,"fascicle","radial",1,0,"tube",0,1,0,"purple",0,0,0,0,1,0,0,0,0,0,0,1,1,1,1,1,1,1,0,0,NA
+"Eremalche exilis","Malvaceae","Eremalche","exilis","Eremalche exilis","determinate",0,1,0,"cluster","radial",1,0,"bowl",1,0,0,"purple",0,0,0,0,1,0,0,0,0,0,1,1,1,0,0,0,0,0,0,0,NA
+"Malacothamnus fasciculatus","Malvaceae","Malacothamnus","fasciculatus","Malacothamnus fasciculatus var. nesioticus","determinate",0,1,0,"drepanium","radial",1,0,"bowl",1,0,0,"pink",0,1,0,0,0,0,0,0,0,0,0,1,1,1,1,0,0,0,0,0,NA
+"Malva assurgentiflora","Malvaceae","Malva","assurgentiflora","Malva assurgentiflora ssp. assurgentiflora","determinate",0,1,0,"solitary","radial",1,0,"bowl",1,0,0,"pink",0,1,0,0,0,0,0,0,0,1,1,1,1,1,1,0,0,0,0,0,NA
+"Malva nicaeensis","Malvaceae","Malva","nicaeensis","Malva nicaeensis","determinate",0,1,0,"fascicle","radial",1,0,"bowl",1,0,0,"purple",0,0,0,0,1,0,0,0,0,0,1,1,1,0,0,0,0,0,0,0,NA
+"Malva parviflora","Malvaceae","Malva","parviflora","Malva parviflora","determinate",0,1,0,"solitary","radial",1,0,"bowl",1,0,0,"white",1,0,0,0,0,0,0,0,0,0,1,1,1,1,1,1,1,1,0,0,NA
+"Sidalcea malviflora","Malvaceae","Sidalcea","malviflora","Sidalcea malviflora subsp. malviflora","indeterminate",1,0,0,"raceme","radial",1,0,"bowl",1,0,0,"pink",0,1,0,0,0,0,0,0,0,0,0,0,1,1,1,1,0,0,0,0,NA
+"Calandrinia breweri","Montiaceae","Calandrinia","breweri","Calandrinia breweri","determinate",0,1,0,"cluster","radial",1,0,"bowl",1,0,0,"pink",0,1,0,0,0,0,0,0,0,0,1,1,1,1,0,0,0,0,0,0,NA
+"Calandrinia menziesii","Montiaceae","Calandrinia","menziesii","Calandrinia menziesii","determinate",0,1,0,"solitary","radial",1,0,"bowl",1,0,0,"pink",0,1,0,0,0,0,0,0,0,1,1,1,1,0,0,0,0,0,0,0,NA
+"Calyptridium monandrum","Montiaceae","Calyptridium","monandrum","Calyptridium monandrum","determinate",0,1,0,"cluster","radial",1,0,"bowl",1,0,0,"white",1,0,0,0,0,0,0,0,1,1,1,1,1,1,1,0,0,0,0,0,NA
+"Cistanthe maritima","Montiaceae","Cistanthe","maritima","Cistanthe maritima","determinate",0,1,0,"solitary","radial",1,0,"bowl",1,0,0,"purple",0,0,0,0,1,0,0,0,0,0,1,1,1,1,0,0,0,0,0,0,NA
+"Claytonia parviflora","Montiaceae","Claytonia","parviflora","Claytonia parviflora subsp. parviflora","determinate",0,1,0,"cluster","radial",1,0,"bowl",1,0,0,"white",1,0,0,0,0,0,0,0,0,0,1,1,1,0,0,0,0,0,0,0,NA
+"Montia fontana","Montiaceae","Montia","fontana","Montia fontana","determinate",0,1,0,"cluster","radial",1,0,"bowl",1,0,0,"white",1,0,0,0,0,0,0,0,0,0,1,1,1,1,0,0,0,0,0,0,NA
+"Ficus carica","Moraceae","Ficus","carica","Ficus carica","compound",0,0,1,"head","radial",1,0,NA,0,0,0,"purple",0,0,0,0,1,0,0,0,0,0,1,1,0,0,0,0,0,0,0,0,NA
+"Lysimachia arvensis","Myrsinaceae","Lysimachia","arvensis","Lysimachia arvensis","determinate",0,1,0,"solitary","radial",1,0,"bowl",1,0,0,"orange",0,0,0,0,0,1,0,0,0,0,1,1,1,1,1,1,1,0,0,0,NA
+"Eucalyptus camaldulensis","Myrtaceae","Eucalyptus","camaldulensis","Eucalyptus camaldulensis","compound",0,0,1,"head","radial",1,0,"bowl",1,0,0,"white",1,0,0,0,0,0,0,0,0,1,1,0,0,0,0,0,0,0,0,0,NA
+"Eucalyptus globulus","Myrtaceae","Eucalyptus","globulus","Eucalyptus globulus","compound",0,0,1,"head","radial",1,0,"bowl",1,0,0,"white",1,0,0,0,0,0,0,0,1,1,1,0,0,0,0,0,0,1,1,1,NA
+"Eucalyptus sideroxylon","Myrtaceae","Eucalyptus","sideroxylon","Eucalyptus sideroxylon","compound",0,0,1,"head","radial",1,0,"bowl",1,0,0,"pink",0,1,0,0,0,0,0,0,1,1,0,0,0,0,0,0,0,0,0,1,NA
+"Eucalyptus tereticornis","Myrtaceae","Eucalyptus","tereticornis","Eucalyptus tereticornis","compound",0,0,1,"head","radial",1,0,"bowl",1,0,0,"white",1,0,0,0,0,0,0,0,0,0,0,0,1,1,1,1,0,0,0,0,NA
+"Abronia maritima","Nyctaginaceae","Abronia","maritima","Abronia maritima","compound",0,0,1,"umbel","radial",1,0,"tube",0,1,0,"purple",0,0,0,0,1,0,0,0,0,1,1,1,1,1,1,1,1,1,1,1,NA
+"Abronia umbellata","Nyctaginaceae","Abronia","umbellata","Abronia umbellata var. umbellata","compound",0,0,1,"umbel","radial",1,0,"tube",0,1,0,"purple",0,0,0,0,1,0,0,0,1,1,1,1,1,1,1,1,1,1,1,1,NA
+"Mirabilis laevis","Nyctaginaceae","Mirabilis","laevis","Mirabilis laevis var. crassifolia","determinate",0,1,0,"cluster","radial",1,0,"bowl",1,0,0,"purple",0,0,0,0,1,0,0,0,1,1,1,1,1,1,0,0,0,0,0,1,NA
+"Olea europaea","Oleaceae","Olea","europaea","Olea europaea","determinate",0,1,0,"botryoid","radial",1,0,"bowl",1,0,0,"white",1,0,0,0,0,0,0,0,0,0,0,1,1,1,0,0,0,0,0,0,NA
+"Camissoniopsis cheiranthifolia","Onagraceae","Camissoniopsis","cheiranthifolia","Camissoniopsis cheiranthifolia ssp. cheiranthifolia","determinate",0,1,0,"solitary","radial",1,0,"bowl",1,0,0,"yellow",0,0,1,0,0,0,0,0,1,1,1,1,1,1,1,1,0,0,0,0,NA
+"Camissoniopsis hirtella","Onagraceae","Camissoniopsis","hirtella","Camissoniopsis hirtella","determinate",0,1,0,"cluster","radial",1,0,"bowl",1,0,0,"yellow",0,0,1,0,0,0,0,0,0,0,0,1,1,1,0,0,0,0,0,0,NA
+"Camissoniopsis ignota","Onagraceae","Camissoniopsis","ignota","Camissoniopsis ignota","determinate",0,1,0,"solitary","radial",1,0,"bowl",1,0,0,"yellow",0,0,1,0,0,0,0,0,0,0,1,1,1,1,1,1,0,0,0,0,NA
+"Camissoniopsis intermedia","Onagraceae","Camissoniopsis","intermedia","Camissoniopsis intermedia","determinate",0,1,0,"cluster","radial",1,0,"bowl",1,0,0,"yellow",0,0,1,0,0,0,0,0,0,0,0,1,1,0,0,0,0,0,0,0,NA
+"Camissoniopsis micrantha","Onagraceae","Camissoniopsis","micrantha","Camissoniopsis micrantha","determinate",0,1,0,"cluster","radial",1,0,"bowl",1,0,0,"yellow",0,0,1,0,0,0,0,0,0,0,1,1,1,1,0,0,0,0,0,0,NA
+"Camissoniopsis robusta","Onagraceae","Camissoniopsis","robusta","Camissoniopsis robusta","determinate",0,1,0,"cluster","radial",1,0,"bowl",1,0,0,"yellow",0,0,1,0,0,0,0,0,0,0,1,1,1,1,1,1,0,0,0,0,NA
+"Clarkia davyi","Onagraceae","Clarkia","davyi","Clarkia davyi","determinate",0,1,0,"solitary","radial",1,0,"bowl",1,0,0,"pink",0,1,0,0,0,0,0,0,0,0,0,0,1,1,0,0,0,0,0,0,NA
+"Clarkia epilobioides","Onagraceae","Clarkia","epilobioides","Clarkia epilobioides","determinate",0,1,0,"solitary","radial",1,0,"bowl",1,0,0,"white",1,0,0,0,0,0,0,0,0,0,0,1,1,0,0,0,0,0,0,0,NA
+"Clarkia purpurea","Onagraceae","Clarkia","purpurea","Clarkia purpurea subsp. quadrivulnera","determinate",0,1,0,"solitary","radial",1,0,"bowl",1,0,0,"purple",0,0,0,0,1,0,0,0,0,0,0,1,1,1,1,0,0,0,0,0,NA
+"Clarkia unguiculata","Onagraceae","Clarkia","unguiculata","Clarkia unguiculata","determinate",0,1,0,"raceme","bilateral",0,1,"tube",0,1,0,"purple",0,0,0,0,1,0,0,0,0,0,0,0,0,1,1,1,1,0,0,0,NA
+"Epilobium brachycarpum","Onagraceae","Epilobium","brachycarpum","Epilobium brachycarpum","determinate",0,1,0,"solitary","radial",1,0,"bowl",1,0,0,"pink",0,1,0,0,0,0,0,0,0,0,0,0,0,1,1,1,1,1,0,0,NA
+"Epilobium canum","Onagraceae","Epilobium","canum","Epilobium canum subsp. canum","determinate",0,1,0,"cluster","bilateral",0,1,"tube",0,1,0,"red",0,0,0,0,0,0,1,0,0,0,0,0,0,0,0,1,1,1,0,0,NA
+"Epilobium ciliatum","Onagraceae","Epilobium","ciliatum","Epilobium ciliatum subsp. ciliatum","determinate",0,1,0,"cluster","radial",1,0,"tube",0,1,0,"white",1,0,0,0,0,0,0,0,0,0,0,0,0,1,1,1,1,0,0,0,NA
+"Eulobus californicus","Onagraceae","Eulobus","californicus","Eulobus californicus","determinate",0,1,0,"cluster","radial",1,0,"bowl",1,0,0,"yellow",0,0,1,0,0,0,0,0,0,1,1,1,1,0,0,0,0,0,0,0,NA
+"Ludwigia peploides","Onagraceae","Ludwigia","peploides","Ludwigia peploides subsp. peploides","determinate",0,1,0,"solitary","radial",1,0,"bowl",1,0,0,"yellow",0,0,1,0,0,0,0,0,0,0,0,0,0,1,1,1,1,1,0,0,NA
+"Oenothera elata","Onagraceae","Oenothera","elata","Oenothera elata ssp. hirsutissima","indeterminate",1,0,0,"raceme","radial",1,0,"bowl",1,0,0,"yellow",0,0,1,0,0,0,0,0,0,0,0,0,0,1,1,1,1,0,0,0,NA
+"Oenothera xenogaura","Onagraceae","Oenothera","xenogaura","Oenothera xenogaura","indeterminate",1,0,0,"raceme","bilateral",0,1,"bowl",1,0,0,"pink",0,1,0,0,0,0,0,0,0,0,0,0,1,1,1,1,1,0,0,0,NA
+"Aphyllon fasciculatum","Orobanchaceae","Aphyllon","fasciculatum","Aphyllon fasciculatum","determinate",0,1,0,"cluster","bilateral",0,1,"tube",0,1,0,"yellow",0,0,1,0,0,0,0,0,0,0,1,1,1,1,1,1,0,0,0,0,NA
+"Aphyllon parishii","Orobanchaceae","Aphyllon","parishii","Aphyllon parishii subsp. brachylobum","indeterminate",1,0,0,"head","bilateral",0,1,"tube",0,1,0,"yellow",0,0,1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,"unavailable from calflora"
+"Aphyllon purpureum","Orobanchaceae","Aphyllon","purpureum","Aphyllon purpureum","determinate",0,1,0,"cluster","bilateral",0,1,"tube",0,1,0,"purple",0,0,0,0,1,0,0,0,0,0,0,1,1,1,1,0,0,0,0,0,NA
+"Aphyllon tuberosum","Orobanchaceae","Aphyllon","tuberosum","Aphyllon tuberosum","indeterminate",1,0,0,"head","bilateral",0,1,"tube",0,1,0,"purple",0,0,0,0,1,0,0,0,0,0,0,1,1,1,0,0,0,0,0,0,NA
+"Castilleja affinis","Orobanchaceae","Castilleja","affinis","Castilleja affinis subsp. affinis","indeterminate",1,0,0,"head","bilateral",0,1,"tube",0,1,0,"red",0,0,0,0,0,0,1,0,0,0,0,0,0,1,0,0,0,0,0,0,NA
+"Castilleja attenuata","Orobanchaceae","Castilleja","attenuata","Castilleja attenuata","indeterminate",1,0,0,"head","bilateral",0,1,"tube",0,1,0,"white",1,0,0,0,0,0,0,0,0,0,1,1,1,0,0,0,0,0,0,0,NA
+"Castilleja densiflora","Orobanchaceae","Castilleja","densiflora","Castilleja densiflora","indeterminate",1,0,0,"head","bilateral",0,1,"tube",0,1,0,"white",1,0,0,0,0,0,0,0,0,0,1,1,1,0,0,0,0,0,0,0,NA
+"Castilleja exserta","Orobanchaceae","Castilleja","exserta","Castilleja exserta","indeterminate",1,0,0,"head","bilateral",0,1,"tube",0,1,0,"purple",0,0,0,0,1,0,0,0,0,0,1,1,1,1,0,0,0,0,0,0,NA
+"Castilleja hololeuca","Orobanchaceae","Castilleja","hololeuca","Castilleja hololeuca","indeterminate",1,0,0,"head","bilateral",0,1,"tube",0,1,0,"yellow",0,0,1,0,0,0,0,0,0,1,1,1,1,1,1,1,1,0,0,0,NA
+"Oxalis californica","Oxalidaceae","Oxalis","californica","Oxalis californica","determinate",0,1,0,"solitary","radial",1,0,"tube",0,1,0,"yellow",0,0,1,0,0,0,0,0,0,1,1,1,1,1,0,0,0,0,0,0,NA
+"Oxalis corniculata","Oxalidaceae","Oxalis","corniculata","Oxalis corniculata","determinate",0,1,0,"solitary","radial",1,0,"tube",0,1,0,"yellow",0,0,1,0,0,0,0,0,1,1,1,1,1,1,1,1,1,1,1,1,NA
+"Oxalis pes-caprae","Oxalidaceae","Oxalis","pes-caprae","Oxalis pes-caprae","determinate",0,1,0,"cyme","radial",1,0,"tube",0,1,0,"yellow",0,0,1,0,0,0,0,0,1,1,1,1,1,1,0,0,0,0,0,1,NA
+"Dendromecon harfordii","Papaveraceae","Dendromecon","harfordii","Dendromecon harfordii","determinate",0,1,0,"solitary","radial",1,0,"bowl",1,0,0,"yellow",0,0,1,0,0,0,0,0,0,0,1,1,1,1,1,1,1,1,1,0,NA
+"Eschscholzia californica","Papaveraceae","Eschscholzia","californica","Eschscholzia californica","determinate",0,1,0,"solitary","radial",1,0,"bowl",1,0,0,"orange",0,0,0,0,0,1,0,0,0,1,1,1,1,1,1,1,1,0,0,0,NA
+"Eschscholzia ramosa","Papaveraceae","Eschscholzia","ramosa","Eschscholzia ramosa","determinate",0,1,0,"solitary","radial",1,0,"bowl",1,0,0,"orange",0,0,0,0,0,1,0,0,0,0,1,1,1,0,0,0,0,0,0,0,NA
+"Meconella denticulata","Papaveraceae","Meconella","denticulata","Meconella denticulata","determinate",0,1,0,"solitary","radial",1,0,"bowl",1,0,0,"white",1,0,0,0,0,0,0,0,0,0,1,1,1,1,0,0,0,0,0,0,NA
+"Papaver californicum","Papaveraceae","Papaver","californicum","Papaver californicum","determinate",0,1,0,"solitary","radial",1,0,"bowl",1,0,0,"orange",0,0,0,0,0,1,0,0,0,0,0,1,1,0,0,0,0,0,0,0,NA
+"Papaver heterophyllum","Papaveraceae","Papaver","heterophyllum","Papaver heterophyllum","determinate",0,1,0,"solitary","radial",1,0,"bowl",1,0,0,"orange",0,0,0,0,0,1,0,0,0,0,0,1,1,0,0,0,0,0,0,0,NA
+"Papaver somniferum","Papaveraceae","Papaver","somniferum","Papaver somniferum","determinate",0,1,0,"solitary","radial",1,0,"bowl",1,0,0,"pink",0,1,0,0,0,0,0,0,0,0,0,0,0,1,1,1,0,0,0,0,NA
+"Platystemon californicus","Papaveraceae","Platystemon","californicus","Platystemon californicus","determinate",0,1,0,"solitary","radial",1,0,"bowl",1,0,0,"yellow",0,0,1,0,0,0,0,0,0,1,1,1,1,0,0,0,0,0,0,0,NA
+"Diplacus brandegeei","Phrymaceae","Diplacus","brandegeei","Diplacus brandegeei","determinate",0,1,0,"cluster","bilateral",0,1,"tube",0,1,0,"purple",0,0,0,0,1,0,0,0,0,0,1,1,1,0,0,0,0,0,0,0,NA
+"Diplacus longiflorus","Phrymaceae","Diplacus","longiflorus","Diplacus longiflorus","determinate",0,1,0,"cluster","bilateral",0,1,"tube",0,1,0,"orange",0,0,0,0,0,1,0,0,0,0,1,1,1,1,0,0,0,0,0,0,NA
+"Diplacus parviflorus","Phrymaceae","Diplacus","parviflorus","Diplacus parviflorus","determinate",0,1,0,"cluster","bilateral",0,1,"tube",0,1,0,"red",0,0,0,0,0,0,1,0,0,0,0,0,0,0,0,0,0,0,0,0,"unavailable from calflora"
+"Erythranthe cardinalis","Phrymaceae","Erythranthe","cardinalis","Erythranthe cardinalis","determinate",0,1,0,"solitary","bilateral",0,1,"tube",0,1,0,"red",0,0,0,0,0,0,1,0,0,0,1,1,1,0,0,0,0,0,0,0,NA
+"Erythranthe guttata","Phrymaceae","Erythranthe","guttata","Erythranthe guttata","determinate",0,1,0,"solitary","bilateral",0,1,"tube",0,1,0,"yellow",0,0,1,0,0,0,0,0,0,0,0,1,1,1,0,0,0,0,0,0,NA
+"Erythranthe nasuta","Phrymaceae","Erythranthe","nasuta","Erythranthe nasuta","determinate",0,1,0,"solitary","bilateral",0,1,"tube",0,1,0,"yellow",0,0,1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,"unavailable from calflora"
+"Antirrhinum kelloggii","Plantaginaceae","Antirrhinum","kelloggii","Antirrhinum kelloggii","indeterminate",1,0,0,"solitary","bilateral",0,1,"tube",0,1,0,"purple",0,0,0,0,1,0,0,0,0,0,1,1,1,0,0,0,0,0,0,0,NA
+"Antirrhinum nuttallianum","Plantaginaceae","Antirrhinum","nuttallianum","Antirrhinum nuttallianum subsp. subsessile","indeterminate",1,0,0,"raceme","bilateral",0,1,"tube",0,1,0,"purple",0,0,0,0,1,0,0,0,0,0,1,1,1,1,1,1,0,0,0,0,NA
+"Antirrhinum thompsonii","Plantaginaceae","Antirrhinum","thompsonii","Antirrhinum thompsonii","indeterminate",1,0,0,"raceme","bilateral",0,1,"tube",0,1,0,"pink",0,1,0,0,0,0,0,0,0,0,0,1,1,1,1,1,0,0,0,0,"jepson"
+"Keckiella cordifolia","Plantaginaceae","Keckiella","cordifolia","Keckiella cordifolia","determinate",0,1,0,"cluster","bilateral",0,1,"tube",0,1,0,"red",0,0,0,0,0,0,1,0,0,0,1,1,1,1,1,1,0,0,0,0,NA
+"Nuttallanthus texanus","Plantaginaceae","Nuttallanthus","texanus","Nuttallanthus texanus","indeterminate",1,0,0,"raceme","bilateral",0,1,"tube",0,1,0,"purple",0,0,0,0,1,0,0,0,0,0,1,1,1,0,0,0,0,0,0,0,NA
+"Plantago elongata","Plantaginaceae","Plantago","elongata","Plantago elongata","indeterminate",1,0,0,"spike","radial",1,0,NA,0,0,0,"pink",0,1,0,0,0,0,0,0,0,0,1,1,1,0,0,0,0,0,0,0,NA
+"Plantago erecta","Plantaginaceae","Plantago","erecta","Plantago erecta","indeterminate",1,0,0,"spike","radial",1,0,NA,0,0,0,"green",0,0,0,1,0,0,0,0,0,0,1,1,0,0,0,0,0,0,0,0,NA
+"Plantago lanceolata","Plantaginaceae","Plantago","lanceolata","Plantago lanceolata","indeterminate",1,0,0,"spike","radial",1,0,NA,0,0,0,"green",0,0,0,1,0,0,0,0,0,0,1,1,1,1,1,1,0,0,0,0,NA
+"Plantago major","Plantaginaceae","Plantago","major","Plantago major","indeterminate",1,0,0,"spike","radial",1,0,NA,0,0,0,"green",0,0,0,1,0,0,0,0,0,0,0,1,1,1,1,1,1,0,0,0,NA
+"Plantago ovata","Plantaginaceae","Plantago","ovata","Plantago ovata var. insularis","indeterminate",1,0,0,"spike","radial",1,0,NA,0,0,0,"white",1,0,0,0,0,0,0,0,0,1,1,1,0,0,0,0,0,0,0,0,NA
+"Plantago subnuda","Plantaginaceae","Plantago","subnuda","Plantago subnuda","indeterminate",1,0,0,"spike","radial",1,0,NA,0,0,0,"green",0,0,0,1,0,0,0,0,0,0,0,1,1,1,1,0,0,0,0,0,NA
+"Veronica anagallis-aquatica","Plantaginaceae","Veronica","anagallis-aquatica","Veronica anagallis-aquatica","indeterminate",1,0,0,"spike","radial",1,0,"bowl",1,0,0,"purple",0,0,0,0,1,0,0,0,0,0,0,0,1,1,1,1,1,0,0,0,NA
+"Platanus racemosa","Platanaceae","Platanus","racemosa","Platanus racemosa",NA,0,0,0,NA,NA,0,0,NA,0,0,0,NA,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,NA
+"Eriastrum filifolium","Polemoniaceae","Eriastrum","filifolium","Eriastrum filifolium","compound",0,0,1,"head","radial",1,0,"tube",0,1,0,"purple",0,0,0,0,1,0,0,0,0,0,0,1,1,1,1,0,0,0,0,0,NA
+"Gilia angelensis","Polemoniaceae","Gilia","angelensis","Gilia angelensis","determinate",0,1,0,"cluster","radial",1,0,"bowl",1,0,0,"white",1,0,0,0,0,0,0,0,0,0,1,1,1,0,0,0,0,0,0,0,NA
+"Gilia capitata","Polemoniaceae","Gilia","capitata","Gilia capitata subsp. abrotanifolia","compound",0,0,1,"head","radial",1,0,"tube",0,1,0,"purple",0,0,0,0,1,0,0,0,0,1,1,1,0,0,0,0,0,0,0,0,NA
+"Gilia clivorum","Polemoniaceae","Gilia","clivorum","Gilia clivorum","determinate",0,1,0,"cluster","radial",1,0,"tube",0,1,0,"purple",0,0,0,0,1,0,0,0,0,1,1,1,1,1,0,0,0,0,0,0,NA
+"Gilia nevinii","Polemoniaceae","Gilia","nevinii","Gilia nevinii","determinate",0,1,0,"cluster","radial",1,0,"tube",0,1,0,"purple",0,0,0,0,1,0,0,0,0,0,1,1,1,1,0,0,0,0,0,0,NA
+"Leptosiphon bicolor","Polemoniaceae","Leptosiphon","bicolor","Leptosiphon bicolor","determinate",0,1,0,"solitary","radial",1,0,"bowl",1,0,0,"purple",0,0,0,0,1,0,0,0,0,0,1,1,1,1,0,0,0,0,0,0,NA
+"Leptosiphon parviflorus","Polemoniaceae","Leptosiphon","parviflorus","Leptosiphon parviflorus","determinate",0,1,0,"cyme","radial",1,0,"bowl",1,0,0,"yellow",0,0,1,0,0,0,0,0,0,0,1,1,1,1,0,0,0,0,0,0,NA
+"Linanthus dianthiflorus","Polemoniaceae","Linanthus","dianthiflorus","Linanthus dianthiflorus","determinate",0,1,0,"solitary","radial",1,0,"bowl",1,0,0,"purple",0,0,0,0,1,0,0,0,0,1,1,1,1,1,0,0,0,0,0,0,NA
+"Navarretia atractyloides","Polemoniaceae","Navarretia","atractyloides","Navarretia atractyloides","compound",0,0,1,"head","radial",1,0,"bowl",1,0,0,"purple",0,0,0,0,1,0,0,0,0,0,0,0,1,1,0,0,0,0,0,0,NA
+"Navarretia hamata","Polemoniaceae","Navarretia","hamata","Navarretia hamata subsp. leptantha","compound",0,0,1,"head","radial",1,0,"bowl",1,0,0,"purple",0,0,0,0,1,0,0,0,0,0,0,0,1,1,1,0,0,0,0,0,NA
+"Polygala californica","Polygalaceae","Polygala","californica","Polygala californica","determinate",0,1,0,"cluster","bilateral",0,1,"tube",0,1,0,"purple",0,0,0,0,1,0,0,0,0,0,0,1,1,1,0,0,0,0,0,0,NA
+"Chorizanthe wheeleri","Polygonaceae","Chorizanthe","wheeleri","Chorizanthe wheeleri","determinate",0,1,0,"umbel","radial",1,0,"bowl",1,0,0,"pink",0,1,0,0,0,0,0,0,0,0,0,1,1,1,1,0,0,0,0,0,NA
+"Eriogonum arborescens","Polygonaceae","Eriogonum","arborescens","Eriogonum arborescens","compound",0,0,1,"umbel","radial",1,0,"bowl",1,0,0,"pink",0,1,0,0,0,0,0,0,0,0,0,1,1,1,1,1,1,1,0,0,NA
+"Eriogonum giganteum","Polygonaceae","Eriogonum","giganteum","Eriogonum giganteum var. giganteum","compound",0,0,1,"umbel","radial",1,0,"bowl",1,0,0,"white",1,0,0,0,0,0,0,0,0,0,1,1,1,1,1,1,1,1,0,0,NA
+"Lastarriaea coriacea","Polygonaceae","Lastarriaea","coriacea","Lastarriaea coriacea","determinate",0,1,0,"cluster","radial",1,0,"bowl",1,0,0,"green",0,0,0,1,0,0,0,0,0,0,0,1,1,1,0,0,0,0,0,0,NA
+"Persicaria lapathifolia","Polygonaceae","Persicaria","lapathifolia","Persicaria lapathifolia","indeterminate",1,0,0,"raceme","radial",1,0,"bowl",1,0,0,"white",1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1,1,1,1,0,NA
+"Polygonum argyrocoleon","Polygonaceae","Polygonum","argyrocoleon","Polygonum argyrocoleon","indeterminate",1,0,0,"raceme","radial",1,0,"bowl",1,0,0,"white",1,0,0,0,0,0,0,0,0,0,0,0,0,1,1,1,1,1,0,0,NA
+"Polygonum aviculare","Polygonaceae","Polygonum","aviculare","Polygonum aviculare subsp. depressum","indeterminate",1,0,0,"raceme","radial",1,0,"bowl",1,0,0,"white",1,0,0,0,0,0,0,0,0,0,0,0,1,1,1,1,1,1,1,1,NA
+"Pterostegia drymarioides","Polygonaceae","Pterostegia","drymarioides","Pterostegia drymarioides","determinate",0,1,0,"fascicle","radial",1,0,"bowl",1,0,0,"white",1,0,0,0,0,0,0,0,0,1,1,1,1,1,1,0,0,0,0,0,NA
+"Rumex acetosella","Polygonaceae","Rumex","acetosella","Rumex acetosella",NA,0,0,0,NA,NA,0,0,NA,0,0,0,NA,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,NA
+"Rumex conglomeratus","Polygonaceae","Rumex","conglomeratus","Rumex conglomeratus",NA,0,0,0,NA,NA,0,0,NA,0,0,0,NA,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,NA
+"Rumex crispus","Polygonaceae","Rumex","crispus","Rumex crispus",NA,0,0,0,NA,NA,0,0,NA,0,0,0,NA,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,NA
+"Rumex pulcher","Polygonaceae","Rumex","pulcher","Rumex pulcher",NA,0,0,0,NA,NA,0,0,NA,0,0,0,NA,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,NA
+"Rumex salicifolius","Polygonaceae","Rumex","salicifolius","Rumex salicifolius",NA,0,0,0,NA,NA,0,0,NA,0,0,0,NA,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,NA
+"Portulaca oleracea","Portulacaceae","Portulaca","oleracea","Portulaca oleracea","determinate",0,1,0,"solitary","radial",1,0,"bowl",1,0,0,"yellow",0,0,1,0,0,0,0,0,0,0,0,0,1,1,1,1,1,0,0,0,NA
+"Primula clevelandii","Primulaceae","Primula","clevelandii","Primula clevelandii var. insularis","determinate",0,1,0,"cyme","radial",1,0,"restricted",0,0,1,"purple",0,0,0,0,1,0,0,0,0,0,1,1,0,0,0,0,0,0,0,0,NA
+"Clematis lasiantha","Ranunculaceae","Clematis","lasiantha","Clematis lasiantha","determinate",0,1,0,"cluster","radial",1,0,"bowl",1,0,0,"white",1,0,0,0,0,0,0,0,0,0,1,1,1,1,1,0,0,0,0,0,NA
+"Clematis ligusticifolia","Ranunculaceae","Clematis","ligusticifolia","Clematis ligusticifolia","determinate",0,1,0,"cluster","radial",1,0,"bowl",1,0,0,"white",1,0,0,0,0,0,0,0,0,0,0,0,0,1,1,1,0,0,0,0,NA
+"Clematis pauciflora","Ranunculaceae","Clematis","pauciflora","Clematis pauciflora","determinate",0,1,0,"cluster","radial",1,0,"bowl",1,0,0,"white",1,0,0,0,0,0,0,0,1,1,1,1,1,1,0,0,0,0,0,0,NA
+"Ranunculus californicus","Ranunculaceae","Ranunculus","californicus","Ranunculus californicus var. cuneatus","determinate",0,1,0,"solitary","radial",1,0,"bowl",1,0,0,"yellow",0,0,1,0,0,0,0,0,0,1,1,1,1,0,0,0,0,0,0,0,NA
+"Ranunculus hebecarpus","Ranunculaceae","Ranunculus","hebecarpus","Ranunculus hebecarpus","determinate",0,1,0,"solitary","radial",1,0,"bowl",1,0,0,"yellow",0,0,1,0,0,0,0,0,0,0,1,1,1,0,0,0,0,0,0,0,NA
+"Oligomeris linifolia","Resedaceae","Oligomeris","linifolia","Oligomeris linifolia","indeterminate",1,0,0,"raceme","radial",1,0,"bowl",1,0,0,"pink",0,1,0,0,0,0,0,0,0,1,1,1,1,1,1,0,0,0,0,0,NA
+"Ceanothus arboreus","Rhamnaceae","Ceanothus","arboreus","Ceanothus arboreus","determinate",0,1,0,"spike","radial",1,0,"bowl",1,0,0,"blue",0,0,0,0,0,0,0,1,0,1,1,1,0,0,0,0,0,0,0,0,NA
+"Frangula californica","Rhamnaceae","Frangula","californica","Frangula californica subsp. californica","determinate",0,1,0,"cluster","radial",1,0,"bowl",1,0,0,"white",1,0,0,0,0,0,0,0,0,0,0,1,1,0,0,0,0,0,0,0,NA
+"Rhamnus pirifolia","Rhamnaceae","Rhamnus","pirifolia","Rhamnus pirifolia","determinate",0,1,0,"cluster","radial",1,0,"bowl",1,0,0,"green",0,0,0,1,0,0,0,0,0,1,1,1,1,1,1,0,0,0,0,0,NA
+"Aphanes occidentalis","Rosaceae","Aphanes","occidentalis","Aphanes occidentalis","determinate",0,1,0,"solitary","radial",1,0,"bowl",1,0,0,"green",0,0,0,1,0,0,0,0,0,1,1,1,0,0,0,0,0,0,0,0,NA
+"Cercocarpus betuloides","Rosaceae","Cercocarpus","betuloides","Cercocarpus betuloides var. blancheae","determinate",0,1,0,"cluster","radial",1,0,"bowl",1,0,0,"green",0,0,0,1,0,0,0,0,0,1,1,1,1,0,0,0,0,0,0,0,NA
+"Heteromeles arbutifolia","Rosaceae","Heteromeles","arbutifolia","Heteromeles arbutifolia","determinate",0,1,0,"cluster","radial",1,0,"bowl",1,0,0,"white",1,0,0,0,0,0,0,0,0,0,0,0,0,1,1,1,0,0,0,0,NA
+"Holodiscus discolor","Rosaceae","Holodiscus","discolor","Holodiscus discolor var. discolor","determinate",0,1,0,"cluster","radial",1,0,"bowl",1,0,0,"white",1,0,0,0,0,0,0,0,0,0,0,0,1,1,1,0,0,0,0,0,NA
+"Lyonothamnus floribundus","Rosaceae","Lyonothamnus","floribundus","Lyonothamnus floribundus subsp. aspleniifolius","determinate",0,1,0,"cluster","radial",1,0,"bowl",1,0,0,"white",1,0,0,0,0,0,0,0,0,0,0,0,1,1,1,0,0,0,0,0,NA
+"Potentilla anserina","Rosaceae","Potentilla","anserina","Potentilla anserina subsp. pacifica","determinate",0,1,0,"solitary","radial",1,0,"bowl",1,0,0,"yellow",0,0,1,0,0,0,0,0,0,0,1,1,1,0,0,0,0,0,0,0,NA
+"Prunus ilicifolia","Rosaceae","Prunus","ilicifolia","Prunus ilicifolia subsp. lyonii","determinate",0,1,0,"cluster","radial",1,0,"bowl",1,0,0,"white",1,0,0,0,0,0,0,0,0,0,0,0,1,1,0,0,0,0,0,0,NA
+"Rosa californica","Rosaceae","Rosa","californica","Rosa californica","determinate",0,1,0,"solitary","radial",1,0,"bowl",1,0,0,"pink",0,1,0,0,0,0,0,0,0,0,0,0,1,1,1,1,0,0,0,0,NA
+"Rubus ursinus","Rosaceae","Rubus","ursinus","Rubus ursinus","determinate",0,1,0,"solitary","radial",1,0,"bowl",1,0,0,"white",1,0,0,0,0,0,0,0,0,1,1,1,1,0,0,0,0,0,0,0,NA
+"Galium angustifolium","Rubiaceae","Galium","angustifolium","Galium angustifolium subsp. foliosum","determinate",0,1,0,"spike","radial",1,0,"bowl",1,0,0,"green",0,0,0,1,0,0,0,0,0,0,1,0,0,0,0,0,0,0,0,0,NA
+"Galium aparine","Rubiaceae","Galium","aparine","Galium aparine","determinate",0,1,0,"cluster","radial",1,0,"bowl",1,0,0,"white",1,0,0,0,0,0,0,0,0,0,0,1,1,0,0,0,0,0,0,0,NA
+"Galium buxifolium","Rubiaceae","Galium","buxifolium","Galium buxifolium","determinate",0,1,0,"cluster","radial",1,0,"bowl",1,0,0,"white",1,0,0,0,0,0,0,0,0,0,1,1,1,1,1,0,0,0,0,0,NA
+"Galium californicum","Rubiaceae","Galium","californicum","Galium californicum subsp. flaccidum","determinate",0,1,0,"cluster","radial",1,0,"bowl",1,0,0,"green",0,0,0,1,0,0,0,0,0,0,1,1,1,1,1,1,1,0,0,0,NA
+"Galium nuttallii","Rubiaceae","Galium","nuttallii","Galium nuttallii subsp. insulare","determinate",0,1,0,"solitary","radial",1,0,"bowl",1,0,0,"white",1,0,0,0,0,0,0,0,0,0,1,1,1,1,0,0,0,0,0,0,NA
+"Galium porrigens","Rubiaceae","Galium","porrigens","Galium porrigens var. porrigens","determinate",0,1,0,"solitary","radial",1,0,"bowl",1,0,0,"white",1,0,0,0,0,0,0,0,0,0,1,1,0,0,0,0,0,0,0,0,NA
+"Populus fremontii","Salicaceae","Populus","fremontii","Populus fremontii subsp. fremontii","determinate",0,1,0,"racemose","radial",1,0,"bowl",1,0,0,"yellow",0,0,1,0,0,0,0,0,0,1,1,0,0,0,0,0,0,0,0,0,NA
+"Populus trichocarpa","Salicaceae","Populus","trichocarpa","Populus trichocarpa","determinate",0,1,0,"racemose","radial",1,0,"bowl",1,0,0,"yellow",0,0,1,0,0,0,0,0,0,1,1,1,0,0,0,0,0,0,0,0,NA
+"Salix exigua","Salicaceae","Salix","exigua","Salix exigua","indeterminate",1,0,0,"racemose","radial",1,0,"bowl",1,0,0,"yellow",0,0,1,0,0,0,0,0,0,1,1,1,0,0,0,0,0,0,0,0,NA
+"Salix laevigata","Salicaceae","Salix","laevigata","Salix laevigata","indeterminate",1,0,0,"racemose","radial",1,0,"bowl",1,0,0,"yellow",0,0,1,0,0,0,0,0,0,1,1,1,1,0,0,0,0,0,0,0,NA
+"Salix lasiandra","Salicaceae","Salix","lasiandra","Salix lasiandra var. lasiandra","indeterminate",1,0,0,"racemose","radial",1,0,"bowl",1,0,0,"yellow",0,0,1,0,0,0,0,0,0,0,1,1,0,0,0,0,0,0,0,0,NA
+"Salix lasiolepis","Salicaceae","Salix","lasiolepis","Salix lasiolepis","indeterminate",1,0,0,"racemose","radial",1,0,"bowl",1,0,0,"yellow",0,0,1,0,0,0,0,0,0,1,1,1,1,0,0,0,0,0,0,0,NA
+"Acer macrophyllum","Sapindaceae","Acer","macrophyllum","Acer macrophyllum","indeterminate",1,0,0,"racemose","radial",1,0,"bowl",1,0,0,"yellow",0,0,1,0,0,0,0,0,0,0,0,1,1,0,0,0,0,0,0,0,NA
+"Heuchera maxima","Saxifragaceae","Heuchera","maxima","Heuchera maxima","determinate",0,1,0,"raceme","radial",1,0,"bowl",1,0,0,"white",1,0,0,0,0,0,0,0,0,1,1,1,1,0,0,0,0,0,0,0,NA
+"Jepsonia malvifolia","Saxifragaceae","Jepsonia","malvifolia","Jepsonia malvifolia","determinate",0,1,0,"umbel","radial",1,0,"bowl",1,0,0,"white",1,0,0,0,0,0,0,0,1,0,0,0,0,0,0,1,1,1,1,1,NA
+"Lithophragma cymbalaria","Saxifragaceae","Lithophragma","cymbalaria","Lithophragma cymbalaria","determinate",0,1,0,"cluster","radial",1,0,"bowl",1,0,0,"white",1,0,0,0,0,0,0,0,0,0,1,1,1,0,0,0,0,0,0,0,NA
+"Micranthes californica","Saxifragaceae","Micranthes","californica","Micranthes californica","determinate",0,1,0,"cluster","radial",1,0,"bowl",1,0,0,"white",1,0,0,0,0,0,0,0,0,0,1,1,0,0,0,0,0,0,0,0,NA
+"Myoporum laetum","Scrophulariaceae","Myoporum","laetum","Myoporum laetum","determinate",0,1,0,"cluster","radial",1,0,"bowl",1,0,0,"white",1,0,0,0,0,0,0,0,0,0,0,1,1,1,1,1,0,0,0,0,NA
+"Verbascum thapsus","Scrophulariaceae","Verbascum","thapsus","Verbascum thapsus","indeterminate",1,0,0,"raceme","radial",1,0,"bowl",1,0,0,"yellow",0,0,1,0,0,0,0,0,0,0,0,0,1,1,1,1,1,0,0,0,NA
+"Datura wrightii","Solanaceae","Datura","wrightii","Datura wrightii","determinate",0,1,0,"solitary","radial",1,0,"bowl",1,0,0,"white",1,0,0,0,0,0,0,0,0,1,1,1,1,1,1,1,1,1,0,0,NA
+"Lycium californicum","Solanaceae","Lycium","californicum","Lycium californicum","determinate",0,1,0,"solitary","radial",1,0,"bowl",1,0,0,"white",1,0,0,0,0,0,0,0,0,0,1,1,1,1,1,1,0,0,0,0,NA
+"Lycopersicon esculentum","Solanaceae","Lycopersicum","esculentum","Lycopersicum esculentum","determinate",0,1,0,"cluster","radial",1,0,"tube",0,1,0,"yellow",0,0,1,0,0,0,0,0,1,1,1,1,1,1,1,1,1,1,1,1,"based on Solanum douglasii"
+"Nicotiana clevelandii","Solanaceae","Nicotiana","clevelandii","Nicotiana clevelandii","determinate",0,1,0,"cluster","radial",1,0,"tube",0,1,0,"white",1,0,0,0,0,0,0,0,0,0,1,1,1,1,0,0,0,0,0,0,NA
+"Nicotiana glauca","Solanaceae","Nicotiana","glauca","Nicotiana glauca","determinate",0,1,0,"cluster","radial",1,0,"tube",0,1,0,"yellow",0,0,1,0,0,0,0,0,0,0,1,1,1,1,1,1,1,0,0,0,NA
+"Solanum douglasii","Solanaceae","Solanum","douglasii","Solanum douglasii","determinate",0,1,0,"cluster","radial",1,0,"tube",0,1,0,"white",1,0,0,0,0,0,0,0,1,1,1,1,1,1,1,1,1,1,1,1,NA
+"Solanum elaeagnifolium","Solanaceae","Solanum","elaeagnifolium","Solanum elaeagnifolium","determinate",0,1,0,"cluster","radial",1,0,"tube",0,1,0,"purple",0,0,0,0,1,0,0,0,0,0,0,0,1,1,1,1,1,0,0,0,NA
+"Solanum wallacei","Solanaceae","Solanum","wallacei","Solanum wallacei","determinate",0,1,0,"cluster","radial",1,0,"tube",0,1,0,"purple",0,0,0,0,1,0,0,0,0,0,1,1,1,1,1,1,0,0,0,0,NA
+"Tamarix ramosissima","Tamaricaceae","Tamarix","ramosissima","Tamarix ramosissima","indeterminate",1,0,0,"spike","radial",1,0,"bowl",1,0,0,"pink",0,1,0,0,0,0,0,0,0,0,0,1,1,1,1,1,0,0,0,0,NA
+"Samolus parviflorus","Theophrastaceae","Samolus","parviflorus","Samolus parviflorus","indeterminate",1,0,0,"raceme","radial",1,0,"bowl",1,0,0,"white",1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,NA
+"Ulmus hollandica","Ulmaceae","Ulmus","xhollandica","Ulmus xhollandica",NA,0,0,0,NA,NA,0,0,NA,0,0,0,NA,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,NA
+"Hesperocnide tenella","Urticaceae","Hesperocnide","tenella","Hesperocnide tenella","determinate",0,1,0,"fascicle","radial",1,0,"bowl",1,0,0,"white",1,0,0,0,0,0,0,0,0,1,1,1,1,1,0,0,0,0,0,0,NA
+"Parietaria hespera","Urticaceae","Parietaria","hespera","Parietaria hespera var. californica","determinate",0,1,0,"fascicle","radial",1,0,"bowl",1,0,0,"white",1,0,0,0,0,0,0,0,0,1,1,1,1,1,0,0,0,0,0,0,NA
+"Urtica urens","Urticaceae","Urtica","urens","Urtica urens","indeterminate",1,0,0,"spike","radial",1,0,"bowl",1,0,0,"green",0,0,0,1,0,0,0,0,1,1,1,1,0,0,0,0,0,0,0,0,NA
+"Centranthus ruber","Valerianaceae","Centranthus","ruber","Centranthus ruber","indeterminate",1,0,0,"umbel","radial",1,0,"tube",0,1,0,"pink",0,1,0,0,0,0,0,0,0,0,0,1,1,1,1,1,0,0,0,0,NA
+"Plectritis ciliosa","Valerianaceae","Plectritis","ciliosa","Plectritis ciliosa","compound",0,0,1,"umbel","bilateral",0,1,"tube",0,1,0,"pink",0,1,0,0,0,0,0,0,0,0,1,1,0,0,0,0,0,0,0,0,NA
+"Phyla nodiflora","Verbenaceae","Phyla","nodiflora","Phyla nodiflora","compound",0,0,1,"umbel","radial",1,0,"tube",0,1,0,"pink",0,1,0,0,0,0,0,0,0,0,0,0,1,1,0,0,0,0,0,0,NA
+"Verbena lasiostachys","Verbenaceae","Verbena","lasiostachys","Verbena lasiostachys var. scabrida","compound",0,0,1,"head","bilateral",0,1,"tube",0,1,0,"pink",0,1,0,0,0,0,0,0,0,0,0,0,1,1,1,1,1,0,0,0,NA
+"Viola pedunculata","Violaceae","Viola","pedunculata","Viola pedunculata","determinate",0,1,0,"solitary","bilateral",0,1,"bowl",1,0,0,"yellow",0,0,1,0,0,0,0,0,0,1,1,1,0,0,0,0,0,0,0,0,NA
+"Agave americana","Agavaceae","Agave","americana","Agave americana","indeterminate",1,0,0,"spike","radial",1,0,"tube",0,1,0,"yellow",0,0,1,0,0,0,0,0,1,1,1,1,1,1,1,1,1,1,1,1,NA
+"Allium lacunosum","Alliaceae","Allium","lacunosum","Allium lacunosum var. lacunosum","determinate",0,1,0,"cyme","radial",1,0,"bowl",1,0,0,"white",1,0,0,0,0,0,0,0,0,0,0,1,1,1,0,0,0,0,0,0,NA
+"Allium praecox","Alliaceae","Allium","praecox","Allium praecox","determinate",0,1,0,"cyme","radial",1,0,"bowl",1,0,0,"white",1,0,0,0,0,0,0,0,0,0,1,1,1,0,0,0,0,0,0,0,NA
+"Narcissus tazetta","Amaryllidaceae","Narcissus","tazetta","Narcissus tazetta","determinate",0,1,0,"cluster","radial",1,0,"tube",0,1,0,"white",1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,NA
+"Washingtonia filifera","Arecaceae","Washingtonia","filifera","Washingtonia filifera","indeterminate",1,0,0,"spike","radial",1,0,"bowl",1,0,0,"yellow",0,0,1,0,0,0,0,0,0,1,1,1,1,1,0,0,0,0,0,0,NA
+"Bolboschoenus maritimus","Cyperaceae","Bolboschoenus","maritimus","Bolboschoenus maritimus subsp. paludosus",NA,0,0,0,NA,NA,0,0,NA,0,0,0,NA,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,NA
+"Carex barbarae","Cyperaceae","Carex","barbarae","Carex barbarae",NA,0,0,0,NA,NA,0,0,NA,0,0,0,NA,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,NA
+"Carex globosa","Cyperaceae","Carex","globosa","Carex globosa",NA,0,0,0,NA,NA,0,0,NA,0,0,0,NA,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,NA
+"Carex harfordii","Cyperaceae","Carex","harfordii","Carex harfordii",NA,0,0,0,NA,NA,0,0,NA,0,0,0,NA,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,NA
+"Carex senta","Cyperaceae","Carex","senta","Carex senta",NA,0,0,0,NA,NA,0,0,NA,0,0,0,NA,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,NA
+"Carex subbracteata","Cyperaceae","Carex","subbracteata","Carex subbracteata",NA,0,0,0,NA,NA,0,0,NA,0,0,0,NA,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,NA
+"Carex triquetra","Cyperaceae","Carex","triquetra","Carex triquetra",NA,0,0,0,NA,NA,0,0,NA,0,0,0,NA,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,NA
+"Carex tumulicola","Cyperaceae","Carex","tumulicola","Carex tumulicola",NA,0,0,0,NA,NA,0,0,NA,0,0,0,NA,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,NA
+"Cyperus involucratus","Cyperaceae","Cyperus","involucratus","Cyperus involucratus",NA,0,0,0,NA,NA,0,0,NA,0,0,0,NA,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,NA
+"Cyperus odoratus","Cyperaceae","Cyperus","odoratus","Cyperus odoratus",NA,0,0,0,NA,NA,0,0,NA,0,0,0,NA,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,NA
+"Schoenoplectus californicus","Cyperaceae","Schoenoplectus","californicus","Schoenoplectus californicus",NA,0,0,0,NA,NA,0,0,NA,0,0,0,NA,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,NA
+"Schoenoplectus pungens","Cyperaceae","Schoenoplectus","pungens","Schoenoplectus pungens var. longispicatus",NA,0,0,0,NA,NA,0,0,NA,0,0,0,NA,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,NA
+"Sisyrinchium bellum","Iridaceae","Sisyrinchium","bellum","Sisyrinchium bellum","determinate",0,1,0,"solitary","radial",1,0,"bowl",1,0,0,"blue",0,0,0,0,0,0,0,1,0,0,1,1,1,0,0,0,0,0,0,0,NA
+"Juncus bufonius","Juncaceae","Juncus","bufonius","Juncus bufonius var. bufonius",NA,0,0,0,NA,NA,0,0,NA,0,0,0,NA,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,NA
+"Juncus mexicanus","Juncaceae","Juncus","mexicanus","Juncus mexicanus",NA,0,0,0,NA,NA,0,0,NA,0,0,0,NA,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,NA
+"Juncus patens","Juncaceae","Juncus","patens","Juncus patens",NA,0,0,0,NA,NA,0,0,NA,0,0,0,NA,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,NA
+"Juncus xiphioides","Juncaceae","Juncus","xiphioides","Juncus xiphioides",NA,0,0,0,NA,NA,0,0,NA,0,0,0,NA,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,NA
+"Luzula subsessilis","Juncaceae","Luzula","subsessilis","Luzula subsessilis",NA,0,0,0,NA,NA,0,0,NA,0,0,0,NA,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,NA
+"Calochortus albus","Liliaceae","Calochortus","albus","Calochortus albus","determinate",0,1,0,"solitary","radial",1,0,"bowl",1,0,0,"white",1,0,0,0,0,0,0,0,0,0,0,1,1,0,0,0,0,0,0,0,NA
+"Calochortus catalinae","Liliaceae","Calochortus","catalinae","Calochortus catalinae","determinate",0,1,0,"solitary","radial",1,0,"bowl",1,0,0,"white",1,0,0,0,0,0,0,0,0,0,1,1,1,1,0,0,0,0,0,0,NA
+"Calochortus luteus","Liliaceae","Calochortus","luteus","Calochortus luteus","determinate",0,1,0,"solitary","radial",1,0,"bowl",1,0,0,"yellow",0,0,1,0,0,0,0,0,0,0,0,0,1,1,0,0,0,0,0,0,NA
+"Lilium humboldtii","Liliaceae","Lilium","humboldtii","Lilium humboldtii ssp. ocellatum","indeterminate",1,0,0,"raceme","radial",1,0,"bowl",1,0,0,"orange",0,0,0,0,0,1,0,0,0,0,1,1,1,1,1,0,0,0,0,0,NA
+"Toxicoscordion fremontii","Melanthiaceae","Toxicoscordion","fremontii","Toxicoscordion fremontii","indeterminate",1,0,0,"raceme","radial",1,0,"bowl",1,0,0,"white",1,0,0,0,0,0,0,0,0,0,1,1,1,0,0,0,0,0,0,0,NA
+"Epipactis gigantea","Orchidaceae","Epipactis","gigantea","Epipactis gigantea","indeterminate",1,0,0,"spike","bilateral",0,1,"tube",0,1,0,"green",0,0,0,1,0,0,0,0,0,0,0,0,1,1,1,0,0,0,0,0,NA
+"Piperia elongata","Orchidaceae","Piperia","elongata","Piperia elongata","indeterminate",1,0,0,"spike","bilateral",0,1,"tube",0,1,0,"green",0,0,0,1,0,0,0,0,0,0,0,0,1,1,1,0,0,0,0,0,NA
+"Piperia michaelii","Orchidaceae","Piperia","michaelii","Piperia michaelii","indeterminate",1,0,0,"spike","bilateral",0,1,"tube",0,1,0,"green",0,0,0,1,0,0,0,0,0,0,0,1,1,1,1,1,0,0,0,0,NA
+"Stuckenia pectinata","Potamogetonaceae","Stuckenia","pectinata","Stuckenia pectinata",NA,0,0,0,NA,NA,0,0,NA,0,0,0,NA,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,NA
+"Ruppia maritima","Ruppiaceae","Ruppia","maritima","Ruppia maritima",NA,0,0,0,NA,NA,0,0,NA,0,0,0,NA,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,NA
+"Bloomeria crocea","Themidaceae","Bloomeria","crocea","Bloomeria crocea","determinate",0,1,0,"umbel","radial",1,0,"bowl",1,0,0,"yellow",0,0,1,0,0,0,0,0,0,0,0,1,1,1,0,0,0,0,0,0,NA
+"Brodiaea jolonensis","Themidaceae","Brodiaea","jolonensis","Brodiaea jolonensis","determinate",0,1,0,"umbel","radial",1,0,"bowl",1,0,0,"purple",0,0,0,0,1,0,0,0,0,0,0,1,1,1,0,0,0,0,0,0,NA
+"Dipterostemon capitatus","Themidaceae","Dipterostemon","capitatus","Dipterostemon capitatus subsp. capitatus","determinate",0,1,0,"umbel","radial",1,0,"bowl",1,0,0,"purple",0,0,0,0,1,0,0,0,0,1,1,1,0,0,0,0,0,0,0,0,NA
+"Triteleia hyacinthina","Themidaceae","Triteleia","hyacinthina","Triteleia hyacinthina","determinate",0,1,0,"umbel","radial",1,0,"bowl",1,0,0,"white",1,0,0,0,0,0,0,0,0,0,0,1,1,1,0,0,0,0,0,0,NA
+"Typha domingensis","Typhaceae","Typha","domingensis","Typha domingensis",NA,0,0,0,NA,NA,0,0,NA,0,0,0,NA,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,NA
+"Typha latifolia","Typhaceae","Typha","latifolia","Typha latifolia",NA,0,0,0,NA,NA,0,0,NA,0,0,0,NA,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,NA
+"Zannichellia palustris","Zannichelliaceae","Zannichellia","palustris","Zannichellia palustris",NA,0,0,0,NA,NA,0,0,NA,0,0,0,NA,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,NA
+"Phyllospadix scouleri","Zosteraceae","Phyllospadix","scouleri","Phyllospadix scouleri",NA,0,0,0,NA,NA,0,0,NA,0,0,0,NA,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,NA
+"Phyllospadix torreyi","Zosteraceae","Phyllospadix","torreyi","Phyllospadix torreyi",NA,0,0,0,NA,NA,0,0,NA,0,0,0,NA,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,NA
+"Zostera pacifica","Zosteraceae","Zostera","pacifica","Zostera pacifica",NA,0,0,0,NA,NA,0,0,NA,0,0,0,NA,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,NA
+"Adenostoma fasciculatum","Rosaceae","Adenostoma","fasciculatum","Adenostoma fasciculatum var. fasciculatum","determinate",0,1,0,"raceme","radial",1,0,"bowl",1,0,0,"white",1,0,0,0,0,0,0,0,0,0,0,0,0,1,1,1,0,0,0,0,NA
+"Amsinckia intermedia","Boraginaceae","Amsinckia","intermedia","Amsinckia intermedia","determinate",0,1,0,"cincinnus","radial",1,0,"tube",0,1,0,"yellow",0,0,1,0,0,0,0,0,0,1,1,1,1,1,0,0,0,0,0,0,NA
+"Arctostaphylos crustacea","Ericaceae","Arctostaphylos","crustacea","Arctostaphylos crustacea subsp. insulicola","determinate",0,1,0,"botryoid","radial",1,0,"tube",0,1,0,"pink",0,1,0,0,0,0,0,0,1,1,1,1,1,1,0,0,0,0,0,1,NA
+"Ceanothus megacarpus","Rhamnaceae","Ceanothus","megacarpus","Ceanothus megacarpus var. insularis","determinate",0,1,0,"spike","radial",1,0,"bowl",1,0,0,"white",1,0,0,0,0,0,0,0,1,1,1,1,0,0,0,0,0,0,0,1,NA
+"Claytonia perfoliata","Montiaceae","Claytonia","perfoliata","Claytonia perfoliata subsp. mexicana","determinate",0,1,0,"cluster","radial",1,0,"bowl",1,0,0,"white",1,0,0,0,0,0,0,0,0,0,0,1,1,0,0,0,0,0,0,0,NA
+"Delphinium parryi","Ranunculaceae","Delphinium","parryi","Delphinium parryi subsp. maritimum","indeterminate",1,0,0,"raceme","bilateral",0,1,"tube",0,1,0,"purple",0,0,0,0,1,0,0,0,0,0,0,1,1,0,0,0,0,0,0,0,NA
+"Eriogonum grande","Polygonaceae","Eriogonum","grande","Eriogonum grande var. rubescens","compound",0,0,1,"umbel","radial",1,0,"bowl",1,0,0,"pink",0,1,0,0,0,0,0,0,0,0,0,1,1,1,1,1,1,1,0,0,NA
+"Grindelia camporum","Asteraceae","Grindelia","camporum","Grindelia camporum","compound",0,0,1,"head","radial",1,0,"bowl",1,0,0,"yellow",0,0,1,0,0,0,0,0,0,0,0,1,1,1,1,1,1,1,0,0,NA
+"Isocoma menziesii","Asteraceae","Isocoma","menziesii","Isocoma menziesii var. sedoides","compound",0,0,1,"head","radial",1,0,"bowl",1,0,0,"yellow",0,0,1,0,0,0,0,0,0,0,0,1,1,1,1,1,1,1,1,0,NA
+"Lonicera subspicata","Caprifoliaceae","Lonicera","subspicata","Lonicera subspicata var. denudata","determinate",0,1,0,"botryoid","bilateral",0,1,"tube",0,1,0,"white",1,0,0,0,0,0,0,0,0,0,0,0,1,1,1,1,0,0,0,0,NA
+"Lupinus albifrons","Fabaceae","Lupinus","albifrons","Lupinus albifrons var. albifrons","indeterminate",1,0,0,"raceme","bilateral",0,1,"restricted",0,0,1,"purple",0,0,0,0,1,0,0,0,0,0,0,1,1,1,1,0,0,0,0,0,NA
+"Plagiobothrys collinus","Boraginaceae","Plagiobothrys","collinus","Plagiobothrys collinus var. gracilis","determinate",0,1,0,"cluster","radial",1,0,"tube",0,1,0,"white",1,0,0,0,0,0,0,0,1,1,1,1,1,0,0,0,0,0,0,0,NA
+"Quercus chrysolepis","Fagaceae","Quercus","chrysolepis","Quercus chrysolepis",NA,0,0,0,NA,NA,0,0,NA,0,0,0,NA,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,NA
+"Quercus douglasii","Fagaceae","Quercus","douglasii","Quercus douglasii",NA,0,0,0,NA,NA,0,0,NA,0,0,0,NA,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,NA
+"Raphanus raphanistrum","Brassicaceae","Raphanus","raphanistrum","Raphanus raphanistrum","indeterminate",1,0,0,"raceme","radial",1,0,"tube",0,1,0,"white",1,0,0,0,0,0,0,0,1,1,1,1,1,1,1,0,0,0,0,1,NA
+"Urtica dioica","Urticaceae","Urtica","dioica","Urtica dioica subsp. holosericea","indeterminate",1,0,0,"racemose","radial",1,0,"bowl",1,0,0,"green",0,0,0,1,0,0,0,0,0,0,0,0,0,1,1,1,1,0,0,0,NA
+"Cirsium occidentale","Asteraceae","Cirsium","occidentale","Cirsium occidentale var. californicum","compound",0,0,1,"head","radial",1,0,"bowl",1,0,0,"purple",0,0,0,0,1,0,0,0,0,0,0,0,1,1,1,0,0,0,0,0,NA
