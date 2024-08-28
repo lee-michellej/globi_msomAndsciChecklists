@@ -163,6 +163,82 @@ metrics <- cbind(model_metrics, globi_metrics)
 
 
 
+# 2.5 -- figure for range of cut offs =========
+
+cutoffs <- c(0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10)
+cutoff_values <- data.frame(index = c('connectance', 
+                                      'nestedness',
+                                      'NODF',
+                                      'interaction evenness',
+                                      'H2'))
+
+# for every i in cutoffs
+for(i in unique(cutoffs)){
+  
+  # take modeled df (dat) and then filter (cutoff_df)
+  cutoff_df <- dat %>% 
+    dplyr::select(bee.names, plant.names, prob_10) %>% 
+    dplyr::filter(prob_10 >= i) %>% 
+    separate(plant.names, into = c("genus", NA), sep = " ", remove = FALSE)
+  
+  # convert df into matrix
+  cutoff_mat <- as.data.frame(df2intmatrix(as.data.frame(cutoff_df), 
+                                           varnames = c("plant.names", "bee.names", "prob_10"),
+                                           type.out = "array",
+                                           emptylist = TRUE))
+  
+  # calculate some basic metrics for the model
+  cutoff_metrics <- as.data.frame(networklevel(cutoff_mat, index = c('connectance', 
+                                                                    'nestedness',
+                                                                    'NODF',
+                                                                    'interaction evenness',
+                                                                    'H2')))
+  names(cutoff_metrics)[1] <- i
+  add <- cutoff_metrics[1]
+  
+  # paste to a dataframe
+  
+  cutoff_values <- cbind(cutoff_values, add)
+  
+  
+}
+
+
+
+# plot data with GloBI as reference
+
+plotdf <- pivot_longer(cutoff_values,
+                       c(2:12),
+                       names_to = "cutoff")
+plotdf$cutoff <- as.numeric(plotdf$cutoff)
+
+plotglobi <- globi_metrics %>% 
+  rownames_to_column("index")
+  
+
+ggplot(plotdf, aes(x = (cutoff*10), y = value)) +
+  geom_point() +
+  facet_wrap("index", scales = "free_y") +
+  theme_bw(base_size = 12) +
+  xlab("Probability cut off (%)") +
+  ylab("Metric value") +
+  geom_hline(data = plotglobi, 
+             aes(yintercept = globi_values), 
+             color = "red",
+             linewidth = 1,
+             linetype = 2)
+ggsave("./Figures/Bipartite_figures/varyCutOffs_19aug24.jpeg",
+       width = 6,
+       height = 4)
+
+
+
+
+
+
+
+
+
 # 3 - null networks -------------
 
 model_matrix <- df2intmatrix(as.data.frame(cut_df), 
