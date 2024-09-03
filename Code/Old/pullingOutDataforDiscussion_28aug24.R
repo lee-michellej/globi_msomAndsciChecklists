@@ -13,11 +13,15 @@ avbeesize <- bee.size.std %>%
 
 bigbeesize <- bee.size.std %>% 
   filter(size_std > 0.1)
+# 60 bees
+max(bigbeesize$size) #16.5mm
+over10 <- bigbeesize %>% 
+  filter(size > 10) #30 bees over 1 cm
 
 
 smallbeesize <- bee.size.std %>% 
   filter(size_std < 0.1)
-
+# 77 bees
 
 # check flower color covariate =====
 

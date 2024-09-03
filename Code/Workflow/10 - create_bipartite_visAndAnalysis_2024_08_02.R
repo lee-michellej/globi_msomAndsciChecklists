@@ -62,7 +62,7 @@ hist(dat$prob_10)
 
 cut_df <- dat %>% 
   dplyr::select(bee.names, plant.names, prob_10) %>% 
-  dplyr::filter(prob_10 >= 1) %>% 
+  dplyr::filter(prob_10 >= 5) %>% 
   separate(plant.names, into = c("genus", NA), sep = " ", remove = FALSE)
 
 
@@ -580,13 +580,16 @@ tests <- rbind(vaz.test.nest,
 # this file is likely not complete -- maybe check with Katja if missing anything major
 apis <- read_csv("./Data/apidae.csv")
 
-apis_df <- cut_df %>% 
+apis_df1 <- cut_df %>% 
   left_join(bee.list, by = c("bee.names" = "resolvedBeeNames")) %>% 
   dplyr::rename(plant.genus = genus.x,
                 bee.genus = genus.y) %>% 
   left_join(apis, by = c("bee.genus" = "genus")) %>% 
   filter(!is.na(family)) %>% 
-  filter(prob_10 == 10)
+  filter(prob_10 > 5)
+
+apis_df <- filter(apis_df1, 
+                  apis_df1$plant.names %in% globi_dat$resolvedPlantNames)
 
 apid_matdat <- as.data.frame(df2intmatrix(as.data.frame(apis_df), 
                                          varnames = c("plant.names", "bee.names", "prob_10"),
@@ -636,30 +639,3 @@ plotweb(visglobi_matdat, method = "normal", empty = TRUE, arrow = "no",
         #plot.axes = TRUE
 )
 # make visualizations
-
-
-
-
-
-# # 5 - make heat map visualization ----------
-# 
-# # use the full dataset
-# # continue filtering down until legible
-# library(viridis)
-# 
-# globi_dat <- read_csv("./Data/final-globi-list-clean 2024 04 07.csv") %>% 
-#   select(resolvedPlantNames, resolvedBeeNames, sourceTaxonFamilyName, targetTaxonOrderName, targetTaxonFamilyName) %>% 
-#   mutate(plant_order = ifelse(is.na(targetTaxonOrderName),
-#                               "Boraginales",
-#                               targetTaxonOrderName)) %>% 
-#   separate(resolvedPlantNames, into = c("genus", NA), sep = " ", remove = FALSE)
-# 
-# sum_globi_dat <- 
-# 
-# ggplot(globi_dat, aes(reorder(bee.names, -max_prob), 
-#                 reorder(plant.names, -max_prob), 
-#                 fill= max_prob)) + 
-#   geom_tile() +
-#   scale_fill_viridis_c() +
-#   theme(axis.text.x = element_text(angle = 90, vjust = 0.5, hjust=1))
-
