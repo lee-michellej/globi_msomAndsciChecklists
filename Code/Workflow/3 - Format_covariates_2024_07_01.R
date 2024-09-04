@@ -124,6 +124,7 @@ plant.covariates <- read.csv("./Data/plant.phenology2.csv")
 
 # Save the order in which the bee species are listed
 bee.sp.names <- dat_info$bee.species
+bee.species <- dat_info$bee.species
 
 
 
@@ -314,8 +315,8 @@ save(covariates, file = "./Data/model_covariates - 2024 07 11 - no apis.rds")
 
 
 
-# 6. Make some plots (to check for correlations) -------------------------------------------------------
 
+# 6. Make some plots (to check for correlations) -------------------------------------------------------
 
 
 
@@ -602,6 +603,28 @@ bee_plant_sum$color <- ifelse(plant.covariates$yellow == 1, "yellow",
                                          "other")))
 
 
+# These are the sample sizes recorded in the results section for the number of total bee observations across all sources for each flower color type
+plant.samp[plant.samp$color == "blue",]
+
+nrow(plant.samp[plant.samp$color == "yellow",])
+  mean(plant.samp[plant.samp$color == "yellow",]$number_obs_per_plant)
+  sd(plant.samp[plant.samp$color == "yellow",]$number_obs_per_plant)
+  min(plant.samp[plant.samp$color == "yellow",]$number_obs_per_plant)
+  max(plant.samp[plant.samp$color == "yellow",]$number_obs_per_plant)
+  
+
+nrow(plant.samp[plant.samp$color == "white",])
+  mean(plant.samp[plant.samp$color == "white",]$number_obs_per_plant)
+  sd(plant.samp[plant.samp$color == "white",]$number_obs_per_plant)
+  min(plant.samp[plant.samp$color == "white",]$number_obs_per_plant)
+  max(plant.samp[plant.samp$color == "white",]$number_obs_per_plant)
+
+
+nrow(plant.samp[plant.samp$color == "other",])
+  mean(plant.samp[plant.samp$color == "other",]$number_obs_per_plant)
+  sd(plant.samp[plant.samp$color == "other",]$number_obs_per_plant)
+  min(plant.samp[plant.samp$color == "other",]$number_obs_per_plant)
+  max(plant.samp[plant.samp$color == "other",]$number_obs_per_plant)
 
 
 ggplot(data = plant.samp, aes(x = as.factor(color), y = number_obs_per_plant))+
