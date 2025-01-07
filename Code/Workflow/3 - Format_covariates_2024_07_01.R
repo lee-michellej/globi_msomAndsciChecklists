@@ -51,7 +51,7 @@ library(plyr)
 
 
 # Set working directory
-setwd("Users/gdirenzo/Documents/GitHub/globi_msomAndsciChecklists/")
+setwd("/Users/gdirenzo/Documents/GitHub/globi_msomAndsciChecklists/")
 
 
 
@@ -66,6 +66,8 @@ color <- read.csv("./Data/Bee traits for checklist species - coloration_NEW.csv"
 sociality <- read.csv("./Data/Bee traits for checklist species - sociality.csv")[-1,]
   # First row = EXAMPLE = remove
 
+# Bee family
+bee_family <- read.csv("./Data/bees-SCI_2021_08_04.csv", header = T)
 
 # Read in file with type of citation
 citation.list <- read.csv("./Data/KS-sources.kept.2024.07.01.csv")
@@ -134,8 +136,10 @@ plant.sp.names <- dat_info$plant.species
 
 
 
-# Reorder the bee species in the size dataframe
+# Reorder the bee species in the size and bee_family dataframe
 size <- size[which(size$Species %in% bee.sp.names),]
+bee_family <- bee_family[which(bee_family$ScientificName %in% bee.sp.names),]
+  # nrow(bee_family)
 
 # Quick visual check to make sure they are reordered & paired correctly
 #data.frame(sizeSP = size$Species,
@@ -161,6 +165,21 @@ sociality <- sociality[which(sociality$Species %in% bee.sp.names),]
 # Reorder the plant species in the plant.covariates dataframe
 plant.covariates <- plant.covariates[which(plant.covariates$scientificName %in% plant.sp.names),]
 
+
+# Plant color categories:
+  # white
+  # yellow
+  # blue/purple
+  # other
+# Combine the blue and purple columns for the plant color
+plant.covariates$blue.new <- ifelse(plant.covariates$blue == 1 | 
+                                    plant.covariates$purple == 1, 1, 0)
+plant.covariates$other <- ifelse(plant.covariates$pink == 1 | 
+                                 plant.covariates$orange == 1 |
+                                 plant.covariates$red == 1 |
+                                 plant.covariates$green == 1, 1, 0)
+
+
 # # Quick visual check to make sure they are reordered & paired correctly
 # data.frame(plantSP = plant.covariates$scientificName,
 #            order = plant.sp.names)
@@ -183,6 +202,7 @@ nrow(plant.covariates)
 
 # Summarize the bee covariates that you need into 1 file
 bee.covariates <- data.frame(species = size[,1],
+                             family = bee_family$Family,
                              size = size[,2],
                              
                              # Look at columns "StripeAbdomen" and "PatternedAbdomen" - if these > 0, then assign a 1; else = 0
@@ -308,7 +328,7 @@ covariates <- list(bee.covariates = bee.covariates,
                    citation.covariates = citation.list)
 
 
-save(covariates, file = "./Data/model_covariates - 2024 07 11 - no apis.rds")
+save(covariates, file = "./Data/model_covariates - 2025 01 07 - no apis.rds")
 
 
 
@@ -592,13 +612,13 @@ bee_plant_sum <- data.frame(plant.sp.names = plant.sp.names,
 
 # Add color covariate
 plant.samp$color <- ifelse(plant.covariates$yellow == 1, "yellow", 
-                           ifelse(plant.covariates$blue == 1, "blue", 
+                           ifelse(plant.covariates$blue == 1 | plant.covariates$purple == 1, "blue", 
                                   ifelse(plant.covariates$white == 1, "white",
                                          "other")))
 
 
 bee_plant_sum$color <- ifelse(plant.covariates$yellow == 1, "yellow", 
-                           ifelse(plant.covariates$blue == 1, "blue", 
+                           ifelse(plant.covariates$blue == 1 | plant.covariates$purple == 1, "blue", 
                                   ifelse(plant.covariates$white == 1, "white",
                                          "other")))
 
