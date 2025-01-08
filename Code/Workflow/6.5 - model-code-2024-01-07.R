@@ -55,11 +55,19 @@
 
 
 # Create a function with all the needed code
-no_bee_plant_specification <- function(seed, 
-                                       n.iter, 
-                                       n.burn,
-                                       n.thin1, 
-                                       n.thin2){
+occ_model <- function(seed, 
+                      n.iter, 
+                      n.burn,
+                      n.thin1, 
+                      n.thin2,
+                      model # 6 models: 
+                               # no_bee_plant
+                               # bee_species
+                               # plant_species
+                               # bee_family
+                               # plant_family
+                               # bee_plant_family
+                                       ){
   
   # Load the library
   library(nimble)
@@ -81,23 +89,19 @@ no_bee_plant_specification <- function(seed,
   colnames(dat_long) <- c("bee_ID", "plant_ID", "cite_ID", "observation")
   
   
+  if(model == "no_bee_plant"){
   # Write the model
   MEcode <- nimbleCode({
     
     # Priors for covariates
     
     for (j in 1:ncov_psi){
-      
       beta_psi[j] ~ dnorm(0, sd = sqrt(1/0.368))
-      
     }
     
     for (j in 1:ncov_p){
-      
       beta_p[j] ~ dnorm(0, sd = sqrt(1/0.368))
-      
     }
-    
     
     # Ecological model
     for(i in 1:n_bee_plant){
@@ -150,7 +154,7 @@ no_bee_plant_specification <- function(seed,
           # Flower shape = no bowl
         beta_p[1] +
         
-        # Bee Strippiness (1 = yes stripped; 0 = no stripped)
+        # Bee Strippiness (1 = yes striped; 0 = no striped)
         beta_p[2] * striped[bee_ID[i]]+
         
         # Bee size
@@ -205,16 +209,774 @@ no_bee_plant_specification <- function(seed,
     
   })
   
+  }
+  
+  # bee_species
+  if(model == "bee_species"){
+    
+    # Write the model
+    MEcode <- nimbleCode({
+      
+      # Priors
+      for(i in 1:n_bee){ # For each bee species
+        
+        # Bee species-specific random effect for psi
+        # psi = The bee-plant interaction probability
+        u[i] ~ dnorm(0, sd = sigma_psi)
+        
+        # Bee species-specific random effect for p
+        # p = The detection probability of documented a bee-plant interaction
+        v[i] ~ dnorm(0, sd = sigma_p)
+        
+      }
+
+      # sd values for psi
+      sigma_psi ~ T(dnorm(0.0, sd = 2.0), 0, 10)
+      
+      # sd values for p
+      sigma_p ~  T(dnorm(0.0, sd = 2.0), 0, 10)
+      
+      # Priors for covariates
+      for (j in 1:ncov_psi){
+        beta_psi[j] ~ dnorm(0, sd = sqrt(1/0.368))
+      }
+      
+      for (j in 1:ncov_p){
+        beta_p[j] ~ dnorm(0, sd = sqrt(1/0.368))
+      }
+      
+      
+      # Ecological model
+      for(i in 1:n_bee_plant){
+        
+        # True bee-plant interaction
+        z[bee_ID[i], plant_ID[i]] ~ dbern(psi[bee_ID[i], plant_ID[i]])
+        
+        # Make the bee-plant interaction probability of function of variables
+        logit(psi[bee_ID[i], plant_ID[i]]) <-
+          
+          # Bee species-specific random effect
+          u[bee_ID[i]] +
+          
+          # Intercept
+          # Average size bee
+          # Not solitary bee
+          # Other flower color
+          # Not bowl
+          beta_psi[1] +
+          
+          # Bee size
+          beta_psi[2] * size[bee_ID[i]]+ 
+          
+          # Bee solitary (1 = yes; 0 = no)
+          beta_psi[3] * solitary[bee_ID[i]]+ 
+          
+          # Flower color
+          # Different bee genus have different probabilities of interacting with different plant colors
+          beta_psi[4] * yellow_flower_color[plant_ID[i]]+
+          beta_psi[5] * blue_flower_color[plant_ID[i]]+
+          beta_psi[6] * white_flower_color[plant_ID[i]]+
+          
+          # Flower shape (== bowl)
+          beta_psi[7] * flower_shape[plant_ID[i]]
+      }
+      
+      # Observation model
+      for(i in 1:n_bee_plant_cite){
+        
+        # Observed bee-plant interaction by source citation
+        y[i] ~ dbern(p.eff[bee_ID[i], plant_ID[i], cite_ID[i]])
+        
+        p.eff[bee_ID[i], plant_ID[i], cite_ID[i]] <- p[bee_ID[i], plant_ID[i], cite_ID[i]] * z[bee_ID[i], plant_ID[i]]
+        
+        logit(p[bee_ID[i], plant_ID[i], cite_ID[i]]) <- 
+          
+          # Bee species-specific random effect
+          v[bee_ID[i]] +
+          
+          # Intercept
+            # Not striped
+            # Averge sized bee (= 0)
+            # Aggregated data type
+            # Flower color = other
+            # Flower shape = no bowl
+          beta_p[1] +
+          
+          # Bee Strippiness (1 = yes striped; 0 = no striped)
+          beta_p[2] * striped[bee_ID[i]]+
+          
+          # Bee size
+          beta_p[3] * size[bee_ID[i]]+
+          
+          # sourceCitation type
+          # Literature (1 = yes; 0 = no)
+          beta_p[4] * citation_lit[cite_ID[i]]+
+          # Collection (1 = yes; 0 = no)
+          beta_p[5] * citation_col[cite_ID[i]]+
+          # Observation (1 = yes; 0 = no)
+          beta_p[6] * citation_obs[cite_ID[i]]+
+          
+          # Flower color (1 = yes yellow; 0 = no yellow)
+          beta_p[7] * yellow_flower_color[plant_ID[i]]+
+          # blue
+          beta_p[8] * blue_flower_color[plant_ID[i]]+
+          # white
+          beta_p[9] * white_flower_color[plant_ID[i]]+            
+          
+          # Flower shape (1 = yes bowl; 0 = no bowl)
+          beta_p[10] * flower_shape[plant_ID[i]]
+        
+        # Create simulated dataset to calculate the Bayesian p-value
+        y.sim[i] ~ dbern(p.eff[bee_ID[i], plant_ID[i], cite_ID[i]])
+        
+        d[i]<-  abs(y[i] - p.eff[bee_ID[i], plant_ID[i], cite_ID[i]]) 
+        
+        dnew[i]<- abs(y.sim[i] - p.eff[bee_ID[i], plant_ID[i], cite_ID[i]]) 
+        
+        d2[i]<- pow(d[i], 2)  
+        
+        dnew2[i]<- pow(dnew[i], 2) 
+        
+      }   
+      
+      # Calculate the discrepancy measure, defined as the mean(p.fit > p.fitnew) 
+      p.fit <- sum(d2[1:n_bee_plant_cite]) 
+      p.fitnew <- sum(dnew2[1:n_bee_plant_cite])
+      
+      p.diff <- nimStep(p.fit - p.fitnew)
+      # step function at 0 = function returns 0 if 𝑥 < 0, 1 if 𝑥 >= 0
+      
+      # Calculate the total number of plants that each bee interacts with
+      for(i in 1:n_bee){
+        
+        n_plants_per_bee[i] <- sum(z[i,])
+        
+      }
+      
+    })
+    
+  }
+  
+  # plant_species
+  if(model == "plant_species"){
+    
+    # Write the model
+    MEcode <- nimbleCode({
+      
+      # Priors
+      for(i in 1:n_plant){ # For each bee species
+        
+        # Plant species-specific random effect for psi
+        # psi = The bee-plant interaction probability
+        u[i] ~ dnorm(0, sd = sigma_psi)
+        
+        # Plant species-specific random effect for p
+        # p = The detection probability of documented a bee-plant interaction
+        v[i] ~ dnorm(0, sd = sigma_p)
+        
+      }
+
+      # sd values for psi
+      sigma_psi ~ T(dnorm(0.0, sd = 2.0), 0, 10)
+      
+      # sd values for p
+      sigma_p ~  T(dnorm(0.0, sd = 2.0), 0, 10)
+      
+      # Priors for covariates
+      for (j in 1:ncov_psi){
+        beta_psi[j] ~ dnorm(0, sd = sqrt(1/0.368))
+      }
+      
+      for (j in 1:ncov_p){
+        beta_p[j] ~ dnorm(0, sd = sqrt(1/0.368))
+      }
+      
+      # Ecological model
+      for(i in 1:n_bee_plant){
+        
+        # True bee-plant interaction
+        z[bee_ID[i], plant_ID[i]] ~ dbern(psi[bee_ID[i], plant_ID[i]])
+        
+        # Make the bee-plant interaction probability of function of variables
+        logit(psi[bee_ID[i], plant_ID[i]]) <- 
+          
+          # Plant species-specific random effect
+          u[plant_ID[i]] +
+          
+          # Intercept
+          # Average size bee
+          # Not solitary bee
+          # Other flower color
+          # Not bowl
+          beta_psi[1] +
+          
+          # Bee size
+          beta_psi[2] * size[bee_ID[i]]+ 
+          
+          # Bee solitary (1 = yes; 0 = no)
+          beta_psi[3] * solitary[bee_ID[i]]+ 
+          
+          # Flower color
+          # Different bee genus have different probabilities of interacting with different plant colors
+          beta_psi[4] * yellow_flower_color[plant_ID[i]]+
+          beta_psi[5] * blue_flower_color[plant_ID[i]]+
+          beta_psi[6] * white_flower_color[plant_ID[i]]+
+          
+          # Flower shape (== bowl)
+          beta_psi[7] * flower_shape[plant_ID[i]]
+      }
+      
+      # Observation model
+      for(i in 1:n_bee_plant_cite){
+        
+        # Observed bee-plant interaction by source citation
+        y[i] ~ dbern(p.eff[bee_ID[i], plant_ID[i], cite_ID[i]])
+        
+        p.eff[bee_ID[i], plant_ID[i], cite_ID[i]] <- p[bee_ID[i], plant_ID[i], cite_ID[i]] * z[bee_ID[i], plant_ID[i]]
+        
+        logit(p[bee_ID[i], plant_ID[i], cite_ID[i]]) <- 
+          
+          # Plant species-specific random effect
+          v[plant_ID[i]] +
+          
+          # Intercept
+            # Not striped
+            # Averge sized bee (= 0)
+            # Aggregated data type
+            # Flower color = other
+            # Flower shape = no bowl
+          beta_p[1] +
+          
+          # Bee Strippiness (1 = yes striped; 0 = no striped)
+          beta_p[2] * striped[bee_ID[i]]+
+          
+          # Bee size
+          beta_p[3] * size[bee_ID[i]]+
+          
+          # sourceCitation type
+          # Literature (1 = yes; 0 = no)
+          beta_p[4] * citation_lit[cite_ID[i]]+
+          # Collection (1 = yes; 0 = no)
+          beta_p[5] * citation_col[cite_ID[i]]+
+          # Observation (1 = yes; 0 = no)
+          beta_p[6] * citation_obs[cite_ID[i]]+
+          
+          # Flower color (1 = yes yellow; 0 = no yellow)
+          beta_p[7] * yellow_flower_color[plant_ID[i]]+
+          # blue
+          beta_p[8] * blue_flower_color[plant_ID[i]]+
+          # white
+          beta_p[9] * white_flower_color[plant_ID[i]]+            
+          
+          # Flower shape (1 = yes bowl; 0 = no bowl)
+          beta_p[10] * flower_shape[plant_ID[i]]
+        
+        # Create simulated dataset to calculate the Bayesian p-value
+        y.sim[i] ~ dbern(p.eff[bee_ID[i], plant_ID[i], cite_ID[i]])
+        
+        d[i]<-  abs(y[i] - p.eff[bee_ID[i], plant_ID[i], cite_ID[i]]) 
+        
+        dnew[i]<- abs(y.sim[i] - p.eff[bee_ID[i], plant_ID[i], cite_ID[i]]) 
+        
+        d2[i]<- pow(d[i], 2)  
+        
+        dnew2[i]<- pow(dnew[i], 2) 
+        
+      }   
+      
+      # Calculate the discrepancy measure, defined as the mean(p.fit > p.fitnew) 
+      p.fit <- sum(d2[1:n_bee_plant_cite]) 
+      p.fitnew <- sum(dnew2[1:n_bee_plant_cite])
+      
+      p.diff <- nimStep(p.fit - p.fitnew)
+      # step function at 0 = function returns 0 if 𝑥 < 0, 1 if 𝑥 >= 0
+      
+      # Calculate the total number of plants that each bee interacts with
+      for(i in 1:n_bee){
+        
+        n_plants_per_bee[i] <- sum(z[i,])
+        
+      }
+      
+    })
+    
+    
+  }
+  
+  # bee_family
+  if(model == "bee_family"){
+    
+    
+    # Write the model
+    MEcode <- nimbleCode({
+      
+      # Priors
+      for(i in 1:n_bee_fam){ # For each bee species
+        
+        # Bee species-specific random effect for psi
+        # psi = The bee-plant interaction probability
+        u[i] ~ dnorm(0, sd = sigma_psi)
+        
+        # Bee species-specific random effect for p
+        # p = The detection probability of documented a bee-plant interaction
+        v[i] ~ dnorm(0, sd = sigma_p)
+        
+      }
+      
+      # sd values for psi
+      sigma_psi ~ T(dnorm(0.0, sd = 2.0), 0, 10)
+      
+      # sd values for p
+      sigma_p ~  T(dnorm(0.0, sd = 2.0), 0, 10)
+      
+      # Priors for covariates
+      for (j in 1:ncov_psi){
+        beta_psi[j] ~ dnorm(0, sd = sqrt(1/0.368))
+      }
+      
+      for (j in 1:ncov_p){
+        beta_p[j] ~ dnorm(0, sd = sqrt(1/0.368))
+      }
+      
+      
+      # Ecological model
+      for(i in 1:n_bee_plant){
+        
+        # True bee-plant interaction
+        z[bee_ID[i], plant_ID[i]] ~ dbern(psi[bee_ID[i], plant_ID[i]])
+        
+        # Make the bee-plant interaction probability of function of variables
+        logit(psi[bee_ID[i], plant_ID[i]]) <-
+          
+          # Bee family-specific random effect
+          u[bee_fam[bee_ID[i]]] +
+          
+          # Intercept
+          # Average size bee
+          # Not solitary bee
+          # Other flower color
+          # Not bowl
+          beta_psi[1] +
+          
+          # Bee size
+          beta_psi[2] * size[bee_ID[i]]+ 
+          
+          # Bee solitary (1 = yes; 0 = no)
+          beta_psi[3] * solitary[bee_ID[i]]+ 
+          
+          # Flower color
+          # Different bee genus have different probabilities of interacting with different plant colors
+          beta_psi[4] * yellow_flower_color[plant_ID[i]]+
+          beta_psi[5] * blue_flower_color[plant_ID[i]]+
+          beta_psi[6] * white_flower_color[plant_ID[i]]+
+          
+          # Flower shape (== bowl)
+          beta_psi[7] * flower_shape[plant_ID[i]]
+      }
+      
+      # Observation model
+      for(i in 1:n_bee_plant_cite){
+        
+        # Observed bee-plant interaction by source citation
+        y[i] ~ dbern(p.eff[bee_ID[i], plant_ID[i], cite_ID[i]])
+        
+        p.eff[bee_ID[i], plant_ID[i], cite_ID[i]] <- p[bee_ID[i], plant_ID[i], cite_ID[i]] * z[bee_ID[i], plant_ID[i]]
+        
+        logit(p[bee_ID[i], plant_ID[i], cite_ID[i]]) <- 
+          
+          # Bee family-specific random effect
+          v[bee_fam[bee_ID[i]]] +
+          
+          # Intercept
+            # Not striped
+            # Averge sized bee (= 0)
+            # Aggregated data type
+            # Flower color = other
+            # Flower shape = no bowl
+          beta_p[1] +
+          
+          # Bee Strippiness (1 = yes striped; 0 = no striped)
+          beta_p[2] * striped[bee_ID[i]]+
+          
+          # Bee size
+          beta_p[3] * size[bee_ID[i]]+
+          
+          # sourceCitation type
+          # Literature (1 = yes; 0 = no)
+          beta_p[4] * citation_lit[cite_ID[i]]+
+          # Collection (1 = yes; 0 = no)
+          beta_p[5] * citation_col[cite_ID[i]]+
+          # Observation (1 = yes; 0 = no)
+          beta_p[6] * citation_obs[cite_ID[i]]+
+          
+          # Flower color (1 = yes yellow; 0 = no yellow)
+          beta_p[7] * yellow_flower_color[plant_ID[i]]+
+          # blue
+          beta_p[8] * blue_flower_color[plant_ID[i]]+
+          # white
+          beta_p[9] * white_flower_color[plant_ID[i]]+            
+          
+          # Flower shape (1 = yes bowl; 0 = no bowl)
+          beta_p[10] * flower_shape[plant_ID[i]]
+        
+        # Create simulated dataset to calculate the Bayesian p-value
+        y.sim[i] ~ dbern(p.eff[bee_ID[i], plant_ID[i], cite_ID[i]])
+        
+        d[i]<-  abs(y[i] - p.eff[bee_ID[i], plant_ID[i], cite_ID[i]]) 
+        
+        dnew[i]<- abs(y.sim[i] - p.eff[bee_ID[i], plant_ID[i], cite_ID[i]]) 
+        
+        d2[i]<- pow(d[i], 2)  
+        
+        dnew2[i]<- pow(dnew[i], 2) 
+        
+      }   
+      
+      # Calculate the discrepancy measure, defined as the mean(p.fit > p.fitnew) 
+      p.fit <- sum(d2[1:n_bee_plant_cite]) 
+      p.fitnew <- sum(dnew2[1:n_bee_plant_cite])
+      
+      p.diff <- nimStep(p.fit - p.fitnew)
+      # step function at 0 = function returns 0 if 𝑥 < 0, 1 if 𝑥 >= 0
+      
+      # Calculate the total number of plants that each bee interacts with
+      for(i in 1:n_bee){
+        
+        n_plants_per_bee[i] <- sum(z[i,])
+        
+      }
+      
+    })
+    
+  }
+  
+  # plant_family
+  if(model == "plant_family"){
+    # Write the model
+    MEcode <- nimbleCode({
+      
+      # Priors
+      for(i in 1:n_plant_fam){ # For each bee species
+        
+        # Plant family-specific random effect for psi
+        # psi = The bee-plant interaction probability
+        u[i] ~ dnorm(0, sd = sigma_psi)
+        
+        # Plant family-specific random effect for p
+        # p = The detection probability of documented a bee-plant interaction
+        v[i] ~ dnorm(0, sd = sigma_p)
+        
+      }
+      
+      # sd values for psi
+      sigma_psi ~ T(dnorm(0.0, sd = 2.0), 0, 10)
+      
+      # sd values for p
+      sigma_p ~  T(dnorm(0.0, sd = 2.0), 0, 10)
+      
+      # Priors for covariates
+      for (j in 1:ncov_psi){
+        beta_psi[j] ~ dnorm(0, sd = sqrt(1/0.368))
+      }
+      
+      for (j in 1:ncov_p){
+        beta_p[j] ~ dnorm(0, sd = sqrt(1/0.368))
+      }
+      
+      # Ecological model
+      for(i in 1:n_bee_plant){
+        
+        # True bee-plant interaction
+        z[bee_ID[i], plant_ID[i]] ~ dbern(psi[bee_ID[i], plant_ID[i]])
+        
+        # Make the bee-plant interaction probability of function of variables
+        logit(psi[bee_ID[i], plant_ID[i]]) <- 
+          
+          # Plant family-specific random effect
+          u[plant_fam[plant_ID[i]]] +
+          
+          # Intercept
+          # Average size bee
+          # Not solitary bee
+          # Other flower color
+          # Not bowl
+          beta_psi[1] +
+          
+          # Bee size
+          beta_psi[2] * size[bee_ID[i]]+ 
+          
+          # Bee solitary (1 = yes; 0 = no)
+          beta_psi[3] * solitary[bee_ID[i]]+ 
+          
+          # Flower color
+          # Different bee genus have different probabilities of interacting with different plant colors
+          beta_psi[4] * yellow_flower_color[plant_ID[i]]+
+          beta_psi[5] * blue_flower_color[plant_ID[i]]+
+          beta_psi[6] * white_flower_color[plant_ID[i]]+
+          
+          # Flower shape (== bowl)
+          beta_psi[7] * flower_shape[plant_ID[i]]
+      }
+      
+      # Observation model
+      for(i in 1:n_bee_plant_cite){
+        
+        # Observed bee-plant interaction by source citation
+        y[i] ~ dbern(p.eff[bee_ID[i], plant_ID[i], cite_ID[i]])
+        
+        p.eff[bee_ID[i], plant_ID[i], cite_ID[i]] <- p[bee_ID[i], plant_ID[i], cite_ID[i]] * z[bee_ID[i], plant_ID[i]]
+        
+        logit(p[bee_ID[i], plant_ID[i], cite_ID[i]]) <- 
+          
+          # Plant family-specific random effect
+          v[plant_fam[plant_ID[i]]] +
+          
+          # Intercept
+          # Not striped
+          # Average sized bee (= 0)
+          # Aggregated data type
+          # Flower color = other
+          # Flower shape = no bowl
+          beta_p[1] +
+          
+          # Bee Stripiness (1 = yes striped; 0 = no striped)
+          beta_p[2] * striped[bee_ID[i]]+
+          
+          # Bee size
+          beta_p[3] * size[bee_ID[i]]+
+          
+          # sourceCitation type
+          # Literature (1 = yes; 0 = no)
+          beta_p[4] * citation_lit[cite_ID[i]]+
+          # Collection (1 = yes; 0 = no)
+          beta_p[5] * citation_col[cite_ID[i]]+
+          # Observation (1 = yes; 0 = no)
+          beta_p[6] * citation_obs[cite_ID[i]]+
+          
+          # Flower color (1 = yes yellow; 0 = no yellow)
+          beta_p[7] * yellow_flower_color[plant_ID[i]]+
+          # blue
+          beta_p[8] * blue_flower_color[plant_ID[i]]+
+          # white
+          beta_p[9] * white_flower_color[plant_ID[i]]+            
+          
+          # Flower shape (1 = yes bowl; 0 = no bowl)
+          beta_p[10] * flower_shape[plant_ID[i]]
+        
+        # Create simulated dataset to calculate the Bayesian p-value
+        y.sim[i] ~ dbern(p.eff[bee_ID[i], plant_ID[i], cite_ID[i]])
+        
+        d[i]<-  abs(y[i] - p.eff[bee_ID[i], plant_ID[i], cite_ID[i]]) 
+        
+        dnew[i]<- abs(y.sim[i] - p.eff[bee_ID[i], plant_ID[i], cite_ID[i]]) 
+        
+        d2[i]<- pow(d[i], 2)  
+        
+        dnew2[i]<- pow(dnew[i], 2) 
+        
+      }   
+      
+      # Calculate the discrepancy measure, defined as the mean(p.fit > p.fitnew) 
+      p.fit <- sum(d2[1:n_bee_plant_cite]) 
+      p.fitnew <- sum(dnew2[1:n_bee_plant_cite])
+      
+      p.diff <- nimStep(p.fit - p.fitnew)
+      # step function at 0 = function returns 0 if 𝑥 < 0, 1 if 𝑥 >= 0
+      
+      # Calculate the total number of plants that each bee interacts with
+      for(i in 1:n_bee){
+        
+        n_plants_per_bee[i] <- sum(z[i,])
+        
+      }
+      
+    }) 
+  }
+  
+  # bee_plant_family
+  if(model == "bee_plant_family"){
+    # Write the model
+    MEcode <- nimbleCode({
+      
+      # Priors
+      
+      # Plant family
+      for(i in 1:n_plant_fam){
+        
+        # Plant family-specific random effect for psi
+        # psi = The bee-plant interaction probability
+        u[i] ~ dnorm(0, sd = sigma_psi_u)
+        
+        # Plant family-specific random effect for p
+        # p = The detection probability of documented a bee-plant interaction
+        v[i] ~ dnorm(0, sd = sigma_p_v)
+        
+      }
+      
+      # sd values for psi
+      sigma_psi_u ~ T(dnorm(0.0, sd = 2.0), 0, 10)
+      sigma_psi_g ~ T(dnorm(0.0, sd = 2.0), 0, 10)
+      
+      # sd values for p
+      sigma_p_v ~  T(dnorm(0.0, sd = 2.0), 0, 10)
+      sigma_p_d ~  T(dnorm(0.0, sd = 2.0), 0, 10)
+      
+      # Bee family
+      for(i in 1:n_bee_fam){ # For each bee species
+        
+        # Plant family-specific random effect for psi
+        # psi = The bee-plant interaction probability
+        g[i] ~ dnorm(0, sd = sigma_psi_g)
+        
+        # Plant family-specific random effect for p
+        # p = The detection probability of documented a bee-plant interaction
+        d[i] ~ dnorm(0, sd = sigma_p_d)
+        
+      }
+      
+      # Priors for covariates
+      for (j in 1:ncov_psi){
+        beta_psi[j] ~ dnorm(0, sd = sqrt(1/0.368))
+      }
+      
+      for (j in 1:ncov_p){
+        beta_p[j] ~ dnorm(0, sd = sqrt(1/0.368))
+      }
+      
+      # Ecological model
+      for(i in 1:n_bee_plant){
+        
+        # True bee-plant interaction
+        z[bee_ID[i], plant_ID[i]] ~ dbern(psi[bee_ID[i], plant_ID[i]])
+        
+        # Make the bee-plant interaction probability of function of variables
+        logit(psi[bee_ID[i], plant_ID[i]]) <- 
+          
+          # Plant family-specific random effect
+          u[plant_fam[plant_ID[i]]] +
+          
+          # Bee family-specific random effect
+          g[bee_fam[bee_ID[i]]] +
+          
+          # Intercept
+          # Average size bee
+          # Not solitary bee
+          # Other flower color
+          # Not bowl
+          beta_psi[1] +
+          
+          # Bee size
+          beta_psi[2] * size[bee_ID[i]]+ 
+          
+          # Bee solitary (1 = yes; 0 = no)
+          beta_psi[3] * solitary[bee_ID[i]]+ 
+          
+          # Flower color
+          # Different bee genus have different probabilities of interacting with different plant colors
+          beta_psi[4] * yellow_flower_color[plant_ID[i]]+
+          beta_psi[5] * blue_flower_color[plant_ID[i]]+
+          beta_psi[6] * white_flower_color[plant_ID[i]]+
+          
+          # Flower shape (== bowl)
+          beta_psi[7] * flower_shape[plant_ID[i]]
+      }
+      
+      # Observation model
+      for(i in 1:n_bee_plant_cite){
+        
+        # Observed bee-plant interaction by source citation
+        y[i] ~ dbern(p.eff[bee_ID[i], plant_ID[i], cite_ID[i]])
+        
+        p.eff[bee_ID[i], plant_ID[i], cite_ID[i]] <- p[bee_ID[i], plant_ID[i], cite_ID[i]] * z[bee_ID[i], plant_ID[i]]
+        
+        logit(p[bee_ID[i], plant_ID[i], cite_ID[i]]) <- 
+          
+          # Plant family-specific random effect
+          v[plant_fam[plant_ID[i]]] +
+          
+          # Bee family-specific random effect
+          d[bee_fam[bee_ID[i]]] +    
+            
+          # Intercept
+          # Not striped
+          # Average sized bee (= 0)
+          # Aggregated data type
+          # Flower color = other
+          # Flower shape = no bowl
+          beta_p[1] +
+          
+          # Bee Stripiness (1 = yes striped; 0 = no striped)
+          beta_p[2] * striped[bee_ID[i]]+
+          
+          # Bee size
+          beta_p[3] * size[bee_ID[i]]+
+          
+          # sourceCitation type
+          # Literature (1 = yes; 0 = no)
+          beta_p[4] * citation_lit[cite_ID[i]]+
+          # Collection (1 = yes; 0 = no)
+          beta_p[5] * citation_col[cite_ID[i]]+
+          # Observation (1 = yes; 0 = no)
+          beta_p[6] * citation_obs[cite_ID[i]]+
+          
+          # Flower color (1 = yes yellow; 0 = no yellow)
+          beta_p[7] * yellow_flower_color[plant_ID[i]]+
+          # blue
+          beta_p[8] * blue_flower_color[plant_ID[i]]+
+          # white
+          beta_p[9] * white_flower_color[plant_ID[i]]+            
+          
+          # Flower shape (1 = yes bowl; 0 = no bowl)
+          beta_p[10] * flower_shape[plant_ID[i]]
+        
+        # Create simulated dataset to calculate the Bayesian p-value
+        y.sim[i] ~ dbern(p.eff[bee_ID[i], plant_ID[i], cite_ID[i]])
+        
+        d[i]<-  abs(y[i] - p.eff[bee_ID[i], plant_ID[i], cite_ID[i]]) 
+        
+        dnew[i]<- abs(y.sim[i] - p.eff[bee_ID[i], plant_ID[i], cite_ID[i]]) 
+        
+        d2[i]<- pow(d[i], 2)  
+        
+        dnew2[i]<- pow(dnew[i], 2) 
+        
+      }   
+      
+      # Calculate the discrepancy measure, defined as the mean(p.fit > p.fitnew) 
+      p.fit <- sum(d2[1:n_bee_plant_cite]) 
+      p.fitnew <- sum(dnew2[1:n_bee_plant_cite])
+      
+      p.diff <- nimStep(p.fit - p.fitnew)
+      # step function at 0 = function returns 0 if 𝑥 < 0, 1 if 𝑥 >= 0
+      
+      # Calculate the total number of plants that each bee interacts with
+      for(i in 1:n_bee){
+        
+        n_plants_per_bee[i] <- sum(z[i,])
+        
+      }
+      
+    }) 
+  }
   
   # Bundle all the values that remain constant in the model
+  {
   MEconsts <- list(
     
-    # Total number of bees
+    # Total number of bee species
     n_bee = dim(bee.plant.cite)[1],
+    
+    # Total number of plants species
+    n_plant = dim(bee.plant.cite)[2],
+    
+    # Total number of bee families
+    n_bee_fam = max(covariates$bee.covariates$family_num),
+    
+    # Total number of plant families
+    n_plant_fam = max(covariates$plant.covariates$family_num),
     
     # bee * plant total
     n_bee_plant  = dim(bee.plant.cite)[1] * dim(bee.plant.cite)[2],
-    
     n_bee_plant_cite  = dim(bee.plant.cite)[1] * dim(bee.plant.cite)[2] * dim(bee.plant.cite)[3],
     
     # Bee Covariates
@@ -242,14 +1004,16 @@ no_bee_plant_specification <- function(seed,
     # ID index
     bee_ID = dat_long$bee_ID,
     plant_ID = dat_long$plant_ID,
-    cite_ID = dat_long$cite_ID
+    cite_ID = dat_long$cite_ID,
     
+    # bee and plant family IDs (as numeric)
+    bee_family = covariates$bee.covariates$family_num,
+    plant_family = covariates$plant.covariates$family_num
   )
-  
+  }
   
   # List the data
   MEdata <- list(y = dat_long$observation)
-  
   
   # Initial values for the z array - latent state variable
   zinit <- apply(bee.plant.cite, c(1, 2), max, na.rm = TRUE) 
@@ -272,6 +1036,8 @@ no_bee_plant_specification <- function(seed,
   )}
   
   # List parameters to monitor
+  # Coefficents
+  if(model == "no_bee_plant"){
   MEmons <- c( 
     # Psi covariates
     "beta_psi",
@@ -279,11 +1045,58 @@ no_bee_plant_specification <- function(seed,
     # P covariates
     "beta_p"
   )
+  }
   
-  # Latent variables to monitor:
-  MElatent <- c("n_plants_per_bee", "z", "u", "v",
-                "p.fit", "p.fitnew", "p.diff")
+  if(model == "bee_species" | model == "plant_species" |
+     model == "bee_family" | model == "plant_family"){
+    MEmons <- c( 
+      # Psi covariates
+      "beta_psi",
+      
+      # P covariates
+      "beta_p",
+      
+      "sigma_psi",
+      "sigma_p"
+    )
+     
+  }
   
+  if(model == "bee_plant_family"){
+    MEmons <- c( 
+      # Psi covariates
+      "beta_psi",
+      
+      # P covariates
+      "beta_p",
+      
+      "sigma_psi_u",
+      "sigma_psi_g",
+      "sigma_p_v",
+      "sigma_p_d"
+    )
+    
+  }
+  
+  # latent state parameters
+  if(model == "no_bee_plant"){
+    # Latent variables to monitor:
+    MElatent <- c("n_plants_per_bee", "z", 
+                  "p.fit", "p.fitnew", "p.diff")
+  }
+  
+  if(model == "bee_species" | model == "plant_species" |
+     model == "bee_family" | model == "plant_family"){
+      # Latent variables to monitor:
+      MElatent <- c("n_plants_per_bee", "z", "u", "v",
+                    "p.fit", "p.fitnew", "p.diff")
+  }
+  
+  if(model == "bee_plant_family"){
+    # Latent variables to monitor:
+    MElatent <- c("n_plants_per_bee", "z", "u", "v", "g", "d",
+                  "p.fit", "p.fitnew", "p.diff")
+  }
   
   # Start creating/compiling the nimble model
   MEmodel <- nimbleModel(MEcode, 
@@ -323,6 +1136,5 @@ no_bee_plant_specification <- function(seed,
     
   # Return MCMC results
   return(results)
-  
   
 }
