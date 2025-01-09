@@ -53,8 +53,6 @@ library(plyr)
 # Set working directory
 setwd("/Users/gdirenzo/Documents/GitHub/globi_msomAndsciChecklists/")
 
-
-
 # Bee size data
 size <- read.csv("./Data/Bee traits for checklist species - size.csv")
 
@@ -63,19 +61,22 @@ color <- read.csv("./Data/Bee traits for checklist species - coloration_NEW.csv"
   # First row = EXAMPLE = remove
 
 # Bee sociality data
-sociality <- read.csv("./Data/Bee traits for checklist species - sociality.csv")[-1,]
+sociality <- read.csv("./Data/KS-Bee traits for checklist species - sociality.csv")[-1,]
   # First row = EXAMPLE = remove
 
 # Bee family
 bee_family <- read.csv("./Data/bees-SCI_2021_08_04.csv", header = T)
 
-# Read in file with type of citation
-citation.list <- read.csv("./Data/KS-sources.kept.2024.07.01.csv")
 
+# Upload the observed bee-plant data
+load("./Data/data_summary/globi_data_formatted_bee_plant_date_citation_2024_07_11 - short plant list - no apis.rds")
+  # object name = bee.plant.cite
+  # 3-D array
+  
 
-#View(citation.list)
-
-
+# Read in the dat_info
+load("./Data/dat_info_2024_07_11.rds")
+  # object name = dat_info
 
 
 
@@ -87,33 +88,42 @@ size <- size[size$Species != "Apis mellifera",]
 color <- color[color$Species != "Apis mellifera",]
 sociality <- sociality[sociality$Species != "Apis mellifera",]
 
+# Apis mellifora was not included in either the bee.plant.cite object or dat_info
 
 
-# Upload the observed bee-plant data
-load("./Data/data_summary/globi_data_formatted_bee_plant_date_citation_2024_07_11 - short plant list - no apis.rds")
-  # object name = bee.plant.cite
-  # 3-D array
+# Update in January 2025: Remove a few bee species that are dubious for actually being on SCI. They are only in the current checklist because there is a specimen record, but it is thought to be a misidentification. 
+  # Colletes kincaidii, Bombus occidentalis, Halictus harmonius, Eucera lunata
+
+bee.sp.remove <- c("Colletes kincaidii", "Bombus occidentalis", "Halictus harmonius", "Eucera lunata")
   
+# Remove species from each dataset
+size <- size[!size$Species %in% bee.sp.remove, ]
+color <- color[!color$Species %in% bee.sp.remove, ]
+sociality <- sociality[!sociality$Species %in% bee.sp.remove, ]
 
 
 
-# Read in the dat_info
-load("./Data/dat_info_2024_07_11.rds")
-  # object name = dat_info
 
+# *******----- START HERE ---- not sure if rownames were included *******
+  # ********Need to remove those 4 bee species********
+bee.plant.cite
+dat_info
+
+
+
+
+
+################
+################
+################
+
+
+
+# Read in file with type of citation
+citation.list <- read.csv("./Data/KS-sources.kept.2024.07.01.csv")
 
 # Flower color
 plant.covariates <- read.csv("./Data/plant.phenology2.csv")
-
-
-
-
-################
-################
-################
-
-
-
 
 
 
@@ -166,22 +176,6 @@ sociality <- sociality[which(sociality$Species %in% bee.sp.names),]
 plant.covariates <- plant.covariates[which(plant.covariates$scientificName %in% plant.sp.names),]
 
 
-# Plant color categories:
-  # white
-  # yellow
-  # blue/purple
-  # other
-# Combine the blue and purple columns for the plant color
-plant.covariates$blue.new <- ifelse(plant.covariates$blue == 1 | 
-                                    plant.covariates$purple == 1, 1, 0)
-plant.covariates$other <- ifelse(plant.covariates$pink == 1 | 
-                                 plant.covariates$orange == 1 |
-                                 plant.covariates$red == 1 |
-                                 plant.covariates$green == 1, 1, 0)
-
-# Make plant family numeric
-plant.covariates$family_num <- as.numeric(as.factor(plant.covariates$Family))
-
 # # Quick visual check to make sure they are reordered & paired correctly
 # data.frame(plantSP = plant.covariates$scientificName,
 #            order = plant.sp.names)
@@ -199,6 +193,8 @@ nrow(plant.covariates)
 
 
 # 4. Summarize the bee covariates -------------------------------------------------------
+
+
 
 
 
@@ -303,6 +299,23 @@ citation.list$observation <- ifelse(citation.list$citationType == "Observation",
 
 # 6. Plant covariates -------------------------------------------------------
 
+
+
+# Plant color categories:
+# white
+# yellow
+# blue/purple
+# other
+# Combine the blue and purple columns for the plant color
+plant.covariates$blue.new <- ifelse(plant.covariates$blue == 1 | 
+                                      plant.covariates$purple == 1, 1, 0)
+plant.covariates$other <- ifelse(plant.covariates$pink == 1 | 
+                                   plant.covariates$orange == 1 |
+                                   plant.covariates$red == 1 |
+                                   plant.covariates$green == 1, 1, 0)
+
+# Make plant family numeric
+plant.covariates$family_num <- as.numeric(as.factor(plant.covariates$Family))
 
 
 
