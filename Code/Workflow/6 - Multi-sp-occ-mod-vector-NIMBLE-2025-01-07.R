@@ -79,6 +79,8 @@ library(coda)
 setwd("~/globi_tritrophic_networks/")
 
 
+# Temp
+setwd("/Users/gdirenzo/Documents/GitHub/globi_msomAndsciChecklists/")
 
 
 
@@ -182,7 +184,7 @@ source("./Code/Workflow/6.5 - model-code-2024-01-07.R")
 # 150,000 iterations = 21.18633 hours
 # 250,000 iterations = 1.459393 days
 
-# no_bee_plant
+# bee_species
 {
 start.time <- Sys.time()
 
@@ -208,11 +210,11 @@ result <- foreach(x = seeds,
   
                     # function
                     occ_model(seed = seeds[x],
-                              n.iter = 2, 
-                              n.burn = 1,
-                              n.thin1 = 1, 
-                              n.thin2 = 1,
-                              model = "no_bee_plant")
+                              n.iter = 150000, 
+                              n.burn = 50000, 
+                              n.thin1 = 10, 
+                              n.thin2 = 10,
+                              model = "bee_species")
                   }
 
 stopCluster(cl)
@@ -226,8 +228,6 @@ end.time - start.time
 }
 
 
-# Notes to self (what you did and where you are):
-  # Started no_bee_plant run at 11:05 am
 
 
 
