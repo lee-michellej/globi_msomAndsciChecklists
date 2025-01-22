@@ -92,7 +92,7 @@ setwd("/Users/gdirenzo/Documents/GitHub/globi_msomAndsciChecklists/")
 # Upload the data
   # object name = bee.plant.cite
   # 3-D array
-load("./Data/data_summary/globi_data_formatted_bee_plant_date_citation_2024_07_11 - short plant list - no apis.rds")
+load("./Data/data_summary/globi_data_formatted_bee_plant_date_citation_2025_01_22 - short plant list - no apis.rds")
 
 
 
@@ -188,36 +188,12 @@ source("./Code/Workflow/6.5 - model-code-2024-01-07.R")
 {
 start.time <- Sys.time()
 
-# Number of cores available on this machine
-detectCores()  
 
-# Number to cores to use
-ncore <- 3     
-
-# Create the cluster
-cl <- makeCluster(ncore)
-
-registerDoParallel(cl)
-
-# set seeds
-seeds <- 1:ncore
-
-# Run the model using dopar 
-start.time <- Sys.time()
-
-result <- foreach(x = seeds, 
-                  .packages="nimble") %dopar% {
-  
-                    # function
-                    occ_model(seed = seeds[x],
-                              n.iter = 150000, 
-                              n.burn = 50000, 
-                              n.thin1 = 10, 
-                              n.thin2 = 10,
-                              model = "bee_species")
-                  }
-
-stopCluster(cl)
+result <- occ_model(n.iter = 2, 
+                    n.burn = 1, 
+                    n.thin1 = 1, 
+                    n.thin2 = 1,
+                    model = "bee_species")
 
 end.time <- Sys.time()
 

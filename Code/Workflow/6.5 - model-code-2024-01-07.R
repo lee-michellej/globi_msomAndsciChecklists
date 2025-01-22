@@ -55,8 +55,7 @@
 
 
 # Create a function with all the needed code
-occ_model <- function(seed, 
-                      n.iter, 
+occ_model <- function(n.iter, 
                       n.burn,
                       n.thin1, 
                       n.thin2,
@@ -77,11 +76,11 @@ occ_model <- function(seed,
   # Upload the data
   # object name = bee.plant.cite
   # 3-D array
-  load("./Data/data_summary/globi_data_formatted_bee_plant_date_citation_2024_07_11 - short plant list - no apis.rds")
+  load("./Data/data_summary/globi_data_formatted_bee_plant_date_citation_2025_01_22 - short plant list - no apis.rds")
   
   
   # Load covariates
-  load("./Data/model_covariates - 2025 01 07 - no apis.rds")
+  load("./Data/model_covariates - 2025 01 22 - no apis.rds")
   
   
   # Flatten the array
@@ -90,6 +89,7 @@ occ_model <- function(seed,
   
   
   if(model == "no_bee_plant"){
+    
   # Write the model
   MEcode <- nimbleCode({
     
@@ -969,6 +969,9 @@ occ_model <- function(seed,
     # Total number of plants species
     n_plant = dim(bee.plant.cite)[2],
     
+    # Total number of unique citations,
+    n_citations = dim(bee.plant.cite)[3],
+    
     # Total number of bee families
     n_bee_fam = max(covariates$bee.covariates$family_num),
     
@@ -1017,7 +1020,7 @@ occ_model <- function(seed,
   
   # Initial values for the z array - latent state variable
   zinit <- apply(bee.plant.cite, c(1, 2), max, na.rm = TRUE) 
-  zinit[zinit == "-Inf"] <- NA
+  zinit[zinit == -Inf] <- NA
   
   
   # Bundle the initial values
@@ -1107,32 +1110,32 @@ occ_model <- function(seed,
                          check = F)
   
   
-  # Compile
+  # Compile model
   cMEmodel <- compileNimble(MEmodel)
   
-  # MCMC
+  # Configure MCMC
   MEconf <- configureMCMC(MEmodel, 
                           monitors = MEmons,
-                          monitors2 = MElatent
-  )
+                          monitors2 = MElatent)
   
-  # Build
+  # Build MCMC
   MEmcmc <- buildMCMC(MEconf)
   
-  # Compile
-  cMEmcmc <- compileNimble(MEmcmc, 
-                           project = cMEmodel, 
-                           resetFunctions = T)
+  # Compile MCMC
+  cMEmcmc <- compileNimble(MEmcmc, project = cMEmodel)
   
-
-    ## Run MCMC
-    results <-  runMCMC(cMEmcmc, 
-                        nchains = 1, 
-                        niter = n.iter, 
-                        nburnin = n.burn,
-                        thin = n.thin1, 
-                        thin2 = n.thin2,
-                        setSeed = seed)
+  
+  ## Run model:
+  results <- runMCMC(
+    mcmc = cMEmcmc, 
+    nchains = 3,
+    nCores = 3,          
+    niter = n.iter,
+    nburnin = n.burn,
+    thin = n.thin1,
+    thin2 = n.thin2,
+    setSeed = c(1, 2, 3, 4) 
+  )
     
   # Return MCMC results
   return(results)

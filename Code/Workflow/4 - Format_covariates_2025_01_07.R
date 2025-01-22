@@ -38,6 +38,9 @@
 
 # 1. Load libraries -------------------------------------------------------
 
+
+
+
 # Load libraries
 library(tidyverse)
 library(plyr)
@@ -69,13 +72,13 @@ bee_family <- read.csv("./Data/bees-SCI_2021_08_04.csv", header = T)
 
 
 # Upload the observed bee-plant data
-load("./Data/data_summary/globi_data_formatted_bee_plant_date_citation_2024_07_11 - short plant list - no apis.rds")
+load("./Data/data_summary/globi_data_formatted_bee_plant_date_citation_2025_01_22 - short plant list - no apis.rds")
   # object name = bee.plant.cite
   # 3-D array
   
 
 # Read in the dat_info
-load("./Data/dat_info_2024_07_11.rds")
+load("./Data/dat_info_2025_01_22.rds")
   # object name = dat_info
 
 
@@ -94,24 +97,20 @@ sociality <- sociality[sociality$Species != "Apis mellifera",]
 # Update in January 2025: Remove a few bee species that are dubious for actually being on SCI. They are only in the current checklist because there is a specimen record, but it is thought to be a misidentification. 
   # Colletes kincaidii, Bombus occidentalis, Halictus harmonius, Eucera lunata
 
-bee.sp.remove <- c("Colletes kincaidii", "Bombus occidentalis", "Halictus harmonius", "Eucera lunata")
+# Bee species to keep
+dat_info$bee.species
+
   
 # Remove species from each dataset
-size <- size[!size$Species %in% bee.sp.remove, ]
-color <- color[!color$Species %in% bee.sp.remove, ]
-sociality <- sociality[!sociality$Species %in% bee.sp.remove, ]
+size <- size[size$Species %in% dat_info$bee.species, ]
+color <- color[color$Species %in% dat_info$bee.species, ]
+sociality <- sociality[sociality$Species %in% dat_info$bee.species, ]
 
 
-
-
-# *******----- START HERE ---- not sure if rownames were included *******
-  # ********Need to remove those 4 bee species********
-bee.plant.cite
-dat_info
-
-
-
-
+# All of these should have 133 rows
+nrow(size)
+nrow(color)
+nrow(sociality)
 
 ################
 ################
@@ -121,6 +120,11 @@ dat_info
 
 # Read in file with type of citation
 citation.list <- read.csv("./Data/KS-sources.kept.2024.07.01.csv")
+
+# Need to remove 1 citation from an old list
+citation.list <- citation.list[citation.list$x %in% dat_info$citations,]
+
+
 
 # Flower color
 plant.covariates <- read.csv("./Data/plant.phenology2.csv")
@@ -293,6 +297,8 @@ citation.list$literature <- ifelse(citation.list$citationType == "Literature", 1
 citation.list$collection <- ifelse(citation.list$citationType == "Collection", 1, 0)
 citation.list$observation <- ifelse(citation.list$citationType == "Observation", 1, 0)
 
+# Number of unique citations
+nrow(citation.list)
 
 
 
@@ -344,7 +350,7 @@ covariates <- list(bee.covariates = bee.covariates,
                    citation.covariates = citation.list)
 
 
-save(covariates, file = "./Data/model_covariates - 2025 01 07 - no apis.rds")
+save(covariates, file = "./Data/model_covariates - 2025 01 22 - no apis.rds")
 
 
 
