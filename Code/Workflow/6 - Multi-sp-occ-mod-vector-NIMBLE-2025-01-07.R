@@ -71,6 +71,7 @@ library(doParallel)
 library(MCMCvis)
 library(mcmcOutput)
 library(coda)
+library(parallel)
 
 
 
@@ -90,9 +91,18 @@ setwd("/Users/gdirenzo/Documents/GitHub/globi_msomAndsciChecklists/")
 
 
 # Upload the data
-  # object name = bee.plant.cite
-  # 3-D array
+# object name = bee.plant.cite
+# 3-D array
 load("./Data/data_summary/globi_data_formatted_bee_plant_date_citation_2025_01_22 - short plant list - no apis.rds")
+
+
+# Load covariates
+load("./Data/model_covariates - 2025 01 22 - no apis.rds")
+
+
+# Flatten the array
+dat_long <- melt(bee.plant.cite) 
+colnames(dat_long) <- c("bee_ID", "plant_ID", "cite_ID", "observation")
 
 
 
@@ -181,19 +191,44 @@ source("./Code/Workflow/6.5 - model-code-2024-01-07.R")
 # 7. Run the models --------------------------------------------------------
 
 
-# 150,000 iterations = 21.18633 hours
-# 250,000 iterations = 1.459393 days
+# 150,000 iterations = XXX hours
+# 250,000 iterations = XXX days
 
-# bee_species
-{
+
+
+
+
+# Number of cores available on this machine
+detectCores()  
+
+# Number to cores to use
+ncore <- 3     
+
+# Create the cluster
+cl <- makeCluster(ncore)
+registerDoParallel(cl)
+
+# set seeds
+seeds <- 1:ncore
+
+# Save start time
 start.time <- Sys.time()
 
 
-result <- occ_model(n.iter = 2, 
-                    n.burn = 1, 
-                    n.thin1 = 1, 
-                    n.thin2 = 1,
-                    model = "bee_species")
+# Run the model using dopar 
+result <- foreach(x = seeds, 
+                  .packages="nimble") %dopar% {
+                    
+                    # function
+                    occ_model(seed = seeds[x],
+                              n.iter = 2, 
+                              n.burn = 1,
+                              n.thin1 = 1, 
+                              n.thin2 = 1,
+                              model = "plant_species")
+                  }
+
+stopCluster(cl)
 
 end.time <- Sys.time()
 
@@ -201,10 +236,15 @@ beepr::beep(2)
 
 # How long did the model take?
 end.time - start.time
-}
 
 
 
+# Models checked:
+  # bee_species
+  # no_bee_plant
+  # bee_family
+
+  # plant_species
 
 
 
@@ -214,26 +254,27 @@ end.time - start.time
 
 
 
-
 # # Row bind all of the chains together - coefficents
-out <- as.mcmc(data.frame(rbind(result[[1]]$samples,
-                                 result[[2]]$samples,
-                                 result[[3]]$samples)))
+out <- as.mcmc(data.frame(rbind(result[[1]],
+                                result[[2]],
+                                result[[3]])))
 
+# Make a list and MCMC
 simp_list <- list()
-
-simp_list[[1]] <- as.mcmc(result[[1]]$samples)
-simp_list[[2]] <- as.mcmc(result[[2]]$samples)
-simp_list[[3]] <- as.mcmc(result[[3]]$samples)
+simp_list[[1]] <- as.mcmc(result[[1]])
+simp_list[[2]] <- as.mcmc(result[[2]])
+simp_list[[3]] <- as.mcmc(result[[3]])
 
 MCMClist <- mcmc.list(simp_list)
+MCMClist2 <- mcmc.list(out)
 
 MCMCsummary(MCMClist)
+MCMCsummary(MCMClist2)
 
 # Save MCMC output as table
 
 write.csv(MCMCsummary(MCMClist),
-          file = "./Tables/Table-1-MCMC-output-2024 07 17.csv")
+          file = "./Tables/Table-1-MCMC-output-2025 01 23.csv")
 
 
 

@@ -55,7 +55,8 @@
 
 
 # Create a function with all the needed code
-occ_model <- function(n.iter, 
+occ_model <- function(seed, 
+                      n.iter, 
                       n.burn,
                       n.thin1, 
                       n.thin2,
@@ -68,12 +69,12 @@ occ_model <- function(n.iter,
                                # bee_plant_family
                                        ){
   
-  # Load the library
+#------------ Load the library
   library(nimble)
   library(reshape2)
   
   
-  # Upload the data
+#------------  Upload the data & format
   # object name = bee.plant.cite
   # 3-D array
   load("./Data/data_summary/globi_data_formatted_bee_plant_date_citation_2025_01_22 - short plant list - no apis.rds")
@@ -87,6 +88,9 @@ occ_model <- function(n.iter,
   dat_long <- melt(bee.plant.cite) 
   colnames(dat_long) <- c("bee_ID", "plant_ID", "cite_ID", "observation")
   
+
+  
+# ------------  No bee or plant intercept model
   
   if(model == "no_bee_plant"){
     
@@ -114,7 +118,7 @@ occ_model <- function(n.iter,
         
         # Intercept
           # Average size bee
-          # Not solitary bee
+          # Social bee
           # Other flower color
           # Not bowl
         beta_psi[1] +
@@ -131,7 +135,7 @@ occ_model <- function(n.iter,
         beta_psi[5] * blue_flower_color[plant_ID[i]]+
         beta_psi[6] * white_flower_color[plant_ID[i]]+
         
-        # Flower shape (== bowl)
+        # Flower shape (1 = yes bowl; 0 = no bowl)
         beta_psi[7] * flower_shape[plant_ID[i]]
       
     }
@@ -148,7 +152,7 @@ occ_model <- function(n.iter,
         
         # Intercept
           # Not striped
-          # Averge sized bee (= 0)
+          # Average sized bee (= 0)
           # Aggregated data type
           # Flower color = other
           # Flower shape = no bowl
@@ -180,25 +184,25 @@ occ_model <- function(n.iter,
       
       
       
-      # Create simulated dataset to calculate the Bayesian p-value
-      y.sim[i] ~ dbern(p.eff[bee_ID[i], plant_ID[i], cite_ID[i]])
-      
-      d[i]<-  abs(y[i] - p.eff[bee_ID[i], plant_ID[i], cite_ID[i]]) 
-      
-      dnew[i]<- abs(y.sim[i] - p.eff[bee_ID[i], plant_ID[i], cite_ID[i]]) 
-      
-      d2[i]<- pow(d[i], 2)  
-      
-      dnew2[i]<- pow(dnew[i], 2) 
+      # # Create simulated dataset to calculate the Bayesian p-value
+      # y.sim[i] ~ dbern(p.eff[bee_ID[i], plant_ID[i], cite_ID[i]])
+      # 
+      # d[i]<-  abs(y[i] - p.eff[bee_ID[i], plant_ID[i], cite_ID[i]]) 
+      # 
+      # dnew[i]<- abs(y.sim[i] - p.eff[bee_ID[i], plant_ID[i], cite_ID[i]]) 
+      # 
+      # d2[i]<- pow(d[i], 2)  
+      # 
+      # dnew2[i]<- pow(dnew[i], 2) 
       
     }   
     
-    # Calculate the discrepancy measure, defined as the mean(p.fit > p.fitnew) 
-    p.fit <- sum(d2[1:n_bee_plant_cite]) 
-    p.fitnew <- sum(dnew2[1:n_bee_plant_cite])
-    
-    p.diff <- nimStep(p.fit - p.fitnew)
-    # step function at 0 = function returns 0 if 𝑥 < 0, 1 if 𝑥 >= 0
+    # # Calculate the discrepancy measure, defined as the mean(p.fit > p.fitnew) 
+    # p.fit <- sum(d2[1:n_bee_plant_cite]) 
+    # p.fitnew <- sum(dnew2[1:n_bee_plant_cite])
+    # 
+    # p.diff <- nimStep(p.fit - p.fitnew)
+    # # step function at 0 = function returns 0 if 𝑥 < 0, 1 if 𝑥 >= 0
     
     # Calculate the total number of plants that each bee interacts with
     for(i in 1:n_bee){
@@ -326,25 +330,25 @@ occ_model <- function(n.iter,
           # Flower shape (1 = yes bowl; 0 = no bowl)
           beta_p[10] * flower_shape[plant_ID[i]]
         
-        # Create simulated dataset to calculate the Bayesian p-value
-        y.sim[i] ~ dbern(p.eff[bee_ID[i], plant_ID[i], cite_ID[i]])
-        
-        d[i]<-  abs(y[i] - p.eff[bee_ID[i], plant_ID[i], cite_ID[i]]) 
-        
-        dnew[i]<- abs(y.sim[i] - p.eff[bee_ID[i], plant_ID[i], cite_ID[i]]) 
-        
-        d2[i]<- pow(d[i], 2)  
-        
-        dnew2[i]<- pow(dnew[i], 2) 
+        # # Create simulated dataset to calculate the Bayesian p-value
+        # y.sim[i] ~ dbern(p.eff[bee_ID[i], plant_ID[i], cite_ID[i]])
+        # 
+        # d[i]<-  abs(y[i] - p.eff[bee_ID[i], plant_ID[i], cite_ID[i]]) 
+        # 
+        # dnew[i]<- abs(y.sim[i] - p.eff[bee_ID[i], plant_ID[i], cite_ID[i]]) 
+        # 
+        # d2[i]<- pow(d[i], 2)  
+        # 
+        # dnew2[i]<- pow(dnew[i], 2) 
         
       }   
       
-      # Calculate the discrepancy measure, defined as the mean(p.fit > p.fitnew) 
-      p.fit <- sum(d2[1:n_bee_plant_cite]) 
-      p.fitnew <- sum(dnew2[1:n_bee_plant_cite])
-      
-      p.diff <- nimStep(p.fit - p.fitnew)
-      # step function at 0 = function returns 0 if 𝑥 < 0, 1 if 𝑥 >= 0
+      # # Calculate the discrepancy measure, defined as the mean(p.fit > p.fitnew) 
+      # p.fit <- sum(d2[1:n_bee_plant_cite]) 
+      # p.fitnew <- sum(dnew2[1:n_bee_plant_cite])
+      # 
+      # p.diff <- nimStep(p.fit - p.fitnew)
+      # # step function at 0 = function returns 0 if 𝑥 < 0, 1 if 𝑥 >= 0
       
       # Calculate the total number of plants that each bee interacts with
       for(i in 1:n_bee){
@@ -471,25 +475,25 @@ occ_model <- function(n.iter,
           # Flower shape (1 = yes bowl; 0 = no bowl)
           beta_p[10] * flower_shape[plant_ID[i]]
         
-        # Create simulated dataset to calculate the Bayesian p-value
-        y.sim[i] ~ dbern(p.eff[bee_ID[i], plant_ID[i], cite_ID[i]])
-        
-        d[i]<-  abs(y[i] - p.eff[bee_ID[i], plant_ID[i], cite_ID[i]]) 
-        
-        dnew[i]<- abs(y.sim[i] - p.eff[bee_ID[i], plant_ID[i], cite_ID[i]]) 
-        
-        d2[i]<- pow(d[i], 2)  
-        
-        dnew2[i]<- pow(dnew[i], 2) 
+        # # Create simulated dataset to calculate the Bayesian p-value
+        # y.sim[i] ~ dbern(p.eff[bee_ID[i], plant_ID[i], cite_ID[i]])
+        # 
+        # d[i]<-  abs(y[i] - p.eff[bee_ID[i], plant_ID[i], cite_ID[i]]) 
+        # 
+        # dnew[i]<- abs(y.sim[i] - p.eff[bee_ID[i], plant_ID[i], cite_ID[i]]) 
+        # 
+        # d2[i]<- pow(d[i], 2)  
+        # 
+        # dnew2[i]<- pow(dnew[i], 2) 
         
       }   
       
-      # Calculate the discrepancy measure, defined as the mean(p.fit > p.fitnew) 
-      p.fit <- sum(d2[1:n_bee_plant_cite]) 
-      p.fitnew <- sum(dnew2[1:n_bee_plant_cite])
-      
-      p.diff <- nimStep(p.fit - p.fitnew)
-      # step function at 0 = function returns 0 if 𝑥 < 0, 1 if 𝑥 >= 0
+      # # Calculate the discrepancy measure, defined as the mean(p.fit > p.fitnew) 
+      # p.fit <- sum(d2[1:n_bee_plant_cite]) 
+      # p.fitnew <- sum(dnew2[1:n_bee_plant_cite])
+      # 
+      # p.diff <- nimStep(p.fit - p.fitnew)
+      # # step function at 0 = function returns 0 if 𝑥 < 0, 1 if 𝑥 >= 0
       
       # Calculate the total number of plants that each bee interacts with
       for(i in 1:n_bee){
@@ -619,25 +623,25 @@ occ_model <- function(n.iter,
           # Flower shape (1 = yes bowl; 0 = no bowl)
           beta_p[10] * flower_shape[plant_ID[i]]
         
-        # Create simulated dataset to calculate the Bayesian p-value
-        y.sim[i] ~ dbern(p.eff[bee_ID[i], plant_ID[i], cite_ID[i]])
-        
-        d[i]<-  abs(y[i] - p.eff[bee_ID[i], plant_ID[i], cite_ID[i]]) 
-        
-        dnew[i]<- abs(y.sim[i] - p.eff[bee_ID[i], plant_ID[i], cite_ID[i]]) 
-        
-        d2[i]<- pow(d[i], 2)  
-        
-        dnew2[i]<- pow(dnew[i], 2) 
+        # # Create simulated dataset to calculate the Bayesian p-value
+        # y.sim[i] ~ dbern(p.eff[bee_ID[i], plant_ID[i], cite_ID[i]])
+        # 
+        # d[i]<-  abs(y[i] - p.eff[bee_ID[i], plant_ID[i], cite_ID[i]]) 
+        # 
+        # dnew[i]<- abs(y.sim[i] - p.eff[bee_ID[i], plant_ID[i], cite_ID[i]]) 
+        # 
+        # d2[i]<- pow(d[i], 2)  
+        # 
+        # dnew2[i]<- pow(dnew[i], 2) 
         
       }   
       
-      # Calculate the discrepancy measure, defined as the mean(p.fit > p.fitnew) 
-      p.fit <- sum(d2[1:n_bee_plant_cite]) 
-      p.fitnew <- sum(dnew2[1:n_bee_plant_cite])
-      
-      p.diff <- nimStep(p.fit - p.fitnew)
-      # step function at 0 = function returns 0 if 𝑥 < 0, 1 if 𝑥 >= 0
+      # # Calculate the discrepancy measure, defined as the mean(p.fit > p.fitnew) 
+      # p.fit <- sum(d2[1:n_bee_plant_cite]) 
+      # p.fitnew <- sum(dnew2[1:n_bee_plant_cite])
+      # 
+      # p.diff <- nimStep(p.fit - p.fitnew)
+      # # step function at 0 = function returns 0 if 𝑥 < 0, 1 if 𝑥 >= 0
       
       # Calculate the total number of plants that each bee interacts with
       for(i in 1:n_bee){
@@ -652,6 +656,7 @@ occ_model <- function(n.iter,
   
   # plant_family
   if(model == "plant_family"){
+    
     # Write the model
     MEcode <- nimbleCode({
       
@@ -763,25 +768,25 @@ occ_model <- function(n.iter,
           # Flower shape (1 = yes bowl; 0 = no bowl)
           beta_p[10] * flower_shape[plant_ID[i]]
         
-        # Create simulated dataset to calculate the Bayesian p-value
-        y.sim[i] ~ dbern(p.eff[bee_ID[i], plant_ID[i], cite_ID[i]])
-        
-        d[i]<-  abs(y[i] - p.eff[bee_ID[i], plant_ID[i], cite_ID[i]]) 
-        
-        dnew[i]<- abs(y.sim[i] - p.eff[bee_ID[i], plant_ID[i], cite_ID[i]]) 
-        
-        d2[i]<- pow(d[i], 2)  
-        
-        dnew2[i]<- pow(dnew[i], 2) 
+        # # Create simulated dataset to calculate the Bayesian p-value
+        # y.sim[i] ~ dbern(p.eff[bee_ID[i], plant_ID[i], cite_ID[i]])
+        # 
+        # d[i]<-  abs(y[i] - p.eff[bee_ID[i], plant_ID[i], cite_ID[i]]) 
+        # 
+        # dnew[i]<- abs(y.sim[i] - p.eff[bee_ID[i], plant_ID[i], cite_ID[i]]) 
+        # 
+        # d2[i]<- pow(d[i], 2)  
+        # 
+        # dnew2[i]<- pow(dnew[i], 2) 
         
       }   
       
-      # Calculate the discrepancy measure, defined as the mean(p.fit > p.fitnew) 
-      p.fit <- sum(d2[1:n_bee_plant_cite]) 
-      p.fitnew <- sum(dnew2[1:n_bee_plant_cite])
-      
-      p.diff <- nimStep(p.fit - p.fitnew)
-      # step function at 0 = function returns 0 if 𝑥 < 0, 1 if 𝑥 >= 0
+      # # Calculate the discrepancy measure, defined as the mean(p.fit > p.fitnew) 
+      # p.fit <- sum(d2[1:n_bee_plant_cite]) 
+      # p.fitnew <- sum(dnew2[1:n_bee_plant_cite])
+      # 
+      # p.diff <- nimStep(p.fit - p.fitnew)
+      # # step function at 0 = function returns 0 if 𝑥 < 0, 1 if 𝑥 >= 0
       
       # Calculate the total number of plants that each bee interacts with
       for(i in 1:n_bee){
@@ -929,25 +934,25 @@ occ_model <- function(n.iter,
           # Flower shape (1 = yes bowl; 0 = no bowl)
           beta_p[10] * flower_shape[plant_ID[i]]
         
-        # Create simulated dataset to calculate the Bayesian p-value
-        y.sim[i] ~ dbern(p.eff[bee_ID[i], plant_ID[i], cite_ID[i]])
-        
-        d[i]<-  abs(y[i] - p.eff[bee_ID[i], plant_ID[i], cite_ID[i]]) 
-        
-        dnew[i]<- abs(y.sim[i] - p.eff[bee_ID[i], plant_ID[i], cite_ID[i]]) 
-        
-        d2[i]<- pow(d[i], 2)  
-        
-        dnew2[i]<- pow(dnew[i], 2) 
+        # # Create simulated dataset to calculate the Bayesian p-value
+        # y.sim[i] ~ dbern(p.eff[bee_ID[i], plant_ID[i], cite_ID[i]])
+        # 
+        # d[i]<-  abs(y[i] - p.eff[bee_ID[i], plant_ID[i], cite_ID[i]]) 
+        # 
+        # dnew[i]<- abs(y.sim[i] - p.eff[bee_ID[i], plant_ID[i], cite_ID[i]]) 
+        # 
+        # d2[i]<- pow(d[i], 2)  
+        # 
+        # dnew2[i]<- pow(dnew[i], 2) 
         
       }   
       
-      # Calculate the discrepancy measure, defined as the mean(p.fit > p.fitnew) 
-      p.fit <- sum(d2[1:n_bee_plant_cite]) 
-      p.fitnew <- sum(dnew2[1:n_bee_plant_cite])
-      
-      p.diff <- nimStep(p.fit - p.fitnew)
-      # step function at 0 = function returns 0 if 𝑥 < 0, 1 if 𝑥 >= 0
+      # # Calculate the discrepancy measure, defined as the mean(p.fit > p.fitnew) 
+      # p.fit <- sum(d2[1:n_bee_plant_cite]) 
+      # p.fitnew <- sum(dnew2[1:n_bee_plant_cite])
+      # 
+      # p.diff <- nimStep(p.fit - p.fitnew)
+      # # step function at 0 = function returns 0 if 𝑥 < 0, 1 if 𝑥 >= 0
       
       # Calculate the total number of plants that each bee interacts with
       for(i in 1:n_bee){
@@ -960,7 +965,6 @@ occ_model <- function(n.iter,
   }
   
   # Bundle all the values that remain constant in the model
-  {
   MEconsts <- list(
     
     # Total number of bee species
@@ -1013,7 +1017,6 @@ occ_model <- function(n.iter,
     bee_family = covariates$bee.covariates$family_num,
     plant_family = covariates$plant.covariates$family_num
   )
-  }
   
   # List the data
   MEdata <- list(y = dat_long$observation)
@@ -1031,10 +1034,10 @@ occ_model <- function(n.iter,
     
     # Parameters
     # Occupancy
-    beta_psi = runif(MEconsts$ncov_psi, -3 , -3),
+    beta_psi = runif(MEconsts$ncov_psi, -3 , 3),
     
     # Detection
-    beta_p = runif(MEconsts$ncov_p, -3 , -3)
+    beta_p = runif(MEconsts$ncov_p, -3 , 3)
     
   )}
   
@@ -1084,28 +1087,29 @@ occ_model <- function(n.iter,
   # latent state parameters
   if(model == "no_bee_plant"){
     # Latent variables to monitor:
-    MElatent <- c("n_plants_per_bee", "z", 
-                  "p.fit", "p.fitnew", "p.diff")
+    MElatent <- c("n_plants_per_bee", "z")
+               #   "p.fit", "p.fitnew", "p.diff")
   }
   
   if(model == "bee_species" | model == "plant_species" |
      model == "bee_family" | model == "plant_family"){
       # Latent variables to monitor:
-      MElatent <- c("n_plants_per_bee", "z", "u", "v",
-                    "p.fit", "p.fitnew", "p.diff")
+      MElatent <- c("n_plants_per_bee", "z", "u", "v")
+                  #  "p.fit", "p.fitnew", "p.diff")
   }
   
   if(model == "bee_plant_family"){
     # Latent variables to monitor:
-    MElatent <- c("n_plants_per_bee", "z", "u", "v", "g", "d",
-                  "p.fit", "p.fitnew", "p.diff")
+    MElatent <- c("n_plants_per_bee", "z", "u", "v", "g", "d")
+                #  "p.fit", "p.fitnew", "p.diff")
   }
   
+  
   # Start creating/compiling the nimble model
-  MEmodel <- nimbleModel(MEcode, 
-                         MEconsts, 
-                         MEdata, 
-                         MEinits(), 
+  MEmodel <- nimbleModel(code = MEcode, 
+                         constants = MEconsts, 
+                         data = MEdata, 
+                         inits = MEinits(), 
                          calculate = F, 
                          check = F)
   
@@ -1113,28 +1117,20 @@ occ_model <- function(n.iter,
   # Compile model
   cMEmodel <- compileNimble(MEmodel)
   
-  # Configure MCMC
-  MEconf <- configureMCMC(MEmodel, 
-                          monitors = MEmons,
-                          monitors2 = MElatent)
-  
   # Build MCMC
-  MEmcmc <- buildMCMC(MEconf)
+  MEmcmc <- buildMCMC(cMEmodel)
   
   # Compile MCMC
-  cMEmcmc <- compileNimble(MEmcmc, project = cMEmodel)
-  
+  cMEmcmc <- compileNimble(MEmcmc)
   
   ## Run model:
   results <- runMCMC(
     mcmc = cMEmcmc, 
-    nchains = 3,
-    nCores = 3,          
     niter = n.iter,
     nburnin = n.burn,
     thin = n.thin1,
     thin2 = n.thin2,
-    setSeed = c(1, 2, 3, 4) 
+    nchain = 1
   )
     
   # Return MCMC results
