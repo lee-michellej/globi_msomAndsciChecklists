@@ -72,6 +72,7 @@ library(MCMCvis)
 library(mcmcOutput)
 library(coda)
 library(parallel)
+library(ggmcmc)
 
 
 
@@ -221,11 +222,11 @@ result <- foreach(x = seeds,
                     
                     # function
                     occ_model(seed = seeds[x],
-                              n.iter = 2, 
-                              n.burn = 1,
-                              n.thin1 = 1, 
-                              n.thin2 = 1,
-                              model = "plant_species")
+                              n.iter = 150000, 
+                              n.burn = 50000,
+                              n.thin1 = 10, 
+                              n.thin2 = 10,
+                              model = "bee_family")
                   }
 
 stopCluster(cl)
@@ -241,10 +242,21 @@ end.time - start.time
 
 # Models checked:
   # bee_species
-  # no_bee_plant
+    # 15 hrs
+      # n.iter = 150000, 
+      # n.burn = 50000,
+      # n.thin1 = 10, 
+      # n.thin2 = 10,
   # bee_family
-
-  # plant_species
+    # X hrs
+      # n.iter = 150000, 
+      # n.burn = 50000,
+      # n.thin1 = 10, 
+      # n.thin2 = 10,  
+  # no_bee_plant ~ 20 min
+  # plant_species ~ 20 min
+  # plant_family -- 55 min
+  # bee_plant_family - 50.01325 mins
 
 
 
@@ -269,12 +281,11 @@ MCMClist <- mcmc.list(simp_list)
 MCMClist2 <- mcmc.list(out)
 
 MCMCsummary(MCMClist)
-MCMCsummary(MCMClist2)
 
 # Save MCMC output as table
 
 write.csv(MCMCsummary(MCMClist),
-          file = "./Tables/Table-1-MCMC-output-2025 01 23.csv")
+          file = "./Tables/Table-MCMC-output-2025 01 26- bee intercept.csv")
 
 
 
@@ -298,17 +309,27 @@ ggs_BYMeco %>% filter(Parameter %in% c( paste("beta_p[", 1:8, "]", sep = ""))) %
 
 
 
+# date object for folder
+date <- "2025 01 26"
+
+# Model name
+mod_name <- "bee-species-mod"
+
+setwd("/Users/gdirenzo/OneDrive - University of Massachusetts/Dropbox_transfer/Globi/")
 
 
 # Save the model output
 save(out, 
-     file = "./ModelOutput/globi-short plant list- 2024 07 17 - all cov - NO apis - NIMBLE.rds")
+     file = paste0("./ModelOutput/", date, "/globi-short plant list-", date, "_"
+     , mod_name, "- all cov - NO apis - NIMBLE.rds"))
 
 save(result, 
-     file = "./ModelOutput/OUTPUT - globi-short plant list- 2024 07 17 - all cov - NO apis - NIMBLE.rds")
+     file = paste0("./ModelOutput/", date, "/OUTPUT - globi-short plant list-", date, "_"
+                   , mod_name, "- all cov - NO apis - NIMBLE.rds"))
 
 save(MCMClist,
-     file = "./ModelOutput/MCMClist- globi-short plant list- 2024 07 17 - all cov - NO apis - NIMBLE.rds")
+     file = paste0("./ModelOutput/", date, "/MCMClist- globi-short plant list-", date, "_"
+                   , mod_name,"- all cov - NO apis - NIMBLE.rds"))
 
 
 # End script
