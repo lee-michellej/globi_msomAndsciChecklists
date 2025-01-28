@@ -800,6 +800,7 @@ occ_model <- function(seed,
   
   # bee_plant_family
   if(model == "bee_plant_family"){
+    
     # Write the model
     MEcode <- nimbleCode({
       
