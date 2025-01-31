@@ -157,7 +157,7 @@ ggplot(data = obs.dat, aes(obs)) +
 # 4. Call in function with everything needed ------------------------------------------------
 
 
-
+setwd("/Users/gdirenzo/Documents/GitHub/globi_msomAndsciChecklists/")
 
 # Enable automatic differentiation
 nimbleOptions(enableDerivs = TRUE)
@@ -248,7 +248,7 @@ end.time - start.time
       # n.thin1 = 10, 
       # n.thin2 = 10,
   # bee_family
-    # X hrs
+    # X hrs -- started Sat Jan 26 at 2 pm 
       # n.iter = 150000, 
       # n.burn = 50000,
       # n.thin1 = 10, 
