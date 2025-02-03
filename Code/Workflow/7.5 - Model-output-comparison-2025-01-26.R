@@ -100,8 +100,8 @@ library(patchwork)
 
 
 # Set working directory
-setwd("~/")
-setwd("/Users/gdirenzo/OneDrive - University of Massachusetts/Dropbox_transfer/Globi/")
+setwd("/Volumes/DIRENZO/globi/home/gdirenzo/globi/")
+#setwd("/Users/gdirenzo/OneDrive - University of Massachusetts/Dropbox_transfer/Globi/")
 
 
 
@@ -122,11 +122,11 @@ date <- "2025 01 26"
 #---- bee_species
 
 # Model name
-mod_name <- "bee-species-mod"
+mod_name <- "bee_species"
 
 # Load the model output
-load(file = paste0("./ModelOutput/", date, "/globi-short plant list-", date, "_"
-                   , mod_name, "- all cov - NO apis - NIMBLE.rds"))
+load(file = paste0("./ModelOutput/", date, "/out-"
+                   , mod_name, "-NIMBLE.rds"))
 
 # Save the out object with a new model specific name
 out_bee_species <- out
@@ -137,11 +137,11 @@ out_bee_species_df <- as.data.frame(out_bee_species)
 #---- bee_family
 
 # Model name
-mod_name <- "bee-family-mod"
+mod_name <- "bee_family"
 
 # Load the model output
-load(file = paste0("./ModelOutput/", date, "/globi-short plant list-", date, "_"
-                   , mod_name, "- all cov - NO apis - NIMBLE.rds"))
+load(file = paste0("./ModelOutput/", date, "/out-", 
+                   mod_name, "-NIMBLE.rds"))
 
 # Save the out object with a new model specific name
 out_bee_family <- out
@@ -153,11 +153,11 @@ out_bee_family_df <- as.data.frame(out_bee_family)
 #---- plant_species
 
 # Model name
-mod_name <- "plant-species-mod"
+mod_name <- "plant_species"
 
 # Load the model output
-load(file = paste0("./ModelOutput/", date, "/globi-short plant list-", date, "_"
-                   , mod_name, "- all cov - NO apis - NIMBLE.rds"))
+load(file = paste0("./ModelOutput/", date, "/out-"
+                   , mod_name, "-NIMBLE.rds"))
 
 # Save the out object with a new model specific name
 out_plant_species <- out
@@ -169,11 +169,11 @@ out_plant_species_df <- as.data.frame(out_plant_species)
 #---- plant_family
 
 # Model name
-mod_name <- "plant-family-mod"
+mod_name <- "plant_family"
 
 # Load the model output
-load(file = paste0("./ModelOutput/", date, "/globi-short plant list-", date, "_"
-                   , mod_name, "- all cov - NO apis - NIMBLE.rds"))
+load(file = paste0("./ModelOutput/", date, "/out-"
+                   , mod_name, "-NIMBLE.rds"))
 
 # Save the out object with a new model specific name
 out_plant_family <- out
@@ -185,11 +185,11 @@ out_plant_family_df <- as.data.frame(out_plant_family)
 #---- bee_plant_family
 
 # Model name
-mod_name <- "bee-plant-family-mod"
+mod_name <- "bee_plant_family"
 
 # Load the model output
-load(file = paste0("./ModelOutput/", date, "/globi-short plant list-", date, "_"
-                   , mod_name, "- all cov - NO apis - NIMBLE.rds"))
+load(file = paste0("./ModelOutput/", date, "/out-"
+                   , mod_name, "-NIMBLE.rds"))
 
 # Save the out object with a new model specific name
 out_bee_plant_family <- out
@@ -201,16 +201,47 @@ out_bee_plant_family_df <- as.data.frame(out_bee_plant_family)
 #---- no_bee_plant
 
 # Model name
-mod_name <- "no-bee-plant-mod"
+mod_name <- "no_bee_plant"
 
 # Load the model output
-load(file = paste0("./ModelOutput/", date, "/globi-short plant list-", date, "_"
-                   , mod_name, "- all cov - NO apis - NIMBLE.rds"))
+load(file = paste0("./ModelOutput/", date, "/out-"
+                   , mod_name, "-NIMBLE.rds"))
 
 # Save the out object with a new model specific name
 out_no_bee_plant <- out
 
 out_no_bee_plant_df <- as.data.frame(out_no_bee_plant)
+
+
+
+# 3. Check model convergence and traceplots
+
+
+
+
+
+
+# Traceplots
+ggs_BYMeco <- ggs(MCMClist) 
+
+# Beta_psi
+ggs_BYMeco %>% 
+  filter(Parameter %in% c( paste("beta_psi[", 1:4, "]", sep = ""))) %>% 
+  ggs_traceplot() + 
+  theme_bw()
+
+ggsave(paste0("./Figures/", date, "traceplots-psi-", model_name, ".png"))
+
+
+# Beta_p
+ggs_BYMeco %>% 
+  filter(Parameter %in% c( paste("beta_p[", 1:8, "]", sep = ""))) %>% 
+  ggs_traceplot() + 
+  theme_bw()
+
+ggsave(paste0("./Figures/", date, "traceplots-p-", model_name, ".png"))
+
+
 
 
 
@@ -240,7 +271,8 @@ response_continous_cov_plot <- function(out_df,
                                         intercept, # For most it will be: out_df$beta_psi.1.
                                         mod_name,
                                         x_lab_text,
-                                        y_lab_text){
+                                        y_lab_text,
+                                        n_sub){
 
 # Create empty data frame
   stats_df <- data.frame(mod_name = rep(mod_name, times = 2),
@@ -271,7 +303,7 @@ pred_df$pred <- plogis(pred_df$intercept +
                          pred_df$beta_psi * pred_df$Cov.scaled)
 
 # Take a subsample of the iteractions
-sub.samp <- sample(1:nrow(pred_df), 50000, replace = FALSE)
+sub.samp <- sample(1:nrow(pred_df), n_sub, replace = FALSE)
 
 # Subset the data
 pred_df_sub <- pred_df[pred_df$iteration %in% sub.samp,]
@@ -331,61 +363,66 @@ bee_size_bee_species_mod <- response_continous_cov_plot(out_df = out_bee_species
                                       intercept = out_bee_species_df$beta_psi.1.,
                                       mod_name = "Bee species model",
                                       x_lab_text = "Bee size standardized",
-                                      y_lab_text = "Probability of interacting \nwith a plant")
+                                      y_lab_text = "Probability of interacting \nwith a plant",
+                                      n_sub = 3)
 
 # Bee family model
-bee_size_bee_family_mod <- bee_size_plot(out_df = out_bee_family_df, 
+bee_size_bee_family_mod <- response_continous_cov_plot(out_df = out_bee_family_df, 
                                           beta = out_bee_family_df$beta_psi.2.,     
                                           intercept = out_bee_family_df$beta_psi.1.,
                                           mod_name = "Bee family model",
                                          x_lab_text = "Bee size standardized",
-                                         y_lab_text = "Probability of interacting \nwith a plant")
+                                         y_lab_text = "Probability of interacting \nwith a plant",
+                                         n_sub = 3)
 
 
 
 # Plant species model
-bee_size_plant_species_mod <- bee_size_plot(out_df = out_plant_species_df, 
+bee_size_plant_species_mod <- response_continous_cov_plot(out_df = out_plant_species_df, 
                                           beta = out_plant_species_df$beta_psi.2.,     
                                           intercept = out_plant_species_df$beta_psi.1.,
                                           mod_name = "Plant species model",
                                           x_lab_text = "Bee size standardized",
-                                          y_lab_text = "Probability of interacting \nwith a plant")
+                                          y_lab_text = "Probability of interacting \nwith a plant",
+                                          n_sub = 3)
 
 # Plant family model
-bee_size_plant_family_mod <- bee_size_plot(out_df = out_plant_family_df, 
+bee_size_plant_family_mod <- response_continous_cov_plot(out_df = out_plant_family_df, 
                                           beta = out_plant_family_df$beta_psi.2.,      
                                           intercept = out_plant_family_df$beta_psi.1., 
                                           mod_name = "Plant family model",
                                           x_lab_text = "Bee size standardized",
-                                          y_lab_text = "Probability of interacting \nwith a plant")
+                                          y_lab_text = "Probability of interacting \nwith a plant",
+                                          n_sub = 3)
 
 
 # Bee and Plant family model
-bee_size_bee_plant_family_mod <- bee_size_plot(out_df = out_bee_plant_family_df, 
+bee_size_bee_plant_family_mod <- response_continous_cov_plot(out_df = out_bee_plant_family_df, 
                                            beta = out_bee_plant_family_df$beta_psi.2.,     
                                            intercept = out_bee_plant_family_df$beta_psi.1.,
                                            mod_name = "Bee and plant family model",
                                            x_lab_text = "Bee size standardized",
-                                           y_lab_text = "Probability of interacting \nwith a plant")
+                                           y_lab_text = "Probability of interacting \nwith a plant",
+                                           n_sub = 3)
 
 
 
 # Bee and Plant family model
-bee_size_no_bee_plant_mod <- bee_size_plot(out_df = out_no_bee_plant_df, 
+bee_size_no_bee_plant_mod <- response_continous_cov_plot(out_df = out_no_bee_plant_df, 
                                                beta = out_no_bee_plant_df$beta_psi.2.,     
                                                intercept = out_no_bee_plant_df$beta_psi.1.,
                                                mod_name = "No bee and plant model",
                                            x_lab_text = "Bee size standardized",
-                                           y_lab_text = "Probability of interacting \nwith a plant")
+                                           y_lab_text = "Probability of interacting \nwith a plant",
+                                           n_sub = 3)
 
 
 
 # Stitch the plots together
-(bee_size_bee_species_mod$gplot + bee_size_bee_family_mod$gplot+
+bee_size_bee_species_mod$gplot + bee_size_bee_family_mod$gplot+
  bee_size_plant_species_mod$gplot + bee_size_plant_family_mod$gplot+
- bee_size_bee_plant_family_mod$gplot + bee_size_no_bee_plant_mod$gplot ) + 
-  plot_layout(ncol = 2)+
-  plot_annotation(tag_levels = 'A')
+ bee_size_bee_plant_family_mod$gplot + bee_size_no_bee_plant_mod$gplot  + 
+  plot_layout(ncol = 2)
 
 
 # Save the plot
@@ -1748,52 +1785,58 @@ bee_size_p_bee_species_mod <- response_continous_cov_plot(out_df = out_bee_speci
                                                           intercept = out_bee_species_df$beta_p.1.,
                                                           x_lab_text = "Bee size standardized",
                                                           y_lab_tex = "Probability of detecting \nthe bee on a plant",
-                                                          mod_name = "Bee species model")
+                                                          mod_name = "Bee species model", 
+                                                          n_sub = 3)
 
 # Bee family model
-bee_size_p_bee_family_mod <- bee_size_plot(out_df = out_bee_family_df, 
+bee_size_p_bee_family_mod <- response_continous_cov_plot(out_df = out_bee_family_df, 
                                            beta = out_bee_family_df$beta_p.3.,
                                            intercept = out_bee_family_df$beta_p.1.,
                                            x_lab_text = "Bee size standardized",
                                            y_lab_tex = "Probability of detecting \nthe bee on a plant",
-                                           mod_name = "Bee family model")
+                                           mod_name = "Bee family model", 
+                                           n_sub = 3)
 
 
 
 # Plant species model
-bee_size_p_plant_species_mod <- bee_size_plot(out_df = out_plant_species_df, 
+bee_size_p_plant_species_mod <- response_continous_cov_plot(out_df = out_plant_species_df, 
                                               beta = out_plant_species_df$beta_p.3.,
                                               intercept = out_plant_species_df$beta_p.1.,
                                               x_lab_text = "Bee size standardized",
                                               y_lab_tex = "Probability of detecting \nthe bee on a plant",
-                                            mod_name = "Plant species model")
+                                            mod_name = "Plant species model", 
+                                            n_sub = 3)
 
 # Plant family model
-bee_size_p_plant_family_mod <- bee_size_plot(out_df = out_plant_family_df, 
+bee_size_p_plant_family_mod <- response_continous_cov_plot(out_df = out_plant_family_df, 
                                              beta = out_plant_family_df$beta_p.3.,
                                              intercept = out_plant_family_df$beta_p.1.,
                                              x_lab_text = "Bee size standardized",
                                              y_lab_tex = "Probability of detecting \nthe bee on a plant",
-                                             mod_name = "Plant family model")
+                                             mod_name = "Plant family model", 
+                                             n_sub = 3)
 
 
 # Bee and Plant family model
-bee_size_p_bee_plant_family_mod <- bee_size_plot(out_df = out_bee_plant_family_df, 
+bee_size_p_bee_plant_family_mod <- response_continous_cov_plot(out_df = out_bee_plant_family_df, 
                                                  beta = out_bee_plant_family_df$beta_p.3.,
                                                  intercept = out_bee_plant_family_df$beta_p.1.,
                                                  x_lab_text = "Bee size standardized",
                                                  y_lab_tex = "Probability of detecting \nthe bee on a plant",
-                                                 mod_name = "Bee and plant family model")
+                                                 mod_name = "Bee and plant family model", 
+                                                 n_sub = 3)
 
 
 
 # Bee and Plant family model
-bee_size_p_no_bee_plant_mod <- bee_size_plot(out_df = out_no_bee_plant_df, 
+bee_size_p_no_bee_plant_mod <- response_continous_cov_plot(out_df = out_no_bee_plant_df, 
                                              beta = out_no_bee_plant_df$beta_p.3.,
                                              intercept = out_no_bee_plant_df$beta_p.1.,
                                              x_lab_text = "Bee size standardized",
                                              y_lab_tex = "Probability of detecting \nthe bee on a plant",
-                                             mod_name = "No bee and plant model")
+                                             mod_name = "No bee and plant model", 
+                                             n_sub = 3)
 
 
 
