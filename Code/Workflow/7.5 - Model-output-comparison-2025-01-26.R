@@ -457,7 +457,7 @@ write.csv(bee_size_stats, paste0("./Tables/", date_folder, "/Supp-table-psi-bee-
 # Write function for response vs continuous covariate plot
 response_factor_cov_plot <- function(out_df, 
                                      num_cov, # either 2 or 4
-                                     beta1,
+                                     beta1,  # This is the intercept - always
                                      beta2,
                                      beta3,
                                      beta4,
@@ -469,7 +469,7 @@ response_factor_cov_plot <- function(out_df,
                                      x_lab_text,
                                      y_lab_text,
                                      pal_cols){
-
+  
 # Calculating the stats:
     # Setting up 2 conditions:
       # Number of covariates == 1 or 
@@ -482,8 +482,8 @@ if(num_cov == 2){
                          proportion = c(NA))
   
   
-  # What proportion of the mass is beta1 < beta2?
-  stats_df[1, 3] <- mean(beta1 < beta2)
+  # What proportion of the mass is beta1 < (beta1 + beta2)?
+  stats_df[1, 3] <- mean(beta1 < (beta1 + beta2))
   
 }
   
@@ -497,14 +497,14 @@ if(num_cov == 4){
                          proportion = c(NA, NA, NA))
   
   
-  # What proportion of the mass is beta1 < beta2?
-  stats_df[1, 3] <- mean(beta1 < beta2)
+  # What proportion of the mass is beta1 < (beta1 + beta2)?
+  stats_df[1, 3] <- mean(beta1 < (beta1 + beta2))
   
-  # What proportion of the mass is beta1 < beta3?
-  stats_df[2, 3] <- mean(beta1 < beta3)
+  # What proportion of the mass is beta1 < (beta1 + beta3)?
+  stats_df[2, 3] <- mean(beta1 < (beta1 + beta3))
   
-  # What proportion of the mass is beta1 < beta4?
-  stats_df[3, 3] <- mean(beta1 < beta4)
+  # What proportion of the mass is beta1 < (beta1 + beta4)?
+  stats_df[3, 3] <- mean(beta1 < (beta1 + beta4))
   
 }
 
@@ -865,32 +865,32 @@ write.csv(bee_sociality_stats, paste0("./Tables/", date_folder, "/Supp-table-psi
 # Flower color:
   # out_df = out_bee_species_df 
   # num_cov = 4 # either 2 or 4
-  # beta1 = out_bee_species_df$beta_psi.4.
-  # beta2 = out_bee_species_df$beta_psi.5.
-  # beta3 = out_bee_species_df$beta_psi.6.
-  # beta4 = out_bee_species_df$beta_psi.1.
+  # beta1 = out_bee_species_df$beta_psi.1.
+  # beta2 = out_bee_species_df$beta_psi.4.
+  # beta3 = out_bee_species_df$beta_psi.5.
+  # beta4 = out_bee_species_df$beta_psi.6.
   # mod_name = "Bee species model"
   # x_lab_text = "Probability of interacting \nwith a bee"
   # y_lab_text =  "Flower color"
   # pal_cols = c("#E7B800","#00AFBB",  "grey", "black")
   # beta1_name = "yellow"
-  # beta2_name = "blue"
-  # beta3_name = "white"
-  # beta4_name = "other"
+  # beta2_name = "other"
+  # beta3_name = "blue"
+  # beta4_name = "white"
 
 
 # Bee species model
 flow_col_bee_species_mod <- response_factor_cov_plot(out_df = out_bee_species_df,
                                                      num_cov = 4,
-                                                     beta1 = out_bee_species_df$beta_psi.4.,
-                                                     beta2 = out_bee_species_df$beta_psi.5.,
-                                                     beta3 = out_bee_species_df$beta_psi.6.,
-                                                     beta4 = out_bee_species_df$beta_psi.1.,
+                                                     beta1 = out_bee_species_df$beta_psi.1.,
+                                                     beta2 = out_bee_species_df$beta_psi.4.,
+                                                     beta3 = out_bee_species_df$beta_psi.5.,
+                                                     beta4 = out_bee_species_df$beta_psi.6.,
                                                      pal_cols = c("#E7B800","#00AFBB",  "grey", "black"),
                                                      beta1_name = "yellow",
-                                                     beta2_name = "blue",
-                                                     beta3_name = "white",
-                                                     beta4_name = "other",
+                                                     beta2_name = "other",
+                                                     beta3_name = "blue",
+                                                     beta4_name = "white",
                                                      x_lab_text = "Probability of interacting \nwith a bee",
                                                      y_lab_text =  "Flower color",
                                                      mod_name = "Bee species model")
@@ -898,15 +898,15 @@ flow_col_bee_species_mod <- response_factor_cov_plot(out_df = out_bee_species_df
 # Bee family model
 flow_col_bee_family_mod <- response_factor_cov_plot(out_df = out_bee_family_df,
                                                    num_cov = 4,
-                                                   beta1 = out_bee_family_df$beta_psi.4.,
-                                                   beta2 = out_bee_family_df$beta_psi.5.,
-                                                   beta3 = out_bee_family_df$beta_psi.6.,
-                                                   beta4 = out_bee_family_df$beta_psi.1.,
+                                                   beta1 = out_bee_family_df$beta_psi.1.,
+                                                   beta2 = out_bee_family_df$beta_psi.4.,
+                                                   beta3 = out_bee_family_df$beta_psi.5.,
+                                                   beta4 = out_bee_family_df$beta_psi.6.,
                                                    pal_cols = c("#E7B800","#00AFBB",  "grey", "black"),
                                                    beta1_name = "yellow",
-                                                   beta2_name = "blue",
-                                                   beta3_name = "white",
-                                                   beta4_name = "other",
+                                                   beta2_name = "other",
+                                                   beta3_name = "blue",
+                                                   beta4_name = "white",
                                                    x_lab_text = "Probability of interacting \nwith a bee",
                                                    y_lab_text =  "Flower color",
                                                    mod_name = "Bee family model")
@@ -914,15 +914,15 @@ flow_col_bee_family_mod <- response_factor_cov_plot(out_df = out_bee_family_df,
 # Plant species model
 flow_col_plant_species_mod <- response_factor_cov_plot(out_df = out_plant_species_df,
                                                       num_cov = 4,
-                                                      beta1 = out_plant_species_df$beta_psi.4.,
-                                                      beta2 = out_plant_species_df$beta_psi.5.,
-                                                      beta3 = out_plant_species_df$beta_psi.6.,
-                                                      beta4 = out_plant_species_df$beta_psi.1.,
+                                                      beta1 = out_plant_species_df$beta_psi.1.,
+                                                      beta2 = out_plant_species_df$beta_psi.4.,
+                                                      beta3 = out_plant_species_df$beta_psi.5.,
+                                                      beta4 = out_plant_species_df$beta_psi.6.,
                                                       pal_cols = c("#E7B800","#00AFBB",  "grey", "black"),
                                                       beta1_name = "yellow",
-                                                      beta2_name = "blue",
-                                                      beta3_name = "white",
-                                                      beta4_name = "other",
+                                                      beta2_name = "other",
+                                                      beta3_name = "blue",
+                                                      beta4_name = "white",
                                                       x_lab_text = "Probability of interacting \nwith a bee",
                                                       y_lab_text =  "Flower color",
                                                       mod_name = "Plant species model")
@@ -931,15 +931,15 @@ flow_col_plant_species_mod <- response_factor_cov_plot(out_df = out_plant_specie
 # Plant family model
 flow_col_plant_family_mod <- response_factor_cov_plot(out_df = out_plant_family_df,
                                                      num_cov = 4,
-                                                     beta1 = out_plant_family_df$beta_psi.4.,
-                                                     beta2 = out_plant_family_df$beta_psi.5.,
-                                                     beta3 = out_plant_family_df$beta_psi.6.,
-                                                     beta4 = out_plant_family_df$beta_psi.1.,
+                                                     beta1 = out_plant_family_df$beta_psi.1.,
+                                                     beta2 = out_plant_family_df$beta_psi.4.,
+                                                     beta3 = out_plant_family_df$beta_psi.5.,
+                                                     beta4 = out_plant_family_df$beta_psi.6.,
                                                      pal_cols = c("#E7B800","#00AFBB",  "grey", "black"),
                                                      beta1_name = "yellow",
-                                                     beta2_name = "blue",
-                                                     beta3_name = "white",
-                                                     beta4_name = "other",
+                                                     beta2_name = "other",
+                                                     beta3_name = "blue",
+                                                     beta4_name = "white",
                                                      x_lab_text = "Probability of interacting \nwith a bee",
                                                      y_lab_text =  "Flower color",
                                                      mod_name = "Plant family model")
@@ -948,15 +948,15 @@ flow_col_plant_family_mod <- response_factor_cov_plot(out_df = out_plant_family_
 # Bee and Plant family model
 flow_col_bee_plant_family_mod <- response_factor_cov_plot(out_df = out_bee_plant_family_df,
                                                          num_cov = 4,
-                                                         beta1 = out_bee_plant_family_df$beta_psi.4.,
-                                                         beta2 = out_bee_plant_family_df$beta_psi.5.,
-                                                         beta3 = out_bee_plant_family_df$beta_psi.6.,
-                                                         beta4 = out_bee_plant_family_df$beta_psi.1.,
+                                                         beta1 = out_bee_plant_family_df$beta_psi.1.,
+                                                         beta2 = out_bee_plant_family_df$beta_psi.4.,
+                                                         beta3 = out_bee_plant_family_df$beta_psi.5.,
+                                                         beta4 = out_bee_plant_family_df$beta_psi.6.,
                                                          pal_cols = c("#E7B800","#00AFBB",  "grey", "black"),
                                                          beta1_name = "yellow",
-                                                         beta2_name = "blue",
-                                                         beta3_name = "white",
-                                                         beta4_name = "other",
+                                                         beta2_name = "other",
+                                                         beta3_name = "blue",
+                                                         beta4_name = "white",
                                                          x_lab_text = "Probability of interacting \nwith a bee",
                                                          y_lab_text =  "Flower color",
                                                          mod_name = "Bee and plant family model")
@@ -965,15 +965,15 @@ flow_col_bee_plant_family_mod <- response_factor_cov_plot(out_df = out_bee_plant
 # Bee and Plant family model
 flow_col_no_bee_plant_mod <- response_factor_cov_plot(out_df = out_no_bee_plant_df,
                                                      num_cov = 4,
-                                                     beta1 = out_no_bee_plant_df$beta_psi.4.,
-                                                     beta2 = out_no_bee_plant_df$beta_psi.5.,
-                                                     beta3 = out_no_bee_plant_df$beta_psi.6.,
-                                                     beta4 = out_no_bee_plant_df$beta_psi.1.,
+                                                     beta1 = out_no_bee_plant_df$beta_psi.1.,
+                                                     beta2 = out_no_bee_plant_df$beta_psi.4.,
+                                                     beta3 = out_no_bee_plant_df$beta_psi.5.,
+                                                     beta4 = out_no_bee_plant_df$beta_psi.6.,
                                                      pal_cols = c("#E7B800","#00AFBB",  "grey", "black"),
                                                      beta1_name = "yellow",
-                                                     beta2_name = "blue",
-                                                     beta3_name = "white",
-                                                     beta4_name = "other",
+                                                     beta2_name = "other",
+                                                     beta3_name = "blue",
+                                                     beta4_name = "white",
                                                      x_lab_text = "Probability of interacting \nwith a bee",
                                                      y_lab_text =  "Flower color",
                                                      mod_name = "No bee and plant family model")
@@ -1316,15 +1316,15 @@ write.csv(bee_str_stats, paste0("./Tables/", date_folder, "/Supp-table-p-bee-str
 # Source type:
   # out_df = out_bee_species_df 
   # num_cov = 4
-  # beta1 = out_bee_species_df$beta_p.6.
+  # beta1 = out_bee_species_df$beta_p.1.
   # beta2 = out_bee_species_df$beta_p.4.
   # beta3 = out_bee_species_df$beta_p.5.
-  # beta4 = out_bee_species_df$beta_p.1.
+  # beta4 = out_bee_species_df$beta_p.6.
   # pal_cols = wes_palette("Moonrise2", 4, type = c("discrete"))
   # beta1_name = "observation"
   # beta2_name = "literature"
   # beta3_name = "collection"
-  # beta4_name = "aggregated"
+  # beta4_name = "aggregated"s
   # x_lab_text = "Probability of detecting a \nbee-plant interaction"
   # y_lab_text =  "Source type"
 
@@ -1332,10 +1332,10 @@ write.csv(bee_str_stats, paste0("./Tables/", date_folder, "/Supp-table-p-bee-str
 # Bee species model
 source_bee_species_mod <- response_factor_cov_plot(out_df = out_bee_species_df,
                                                      num_cov = 4,
-                                                     beta1 = out_bee_species_df$beta_p.6.,
+                                                     beta1 = out_bee_species_df$beta_p.1.,
                                                      beta2 = out_bee_species_df$beta_p.4.,
                                                      beta3 = out_bee_species_df$beta_p.5.,
-                                                     beta4 = out_bee_species_df$beta_p.1.,
+                                                     beta4 = out_bee_species_df$beta_p.6.,
                                                      pal_cols = wes_palette("Moonrise2", 4, type = c("discrete")),
                                                      beta1_name = "observation",
                                                      beta2_name = "literature",
@@ -1348,10 +1348,10 @@ source_bee_species_mod <- response_factor_cov_plot(out_df = out_bee_species_df,
 # Bee family model
 source_bee_family_mod <- response_factor_cov_plot(out_df = out_bee_family_df,
                                                     num_cov = 4,
-                                                  beta1 = out_bee_family_df$beta_p.6.,
+                                                  beta1 = out_bee_family_df$beta_p.1.,
                                                   beta2 = out_bee_family_df$beta_p.4.,
                                                   beta3 = out_bee_family_df$beta_p.5.,
-                                                  beta4 = out_bee_family_df$beta_p.1.,
+                                                  beta4 = out_bee_family_df$beta_p.6.,
                                                   pal_cols = wes_palette("Moonrise2", 4, type = c("discrete")),
                                                   beta1_name = "observation",
                                                   beta2_name = "literature",
@@ -1364,10 +1364,10 @@ source_bee_family_mod <- response_factor_cov_plot(out_df = out_bee_family_df,
 # Plant species model
 source_plant_species_mod <- response_factor_cov_plot(out_df = out_plant_species_df,
                                                        num_cov = 4,
-                                                     beta1 = out_plant_species_df$beta_p.6.,
+                                                     beta1 = out_plant_species_df$beta_p.1.,
                                                      beta2 = out_plant_species_df$beta_p.4.,
                                                      beta3 = out_plant_species_df$beta_p.5.,
-                                                     beta4 = out_plant_species_df$beta_p.1.,
+                                                     beta4 = out_plant_species_df$beta_p.6.,
                                                      pal_cols = wes_palette("Moonrise2", 4, type = c("discrete")),
                                                      beta1_name = "observation",
                                                      beta2_name = "literature",
@@ -1381,10 +1381,10 @@ source_plant_species_mod <- response_factor_cov_plot(out_df = out_plant_species_
 # Plant family model
 source_plant_family_mod <- response_factor_cov_plot(out_df = out_plant_family_df,
                                                       num_cov = 4,
-                                                    beta1 = out_plant_family_df$beta_p.6.,
+                                                    beta1 = out_plant_family_df$beta_p.1.,
                                                     beta2 = out_plant_family_df$beta_p.4.,
                                                     beta3 = out_plant_family_df$beta_p.5.,
-                                                    beta4 = out_plant_family_df$beta_p.1.,
+                                                    beta4 = out_plant_family_df$beta_p.6.,
                                                     pal_cols = wes_palette("Moonrise2", 4, type = c("discrete")),
                                                     beta1_name = "observation",
                                                     beta2_name = "literature",
@@ -1398,10 +1398,10 @@ source_plant_family_mod <- response_factor_cov_plot(out_df = out_plant_family_df
 # Bee and Plant family model
 source_bee_plant_family_mod <- response_factor_cov_plot(out_df = out_bee_plant_family_df,
                                                           num_cov = 4,
-                                                        beta1 = out_bee_plant_family_df$beta_p.6.,
+                                                        beta1 = out_bee_plant_family_df$beta_p.1.,
                                                         beta2 = out_bee_plant_family_df$beta_p.4.,
                                                         beta3 = out_bee_plant_family_df$beta_p.5.,
-                                                        beta4 = out_bee_plant_family_df$beta_p.1.,
+                                                        beta4 = out_bee_plant_family_df$beta_p.6.,
                                                         pal_cols = wes_palette("Moonrise2", 4, type = c("discrete")),
                                                         beta1_name = "observation",
                                                         beta2_name = "literature",
@@ -1415,10 +1415,10 @@ source_bee_plant_family_mod <- response_factor_cov_plot(out_df = out_bee_plant_f
 # Bee and Plant family model
 source_no_bee_plant_mod <- response_factor_cov_plot(out_df = out_no_bee_plant_df,
                                                       num_cov = 4,
-                                                    beta1 = out_no_bee_plant_df$beta_p.6.,
+                                                    beta1 = out_no_bee_plant_df$beta_p.1.,
                                                     beta2 = out_no_bee_plant_df$beta_p.4.,
                                                     beta3 = out_no_bee_plant_df$beta_p.5.,
-                                                    beta4 = out_no_bee_plant_df$beta_p.1.,
+                                                    beta4 = out_no_bee_plant_df$beta_p.6.,
                                                     pal_cols = wes_palette("Moonrise2", 4, type = c("discrete")),
                                                     beta1_name = "observation",
                                                     beta2_name = "literature",
@@ -1467,15 +1467,15 @@ write.csv(source_stats, paste0("./Tables/", date_folder, "/Supp-table-p-source-m
 # Flower color:
   # out_df = out_bee_species_df 
   # num_cov = 4
-  # beta1 = out_bee_species_df$beta_p.7.
-  # beta2 = out_bee_species_df$beta_p.8.
-  # beta3 = out_bee_species_df$beta_p.9.
-  # beta4 = out_bee_species_df$beta_p.1.
+  # beta1 = out_bee_species_df$beta_p.1.
+  # beta2 = out_bee_species_df$beta_p.7.
+  # beta3 = out_bee_species_df$beta_p.8.
+  # beta4 = out_bee_species_df$beta_p.9.
   # pal_cols = c( "#E7B800", "#00AFBB","grey", "black")
   # beta1_name = "yellow"
-  # beta2_name = "blue"
-  # beta3_name = "white"
-  # beta4_name = "other"
+  # beta2_name = "other"
+  # beta3_name = "blue"
+  # beta4_name = "white"
   # x_lab_text = "Probability of detecting a \nbee interacting on the plant"
   # y_lab_text =  "Flower color"
 
@@ -1483,15 +1483,15 @@ write.csv(source_stats, paste0("./Tables/", date_folder, "/Supp-table-p-source-m
 # Bee species model
 flow_col_p_bee_species_mod <- response_factor_cov_plot(out_df = out_bee_species_df,
                                                      num_cov = 4,
-                                                     beta1 = out_bee_species_df$beta_p.7.,
-                                                     beta2 = out_bee_species_df$beta_p.8.,
-                                                     beta3 = out_bee_species_df$beta_p.9.,
-                                                     beta4 = out_bee_species_df$beta_p.1.,
+                                                     beta1 = out_bee_species_df$beta_p.1.,
+                                                     beta2 = out_bee_species_df$beta_p.7.,
+                                                     beta3 = out_bee_species_df$beta_p.8.,
+                                                     beta4 = out_bee_species_df$beta_p.9.,
                                                      pal_cols = c( "#E7B800", "#00AFBB","grey", "black"),
                                                      beta1_name = "yellow",
-                                                     beta2_name = "blue",
-                                                     beta3_name = "white",
-                                                     beta4_name = "other",
+                                                     beta2_name = "other",
+                                                     beta3_name = "blue",
+                                                     beta4_name = "white",
                                                      x_lab_text = "Probability of detecting a \nbee interacting on the plant",
                                                      y_lab_text =  "Flower color",
                                                      mod_name = "Bee species model")
@@ -1499,15 +1499,15 @@ flow_col_p_bee_species_mod <- response_factor_cov_plot(out_df = out_bee_species_
 # Bee family model
 flow_col_p_bee_family_mod <- response_factor_cov_plot(out_df = out_bee_family_df,
                                                     num_cov = 4,
-                                                    beta1 = out_bee_family_df$beta_p.7.,
-                                                    beta2 = out_bee_family_df$beta_p.8.,
-                                                    beta3 = out_bee_family_df$beta_p.9.,
-                                                    beta4 = out_bee_family_df$beta_p.1.,
+                                                    beta1 = out_bee_family_df$beta_p.1.,
+                                                    beta2 = out_bee_family_df$beta_p.7.,
+                                                    beta3 = out_bee_family_df$beta_p.8.,
+                                                    beta4 = out_bee_family_df$beta_p.9.,
                                                     pal_cols = c( "#E7B800", "#00AFBB","grey", "black"),
                                                     beta1_name = "yellow",
-                                                    beta2_name = "blue",
-                                                    beta3_name = "white",
-                                                    beta4_name = "other",
+                                                    beta2_name = "other",
+                                                    beta3_name = "blue",
+                                                    beta4_name = "white",
                                                     x_lab_text = "Probability of detecting a \nbee interacting on the plant",
                                                     y_lab_text =  "Flower color",
                                                     mod_name = "Bee family model")
@@ -1515,15 +1515,15 @@ flow_col_p_bee_family_mod <- response_factor_cov_plot(out_df = out_bee_family_df
 # Plant species model
 flow_col_p_plant_species_mod <- response_factor_cov_plot(out_df = out_plant_species_df,
                                                        num_cov = 4,
-                                                       beta1 = out_plant_species_df$beta_p.7.,
-                                                       beta2 = out_plant_species_df$beta_p.8.,
-                                                       beta3 = out_plant_species_df$beta_p.9.,
-                                                       beta4 = out_plant_species_df$beta_p.1.,
+                                                       beta1 = out_plant_species_df$beta_p.1.,
+                                                       beta2 = out_plant_species_df$beta_p.7.,
+                                                       beta3 = out_plant_species_df$beta_p.8.,
+                                                       beta4 = out_plant_species_df$beta_p.9.,
                                                        pal_cols = c( "#E7B800", "#00AFBB","grey", "black"),
                                                        beta1_name = "yellow",
-                                                       beta2_name = "blue",
-                                                       beta3_name = "white",
-                                                       beta4_name = "other",
+                                                       beta2_name = "other",
+                                                       beta3_name = "blue",
+                                                       beta4_name = "white",
                                                        x_lab_text = "Probability of detecting a \nbee interacting on the plant",
                                                        y_lab_text =  "Flower color",
                                                        mod_name = "Plant species model")
@@ -1532,15 +1532,15 @@ flow_col_p_plant_species_mod <- response_factor_cov_plot(out_df = out_plant_spec
 # Plant family model
 flow_col_p_plant_family_mod <- response_factor_cov_plot(out_df = out_plant_family_df,
                                                       num_cov = 4,
-                                                      beta1 = out_plant_family_df$beta_p.7.,
-                                                      beta2 = out_plant_family_df$beta_p.8.,
-                                                      beta3 = out_plant_family_df$beta_p.9.,
-                                                      beta4 = out_plant_family_df$beta_p.1.,
+                                                      beta1 = out_plant_family_df$beta_p.1.,
+                                                      beta2 = out_plant_family_df$beta_p.7.,
+                                                      beta3 = out_plant_family_df$beta_p.8.,
+                                                      beta4 = out_plant_family_df$beta_p.9.,
                                                       pal_cols = c( "#E7B800", "#00AFBB","grey", "black"),
                                                       beta1_name = "yellow",
-                                                      beta2_name = "blue",
-                                                      beta3_name = "white",
-                                                      beta4_name = "other",
+                                                      beta2_name = "other",
+                                                      beta3_name = "blue",
+                                                      beta4_name = "white",
                                                       x_lab_text = "Probability of detecting a \nbee interacting on the plant",
                                                       y_lab_text =  "Flower color",
                                                       mod_name = "Plant family model")
@@ -1549,15 +1549,15 @@ flow_col_p_plant_family_mod <- response_factor_cov_plot(out_df = out_plant_famil
 # Bee and Plant family model
 flow_col_p_bee_plant_family_mod <- response_factor_cov_plot(out_df = out_bee_plant_family_df,
                                                           num_cov = 4,
-                                                          beta1 = out_bee_plant_family_df$beta_p.7.,
-                                                          beta2 = out_bee_plant_family_df$beta_p.8.,
-                                                          beta3 = out_bee_plant_family_df$beta_p.9.,
-                                                          beta4 = out_bee_plant_family_df$beta_p.1.,
+                                                          beta1 = out_bee_plant_family_df$beta_p.1.,
+                                                          beta2 = out_bee_plant_family_df$beta_p.7.,
+                                                          beta3 = out_bee_plant_family_df$beta_p.8.,
+                                                          beta4 = out_bee_plant_family_df$beta_p.9.,
                                                           pal_cols = c( "#E7B800", "#00AFBB","grey", "black"),
                                                           beta1_name = "yellow",
-                                                          beta2_name = "blue",
-                                                          beta3_name = "white",
-                                                          beta4_name = "other",
+                                                          beta2_name = "other",
+                                                          beta3_name = "blue",
+                                                          beta4_name = "white",
                                                           x_lab_text = "Probability of detecting a \nbee interacting on the plant",
                                                           y_lab_text =  "Flower color",
                                                           mod_name = "Bee and plant family model")
@@ -1566,15 +1566,15 @@ flow_col_p_bee_plant_family_mod <- response_factor_cov_plot(out_df = out_bee_pla
 # Bee and Plant family model
 flow_col_p_no_bee_plant_mod <- response_factor_cov_plot(out_df = out_no_bee_plant_df,
                                                       num_cov = 4,
-                                                      beta1 = out_no_bee_plant_df$beta_p.7.,
-                                                      beta2 = out_no_bee_plant_df$beta_p.8.,
-                                                      beta3 = out_no_bee_plant_df$beta_p.9.,
-                                                      beta4 = out_no_bee_plant_df$beta_p.1.,
+                                                      beta1 = out_no_bee_plant_df$beta_p.1.,
+                                                      beta2 = out_no_bee_plant_df$beta_p.7.,
+                                                      beta3 = out_no_bee_plant_df$beta_p.8.,
+                                                      beta4 = out_no_bee_plant_df$beta_p.9.,
                                                       pal_cols = c( "#E7B800", "#00AFBB","grey", "black"),
                                                       beta1_name = "yellow",
-                                                      beta2_name = "blue",
-                                                      beta3_name = "white",
-                                                      beta4_name = "other",
+                                                      beta2_name = "other",
+                                                      beta3_name = "blue",
+                                                      beta4_name = "white",
                                                       x_lab_text = "Probability of detecting a \nbee interacting on the plant",
                                                       y_lab_text =  "Flower color",
                                                       mod_name = "No bee and plant family model")
