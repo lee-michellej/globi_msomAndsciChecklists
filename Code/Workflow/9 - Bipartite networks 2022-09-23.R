@@ -49,6 +49,10 @@
 
 # Load libraries
 library(tidyverse)
+library(reshape2)
+library(splitstackshape)
+
+
 
 
 # Set working directory
@@ -63,6 +67,8 @@ setwd("/Volumes/DIRENZO/globi-20250210/gdirenzo/globi/")
 
 
 
+# Add github path
+github_path <- "/Users/gdirenzo/Documents/GitHub/globi_msomAndsciChecklists/"
 
 
 # Load the data
@@ -80,19 +86,19 @@ load("./ModelOutput/2025 01 26/result-bee_species-NIMBLE.rds")
 
 # Upload the data
 
-load("./Data/data_summary/globi_data_formatted_bee_plant_date_citation_2025_01_22 - short plant list - no apis.rds")
+load(paste0(github_path, "/Data/data_summary/globi_data_formatted_bee_plant_date_citation_2025_01_22 - short plant list - no apis.rds"))
 
 # object name = bee.plant.cite
 # 3-D array
 
 
 # Read in the dat_info
-load("/Users/gdirenzo/Documents/GitHub/globi_msomAndsciChecklists/Data/dat_info_2025_01_22.rds")
+load(paste0(github_path, "/Data/dat_info_2025_01_22.rds"))
 # object name = dat_info
 
 
 # Load in the number of observations
-load("./Data/obs_dat-2025-02-11.rds")
+load(paste0(github_path, "/Data/obs_dat-2025-02-11.rds"))
 # object name = obs_dat.rds
 
 
@@ -118,7 +124,7 @@ z.cols <- grep("z", colnames(result[[1]]$samples2))
 
 
 # Determine how many MCMC iterations to keep
-row.subset <- 1000
+row.subset <- 5000
 
 # Just call the 1st MCMC chain - if you try to row bind all 3 chains, it is a LARGE object
 z.MCMC <- data.frame(rbind(result[[1]]$samples2[1:row.subset,z.cols],
@@ -132,13 +138,11 @@ dim(z.MCMC)
 # Collapse it down to 1 observation by taking the column mean
 z.prob <- colMeans(z.MCMC, na.rm = TRUE)
 
-library(reshape2)
 
 z.long <- melt(z.prob)
 z.long$names <- rownames(z.long)
 
 
-library(splitstackshape)
 z.long2 <- cSplit(z.long, "names", sep=".", type.convert=FALSE)
 
 head(z.long2)
@@ -147,12 +151,11 @@ colnames(z.long2) <- c("probability", "z", "bee.species", "empty", "plant.specie
 
 head(z.long2)
 
-library(tidyverse)
 z.long3 <- z.long2 %>%
   group_by(bee.species, plant.species) %>%
   dplyr::summarize(max_prob = max(probability))
 
-View(z.long3)
+# View(z.long3)
 
 # Add bee names
 z.long3$bee.names <- NA
@@ -179,7 +182,7 @@ for(i in 1:length(plant.names)){
 
 
 # Save file
-write.csv(z.long3, "./Data/2024 07 19 - bee-plant-mod-probabilities.csv")
+write.csv(z.long3, "./Data/2025 02 11 - bee-plant-mod-probabilities.csv")
 
 
 
