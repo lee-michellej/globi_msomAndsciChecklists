@@ -10,24 +10,6 @@
 #######################################
 
 
-
-
-
-
-
-
-# Before running this code:
-  # Check to see if you used means vs effects parameterization (you are calculating the p-value differently than what you are plotting)
-
-
-
-
-
-
-
-
-
-
 #######################################
 ## Code objectives:
 #######################################
@@ -98,11 +80,16 @@ library(wesanderson)
 library(patchwork)
 
 
+# Add globi folder name
+globi_folder <- "globi-20250210"
 
 # Set working directory
-setwd("/Volumes/DIRENZO/globi/home/gdirenzo/globi/")
+setwd(paste0("/Volumes/DIRENZO/", globi_folder, "/gdirenzo/globi/"))
 #setwd("/Users/gdirenzo/OneDrive - University of Massachusetts/Dropbox_transfer/Globi/")
 
+
+# Add github folder path
+github_folder_path <- "/Users/gdirenzo/Documents/GitHub/globi_msomAndsciChecklists/"
 
 
 
@@ -115,6 +102,7 @@ setwd("/Volumes/DIRENZO/globi/home/gdirenzo/globi/")
 
 
 # date object for folder
+date_folder <- "2025 01 26"
 date <- "2025 01 26"
 
 
@@ -214,35 +202,6 @@ out_no_bee_plant_df <- as.data.frame(out_no_bee_plant)
 
 
 
-# 3. Check model convergence and traceplots
-
-
-
-
-
-
-# Traceplots
-ggs_BYMeco <- ggs(MCMClist) 
-
-# Beta_psi
-ggs_BYMeco %>% 
-  filter(Parameter %in% c( paste("beta_psi[", 1:4, "]", sep = ""))) %>% 
-  ggs_traceplot() + 
-  theme_bw()
-
-ggsave(paste0("./Figures/", date, "traceplots-psi-", model_name, ".png"))
-
-
-# Beta_p
-ggs_BYMeco %>% 
-  filter(Parameter %in% c( paste("beta_p[", 1:8, "]", sep = ""))) %>% 
-  ggs_traceplot() + 
-  theme_bw()
-
-ggsave(paste0("./Figures/", date, "traceplots-p-", model_name, ".png"))
-
-
-
 
 
 
@@ -256,6 +215,8 @@ text.size <- 12
 title.size <- 12
 
 
+# Number of samples for MCMC lines on continuous variable plots
+n_samp <- 5000
 
 
 
@@ -314,6 +275,16 @@ mean_response <- data.frame(Cov.scaled = seq(-3, 3, length.out = 50))
 mean_response$pred <- plogis(mean(param_df$intercept) +
                              mean(param_df$beta_psi) * mean_response$Cov.scaled)
 
+# Create data frame to label each scenario if it is significant or not
+annotation_df <- data.frame(
+                          # x-axis value
+                            bee_size_value = mean(pred_df_sub$Cov.scaled),
+                          # y-axis value
+                            prob_value = max(pred_df_sub$pred),
+                          # labelz
+                            label = paste0("Pr(Slope is greater than 0) = ", round(stats_df[1, 3], dig = 2)))
+
+
 # Create plot
 gplot <- ggplot() +
   geom_line(data = pred_df_sub, aes(x = as.numeric(Cov.scaled), 
@@ -332,7 +303,15 @@ gplot <- ggplot() +
         axis.text.y = element_text(size = text.size),
         axis.title.x = element_text(size = title.size),
         axis.title.y = element_text(size = title.size))+
-  ggtitle(mod_name)
+  ggtitle(mod_name)+
+  
+  # Add annotation if the relationship is significant or not
+  geom_text(data = annotation_df, aes(x = bee_size_value, 
+                                      y = prob_value,
+                                      label = label), 
+            size = 3,
+            hjust = 0.5, 
+            vjust = 0)
 
 return(list(gplot = gplot,
             stats_df = stats_df))
@@ -354,6 +333,7 @@ return(list(gplot = gplot,
   # x_lab_text = "Bee size standardized"
   # y_lab_tex = "Probability of interacting \nwith a plant"
   # mod_name = "Bee species model"
+  # n_sub = n_samp
   
 
 
@@ -364,7 +344,7 @@ bee_size_bee_species_mod <- response_continous_cov_plot(out_df = out_bee_species
                                       mod_name = "Bee species model",
                                       x_lab_text = "Bee size standardized",
                                       y_lab_text = "Probability of interacting \nwith a plant",
-                                      n_sub = 3)
+                                      n_sub = n_samp)
 
 # Bee family model
 bee_size_bee_family_mod <- response_continous_cov_plot(out_df = out_bee_family_df, 
@@ -373,7 +353,7 @@ bee_size_bee_family_mod <- response_continous_cov_plot(out_df = out_bee_family_d
                                           mod_name = "Bee family model",
                                          x_lab_text = "Bee size standardized",
                                          y_lab_text = "Probability of interacting \nwith a plant",
-                                         n_sub = 3)
+                                         n_sub = n_samp)
 
 
 
@@ -384,7 +364,7 @@ bee_size_plant_species_mod <- response_continous_cov_plot(out_df = out_plant_spe
                                           mod_name = "Plant species model",
                                           x_lab_text = "Bee size standardized",
                                           y_lab_text = "Probability of interacting \nwith a plant",
-                                          n_sub = 3)
+                                          n_sub = n_samp)
 
 # Plant family model
 bee_size_plant_family_mod <- response_continous_cov_plot(out_df = out_plant_family_df, 
@@ -393,7 +373,7 @@ bee_size_plant_family_mod <- response_continous_cov_plot(out_df = out_plant_fami
                                           mod_name = "Plant family model",
                                           x_lab_text = "Bee size standardized",
                                           y_lab_text = "Probability of interacting \nwith a plant",
-                                          n_sub = 3)
+                                          n_sub = n_samp)
 
 
 # Bee and Plant family model
@@ -403,7 +383,7 @@ bee_size_bee_plant_family_mod <- response_continous_cov_plot(out_df = out_bee_pl
                                            mod_name = "Bee and plant family model",
                                            x_lab_text = "Bee size standardized",
                                            y_lab_text = "Probability of interacting \nwith a plant",
-                                           n_sub = 3)
+                                           n_sub = n_samp)
 
 
 
@@ -414,7 +394,7 @@ bee_size_no_bee_plant_mod <- response_continous_cov_plot(out_df = out_no_bee_pla
                                                mod_name = "No bee and plant model",
                                            x_lab_text = "Bee size standardized",
                                            y_lab_text = "Probability of interacting \nwith a plant",
-                                           n_sub = 3)
+                                           n_sub = n_samp)
 
 
 
@@ -426,8 +406,8 @@ bee_size_bee_species_mod$gplot + bee_size_bee_family_mod$gplot+
 
 
 # Save the plot
-ggsave(paste0("./Figures/", date_folder, "/Supp-fig-psi-bee-size-mod-comparison.png")
-       , height = 6, width = 15)
+ggsave(paste0(github_folder_path, "/Figures/", date_folder, "/Supp-fig-psi-bee-size-mod-comparison.png")
+       , height = 10, width = 12)
 
 
 
@@ -440,7 +420,7 @@ bee_size_stats <- rbind(bee_size_bee_species_mod$stats_df, bee_size_bee_family_m
 
 
 # Save the table
-write.csv(bee_size_stats, paste0("./Tables/", date_folder, "/Supp-table-psi-bee-size-mod-comparison.csv"))
+write.csv(bee_size_stats, paste0(github_folder_path, "/Tables/", date_folder, "/Supp-table-psi-bee-size-mod-comparison.csv"))
 
 
 
@@ -545,7 +525,7 @@ mu <- ddply(pred_df_long,
 annotation_df <- data.frame(
   start =  c(beta1_name),
   end = c(beta2_name),
-  probability = c(1.1),
+  probability = c(max(c(pred_df$beta1_prob, pred_df$beta2_prob))),
   label = c(mean( pred_df$beta1_prob > pred_df$beta2_prob)),
   y_start = 1,
   y_end = 2
@@ -582,7 +562,7 @@ gplot <- ggplot(pred_df_long, aes(x = probability, y = covariate)) +
                                          xend = probability - 0.03,
                                          y = y_end, yend = y_end),
                color = "black", size = 0.5)+
-  geom_text(data = annotation_df, aes(x = probability + 0.05, 
+  geom_text(data = annotation_df, aes(x = probability + 0.01, 
                                       y = (y_start + y_end) / 2,
                                       label = round(label, 2)), size = 3,
             hjust = 0.5, vjust = 0)
@@ -639,7 +619,12 @@ gplot <- ggplot(pred_df_long, aes(x = probability, y = covariate)) +
     annotation_df <- data.frame(
       start =  c(beta1_name, beta1_name, beta1_name),
       end = c(beta2_name, beta3_name, beta4_name),
-      probability = c(1.1, 1.2, 1.3),
+      probability = c(max(c(pred_df$beta1_prob, pred_df$beta2_prob, 
+                            pred_df$beta3_prob, pred_df$beta4_prob))+0.1,
+                      max(c(pred_df$beta1_prob, pred_df$beta2_prob, 
+                            pred_df$beta3_prob, pred_df$beta4_prob))+0.2,
+                      max(c(pred_df$beta1_prob, pred_df$beta2_prob, 
+                            pred_df$beta3_prob, pred_df$beta4_prob))+0.3),
       label = c(mean( pred_df$beta1_prob > pred_df$beta2_prob),
                 mean( pred_df$beta1_prob > pred_df$beta3_prob),
                 mean( pred_df$beta1_prob > pred_df$beta4_prob))
@@ -831,8 +816,8 @@ bee_soc_no_bee_plant_mod <- response_factor_cov_plot(out_df = out_no_bee_plant_d
 
 
 # Save the plot
-ggsave(paste0("./Figures/", date_folder, "/Supp-fig-psi-bee-sociality-mod-comparison.png")
-       , height = 6, width = 15)
+ggsave(paste0(github_folder_path, "/Figures/", date_folder, "/Supp-fig-psi-bee-sociality-mod-comparison.png")
+       , height = 10, width = 12)
 
 
 
@@ -845,7 +830,7 @@ bee_sociality_stats <- rbind(bee_soc_bee_species_mod$stats_df,      bee_soc_bee_
 
 
 # Save the table
-write.csv(bee_sociality_stats, paste0("./Tables/", date_folder, "/Supp-table-psi-bee-sociality-mod-comparison.csv"))
+write.csv(bee_sociality_stats, paste0(github_folder_path, "/Tables/", date_folder, "/Supp-table-psi-bee-sociality-mod-comparison.csv"))
 
 
 
@@ -879,6 +864,8 @@ write.csv(bee_sociality_stats, paste0("./Tables/", date_folder, "/Supp-table-psi
   # beta4_name = "white"
 
 
+pal_cols <- c("#E7B800", "grey", "#00AFBB", "white")
+
 # Bee species model
 flow_col_bee_species_mod <- response_factor_cov_plot(out_df = out_bee_species_df,
                                                      num_cov = 4,
@@ -886,7 +873,7 @@ flow_col_bee_species_mod <- response_factor_cov_plot(out_df = out_bee_species_df
                                                      beta2 = out_bee_species_df$beta_psi.4.,
                                                      beta3 = out_bee_species_df$beta_psi.5.,
                                                      beta4 = out_bee_species_df$beta_psi.6.,
-                                                     pal_cols = c("#E7B800","#00AFBB",  "grey", "black"),
+                                                     pal_cols = pal_cols,
                                                      beta1_name = "yellow",
                                                      beta2_name = "other",
                                                      beta3_name = "blue",
@@ -902,7 +889,7 @@ flow_col_bee_family_mod <- response_factor_cov_plot(out_df = out_bee_family_df,
                                                    beta2 = out_bee_family_df$beta_psi.4.,
                                                    beta3 = out_bee_family_df$beta_psi.5.,
                                                    beta4 = out_bee_family_df$beta_psi.6.,
-                                                   pal_cols = c("#E7B800","#00AFBB",  "grey", "black"),
+                                                   pal_cols = pal_cols,
                                                    beta1_name = "yellow",
                                                    beta2_name = "other",
                                                    beta3_name = "blue",
@@ -918,7 +905,7 @@ flow_col_plant_species_mod <- response_factor_cov_plot(out_df = out_plant_specie
                                                       beta2 = out_plant_species_df$beta_psi.4.,
                                                       beta3 = out_plant_species_df$beta_psi.5.,
                                                       beta4 = out_plant_species_df$beta_psi.6.,
-                                                      pal_cols = c("#E7B800","#00AFBB",  "grey", "black"),
+                                                      pal_cols = pal_cols,
                                                       beta1_name = "yellow",
                                                       beta2_name = "other",
                                                       beta3_name = "blue",
@@ -935,7 +922,7 @@ flow_col_plant_family_mod <- response_factor_cov_plot(out_df = out_plant_family_
                                                      beta2 = out_plant_family_df$beta_psi.4.,
                                                      beta3 = out_plant_family_df$beta_psi.5.,
                                                      beta4 = out_plant_family_df$beta_psi.6.,
-                                                     pal_cols = c("#E7B800","#00AFBB",  "grey", "black"),
+                                                     pal_cols = pal_cols,
                                                      beta1_name = "yellow",
                                                      beta2_name = "other",
                                                      beta3_name = "blue",
@@ -952,7 +939,7 @@ flow_col_bee_plant_family_mod <- response_factor_cov_plot(out_df = out_bee_plant
                                                          beta2 = out_bee_plant_family_df$beta_psi.4.,
                                                          beta3 = out_bee_plant_family_df$beta_psi.5.,
                                                          beta4 = out_bee_plant_family_df$beta_psi.6.,
-                                                         pal_cols = c("#E7B800","#00AFBB",  "grey", "black"),
+                                                         pal_cols = pal_cols,
                                                          beta1_name = "yellow",
                                                          beta2_name = "other",
                                                          beta3_name = "blue",
@@ -969,7 +956,7 @@ flow_col_no_bee_plant_mod <- response_factor_cov_plot(out_df = out_no_bee_plant_
                                                      beta2 = out_no_bee_plant_df$beta_psi.4.,
                                                      beta3 = out_no_bee_plant_df$beta_psi.5.,
                                                      beta4 = out_no_bee_plant_df$beta_psi.6.,
-                                                     pal_cols = c("#E7B800","#00AFBB",  "grey", "black"),
+                                                     pal_cols = pal_cols,
                                                      beta1_name = "yellow",
                                                      beta2_name = "other",
                                                      beta3_name = "blue",
@@ -987,8 +974,8 @@ flow_col_no_bee_plant_mod <- response_factor_cov_plot(out_df = out_no_bee_plant_
 
 
 # Save the plot
-ggsave(paste0("./Figures/", date_folder, "/Supp-fig-psi-flow-col-mod-comparison.png")
-       , height = 6, width = 15)
+ggsave(paste0(github_folder_path, "/Figures/", date_folder, "/Supp-fig-psi-flow-col-mod-comparison.png")
+       , height = 10, width = 12)
 
 
 
@@ -1001,7 +988,7 @@ flow_col_stats <- rbind(flow_col_bee_species_mod$stats_df,      flow_col_bee_fam
 
 
 # Save the table
-write.csv(flow_col_stats, paste0("./Tables/", date_folder, "/Supp-table-psi-flow-col-mod-comparison.csv"))
+write.csv(flow_col_stats, paste0(github_folder_path, "/Tables/", date_folder, "/Supp-table-psi-flow-col-mod-comparison.csv"))
 
 
 
@@ -1135,8 +1122,8 @@ flow_sha_no_bee_plant_mod <- response_factor_cov_plot(out_df = out_no_bee_plant_
 
 
 # Save the plot
-ggsave(paste0("./Figures/", date_folder, "/Supp-fig-psi-flow-sha-mod-comparison.png")
-       , height = 6, width = 15)
+ggsave(paste0(github_folder_path, "/Figures/", date_folder, "/Supp-fig-psi-flow-sha-mod-comparison.png")
+       , height = 10, width = 12)
 
 
 
@@ -1149,7 +1136,7 @@ flow_sha_stats <- rbind(flow_sha_bee_species_mod$stats_df,      flow_sha_bee_fam
 
 
 # Save the table
-write.csv(flow_sha_stats, paste0("./Tables/", date_folder, "/Supp-table-psi-flow-sha-mod-comparison.csv"))
+write.csv(flow_sha_stats, paste0(github_folder_path, "/Tables/", date_folder, "/Supp-table-psi-flow-sha-mod-comparison.csv"))
 
 
 
@@ -1288,8 +1275,8 @@ bee_str_no_bee_plant_mod <- response_factor_cov_plot(out_df = out_no_bee_plant_d
 
 
 # Save the plot
-ggsave(paste0("./Figures/", date_folder, "/Supp-fig-p-bee-str-mod-comparison.png")
-       , height = 6, width = 15)
+ggsave(paste0(github_folder_path, "/Figures/", date_folder, "/Supp-fig-p-bee-str-mod-comparison.png")
+       , height = 10, width = 12)
 
 
 
@@ -1302,7 +1289,7 @@ bee_str_stats <- rbind(bee_str_bee_species_mod$stats_df,      bee_str_bee_family
 
 
 # Save the table
-write.csv(bee_str_stats, paste0("./Tables/", date_folder, "/Supp-table-p-bee-str-mod-comparison.csv"))
+write.csv(bee_str_stats, paste0(github_folder_path, "/Tables/", date_folder, "/Supp-table-p-bee-str-mod-comparison.csv"))
 
 
 
@@ -1437,8 +1424,8 @@ source_no_bee_plant_mod <- response_factor_cov_plot(out_df = out_no_bee_plant_df
 
 
 # Save the plot
-ggsave(paste0("./Figures/", date_folder, "/Supp-fig-p-source-mod-comparison.png")
-       , height = 6, width = 15)
+ggsave(paste0(github_folder_path, "/Figures/", date_folder, "/Supp-fig-p-source-mod-comparison.png")
+       , height = 10, width = 12)
 
 
 
@@ -1451,7 +1438,7 @@ source_stats <- rbind(source_bee_species_mod$stats_df,      source_bee_family_mo
 
 
 # Save the table
-write.csv(source_stats, paste0("./Tables/", date_folder, "/Supp-table-p-source-mod-comparison.csv"))
+write.csv(source_stats, paste0(github_folder_path, "/Tables/", date_folder, "/Supp-table-p-source-mod-comparison.csv"))
 
 
 
@@ -1487,7 +1474,7 @@ flow_col_p_bee_species_mod <- response_factor_cov_plot(out_df = out_bee_species_
                                                      beta2 = out_bee_species_df$beta_p.7.,
                                                      beta3 = out_bee_species_df$beta_p.8.,
                                                      beta4 = out_bee_species_df$beta_p.9.,
-                                                     pal_cols = c( "#E7B800", "#00AFBB","grey", "black"),
+                                                     pal_cols = pal_cols,
                                                      beta1_name = "yellow",
                                                      beta2_name = "other",
                                                      beta3_name = "blue",
@@ -1503,7 +1490,7 @@ flow_col_p_bee_family_mod <- response_factor_cov_plot(out_df = out_bee_family_df
                                                     beta2 = out_bee_family_df$beta_p.7.,
                                                     beta3 = out_bee_family_df$beta_p.8.,
                                                     beta4 = out_bee_family_df$beta_p.9.,
-                                                    pal_cols = c( "#E7B800", "#00AFBB","grey", "black"),
+                                                    pal_cols = pal_cols,
                                                     beta1_name = "yellow",
                                                     beta2_name = "other",
                                                     beta3_name = "blue",
@@ -1519,7 +1506,7 @@ flow_col_p_plant_species_mod <- response_factor_cov_plot(out_df = out_plant_spec
                                                        beta2 = out_plant_species_df$beta_p.7.,
                                                        beta3 = out_plant_species_df$beta_p.8.,
                                                        beta4 = out_plant_species_df$beta_p.9.,
-                                                       pal_cols = c( "#E7B800", "#00AFBB","grey", "black"),
+                                                       pal_cols = pal_cols,
                                                        beta1_name = "yellow",
                                                        beta2_name = "other",
                                                        beta3_name = "blue",
@@ -1536,7 +1523,7 @@ flow_col_p_plant_family_mod <- response_factor_cov_plot(out_df = out_plant_famil
                                                       beta2 = out_plant_family_df$beta_p.7.,
                                                       beta3 = out_plant_family_df$beta_p.8.,
                                                       beta4 = out_plant_family_df$beta_p.9.,
-                                                      pal_cols = c( "#E7B800", "#00AFBB","grey", "black"),
+                                                      pal_cols = pal_cols,
                                                       beta1_name = "yellow",
                                                       beta2_name = "other",
                                                       beta3_name = "blue",
@@ -1553,7 +1540,7 @@ flow_col_p_bee_plant_family_mod <- response_factor_cov_plot(out_df = out_bee_pla
                                                           beta2 = out_bee_plant_family_df$beta_p.7.,
                                                           beta3 = out_bee_plant_family_df$beta_p.8.,
                                                           beta4 = out_bee_plant_family_df$beta_p.9.,
-                                                          pal_cols = c( "#E7B800", "#00AFBB","grey", "black"),
+                                                          pal_cols = pal_cols,
                                                           beta1_name = "yellow",
                                                           beta2_name = "other",
                                                           beta3_name = "blue",
@@ -1570,7 +1557,7 @@ flow_col_p_no_bee_plant_mod <- response_factor_cov_plot(out_df = out_no_bee_plan
                                                       beta2 = out_no_bee_plant_df$beta_p.7.,
                                                       beta3 = out_no_bee_plant_df$beta_p.8.,
                                                       beta4 = out_no_bee_plant_df$beta_p.9.,
-                                                      pal_cols = c( "#E7B800", "#00AFBB","grey", "black"),
+                                                      pal_cols = pal_cols,
                                                       beta1_name = "yellow",
                                                       beta2_name = "other",
                                                       beta3_name = "blue",
@@ -1588,8 +1575,8 @@ flow_col_p_no_bee_plant_mod <- response_factor_cov_plot(out_df = out_no_bee_plan
 
 
 # Save the plot
-ggsave(paste0("./Figures/", date_folder, "/Supp-fig-p-flow-col-mod-comparison.png")
-       , height = 6, width = 15)
+ggsave(paste0(github_folder_path, "/Figures/", date_folder, "/Supp-fig-p-flow-col-mod-comparison.png")
+       , height = 10, width = 12)
 
 
 
@@ -1602,7 +1589,7 @@ flow_col_p_stats <- rbind(flow_col_p_bee_species_mod$stats_df,      flow_col_p_b
 
 
 # Save the table
-write.csv(flow_col_p_stats, paste0("./Tables/", date_folder, "/Supp-table-p-flow-col-mod-comparison.csv"))
+write.csv(flow_col_p_stats, paste0(github_folder_path, "/Tables/", date_folder, "/Supp-table-p-flow-col-mod-comparison.csv"))
 
 
 
@@ -1740,8 +1727,8 @@ flow_sha_p_no_bee_plant_mod <- response_factor_cov_plot(out_df = out_no_bee_plan
 
 
 # Save the plot
-ggsave(paste0("./Figures/", date_folder, "/Supp-fig-p-flow-sha-mod-comparison.png")
-       , height = 6, width = 15)
+ggsave(paste0(github_folder_path, "/Figures/", date_folder, "/Supp-fig-p-flow-sha-mod-comparison.png")
+       , height = 10, width = 12)
 
 
 
@@ -1754,7 +1741,7 @@ flow_sha_p_stats <- rbind(flow_sha_p_bee_species_mod$stats_df,      flow_sha_p_b
 
 
 # Save the table
-write.csv(flow_sha_p_stats, paste0("./Tables/", date_folder, "/Supp-table-p-flow-sha-mod-comparison.csv"))
+write.csv(flow_sha_p_stats, paste0(github_folder_path, "/Tables/", date_folder, "/Supp-table-p-flow-sha-mod-comparison.csv"))
 
 
 
@@ -1786,7 +1773,7 @@ bee_size_p_bee_species_mod <- response_continous_cov_plot(out_df = out_bee_speci
                                                           x_lab_text = "Bee size standardized",
                                                           y_lab_tex = "Probability of detecting \nthe bee on a plant",
                                                           mod_name = "Bee species model", 
-                                                          n_sub = 3)
+                                                          n_sub = n_samp)
 
 # Bee family model
 bee_size_p_bee_family_mod <- response_continous_cov_plot(out_df = out_bee_family_df, 
@@ -1795,7 +1782,7 @@ bee_size_p_bee_family_mod <- response_continous_cov_plot(out_df = out_bee_family
                                            x_lab_text = "Bee size standardized",
                                            y_lab_tex = "Probability of detecting \nthe bee on a plant",
                                            mod_name = "Bee family model", 
-                                           n_sub = 3)
+                                           n_sub = n_samp)
 
 
 
@@ -1806,7 +1793,7 @@ bee_size_p_plant_species_mod <- response_continous_cov_plot(out_df = out_plant_s
                                               x_lab_text = "Bee size standardized",
                                               y_lab_tex = "Probability of detecting \nthe bee on a plant",
                                             mod_name = "Plant species model", 
-                                            n_sub = 3)
+                                            n_sub = n_samp)
 
 # Plant family model
 bee_size_p_plant_family_mod <- response_continous_cov_plot(out_df = out_plant_family_df, 
@@ -1815,7 +1802,7 @@ bee_size_p_plant_family_mod <- response_continous_cov_plot(out_df = out_plant_fa
                                              x_lab_text = "Bee size standardized",
                                              y_lab_tex = "Probability of detecting \nthe bee on a plant",
                                              mod_name = "Plant family model", 
-                                             n_sub = 3)
+                                             n_sub = n_samp)
 
 
 # Bee and Plant family model
@@ -1825,7 +1812,7 @@ bee_size_p_bee_plant_family_mod <- response_continous_cov_plot(out_df = out_bee_
                                                  x_lab_text = "Bee size standardized",
                                                  y_lab_tex = "Probability of detecting \nthe bee on a plant",
                                                  mod_name = "Bee and plant family model", 
-                                                 n_sub = 3)
+                                                 n_sub = n_samp)
 
 
 
@@ -1836,7 +1823,7 @@ bee_size_p_no_bee_plant_mod <- response_continous_cov_plot(out_df = out_no_bee_p
                                              x_lab_text = "Bee size standardized",
                                              y_lab_tex = "Probability of detecting \nthe bee on a plant",
                                              mod_name = "No bee and plant model", 
-                                             n_sub = 3)
+                                             n_sub = n_samp)
 
 
 
@@ -1849,8 +1836,8 @@ bee_size_p_no_bee_plant_mod <- response_continous_cov_plot(out_df = out_no_bee_p
 
 
 # Save the plot
-ggsave(paste0("./Figures/", date_folder, "/Supp-fig-p-bee-size-mod-comparison.png")
-       , height = 6, width = 15)
+ggsave(paste0(github_folder_path, "/Figures/", date_folder, "/Supp-fig-p-bee-size-mod-comparison.png")
+       , height = 10, width = 12)
 
 
 
@@ -1863,7 +1850,7 @@ bee_size_p_stats <- rbind(bee_size_p_bee_species_mod$stats_df,      bee_size_p_b
 
 
 # Save the table
-write.csv(bee_size_p_stats, paste0("./Tables/", date_folder, "/Supp-table-p-bee-size-mod-comparison.csv"))
+write.csv(bee_size_p_stats, paste0(github_folder_path, "/Tables/", date_folder, "/Supp-table-p-bee-size-mod-comparison.csv"))
 
 
 

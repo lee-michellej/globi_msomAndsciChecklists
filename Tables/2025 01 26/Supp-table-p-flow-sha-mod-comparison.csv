@@ -1,0 +1,7 @@
+"","mod_name","beta_direction","proportion"
+"1","Bee species model","Not bowl greater than Bowl",1
+"2","Bee family model","Not bowl greater than Bowl",0.999916666666667
+"3","Plant species model","Not bowl greater than Bowl",0.722733333333333
+"4","Plant family model","Not bowl greater than Bowl",0.470566666666667
+"5","Bee and plant family model","Not bowl greater than Bowl",0.9538
+"6","No bee and plant family model","Not bowl greater than Bowl",0.989983333333333
