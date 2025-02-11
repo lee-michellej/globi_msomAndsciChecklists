@@ -357,7 +357,6 @@ save(covariates, file = "./Data/model_covariates - 2025 01 22 - no apis.rds")
 
 
 
-
 # 6. Make some plots (to check for correlations) -------------------------------------------------------
 
 
@@ -745,17 +744,13 @@ ggsave("./Figures/2024 07 11 - Citation - solitary - richness.png",
 
 
 
-length(which(obs_dat$bee_plant_sum$number_plants_per_bee == 0))
-
-
-
 # Save the number of observation into a list and then as a R object
 
 obs_dat <- list(bee.samp = bee.samp,
                 bee_plant_sum = bee_plant_sum)
 
 
-save(obs_dat, file = "./Data/obs_dat.rds")
+save(obs_dat, file = "/Users/gdirenzo/Documents/GitHub/globi_msomAndsciChecklists/Data/obs_dat-2025-02-11.rds")
 
 # End script
 

@@ -54,6 +54,7 @@ library(tidyverse)
 # Set working directory
 setwd("~/globi_tritrophic_networks/")
 
+setwd("/Volumes/DIRENZO/globi-20250210/gdirenzo/globi/")
 
 
 
@@ -65,31 +66,33 @@ setwd("~/globi_tritrophic_networks/")
 
 
 # Load the data
-load("./ModelOutput/globi-short plant list- 2024 07 17 - all cov - NO apis - NIMBLE.rds")
+load("./ModelOutput/2025 01 26/out-bee_species-NIMBLE.rds")
 # object = out
 # MCMC object
 
 
 ## Load the entire nimble output
-load("./ModelOutput/OUTPUT - globi-short plant list- 2024 07 17 - all cov - NO apis - NIMBLE.rds")
+load("./ModelOutput/2025 01 26/result-bee_species-NIMBLE.rds")
 # object = result
 # MCMC object
 
 
 
 # Upload the data
-load("./Data/data_summary/globi_data_formatted_bee_plant_date_citation_2024_07_11 - short plant list - no apis.rds")
+
+load("./Data/data_summary/globi_data_formatted_bee_plant_date_citation_2025_01_22 - short plant list - no apis.rds")
+
 # object name = bee.plant.cite
 # 3-D array
 
 
 # Read in the dat_info
-load("./Data/dat_info_2024_07_11.rds")
+load("/Users/gdirenzo/Documents/GitHub/globi_msomAndsciChecklists/Data/dat_info_2025_01_22.rds")
 # object name = dat_info
 
 
 # Load in the number of observations
-load("./Data/obs_dat.rds")
+load("./Data/obs_dat-2025-02-11.rds")
 # object name = obs_dat.rds
 
 
