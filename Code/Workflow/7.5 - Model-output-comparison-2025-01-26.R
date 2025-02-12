@@ -62,6 +62,18 @@
 
 
 
+# Things to change:
+  # Change the spacing in some of the graphs
+  # Create the "Probability of interaction plots" for each of the models:
+    # species
+    # family levels
+
+
+
+
+
+
+
 
 # 1. Load libraries & set working directory -------------------------------------------------------
 
@@ -1854,6 +1866,177 @@ write.csv(bee_size_p_stats, paste0(github_folder_path, "/Tables/", date_folder, 
 
 
 
+
+
+
+
+# 15. Create function to extract "probability of interaction" and plot by species or family ----------------------------------------
+
+
+# To calculate the interaction probability per species, you need to calculate psi
+  # logit(psi[bee_species[i], plant_species[i]]) <- 
+  #   
+  #   # Plant family-specific random effect
+  #   u[plant_family[plant_species[i]]] +
+  # 
+  #   # Intercept
+  #   # Average size bee
+  #   # Not solitary bee
+  #   # Yellow flower color
+  #   # Not bowl
+  #   beta_psi[1] +
+  #   
+  #   # Bee size
+  #   beta_psi[2] * size[bee_species[i]]+ 
+  #   
+  #   # Bee solitary (1 = yes; 0 = no)
+  #   beta_psi[3] * solitary[bee_species[i]]+ 
+  #   
+  #   # Flower color
+  #   # Different bee genus have different probabilities of interacting with different plant colors
+  #   beta_psi[4] * other_flower_color[plant_species[i]]+
+  #   beta_psi[5] * blue_flower_color[plant_species[i]]+
+  #   beta_psi[6] * white_flower_color[plant_species[i]]+
+  #   
+  #   # Flower shape (== bowl)
+  #   beta_psi[7] * flower_shape[plant_species[i]]
+
+
+
+mod_name <- "bee_species"
+
+
+interaction_plot <- function(mod_name){
+  
+  
+  # Summarize the observed data
+  
+  # We will take the max (0 or 1) value across the 3rd dimension
+  y.bee.plant <- apply(bee.plant.cite, c(1, 2), max, na.rm = TRUE)
+  y.bee.plant[y.bee.plant == "-Inf"] <- 0
+  
+  
+  # Then, we will sum the number of plant species that each bee species interacts with
+  y.bee.plant <- apply(y.bee.plant, 1, sum, na.rm = TRUE)
+  
+  
+  # Observed number of plant species that each bee interacts with
+  obs.dat <- data.frame(obs = y.bee.plant)
+  
+  
+  # Calcilate the total number of POSSIBLE bee-plant interactions (regardless of month & citation)
+  bee.plant.pos <- apply(bee.plant.cite, c(1, 2), max, na.rm = TRUE)
+  bee.plant.pos[bee.plant.pos == "-Inf"] <- NA
+  bee.plant.pos[bee.plant.pos == 0] <- 1
+  bee.plant.pos <- apply(bee.plant.pos, 1, sum, na.rm = TRUE)
+  
+  
+  
+  # Determine how many MCMC iterations to keep
+  row.subset <- 1:200
+  
+  
+  if(mod_name == "bee_species"){
+    
+  }
+  
+  
+  # Need an if statement for each of the models
+  
+  
+  
+  # Summarize z
+  # # Latent state variables
+  out_n <- as.mcmc(data.frame(rbind(result[[1]]$samples2[row.subset,grep("n_", colnames(result[[1]]$samples2))],
+                                    result[[2]]$samples2[row.subset,grep("n_", colnames(result[[1]]$samples2))],
+                                    result[[3]]$samples2[row.subset,grep("n_", colnames(result[[1]]$samples2))])))
+  
+  
+  # And then, we will sum across plant IDs
+  bee.interactions <- apply(out_n, 2, mean, na.rm = TRUE)
+  
+  # Repeat steps for 95% CI - lower & upper
+  bee.interactions.lower <- apply(out_n, 2, function(x)quantile(x, probs = c(0.025, 0.975), na.rm = TRUE)[1])
+  bee.interactions.upper <- apply(out_n, 2, function(x)quantile(x, probs = c(0.025, 0.975), na.rm = TRUE)[2])
+  
+  
+  
+  # Summarize u
+  
+  # # Latent state variables
+  out_u <- as.mcmc(data.frame(rbind(result[[1]]$samples2[row.subset,grep("u", colnames(result[[1]]$samples2))],
+                                    result[[2]]$samples2[row.subset,grep("u", colnames(result[[1]]$samples2))],
+                                    result[[3]]$samples2[row.subset,grep("u", colnames(result[[1]]$samples2))])))
+  
+  
+  # Extract the mean values for z = true bee, plant, by month interactions
+  # Look at the number of dimensions
+  dim(out_u[,grep("u", colnames(out_u))])
+  
+  # We will put those values in an array
+  out_u_array <- out_u[,grep("u", colnames(out_u))]
+  
+  # Row names - MCMC iterations
+  rownames(out_u_array) <- 1:MCMC
+  
+  # column names - bee species
+  colnames(out_u_array) <- dat_info$bee.species
+  
+  # Now, we calculate the mean & 95% CI
+  # To do this, first we will determine if the bee EVER interacts with the plant
+  u.mean <- apply(out_u_array, c(2), mean, na.rm = TRUE)
+  u.lower <- apply(out_u_array, c(2), function(x)quantile(x, probs = c(0.025, 0.975), na.rm = TRUE)[1])
+  u.upper <- apply(out_u_array, c(2), function(x)quantile(x, probs = c(0.025, 0.975), na.rm = TRUE)[2])
+  
+  
+  
+  
+  
+  # Add row names
+  rownames(bee.plant.cite) <- dat_info$bee.species
+  
+  
+  # Combine the names, and model output
+  dat <- data.frame(names = c(paste(rownames(bee.plant.cite), "interact prob"),
+                              rep("Num-interact", nrow(bee.plant.cite))), 
+                    species = rownames(bee.plant.cite),
+                    mod.mean = c( u.mean,
+                                  bee.interactions), 
+                    mod.q2.5 = c(u.lower,
+                                 bee.interactions.lower), 
+                    mod.q97.5 = c(u.upper,
+                                  bee.interactions.upper))
+  
+  
+  # Plot with probabilities
+  # This one is hard to read
+  ggplot(dat[grep("interact prob", dat$names),], 
+         aes(x= species, y=plogis(mod.mean), 
+             ymin=plogis(mod.q2.5), 
+             ymax=plogis(mod.q97.5)))+ 
+    geom_linerange(linewidth = 1) +
+    geom_point(size = 1) +
+    scale_colour_manual("Values", values=cols)+
+    geom_hline(yintercept = 0, lty=2) +
+    coord_flip() + 
+    ylab('Probability of interacting with a plant') +
+    xlab("Species names") +
+    # ggtitle("Bee-plant interaction probability")+
+    theme_bw()+ 
+    theme(axis.text.x = element_text(size = 12, color = "black"), 
+          axis.text.y = element_text(size = 10, color = "black", face = "italic"), 
+          axis.title.y = element_text(size = 12, color = "black"), 
+          axis.title.x =element_text(size = 12, color = "black")
+    ) 
+  
+  
+  # Save the plot
+  ggsave(paste0("./Figures/", date_folder, "/Fig-S2-Bee-plant-Interaction-prob.png"), 
+         height = 17, width = 10)
+  
+  
+  
+}
 
 
 
