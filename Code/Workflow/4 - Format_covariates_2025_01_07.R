@@ -144,7 +144,7 @@ bee.species <- dat_info$bee.species
 
 
 
-# Save the order in which the bee species are listed
+# Save the order in which the plant species are listed
 plant.sp.names <- dat_info$plant.species
 
 

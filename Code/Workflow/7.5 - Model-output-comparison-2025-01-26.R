@@ -124,7 +124,7 @@ date <- "2025 01 26"
 # Model name
 mod_name <- "bee_species"
 
-# Load the model output
+# Load the model output - out
 load(file = paste0("./ModelOutput/", date, "/out-"
                    , mod_name, "-NIMBLE.rds"))
 
@@ -132,6 +132,18 @@ load(file = paste0("./ModelOutput/", date, "/out-"
 out_bee_species <- out
 
 out_bee_species_df <- as.data.frame(out_bee_species)
+
+
+# Load the model output - result
+load(file = paste0("./ModelOutput/", date, "/result-"
+                   , mod_name, "-NIMBLE.rds"))
+
+# Save the out object with a new model specific name
+result_bee_species <- result
+
+
+
+
 
 
 #---- bee_family
@@ -147,6 +159,15 @@ load(file = paste0("./ModelOutput/", date, "/out-",
 out_bee_family <- out
 
 out_bee_family_df <- as.data.frame(out_bee_family)
+
+
+# Load the model output - result
+load(file = paste0("./ModelOutput/", date, "/result-"
+                   , mod_name, "-NIMBLE.rds"))
+
+# Save the out object with a new model specific name
+result_bee_family <- result
+
 
 
 
@@ -179,6 +200,15 @@ load(file = paste0("./ModelOutput/", date, "/out-"
 out_plant_family <- out
 
 out_plant_family_df <- as.data.frame(out_plant_family)
+
+
+# Load the model output - result
+load(file = paste0("./ModelOutput/", date, "/result-"
+                   , mod_name, "-NIMBLE.rds"))
+
+# Save the out object with a new model specific name
+result_plant_family <- result
+
 
 
 
@@ -462,129 +492,143 @@ response_factor_cov_plot <- function(out_df,
                                      y_lab_text,
                                      pal_cols){
   
-# Calculating the stats:
-    # Setting up 2 conditions:
-      # Number of covariates == 1 or 
-      # Number of covariates == 4
-if(num_cov == 2){
+  # Calculating the stats:
+  # Setting up 2 conditions:
+  # Number of covariates == 1 or 
+  # Number of covariates == 4
+  if(num_cov == 2){
+    
+    # Create empty data frame
+    stats_df <- data.frame(mod_name = rep(mod_name, times = 1),
+                           beta_direction = c(paste0(beta1_name, " greater than ", beta2_name)),
+                           proportion = c(NA))
+    
+    
+    # What proportion of the mass is beta1 < (beta1 + beta2)?
+    stats_df[1, 3] <- mean(beta1 < (beta1 + beta2))
+    
+  }
   
-  # Create empty data frame
-  stats_df <- data.frame(mod_name = rep(mod_name, times = 1),
-                         beta_direction = c(paste0(beta1_name, " greater than ", beta2_name)),
-                         proportion = c(NA))
+  if(num_cov == 4){
+    
+    # Create empty data frame
+    stats_df <- data.frame(mod_name = rep(mod_name, times = 3),
+                           beta_direction = c(paste0(beta1_name, " greater than ", beta2_name),
+                                              paste0(beta1_name, " greater than ", beta3_name),
+                                              paste0(beta1_name, " greater than ", beta4_name)),
+                           proportion = c(NA, NA, NA))
+    
+    
+    # What proportion of the mass is beta1 < (beta1 + beta2)?
+    stats_df[1, 3] <- mean(beta1 < (beta1 + beta2))
+    
+    # What proportion of the mass is beta1 < (beta1 + beta3)?
+    stats_df[2, 3] <- mean(beta1 < (beta1 + beta3))
+    
+    # What proportion of the mass is beta1 < (beta1 + beta4)?
+    stats_df[3, 3] <- mean(beta1 < (beta1 + beta4))
+    
+  }
   
   
-  # What proportion of the mass is beta1 < (beta1 + beta2)?
-  stats_df[1, 3] <- mean(beta1 < (beta1 + beta2))
-  
-}
-  
-if(num_cov == 4){
-  
-  # Create empty data frame
-  stats_df <- data.frame(mod_name = rep(mod_name, times = 3),
-                         beta_direction = c(paste0(beta1_name, " greater than ", beta2_name),
-                                            paste0(beta1_name, " greater than ", beta3_name),
-                                            paste0(beta1_name, " greater than ", beta4_name)),
-                         proportion = c(NA, NA, NA))
-  
-  
-  # What proportion of the mass is beta1 < (beta1 + beta2)?
-  stats_df[1, 3] <- mean(beta1 < (beta1 + beta2))
-  
-  # What proportion of the mass is beta1 < (beta1 + beta3)?
-  stats_df[2, 3] <- mean(beta1 < (beta1 + beta3))
-  
-  # What proportion of the mass is beta1 < (beta1 + beta4)?
-  stats_df[3, 3] <- mean(beta1 < (beta1 + beta4))
-  
-}
-
-
-# Create dataframes for plotting
-if(num_cov == 2){
-  
-# Create a dataframe with the parameter estimates from each MCMC iteraction
+  # Create dataframes for plotting
+  if(num_cov == 2){
+    
+    # Create a dataframe with the parameter estimates from each MCMC iteraction
     # These are on the logit scale
-pred_df <- data.frame(beta1 = beta1, 
-                      beta2 = beta2,
-                      iteration = 1:length(beta1))
-
-# Add a column with the covariate
-  # These are on the probability scale
-pred_df$beta1_prob <- plogis(pred_df$beta1) 
-pred_df$beta2_prob <- plogis(pred_df$beta1 + pred_df$beta2) 
-
-# Convert to long format
-pred_df_long <- melt(pred_df[,4:5])
-
-# Change column names
-colnames(pred_df_long) <- c("covariate", "probability")
-
-# Change labels
-pred_df_long$covariate <- ifelse(pred_df_long$covariate == "beta1_prob",
-                                 beta1_name,
-                                 beta2_name)
-
-# Calculate group means
-mu <- ddply(pred_df_long, 
-            "covariate",
-            summarise, 
-            grp.mean = mean(probability))
-
-
-# Annotation data frame - this adds the Bayesian p-values to the plot
-annotation_df <- data.frame(
-  start =  c(beta1_name),
-  end = c(beta2_name),
-  probability = c(max(c(pred_df$beta1_prob, pred_df$beta2_prob))),
-  label = c(mean( pred_df$beta1_prob > pred_df$beta2_prob)),
-  y_start = 1,
-  y_end = 2
-)
-
-# Create the plot
-gplot <- ggplot(pred_df_long, aes(x = probability, y = covariate)) +
-  geom_density_ridges(aes(fill = covariate)) +
-  scale_fill_manual(values = pal_cols)+
-  geom_vline(data=mu, aes(xintercept = grp.mean, color = covariate),
-             linetype="dashed")+
-  scale_color_manual(values = pal_cols)+
-  xlab(x_lab_text)+
-  ylab(y_lab_text)+
-  theme_bw()+ 
-  theme(legend.position = "none",
-        strip.background = element_rect(colour = "black", fill = "white"),
-        strip.text = element_text(size = title.size, color = "black"), 
-        panel.background = element_rect(colour = "black", fill = NA),
-        axis.text.x = element_text(size = text.size, color = "black"),
-        axis.text.y = element_text(size = text.size, color = "black"),
-        axis.title.x = element_text(size = title.size, color = "black"),
-        axis.title.y = element_text(size = title.size, color = "black"))+
-  ggtitle(mod_name)+
-  geom_segment(data = annotation_df, aes(x = probability, 
-                                         xend = probability,
-                                         y = y_start, yend = y_end),
-               color = "black", size = 0.5)+
-  geom_segment(data = annotation_df, aes(x = probability, 
-                                         xend = probability - 0.03,
-                                         y = y_start, yend = y_start),
-               color = "black", size = 0.5) +
-  geom_segment(data = annotation_df, aes(x = probability, 
-                                         xend = probability - 0.03,
-                                         y = y_end, yend = y_end),
-               color = "black", size = 0.5)+
-  geom_text(data = annotation_df, aes(x = probability + 0.01, 
-                                      y = (y_start + y_end) / 2,
-                                      label = round(label, 2)), size = 3,
-            hjust = 0.5, vjust = 0)
-
-}
+    pred_df <- data.frame(beta1 = beta1, 
+                          beta2 = beta2,
+                          iteration = 1:length(beta1))
+    
+    # Add a column with the covariate
+    # These are on the probability scale
+    pred_df$beta1_prob <- plogis(pred_df$beta1) 
+    pred_df$beta2_prob <- plogis(pred_df$beta1 + pred_df$beta2) 
+    
+    # Convert to long format
+    pred_df_long <- melt(pred_df[,4:5])
+    
+    # Change column names
+    colnames(pred_df_long) <- c("covariate", "probability")
+    
+    # Change labels
+    pred_df_long$covariate <- ifelse(pred_df_long$covariate == "beta1_prob",
+                                     beta1_name,
+                                     beta2_name)
+    
+    # Calculate group means
+    mu <- ddply(pred_df_long, 
+                "covariate",
+                summarise, 
+                grp.mean = mean(probability))
+    
+    
+    # Compute x-axis range dynamically
+    x_min <- min(pred_df_long$probability, na.rm = TRUE)
+    x_max <- max(pred_df_long$probability, na.rm = TRUE)
+    x_range <- x_max - x_min
+    
+    # Dynamic offset values (scaling relative to the x-range)
+    offset_major <- x_range * 0.03  # Used for text placement
+    offset_major1 <- x_range * 0.09  # Used for text placement
+    offset_major2 <- x_range * 0.15  # Used for text placement
+    offset_minor <- x_range * 0.02  # Used for segment adjustments
+    
+    # Annotation data frame - this adds the Bayesian p-values to the plot
+    annotation_df <- data.frame(
+      start =  c(beta1_name),
+      end = c(beta2_name),
+      probability = c(max(pred_df$beta1_prob) + offset_major1),
+      label = c(mean( pred_df$beta1_prob > pred_df$beta2_prob)),
+      y_start = 1,
+      y_end = 2
+    )
+    
+    # Create the plot
+    gplot <- ggplot(pred_df_long, aes(x = probability, y = covariate)) +
+      geom_density_ridges(aes(fill = covariate)) +
+      scale_fill_manual(values = pal_cols)+
+      geom_vline(data=mu, aes(xintercept = grp.mean, color = covariate),
+                 linetype="dashed")+
+      scale_color_manual(values = pal_cols)+
+      xlab(x_lab_text)+
+      ylab(y_lab_text)+
+      theme_bw()+ 
+      theme(legend.position = "none",
+            strip.background = element_rect(colour = "black", fill = "white"),
+            strip.text = element_text(size = title.size, color = "black"), 
+            panel.background = element_rect(colour = "black", fill = NA),
+            axis.text.x = element_text(size = text.size, color = "black"),
+            axis.text.y = element_text(size = text.size, color = "black"),
+            axis.title.x = element_text(size = title.size, color = "black"),
+            axis.title.y = element_text(size = title.size, color = "black"))+
+      ggtitle(mod_name)+
+      geom_segment(data = annotation_df, aes(x = probability, 
+                                             xend = probability,
+                                             y = y_start, 
+                                             yend = y_end),
+                   color = "black", size = 0.5)+
+      geom_segment(data = annotation_df, aes(x = probability, 
+                                             xend = probability - offset_minor,
+                                             y = y_start, 
+                                             yend = y_start),
+                   color = "black", size = 0.5) +
+      geom_segment(data = annotation_df, aes(x = probability, 
+                                             xend = probability - offset_minor,
+                                             y = y_end, 
+                                             yend = y_end),
+                   color = "black", size = 0.5)+
+      geom_text(data = annotation_df, aes(x = probability + offset_major, 
+                                          y = (y_start + y_end) / 2,
+                                          label = round(label, 2)), size = 3,
+                hjust = 0.5, vjust = 0)
+    
+  }
   
   if(num_cov == 4){
     
     # Create a dataframe with the parameter estimates from each MCMC iteraction
-      # These are on the logit scale
+    # These are on the logit scale
     pred_df <- data.frame(beta1 = beta1, 
                           beta2 = beta2,
                           beta3 = beta3,
@@ -592,7 +636,7 @@ gplot <- ggplot(pred_df_long, aes(x = probability, y = covariate)) +
                           iteration = 1:length(beta1))
     
     # Add a column with the covariate
-      # These are on the probability scale
+    # These are on the probability scale
     pred_df$beta1_prob <- plogis(pred_df$beta1) 
     pred_df$beta2_prob <- plogis(pred_df$beta1 + pred_df$beta2) 
     pred_df$beta3_prob <- plogis(pred_df$beta1 + pred_df$beta3) 
@@ -607,13 +651,13 @@ gplot <- ggplot(pred_df_long, aes(x = probability, y = covariate)) +
     # Change labels
     pred_df_long$covariate <- ifelse(pred_df_long$covariate == "beta1_prob",
                                      beta1_name,
-                                      ifelse(pred_df_long$covariate == "beta2_prob",
-                                         beta2_name,
-                                         ifelse(pred_df_long$covariate == "beta3_prob",
-                                                beta3_name,
-                                                ifelse(pred_df_long$covariate == "beta4_prob",
-                                                    beta4_name, NA))))
-      
+                                     ifelse(pred_df_long$covariate == "beta2_prob",
+                                            beta2_name,
+                                            ifelse(pred_df_long$covariate == "beta3_prob",
+                                                   beta3_name,
+                                                   ifelse(pred_df_long$covariate == "beta4_prob",
+                                                          beta4_name, NA))))
+    
     # Make pred_df_long$covariate into a factor
     pred_df_long$covariate <- factor(pred_df_long$covariate, levels = c(beta1_name,
                                                                         beta2_name,
@@ -627,16 +671,28 @@ gplot <- ggplot(pred_df_long, aes(x = probability, y = covariate)) +
                 grp.mean = mean(probability))
     
     
-    # Annotation data frame - this adds the Bayesian p-values to the plot
+    # Compute x-axis range dynamically
+    x_min <- min(pred_df_long$probability, na.rm = TRUE)
+    x_max <- max(pred_df_long$probability, na.rm = TRUE)
+    x_range <- x_max - x_min
+    
+    # Dynamic offset values (scaling relative to the x-range)
+    offset_major <- x_range * 0.03  # Used for text placement
+    offset_major1 <- x_range * 0.09  # Used for text placement
+    offset_major2 <- x_range * 0.15  # Used for text placement
+    offset_major3 <- x_range * 0.21  # Used for text placement
+    offset_minor <- x_range * 0.02  # Used for segment adjustments
+    
+    # Create annotation data frame with scaled offsets
     annotation_df <- data.frame(
       start =  c(beta1_name, beta1_name, beta1_name),
       end = c(beta2_name, beta3_name, beta4_name),
       probability = c(max(c(pred_df$beta1_prob, pred_df$beta2_prob, 
-                            pred_df$beta3_prob, pred_df$beta4_prob))+0.1,
+                            pred_df$beta3_prob, pred_df$beta4_prob))+offset_major1,
                       max(c(pred_df$beta1_prob, pred_df$beta2_prob, 
-                            pred_df$beta3_prob, pred_df$beta4_prob))+0.2,
+                            pred_df$beta3_prob, pred_df$beta4_prob))+offset_major2,
                       max(c(pred_df$beta1_prob, pred_df$beta2_prob, 
-                            pred_df$beta3_prob, pred_df$beta4_prob))+0.3),
+                            pred_df$beta3_prob, pred_df$beta4_prob))+offset_major3),
       label = c(mean( pred_df$beta1_prob > pred_df$beta2_prob),
                 mean( pred_df$beta1_prob > pred_df$beta3_prob),
                 mean( pred_df$beta1_prob > pred_df$beta4_prob))
@@ -644,22 +700,21 @@ gplot <- ggplot(pred_df_long, aes(x = probability, y = covariate)) +
     
     # Create a mapping of color to numeric positions
     color_levels <- c(beta1_name, beta2_name, beta3_name, beta4_name)
-    color_map    <- setNames(seq_along(color_levels), color_levels)
+    color_map <- setNames(seq_along(color_levels), color_levels)
     
     # Adjust annotation_df to use numeric positions
     annotation_df$y_start <- color_map[annotation_df$start]
     annotation_df$y_end   <- color_map[annotation_df$end]
     
-    # Create the plot
+    # Create the plot with scaled offsets
     gplot <- ggplot(pred_df_long, aes(x = probability, y = covariate)) +
       geom_density_ridges(aes(fill = covariate)) +
-      scale_fill_manual(values = pal_cols)+
-      geom_vline(data=mu, aes(xintercept = grp.mean, 
-                              color = covariate),
-                 linetype="dashed")+
-      scale_color_manual(values = pal_cols)+
-      xlab(x_lab_text)+
-      ylab(y_lab_text)+
+      scale_fill_manual(values = pal_cols) +
+      geom_vline(data = mu, aes(xintercept = grp.mean, color = covariate),
+                 linetype = "dashed") +
+      scale_color_manual(values = pal_cols) +
+      xlab(x_lab_text) +
+      ylab(y_lab_text) +
       theme(legend.position = "none",
             strip.background = element_rect(colour = "black", fill = "white"),
             strip.text = element_text(size = title.size), 
@@ -667,29 +722,32 @@ gplot <- ggplot(pred_df_long, aes(x = probability, y = covariate)) +
             axis.text.x = element_text(size = text.size),
             axis.text.y = element_text(size = text.size),
             axis.title.x = element_text(size = title.size),
-            axis.title.y = element_text(size = title.size))+
+            axis.title.y = element_text(size = title.size)) +
       geom_segment(data = annotation_df, aes(x = probability, 
                                              xend = probability,
                                              y = y_start, yend = y_end),
                    color = "black", size = 0.5) +
       geom_segment(data = annotation_df, aes(x = probability, 
-                                             xend = probability - 0.03,
-                                             y = y_start, yend = y_start),
+                                             xend = probability - offset_minor,
+                                             y = y_start, 
+                                             yend = y_start),
                    color = "black", size = 0.5) +
       geom_segment(data = annotation_df, aes(x = probability, 
-                                             xend = probability - 0.03,
-                                             y = y_end, yend = y_end),
+                                             xend = probability - offset_minor,
+                                             y = y_end, 
+                                             yend = y_end),
                    color = "black", size = 0.5) +
-      geom_text(data = annotation_df, aes(x = probability + 0.05, 
+      geom_text(data = annotation_df, aes(x = probability + offset_major, 
                                           y = (y_start + y_end) / 2,
                                           label = round(label, 2)), size = 3,
                 hjust = 0.5, vjust = 0) +
       ggtitle(mod_name)
+    
   }
   
-
-return(list(stats_df = stats_df,
-             gplot = gplot))
+  
+  return(list(stats_df = stats_df,
+              gplot = gplot))
 }
 
 
@@ -1870,10 +1928,118 @@ write.csv(bee_size_p_stats, paste0(github_folder_path, "/Tables/", date_folder, 
 
 
 
-# 15. Create function to extract "probability of interaction" and plot by species or family ----------------------------------------
+# 15. Calculate the number of plant species interactions per bee species  ----------------------------------------
 
 
-# To calculate the interaction probability per species, you need to calculate psi
+
+
+
+mod_name <- "bee_species"
+
+
+# n_plants_per_bee
+
+
+#------------  Upload the data & format
+# object name = bee.plant.cite
+# 3-D array
+load("/Users/gdirenzo/Documents/GitHub/globi_msomAndsciChecklists/Data/data_summary/globi_data_formatted_bee_plant_date_citation_2025_01_22 - short plant list - no apis.rds")
+
+
+
+# Read in the dat_info
+load("/Users/gdirenzo/Documents/GitHub/globi_msomAndsciChecklists/Data/dat_info_2025_01_22.rds")
+# object name = dat_info
+
+
+  
+  # Summarize the observed data
+  
+  # We will take the max (0 or 1) value across the 3rd dimension
+  y.bee.plant <- apply(bee.plant.cite, c(1, 2), max, na.rm = TRUE)
+  y.bee.plant[y.bee.plant == "-Inf"] <- 0
+  
+  
+  # Then, we will sum the number of plant species that each bee species interacts with
+  y.bee.plant <- apply(y.bee.plant, 1, sum, na.rm = TRUE)
+  
+  
+  # Observed number of plant species that each bee interacts with
+  obs.dat <- data.frame(obs = y.bee.plant)
+  
+  
+  # Calcilate the total number of POSSIBLE bee-plant interactions (regardless of month & citation)
+  bee.plant.pos <- apply(bee.plant.cite, c(1, 2), max, na.rm = TRUE)
+  bee.plant.pos[bee.plant.pos == "-Inf"] <- NA
+  bee.plant.pos[bee.plant.pos == 0] <- 1
+  bee.plant.pos <- apply(bee.plant.pos, 1, sum, na.rm = TRUE)
+  
+  
+  
+  # Take a random subset of MCMC iterations to keep
+  row.subset <- sample(1:dim(result[[1]]$samples2)[1], size = n_samp, replace = F)
+
+  
+  # Extract the number of plant interactions per bee species (n_plants_per_bee)
+  out_n <- as.mcmc(data.frame(rbind(result[[1]]$samples2[row.subset, grep("n_", colnames(result[[1]]$samples2))],
+                                    result[[2]]$samples2[row.subset, grep("n_", colnames(result[[1]]$samples2))],
+                                    result[[3]]$samples2[row.subset, grep("n_", colnames(result[[1]]$samples2))])))
+  
+  
+  # Calculate mean and 95% CI for the number of plant interactions per bee species
+  bee.interactions.mean <- apply(out_n, c(2), mean, na.rm = TRUE)
+  bee.interactions.lower <- apply(out_n, 2, function(x)quantile(x, probs = c(0.025, 0.975), na.rm = TRUE)[1])
+  bee.interactions.upper <- apply(out_n, 2, function(x)quantile(x, probs = c(0.025, 0.975), na.rm = TRUE)[2])
+  
+
+  # Combine the names, and model output
+  dat <- data.frame(names = c(rep("observed", dat_info$bee.species),
+                              rep("Num-interact", dat_info$bee.species)), 
+                    species = rep(dat_info$bee.species, times = 2),
+                    mod.mean = c( y.bee.plant,
+                                  bee.interactions.mean), 
+                    mod.q2.5 = c(rep(NA, times = length(y.bee.plant)),
+                                 bee.interactions.lower), 
+                    mod.q97.5 = c(rep(NA, times = length(y.bee.plant)),
+                                  bee.interactions.upper))
+  
+  
+  # Plot with numer of plant interactions per bee species
+  ggplot(dat[grep("Num-interact", dat$names),], 
+         aes(x= species, y=mod.mean, 
+             ymin= mod.q2.5, 
+             ymax= mod.q97.5))+ 
+    geom_linerange(linewidth = 1) +
+    geom_point(size = 1) +
+    geom_point(data = dat[grep("observed", dat$names),], 
+               aes(x= species, y = mod.mean), size = 1, col = "red") +
+    geom_hline(yintercept = 0, lty=2) +
+    coord_flip() + 
+    ylab('Number of plant species') +
+    xlab("Species names") +
+    theme_bw()+ 
+    theme(axis.text.x = element_text(size = 10, color = "black"), 
+          axis.text.y = element_text(size = 10, color = "black", face = "italic"), 
+          axis.title.y = element_text(size = 10, color = "black"), 
+          axis.title.x =element_text(size = 10, color = "black")
+    ) 
+  
+  
+  # Save the plot
+  ggsave(paste0("./Figures/", date_folder, "/Fig-S1-Number-of-bee-plant-interactions.png"), 
+         height = 14, width = 8)
+  
+
+  
+  
+# 16. Create function to extract "probability of interaction" and plot by species or family ----------------------------------------
+  
+  # This function will be used for:
+    # bee_family
+    # plant_family
+  
+  
+  # To calculate the interaction probability per species, you need to calculate psi
   # logit(psi[bee_species[i], plant_species[i]]) <- 
   #   
   #   # Plant family-specific random effect
@@ -1900,144 +2066,246 @@ write.csv(bee_size_p_stats, paste0(github_folder_path, "/Tables/", date_folder, 
   #   
   #   # Flower shape (== bowl)
   #   beta_psi[7] * flower_shape[plant_species[i]]
+  
+  
+  mod_name <- "bee_family"
+  out <- out_bee_family_df
+  
+  
+  # Load covariates
+  load("/Users/gdirenzo/Documents/GitHub/globi_msomAndsciChecklists/Data/model_covariates - 2025 01 22 - no apis.rds")
+  
+  
+  # Flatten the array
+  dat_long <- melt(bee.plant.cite) 
+  colnames(dat_long) <- c("bee_ID", "plant_ID", "cite_ID", "observation")
+  
+  
+  # Create unique bee-plant pairs for the ecological model
+  dat_pairs <- unique(subset(dat_long, select = c("bee_ID","plant_ID"))) 
+  colnames(dat_pairs) <- c("bee_species", "plant_species")
+  
+  head(dat_long)
+  
+  
+  # Write a function to calculate the average interaction probability across species per family
+  
+fam_level_interaction_plot <- function(mod_name,
+                             n_samp = 3,
+                             # latent variable from the model output
+                             result,
+                             
+                             # bee_species and plant_species vectors
+                             bee_species = dat_pairs$bee_species,
+                             plant_species = dat_pairs$plant_species,
+                             
+                             # bee and plant family IDs (as numeric)
+                             bee_family = covariates$bee.covariates$family_num,
+                             plant_family = covariates$plant.covariates$family_num,
+                             
+                             # Bee Covariates
+                             size          = covariates$bee.covariates$size_std,
+                             solitary      = covariates$bee.covariates$solitary,
+                             
+                             # Flower covariates - color
+                             blue_flower_color  = covariates$plant.covariates$blue.new,
+                             white_flower_color  = covariates$plant.covariates$white,
+                             other_flower_color  = covariates$plant.covariates$other,
+                             
+                             # Flower covariates - shape
+                             flower_shape  = covariates$plant.covariates$bowl
+){
 
-
-
-mod_name <- "bee_species"
-
-
-interaction_plot <- function(mod_name){
   
   
-  # Summarize the observed data
+  # Create empty array to hold values
+  psi <- array(NA, dim = c(max(dat_long$bee_ID),
+                           max(dat_long$plant_ID),
+                           n_samp))
   
-  # We will take the max (0 or 1) value across the 3rd dimension
-  y.bee.plant <- apply(bee.plant.cite, c(1, 2), max, na.rm = TRUE)
-  y.bee.plant[y.bee.plant == "-Inf"] <- 0
+  # Name the parameters
+  beta_psi <- out[,grep("psi", colnames(out))]
   
-  
-  # Then, we will sum the number of plant species that each bee species interacts with
-  y.bee.plant <- apply(y.bee.plant, 1, sum, na.rm = TRUE)
-  
-  
-  # Observed number of plant species that each bee interacts with
-  obs.dat <- data.frame(obs = y.bee.plant)
-  
-  
-  # Calcilate the total number of POSSIBLE bee-plant interactions (regardless of month & citation)
-  bee.plant.pos <- apply(bee.plant.cite, c(1, 2), max, na.rm = TRUE)
-  bee.plant.pos[bee.plant.pos == "-Inf"] <- NA
-  bee.plant.pos[bee.plant.pos == 0] <- 1
-  bee.plant.pos <- apply(bee.plant.pos, 1, sum, na.rm = TRUE)
+  # Latent variable from model output
+    # Extract u = random effect
+  out_u <- as.mcmc(data.frame(rbind(result[[1]]$samples2[row.subset, grep("u", colnames(result[[1]]$samples2))],
+                                    result[[2]]$samples2[row.subset, grep("u", colnames(result[[1]]$samples2))],
+                                    result[[3]]$samples2[row.subset, grep("u", colnames(result[[1]]$samples2))])))
   
   
   
-  # Determine how many MCMC iterations to keep
-  row.subset <- 1:200
+  # Loop through each bee and plant family and MCMC iteration to calculate the interaction probability
+  
+  for(i in 1:length(dat_pairs$bee_species)){ # for each bee and plant pair
+    
+    for(j in 1:n_samp){ # for each MCMC iteration
+      
+      
+    if(mod_name == "bee_family"){
+      # To calculate the interaction probability per family, you need to calculate psi
+      psi[bee_species[i], plant_species[i], j] <- 
+        
+        plogis(
+          # Bee family-specific random effect
+          out_u[j, bee_family[bee_species[i]]] +
+            
+            # Intercept
+            # Average size bee
+            # Not solitary bee
+            # Yellow flower color
+            # Not bowl
+            beta_psi[j, 1] +
+            
+            # Bee size
+            beta_psi[j, 2] * size[bee_species[i]]+ 
+            
+            # Bee solitary (1 = yes; 0 = no)
+            beta_psi[j, 3] * solitary[bee_species[i]]+ 
+            
+            # Flower color
+            # Different bee genus have different probabilities of interacting with different plant colors
+            beta_psi[j, 4] * other_flower_color[plant_species[i]]+
+            beta_psi[j, 5] * blue_flower_color[plant_species[i]]+
+            beta_psi[j, 6] * white_flower_color[plant_species[i]]+
+            
+            # Flower shape (== bowl)
+            beta_psi[j, 7] * flower_shape[plant_species[i]]
+        )
+      
+      
+    }
+      
+      if(mod_name == "plant_family"){
+        
+      
+  # To calculate the interaction probability per family, you need to calculate psi
+   psi[bee_species[i], plant_species[i], j] <- 
+     
+     plogis(
+     # Plant family-specific random effect
+     out_u[j, plant_family[plant_species[i]]] +
+   
+     # Intercept
+     # Average size bee
+     # Not solitary bee
+     # Yellow flower color
+     # Not bowl
+     beta_psi[j, 1] +
+     
+     # Bee size
+     beta_psi[j, 2] * size[bee_species[i]]+ 
+     
+     # Bee solitary (1 = yes; 0 = no)
+     beta_psi[j, 3] * solitary[bee_species[i]]+ 
+     
+     # Flower color
+     # Different bee genus have different probabilities of interacting with different plant colors
+     beta_psi[j, 4] * other_flower_color[plant_species[i]]+
+     beta_psi[j, 5] * blue_flower_color[plant_species[i]]+
+     beta_psi[j, 6] * white_flower_color[plant_species[i]]+
+     
+     # Flower shape (== bowl)
+     beta_psi[j, 7] * flower_shape[plant_species[i]]
+     )
+   
+      }
+      
+      
+    }
+  
+  }
   
   
-  if(mod_name == "bee_species"){
+  # Aggregate psi values per family
+  
+  # First - transform the data from 3D to 2D
+  psi_long <- melt(psi)
+  colnames(psi_long) <- c("bee_num", "plant_num", "MCMC", "psi")
+  
+  
+  #--- need if else statement here for plant vs bee family model/data formatting
+  
+  if(mod_name == "plant_family"){
+    
+    # Aggregate data - these are already in the correct species order per file "4 - Format_covariates_2025_01_07.R"
+    covariates$plant.covariates$plant_num <- 1:nrow(covariates$plant.covariates)
+    
+    # Subset plant family and species ID
+    plant_family_species <- covariates$plant.covariates %>% 
+                              select(family_num, plant_num, Family)
+    
+    psi_with_family <- psi_long %>%
+      left_join(plant_family_species, by = "plant_num") %>%
+      dplyr::group_by(family_num, Family) %>%
+      dplyr::summarize(mean_psi = mean(psi), 
+                       lower_95 = quantile(psi, probs = c(0.025, 0.975), na.rm = TRUE)[1],
+                       upper_95 = quantile(psi, probs = c(0.025, 0.975), na.rm = TRUE)[2],
+                       .groups = "drop")
+    
+  }
+  
+  if(mod_name == "bee_family"){
+    
+    # Aggregate data - these are already in the correct species order per file "4 - Format_covariates_2025_01_07.R"
+    covariates$bee.covariates$bee_num <- 1:nrow(covariates$bee.covariates)
+    
+    # Subset bee family and species ID
+    bee_family_species <- covariates$bee.covariates %>% 
+      select(family_num, bee_num, family)
+    
+    psi_with_family <- psi_long %>%
+      left_join(bee_family_species, by = "bee_num") %>%
+      dplyr::group_by(family_num, family) %>%
+      dplyr::summarize(mean_psi = mean(psi), 
+                       lower_95 = quantile(psi, probs = c(0.025, 0.975), na.rm = TRUE)[1],
+                       upper_95 = quantile(psi, probs = c(0.025, 0.975), na.rm = TRUE)[2],
+                       .groups = "drop")
+    
+    # Rename bee family column name with capital (so the ggplot function works next)
+    colnames(psi_with_family)[which(colnames(psi_with_family) == "family")] <- "Family"
     
   }
   
   
-  # Need an if statement for each of the models
-  
-  
-  
-  # Summarize z
-  # # Latent state variables
-  out_n <- as.mcmc(data.frame(rbind(result[[1]]$samples2[row.subset,grep("n_", colnames(result[[1]]$samples2))],
-                                    result[[2]]$samples2[row.subset,grep("n_", colnames(result[[1]]$samples2))],
-                                    result[[3]]$samples2[row.subset,grep("n_", colnames(result[[1]]$samples2))])))
-  
-  
-  # And then, we will sum across plant IDs
-  bee.interactions <- apply(out_n, 2, mean, na.rm = TRUE)
-  
-  # Repeat steps for 95% CI - lower & upper
-  bee.interactions.lower <- apply(out_n, 2, function(x)quantile(x, probs = c(0.025, 0.975), na.rm = TRUE)[1])
-  bee.interactions.upper <- apply(out_n, 2, function(x)quantile(x, probs = c(0.025, 0.975), na.rm = TRUE)[2])
-  
-  
-  
-  # Summarize u
-  
-  # # Latent state variables
-  out_u <- as.mcmc(data.frame(rbind(result[[1]]$samples2[row.subset,grep("u", colnames(result[[1]]$samples2))],
-                                    result[[2]]$samples2[row.subset,grep("u", colnames(result[[1]]$samples2))],
-                                    result[[3]]$samples2[row.subset,grep("u", colnames(result[[1]]$samples2))])))
-  
-  
-  # Extract the mean values for z = true bee, plant, by month interactions
-  # Look at the number of dimensions
-  dim(out_u[,grep("u", colnames(out_u))])
-  
-  # We will put those values in an array
-  out_u_array <- out_u[,grep("u", colnames(out_u))]
-  
-  # Row names - MCMC iterations
-  rownames(out_u_array) <- 1:MCMC
-  
-  # column names - bee species
-  colnames(out_u_array) <- dat_info$bee.species
-  
-  # Now, we calculate the mean & 95% CI
-  # To do this, first we will determine if the bee EVER interacts with the plant
-  u.mean <- apply(out_u_array, c(2), mean, na.rm = TRUE)
-  u.lower <- apply(out_u_array, c(2), function(x)quantile(x, probs = c(0.025, 0.975), na.rm = TRUE)[1])
-  u.upper <- apply(out_u_array, c(2), function(x)quantile(x, probs = c(0.025, 0.975), na.rm = TRUE)[2])
-  
-  
-  
-  
-  
-  # Add row names
-  rownames(bee.plant.cite) <- dat_info$bee.species
-  
-  
-  # Combine the names, and model output
-  dat <- data.frame(names = c(paste(rownames(bee.plant.cite), "interact prob"),
-                              rep("Num-interact", nrow(bee.plant.cite))), 
-                    species = rownames(bee.plant.cite),
-                    mod.mean = c( u.mean,
-                                  bee.interactions), 
-                    mod.q2.5 = c(u.lower,
-                                 bee.interactions.lower), 
-                    mod.q97.5 = c(u.upper,
-                                  bee.interactions.upper))
-  
-  
-  # Plot with probabilities
-  # This one is hard to read
-  ggplot(dat[grep("interact prob", dat$names),], 
-         aes(x= species, y=plogis(mod.mean), 
-             ymin=plogis(mod.q2.5), 
-             ymax=plogis(mod.q97.5)))+ 
+  # Plot
+  ggplot(psi_with_family, 
+         aes(x= Family, y=mean_psi, 
+             ymin= lower_95, 
+             ymax= upper_95))+ 
     geom_linerange(linewidth = 1) +
     geom_point(size = 1) +
-    scale_colour_manual("Values", values=cols)+
-    geom_hline(yintercept = 0, lty=2) +
+   geom_hline(yintercept = 0, lty=2) +
     coord_flip() + 
-    ylab('Probability of interacting with a plant') +
-    xlab("Species names") +
-    # ggtitle("Bee-plant interaction probability")+
+    ylab('Interaction probability') +
+    xlab("Family name") +
     theme_bw()+ 
-    theme(axis.text.x = element_text(size = 12, color = "black"), 
+    theme(axis.text.x = element_text(size = 10, color = "black"), 
           axis.text.y = element_text(size = 10, color = "black", face = "italic"), 
-          axis.title.y = element_text(size = 12, color = "black"), 
-          axis.title.x =element_text(size = 12, color = "black")
+          axis.title.y = element_text(size = 10, color = "black"), 
+          axis.title.x =element_text(size = 10, color = "black")
     ) 
   
-  
-  # Save the plot
-  ggsave(paste0("./Figures/", date_folder, "/Fig-S2-Bee-plant-Interaction-prob.png"), 
-         height = 17, width = 10)
-  
-  
+  return()
   
 }
 
+
+#---- bee_family
+bee_fam_inter_plot <- fam_level_interaction_plot(mod_name = "bee_family",
+                                                  n_samp = 3000,
+                                                  result = result_bee_family)
+
+
+#---- plant_family
+plant_fam_inter_plot <- fam_level_interaction_plot(mod_name = "bee_family",
+                                                 n_samp = 3000,
+                                                 result = result_bee_family)
+
+
+
+# Create 1 plot
+
+bee_fam_inter_plot + plant_fam_inter_plot
 
 
 # End script
