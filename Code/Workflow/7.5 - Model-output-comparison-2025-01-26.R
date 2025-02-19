@@ -444,11 +444,12 @@ bee_size_no_bee_plant_mod <- response_continous_cov_plot(out_df = out_no_bee_pla
 bee_size_bee_species_mod$gplot + bee_size_bee_family_mod$gplot+
  bee_size_plant_species_mod$gplot + bee_size_plant_family_mod$gplot+
  bee_size_bee_plant_family_mod$gplot + bee_size_no_bee_plant_mod$gplot  + 
-  plot_layout(ncol = 2)
+  plot_layout(ncol = 2) +  
+  plot_annotation(tag_levels = "A")
 
 
 # Save the plot
-ggsave(paste0(github_folder_path, "/Figures/", date_folder, "/Supp-fig-psi-bee-size-mod-comparison.png")
+ggsave(paste0(github_folder_path, "/Figures/", date_folder, "/Appendix-S2-Fig-S1-psi-bee-size-mod-comparison.png")
        , height = 10, width = 12)
 
 
@@ -578,7 +579,7 @@ response_factor_cov_plot <- function(out_df,
     annotation_df <- data.frame(
       start =  c(beta1_name),
       end = c(beta2_name),
-      probability = c(max(pred_df$beta1_prob) + offset_major1),
+      probability = c(max(pred_df$beta2_prob) + offset_major1),
       label = c(mean( pred_df$beta1_prob > pred_df$beta2_prob)),
       y_start = 1,
       y_end = 2
@@ -886,7 +887,7 @@ bee_soc_no_bee_plant_mod <- response_factor_cov_plot(out_df = out_no_bee_plant_d
 
 
 # Save the plot
-ggsave(paste0(github_folder_path, "/Figures/", date_folder, "/Supp-fig-psi-bee-sociality-mod-comparison.png")
+ggsave(paste0(github_folder_path, "/Figures/", date_folder, "/Appendix-S2-Fig-S2-psi-bee-sociality-mod-comparison.png")
        , height = 10, width = 12)
 
 
@@ -1044,7 +1045,7 @@ flow_col_no_bee_plant_mod <- response_factor_cov_plot(out_df = out_no_bee_plant_
 
 
 # Save the plot
-ggsave(paste0(github_folder_path, "/Figures/", date_folder, "/Supp-fig-psi-flow-col-mod-comparison.png")
+ggsave(paste0(github_folder_path, "/Figures/", date_folder, "/Appendix-S2-Fig-S3-psi-flow-col-mod-comparison.png")
        , height = 10, width = 12)
 
 
@@ -1192,7 +1193,7 @@ flow_sha_no_bee_plant_mod <- response_factor_cov_plot(out_df = out_no_bee_plant_
 
 
 # Save the plot
-ggsave(paste0(github_folder_path, "/Figures/", date_folder, "/Supp-fig-psi-flow-sha-mod-comparison.png")
+ggsave(paste0(github_folder_path, "/Figures/", date_folder, "/Appendix-S2-Fig-S4-psi-flow-sha-mod-comparison.png")
        , height = 10, width = 12)
 
 
@@ -1345,7 +1346,7 @@ bee_str_no_bee_plant_mod <- response_factor_cov_plot(out_df = out_no_bee_plant_d
 
 
 # Save the plot
-ggsave(paste0(github_folder_path, "/Figures/", date_folder, "/Supp-fig-p-bee-str-mod-comparison.png")
+ggsave(paste0(github_folder_path, "/Figures/", date_folder, "/Appendix-S2-Fig-S5-p-bee-str-mod-comparison.png")
        , height = 10, width = 12)
 
 
@@ -1494,7 +1495,7 @@ source_no_bee_plant_mod <- response_factor_cov_plot(out_df = out_no_bee_plant_df
 
 
 # Save the plot
-ggsave(paste0(github_folder_path, "/Figures/", date_folder, "/Supp-fig-p-source-mod-comparison.png")
+ggsave(paste0(github_folder_path, "/Figures/", date_folder, "/Appendix-S2-Fig-S6-p-source-mod-comparison.png")
        , height = 10, width = 12)
 
 
@@ -1645,7 +1646,7 @@ flow_col_p_no_bee_plant_mod <- response_factor_cov_plot(out_df = out_no_bee_plan
 
 
 # Save the plot
-ggsave(paste0(github_folder_path, "/Figures/", date_folder, "/Supp-fig-p-flow-col-mod-comparison.png")
+ggsave(paste0(github_folder_path, "/Figures/", date_folder, "/Appendix-S2-Fig-S7-p-flow-col-mod-comparison.png")
        , height = 10, width = 12)
 
 
@@ -1797,7 +1798,7 @@ flow_sha_p_no_bee_plant_mod <- response_factor_cov_plot(out_df = out_no_bee_plan
 
 
 # Save the plot
-ggsave(paste0(github_folder_path, "/Figures/", date_folder, "/Supp-fig-p-flow-sha-mod-comparison.png")
+ggsave(paste0(github_folder_path, "/Figures/", date_folder, "/Appendix-S2-Fig-S8-p-flow-sha-mod-comparison.png")
        , height = 10, width = 12)
 
 
@@ -1906,7 +1907,7 @@ bee_size_p_no_bee_plant_mod <- response_continous_cov_plot(out_df = out_no_bee_p
 
 
 # Save the plot
-ggsave(paste0(github_folder_path, "/Figures/", date_folder, "/Supp-fig-p-bee-size-mod-comparison.png")
+ggsave(paste0(github_folder_path, "/Figures/", date_folder, "/Appendix-S2-Fig-S9-p-bee-size-mod-comparison.png")
        , height = 10, width = 12)
 
 
@@ -2026,13 +2027,17 @@ load("/Users/gdirenzo/Documents/GitHub/globi_msomAndsciChecklists/Data/dat_info_
   
   
   # Save the plot
-  ggsave(paste0("./Figures/", date_folder, "/Fig-S1-Number-of-bee-plant-interactions.png"), 
+  ggsave(paste0("./Figures/", date_folder, "/Appendix-S1-Fig-S1-Number-of-bee-plant-interactions.png"), 
          height = 14, width = 8)
   
 
   
   
+  
+  
 # 16. Create function to extract "probability of interaction" and plot by species or family ----------------------------------------
+  
+  
   
   # This function will be used for:
     # bee_family
@@ -2068,10 +2073,8 @@ load("/Users/gdirenzo/Documents/GitHub/globi_msomAndsciChecklists/Data/dat_info_
   #   beta_psi[7] * flower_shape[plant_species[i]]
   
   
-  mod_name <- "bee_family"
-  out <- out_bee_family_df
-  
-  
+
+  # Before writing the function - we need to call in some data and format it
   # Load covariates
   load("/Users/gdirenzo/Documents/GitHub/globi_msomAndsciChecklists/Data/model_covariates - 2025 01 22 - no apis.rds")
   
@@ -2126,12 +2129,15 @@ fam_level_interaction_plot <- function(mod_name,
   # Name the parameters
   beta_psi <- out[,grep("psi", colnames(out))]
   
+
   # Latent variable from model output
     # Extract u = random effect
-  out_u <- as.mcmc(data.frame(rbind(result[[1]]$samples2[row.subset, grep("u", colnames(result[[1]]$samples2))],
-                                    result[[2]]$samples2[row.subset, grep("u", colnames(result[[1]]$samples2))],
-                                    result[[3]]$samples2[row.subset, grep("u", colnames(result[[1]]$samples2))])))
+  out_u <- as.mcmc(data.frame(rbind(result[[1]]$samples2[, grep("u", colnames(result[[1]]$samples2))],
+                                    result[[2]]$samples2[, grep("u", colnames(result[[1]]$samples2))],
+                                    result[[3]]$samples2[, grep("u", colnames(result[[1]]$samples2))])))
   
+  # random sample of MCMC iterations:
+  MCMC.subset <- sample(x = 1:nrow(out_u), n_samp, replace = F)
   
   
   # Loop through each bee and plant family and MCMC iteration to calculate the interaction probability
@@ -2147,29 +2153,29 @@ fam_level_interaction_plot <- function(mod_name,
         
         plogis(
           # Bee family-specific random effect
-          out_u[j, bee_family[bee_species[i]]] +
+          out_u[MCMC.subset[j], bee_family[bee_species[i]]] +
             
             # Intercept
             # Average size bee
             # Not solitary bee
             # Yellow flower color
             # Not bowl
-            beta_psi[j, 1] +
+            beta_psi[MCMC.subset[j], 1] +
             
             # Bee size
-            beta_psi[j, 2] * size[bee_species[i]]+ 
+            beta_psi[MCMC.subset[j], 2] * size[bee_species[i]]+ 
             
             # Bee solitary (1 = yes; 0 = no)
-            beta_psi[j, 3] * solitary[bee_species[i]]+ 
+            beta_psi[MCMC.subset[j], 3] * solitary[bee_species[i]]+ 
             
             # Flower color
             # Different bee genus have different probabilities of interacting with different plant colors
-            beta_psi[j, 4] * other_flower_color[plant_species[i]]+
-            beta_psi[j, 5] * blue_flower_color[plant_species[i]]+
-            beta_psi[j, 6] * white_flower_color[plant_species[i]]+
+            beta_psi[MCMC.subset[j], 4] * other_flower_color[plant_species[i]]+
+            beta_psi[MCMC.subset[j], 5] * blue_flower_color[plant_species[i]]+
+            beta_psi[MCMC.subset[j], 6] * white_flower_color[plant_species[i]]+
             
             # Flower shape (== bowl)
-            beta_psi[j, 7] * flower_shape[plant_species[i]]
+            beta_psi[MCMC.subset[j], 7] * flower_shape[plant_species[i]]
         )
       
       
@@ -2183,29 +2189,29 @@ fam_level_interaction_plot <- function(mod_name,
      
      plogis(
      # Plant family-specific random effect
-     out_u[j, plant_family[plant_species[i]]] +
+     out_u[MCMC.subset[j], plant_family[plant_species[i]]] +
    
      # Intercept
      # Average size bee
      # Not solitary bee
      # Yellow flower color
      # Not bowl
-     beta_psi[j, 1] +
+     beta_psi[MCMC.subset[j], 1] +
      
      # Bee size
-     beta_psi[j, 2] * size[bee_species[i]]+ 
+     beta_psi[MCMC.subset[j], 2] * size[bee_species[i]]+ 
      
      # Bee solitary (1 = yes; 0 = no)
-     beta_psi[j, 3] * solitary[bee_species[i]]+ 
+     beta_psi[MCMC.subset[j], 3] * solitary[bee_species[i]]+ 
      
      # Flower color
      # Different bee genus have different probabilities of interacting with different plant colors
-     beta_psi[j, 4] * other_flower_color[plant_species[i]]+
-     beta_psi[j, 5] * blue_flower_color[plant_species[i]]+
-     beta_psi[j, 6] * white_flower_color[plant_species[i]]+
+     beta_psi[MCMC.subset[j], 4] * other_flower_color[plant_species[i]]+
+     beta_psi[MCMC.subset[j], 5] * blue_flower_color[plant_species[i]]+
+     beta_psi[MCMC.subset[j], 6] * white_flower_color[plant_species[i]]+
      
      # Flower shape (== bowl)
-     beta_psi[j, 7] * flower_shape[plant_species[i]]
+     beta_psi[MCMC.subset[j], 7] * flower_shape[plant_species[i]]
      )
    
       }
@@ -2242,6 +2248,8 @@ fam_level_interaction_plot <- function(mod_name,
                        upper_95 = quantile(psi, probs = c(0.025, 0.975), na.rm = TRUE)[2],
                        .groups = "drop")
     
+    ggplot_title <- "Plant family model"
+    
   }
   
   if(mod_name == "bee_family"){
@@ -2264,11 +2272,13 @@ fam_level_interaction_plot <- function(mod_name,
     # Rename bee family column name with capital (so the ggplot function works next)
     colnames(psi_with_family)[which(colnames(psi_with_family) == "family")] <- "Family"
     
+    ggplot_title <- "Bee family model"
+    
   }
   
   
   # Plot
-  ggplot(psi_with_family, 
+  gplot <- ggplot(psi_with_family, 
          aes(x= Family, y=mean_psi, 
              ymin= lower_95, 
              ymax= upper_95))+ 
@@ -2279,33 +2289,41 @@ fam_level_interaction_plot <- function(mod_name,
     ylab('Interaction probability') +
     xlab("Family name") +
     theme_bw()+ 
+    ggtitle(ggplot_title)+
     theme(axis.text.x = element_text(size = 10, color = "black"), 
           axis.text.y = element_text(size = 10, color = "black", face = "italic"), 
           axis.title.y = element_text(size = 10, color = "black"), 
           axis.title.x =element_text(size = 10, color = "black")
     ) 
   
-  return()
+  return(gplot)
   
 }
 
 
 #---- bee_family
 bee_fam_inter_plot <- fam_level_interaction_plot(mod_name = "bee_family",
-                                                  n_samp = 3000,
+                                                  n_samp = 2000,
                                                   result = result_bee_family)
 
 
 #---- plant_family
-plant_fam_inter_plot <- fam_level_interaction_plot(mod_name = "bee_family",
-                                                 n_samp = 3000,
-                                                 result = result_bee_family)
+plant_fam_inter_plot <- fam_level_interaction_plot(mod_name = "plant_family",
+                                                 n_samp = 2000,
+                                                 result = result_plant_family)
 
 
 
 # Create 1 plot
+bee_fam_inter_plot + plant_fam_inter_plot +
+  plot_layout(ncol = 2) +  
+  plot_annotation(tag_levels = "A")
 
-bee_fam_inter_plot + plant_fam_inter_plot
+
+
+# Save the plot
+ggsave(paste0(github_folder_path, "/Figures/", date_folder, "/Appendix-S2-Fig-S10-Number-of-bee-plant-interactions.png"), 
+       height = 14, width = 8)
 
 
 # End script
