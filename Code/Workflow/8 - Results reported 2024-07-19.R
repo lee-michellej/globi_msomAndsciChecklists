@@ -49,10 +49,28 @@
 
 # Load libraries
 library(tidyverse)
+library(mcmcr)
 
+
+
+# Add globi folder name
+globi_folder <- "globi-20250210"
 
 # Set working directory
-setwd("~/globi_tritrophic_networks/")
+setwd(paste0("/Volumes/DIRENZO/", globi_folder, "/gdirenzo/globi/"))
+#setwd("/Users/gdirenzo/OneDrive - University of Massachusetts/Dropbox_transfer/Globi/")
+
+
+# Add github folder path
+github_folder_path <- "/Users/gdirenzo/Documents/GitHub/globi_msomAndsciChecklists/"
+
+
+
+# date object for folder
+date_folder <- "2025 01 26"
+date <- "2025 01 26"
+
+
 
 
 
@@ -64,39 +82,54 @@ setwd("~/globi_tritrophic_networks/")
 
 
 
-# Load the data
-load("./ModelOutput/globi-short plant list- 2024 07 17 - all cov - NO apis - NIMBLE.rds")
-# object = out
-# MCMC object
+
+#---- bee_species model
+
+# Model name
+mod_name <- "bee_species"
+
+# Load the model output - out
+load(file = paste0("./ModelOutput/", date, "/out-"
+                   , mod_name, "-NIMBLE.rds"))
+
+# Save the out object with a new model specific name
+out_bee_species <- out
+
+out_bee_species_df <- as.data.frame(out_bee_species)
 
 
-## Load the entire nimble output
-load("./ModelOutput/OUTPUT - globi-short plant list- 2024 07 17 - all cov - NO apis - NIMBLE.rds")
-# object = result
-# MCMC object
+# Load the model output - result
+load(file = paste0("./ModelOutput/", date, "/result-"
+                   , mod_name, "-NIMBLE.rds"))
+
+# Save the out object with a new model specific name
+result_bee_species <- result
 
 
 
-# Upload the data
-load("./Data/data_summary/globi_data_formatted_bee_plant_date_citation_2024_07_11 - short plant list - no apis.rds")
+
+
+#------------  Upload the data & format
 # object name = bee.plant.cite
 # 3-D array
+load("/Users/gdirenzo/Documents/GitHub/globi_msomAndsciChecklists/Data/data_summary/globi_data_formatted_bee_plant_date_citation_2025_01_22 - short plant list - no apis.rds")
+
+
+
+# Read in the dat_info
+load("/Users/gdirenzo/Documents/GitHub/globi_msomAndsciChecklists/Data/dat_info_2025_01_22.rds")
+# object name = dat_info
 
 
 
 # Load covariates
-load("./Data/model_covariates - 2024 07 11 - no apis.rds")
-#covariates
+load("/Users/gdirenzo/Documents/GitHub/globi_msomAndsciChecklists/Data/model_covariates - 2025 01 22 - no apis.rds")
 
-
-# Read in the dat_info
-load("./Data/dat_info_2024_07_11.rds")
-# object name = dat_info
 
 
 # Load in the number of observations
-load("./Data/obs_dat.rds")
-# object name = obs_dat.rds
+load("/Users/gdirenzo/Documents/GitHub/globi_msomAndsciChecklists/Data/obs_dat-2025-02-11.rds")
+# object name = obs_dat
 
 
 

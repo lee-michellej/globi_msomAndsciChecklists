@@ -54,88 +54,6 @@
 ################################## 
 
 
-# Just a quick reminder of the model structures
-
-
-# Ecological model:
-
-
-#.  logit(psi[bee_ID[i], plant_ID[i]]) <- 
-#.    # Bee-plant species-specific random effect
-#.    u[bee_ID[i]] +
-#.    
-#.    # Intercept
-#.    # Average size bee
-#.    # Not solitary bee
-#.    # Other flower color
-#.    # Not bowl
-#.    beta_psi[1] +
-#.    
-#.    # Bee size
-#.    beta_psi[2] * size[bee_ID[i]]+ 
-#.    
-#.    # Bee solitary (1 = yes; 0 = no)
-#.    beta_psi[3] * solitary[bee_ID[i]]+ 
-#.    
-#.    # Flower color
-#.    # Different bee genus have different probabilities of interacting with different plant colors
-#.    beta_psi[4] * yellow_flower_color[plant_ID[i]]+
-#.    beta_psi[5] * blue_flower_color[plant_ID[i]]+
-#.    beta_psi[6] * white_flower_color[plant_ID[i]]+
-#.    
-#.    # Flower shape (== bowl)
-#.    beta_psi[7] * flower_shape[plant_ID[i]]
-
-
-
-# Detection model
-
-
-#.    logit(p[bee_ID[i], plant_ID[i], cite_ID[i]]) <-  
-#.      # Bee-plant species-specific random effect
-#.      v[bee_ID[i]] +
-#.      
-#.      # Intercept
-#.      # Not stripped
-#.      # Averge sized bee (= 0)
-#.      # Aggregated data type
-#.      # Flower color = other
-#.      # Flower shape = no bowl
-#.      beta_p[1] +
-#.      
-#.      # Bee Strippiness (1 = yes stripped; 0 = no stripped)
-#.      beta_p[2] * stripped[bee_ID[i]]+
-#.      
-#.      # Bee size
-#.      beta_p[3] * size[bee_ID[i]]+
-#.      
-#.      # sourceCitation type
-#.      # Literature (1 = yes; 0 = no)
-#.      beta_p[4] * citation_lit[cite_ID[i]]+
-#.      # Collection (1 = yes; 0 = no)
-#.      beta_p[5] * citation_col[cite_ID[i]]+
-#.      # Observation (1 = yes; 0 = no)
-#.      beta_p[6] * citation_obs[cite_ID[i]]+
-#.      
-#.      # Flower color (1 = yes yellow; 0 = no yellow)
-#.      beta_p[7] * yellow_flower_color[plant_ID[i]]+
-#.      # blue
-#.      beta_p[8] * blue_flower_color[plant_ID[i]]+
-#.      # white
-#.      beta_p[9] * white_flower_color[plant_ID[i]]+            
-#.      
-#.      # Flower shape (1 = yes bowl; 0 = no bowl)
-#.      beta_p[10] * flower_shape[plant_ID[i]]
-#.    
-
-
-
-
-################################## 
-################################## 
-################################## 
-
-
 
 
 
@@ -154,8 +72,23 @@ library(reshape2)
 library(mcmcr)
 library(wesanderson)
 
+
+# Add globi folder name
+globi_folder <- "globi-20250210"
+
 # Set working directory
-setwd("~/globi_tritrophic_networks/")
+setwd(paste0("/Volumes/DIRENZO/", globi_folder, "/gdirenzo/globi/"))
+#setwd("/Users/gdirenzo/OneDrive - University of Massachusetts/Dropbox_transfer/Globi/")
+
+
+# Add github folder path
+github_folder_path <- "/Users/gdirenzo/Documents/GitHub/globi_msomAndsciChecklists/"
+
+
+
+# date object for folder
+date_folder <- "2025 01 26"
+date <- "2025 01 26"
 
 
 
@@ -166,220 +99,58 @@ setwd("~/globi_tritrophic_networks/")
 
 
 
-  
- # Load the data
- load("./ModelOutput/globi-short plant list- 2024 07 17 - all cov - NO apis - NIMBLE.rds")
- # object = out
- # MCMC object
- 
- 
- ## Load the entire nimble output
-load("./ModelOutput/OUTPUT - globi-short plant list- 2024 07 17 - all cov - NO apis - NIMBLE.rds")
- # object = result
- # MCMC object
- 
- 
- 
- # Upload the data
-load("./Data/data_summary/globi_data_formatted_bee_plant_date_citation_2024_07_11 - short plant list - no apis.rds")
+
+#---- bee_species model
+
+# Model name
+mod_name <- "bee_species"
+
+# Load the model output - out
+load(file = paste0("./ModelOutput/", date, "/out-"
+                   , mod_name, "-NIMBLE.rds"))
+
+# Save the out object with a new model specific name
+out_bee_species <- out
+
+out_bee_species_df <- as.data.frame(out_bee_species)
+
+
+# Load the model output - result
+load(file = paste0("./ModelOutput/", date, "/result-"
+                   , mod_name, "-NIMBLE.rds"))
+
+# Save the out object with a new model specific name
+result_bee_species <- result
+
+
+
+
+
+#------------  Upload the data & format
 # object name = bee.plant.cite
- # 3-D array
+# 3-D array
+load("/Users/gdirenzo/Documents/GitHub/globi_msomAndsciChecklists/Data/data_summary/globi_data_formatted_bee_plant_date_citation_2025_01_22 - short plant list - no apis.rds")
 
-  
-
-# Load covariates
-load("./Data/model_covariates - 2024 07 11 - no apis.rds")
-  #covariates
 
 
 # Read in the dat_info
-load("./Data/dat_info_2024_07_11.rds")
+load("/Users/gdirenzo/Documents/GitHub/globi_msomAndsciChecklists/Data/dat_info_2025_01_22.rds")
 # object name = dat_info
 
 
+
+# Load covariates
+load("/Users/gdirenzo/Documents/GitHub/globi_msomAndsciChecklists/Data/model_covariates - 2025 01 22 - no apis.rds")
+
+
+
 # Load in the number of observations
-load("./Data/obs_dat.rds")
-  # object name = obs_dat.rds
+load("/Users/gdirenzo/Documents/GitHub/globi_msomAndsciChecklists/Data/obs_dat-2025-02-11.rds")
+# object name = obs_dat
 
 
 
-# Create an object with the date folder
-date_folder <- "2024_07_17"
 
-
-
-
-
-
-
-
-
-
-# 3. Summarize the observed data and z parameters/states ----------------------------------------
-
-
-
-
-# Summarize the observed data
-
-# We will take the max (0 or 1) value across the 3rd dimension
-y.bee.plant <- apply(bee.plant.cite, c(1, 2), max, na.rm = TRUE)
-y.bee.plant[y.bee.plant == "-Inf"] <- 0
-
-
-# Then, we will sum the number of plant species that each bee species interacts with
-y.bee.plant <- apply(y.bee.plant, 1, sum, na.rm = TRUE)
-
-
-# Observed number of plant species that each bee interacts with
-obs.dat <- data.frame(obs = y.bee.plant)
-
-
-# Calcilate the total number of POSSIBLE bee-plant interactions (regardless of month & citation)
-bee.plant.pos <- apply(bee.plant.cite, c(1, 2), max, na.rm = TRUE)
-bee.plant.pos[bee.plant.pos == "-Inf"] <- NA
-bee.plant.pos[bee.plant.pos == 0] <- 1
-bee.plant.pos <- apply(bee.plant.pos, 1, sum, na.rm = TRUE)
-
-
-
-# Determine how many MCMC iterations to keep
-row.subset <- 1:200
-
-
-# Summarize z
-# # Latent state variables
-out_n <- as.mcmc(data.frame(rbind(result[[1]]$samples2[row.subset,grep("n_", colnames(result[[1]]$samples2))],
-                                  result[[2]]$samples2[row.subset,grep("n_", colnames(result[[1]]$samples2))],
-                                  result[[3]]$samples2[row.subset,grep("n_", colnames(result[[1]]$samples2))])))
-
-
-# And then, we will sum across plant IDs
-bee.interactions <- apply(out_n, 2, mean, na.rm = TRUE)
-
-# Repeat steps for 95% CI - lower & upper
-bee.interactions.lower <- apply(out_n, 2, function(x)quantile(x, probs = c(0.025, 0.975), na.rm = TRUE)[1])
-bee.interactions.upper <- apply(out_n, 2, function(x)quantile(x, probs = c(0.025, 0.975), na.rm = TRUE)[2])
-
-
-
-# Summarize u
-
-# # Latent state variables
- out_u <- as.mcmc(data.frame(rbind(result[[1]]$samples2[row.subset,grep("u", colnames(result[[1]]$samples2))],
-                                   result[[2]]$samples2[row.subset,grep("u", colnames(result[[1]]$samples2))],
-                                   result[[3]]$samples2[row.subset,grep("u", colnames(result[[1]]$samples2))])))
- 
-
-# Extract the mean values for z = true bee, plant, by month interactions
-# Look at the number of dimensions
-dim(out_u[,grep("u", colnames(out_u))])
-
-# We will put those values in an array
-out_u_array <- out_u[,grep("u", colnames(out_u))]
-
-# Row names - MCMC iterations
-rownames(out_u_array) <- 1:MCMC
-
-# column names - bee species
-colnames(out_u_array) <- dat_info$bee.species
-
-# Now, we calculate the mean & 95% CI
-# To do this, first we will determine if the bee EVER interacts with the plant
-u.mean <- apply(out_u_array, c(2), mean, na.rm = TRUE)
-u.lower <- apply(out_u_array, c(2), function(x)quantile(x, probs = c(0.025, 0.975), na.rm = TRUE)[1])
-u.upper <- apply(out_u_array, c(2), function(x)quantile(x, probs = c(0.025, 0.975), na.rm = TRUE)[2])
-
-
-
-
-
-# Add row names
-rownames(bee.plant.cite) <- dat_info$bee.species
-
-
-# Combine the names, and model output
-dat <- data.frame(names = c(paste(rownames(bee.plant.cite), "interact prob"),
-                            rep("Num-interact", nrow(bee.plant.cite))), 
-                  species = rownames(bee.plant.cite),
-                  mod.mean = c( u.mean,
-                                bee.interactions), 
-                  mod.q2.5 = c(u.lower,
-                               bee.interactions.lower), 
-                  mod.q97.5 = c(u.upper,
-                                bee.interactions.upper))
-
-
-
-
-# 4. Make the Bee - plant interaction probability plot ----------------------------------------
-
-
-
-
-
-# Plot with probabilities
-  # This one is hard to read
-ggplot(dat[grep("interact prob", dat$names),], 
-       aes(x= species, y=plogis(mod.mean), 
-                       ymin=plogis(mod.q2.5), 
-                       ymax=plogis(mod.q97.5)))+ 
-  geom_linerange(linewidth = 1) +
-  geom_point(size = 1) +
-  scale_colour_manual("Values", values=cols)+
-  geom_hline(yintercept = 0, lty=2) +
-  coord_flip() + 
-  ylab('Probability of interacting with a plant') +
-  xlab("Species names") +
- # ggtitle("Bee-plant interaction probability")+
-  theme_bw()+ 
-  theme(axis.text.x = element_text(size = 12, color = "black"), 
-        axis.text.y = element_text(size = 10, color = "black", face = "italic"), 
-        axis.title.y = element_text(size = 12, color = "black"), 
-        axis.title.x =element_text(size = 12, color = "black")
-) 
-
-
-# Save the plot
-ggsave(paste0("./Figures/", date_folder, "/Fig-S2-Bee-plant-Interaction-prob.png"), 
-       height = 17, width = 10)
-
-
-
-# Create a column with the genus info seperately to facet by genus
-dat$genus <- str_split_fixed(dat$species, n = 2, pattern = " ")[,1]
-
-
-# Add the number of observed plant interactions per bee species to the data
-dat$obs_plants_per_bee <- obs_dat$bee.samp$number_obs_per_bee
-
-
-# Add the number of observed interactions
-
-ggplot(dat[grep("Num-interact", dat$names),], 
-       aes(x= species, y=(mod.mean), 
-           ymin=(mod.q2.5), 
-           ymax=(mod.q97.5)))+ 
-  #facet_wrap(~genus, scales = "free")+
-  geom_linerange(size = 1) +
-  geom_point(size = 3, aes(x = species, y = (mod.mean))) +
-  geom_point(size = 3, aes(x = species, y = (obs_plants_per_bee)), col = "red") +
-  scale_colour_manual("Values", values=cols)+
-  coord_flip() + 
-  ylab('Numer of plant interactions ') +
-  xlab("Species names") +
-  # ggtitle("Bee-plant interaction probability")+
-  theme_bw()+ 
-  theme(axis.text.x = element_text(size = 12, color = "black"), 
-        axis.text.y = element_text(size = 10, color = "black", face = "italic"), 
-        axis.title.y = element_text(size = 12, color = "black"), 
-        axis.title.x =element_text(size = 12, color = "black")
-  ) 
-
-
-# Save the plot
-ggsave(paste0("./Figures/", date_folder, "/Fig-1-Bee-plant-Interactions.png"), 
-       height = 17, width = 10)
 
 
 
@@ -483,8 +254,9 @@ mean(out_df$beta_psi.2. < 0)
 
 
 
-# What proportion of the mass is < 0?
-mean(out_df$beta_psi.1. < out_df$beta_psi.3.)
+# What proportion of the mass is beta_psi.1. > (out_df$beta_psi.1. + beta_psi.3.)?
+  # social bee > solitary bee
+mean(out_df$beta_psi.1. > (out_df$beta_psi.1. + out_df$beta_psi.3.))
 
 
 
@@ -507,7 +279,7 @@ colnames(pred.p.soc.long) <- c("solitary", "probability")
 # Change labels
 pred.p.soc.long$solitary <- ifelse(pred.p.soc.long$solitary == "solitary",
                                  "Solitary",
-                                 "Not solitary")
+                                 "Social")
 
 # Calcilate group means
 mu <- ddply(pred.p.soc.long, "solitary", summarise, 
@@ -558,30 +330,31 @@ solitary.plot <- ggplot(pred.p.soc.long, aes(x = probability, y = solitary)) +
 
 # Probability of one parameter > another
 
+# yellow > other
+mean(out_df$beta_psi.1. > (out_df$beta_psi.1. + out_df$beta_psi.4.))
+
 # yellow > blue
-mean(out_df$beta_psi.4. > out_df$beta_psi.5.)
+mean(out_df$beta_psi.1. > (out_df$beta_psi.1. + out_df$beta_psi.5.))
 
 # yellow > white
-mean(out_df$beta_psi.4. > out_df$beta_psi.6.)
+mean(out_df$beta_psi.1. > (out_df$beta_psi.1. + out_df$beta_psi.6.))
 
-# yellow > other
-mean(out_df$beta_psi.4. > out_df$beta_psi.1.)
 
 
 
  # Create a dataframe with the parameter estimates from each MCMC iteraction
- pred.psi.col <- data.frame(beta_psi_yellow = out_df$beta_psi.4., 
+ pred.psi.col <- data.frame(beta_psi_other = out_df$beta_psi.4., 
                             beta_psi_blue = out_df$beta_psi.5., 
                             beta_psi_white = out_df$beta_psi.6., 
-                            mu.psi = out_df$beta_psi.1.,
+                            mu.psi = out_df$beta_psi.1., # yellow
                             iteration = 1:length(out_df$beta_psi.1.))
 
 
  ## Add a column with the covariate
- pred.psi.col$yellow <- plogis(pred.psi.col$mu.psi + pred.psi.col$beta_psi_yellow) 
+ pred.psi.col$other <- plogis(pred.psi.col$mu.psi + pred.psi.col$beta_psi_other) 
  pred.psi.col$blue <- plogis(pred.psi.col$mu.psi + pred.psi.col$beta_psi_blue) 
  pred.psi.col$white <- plogis(pred.psi.col$mu.psi + pred.psi.col$beta_psi_white) 
- pred.psi.col$other <- plogis(pred.psi.col$mu.psi) 
+ pred.psi.col$yellow  <- plogis(pred.psi.col$mu.psi) 
  
  # Convert to long format
  pred.psi.col.long <- melt(pred.psi.col[,6:9])
@@ -594,29 +367,25 @@ mean(out_df$beta_psi.4. > out_df$beta_psi.1.)
              grp.mean=mean(probability))
  
  head(mu)
- 
- 
 
- # 
- annotation_df <- data.frame(
-    start =  c("yellow", "yellow"), 
-    end = c("blue", "white"),
-    probability = c(1, 1.2),
-    label = c(mean(out_df$beta_psi.4. > out_df$beta_psi.5.),
-              mean(out_df$beta_psi.4. > out_df$beta_psi.6.))
- )
- 
  pred.psi.col.long$color_num <- as.numeric(pred.psi.col.long$color)
  
  # Annotation data frame
  annotation_df <- data.frame(
    start =  c("yellow", "yellow", "yellow"),
-   end = c("blue", "white", "other"),
+   end = c("other", "blue", "white"),
    probability = c(1.1, 1.2, 1.3),
-   label = c(mean(out_df$beta_psi.4. > out_df$beta_psi.5.),
-             mean(out_df$beta_psi.4. > out_df$beta_psi.6.),
-             mean(out_df$beta_psi.4. > out_df$beta_psi.1.))
- )
+   label = c(mean(out_df$beta_psi.1. > (out_df$beta_psi.1. + out_df$beta_psi.4.)),
+             mean(out_df$beta_psi.1. > (out_df$beta_psi.1. + out_df$beta_psi.5.)),
+             mean(out_df$beta_psi.1. > (out_df$beta_psi.1. + out_df$beta_psi.6.))
+ ))
+ 
+ # Arrange the colors in the order we want them displayed
+ pred.psi.col.long$color <- factor(pred.psi.col.long$color, levels = c("yellow", 
+                                                                       "other",
+                                                                       "blue", 
+                                                                       "white"))
+ 
  
  # Create a mapping of color to numeric positions
  color_levels <- levels(pred.psi.col.long$color)
@@ -626,14 +395,16 @@ mean(out_df$beta_psi.4. > out_df$beta_psi.1.)
  annotation_df$y_start <- color_map[annotation_df$start]
  annotation_df$y_end <- color_map[annotation_df$end]
  
+ pal_cols <- c("#E7B800", "grey", "#00AFBB", "white")
  
+
  # Create the plot
  flower.color.plot <- ggplot(pred.psi.col.long, aes(x = probability, y = color)) +
    geom_density_ridges(aes(fill = color)) +
-   scale_fill_manual(values = c("#E7B800","#00AFBB",  "grey", "black"))+
-   geom_vline(data=mu, aes(xintercept=grp.mean, color=color),
+   scale_fill_manual(values = pal_cols)+
+   geom_vline(data= mu, aes(xintercept=grp.mean, color = color),
               linetype="dashed")+
-   scale_color_manual(values = c("#E7B800","#00AFBB", "grey", "black"))+
+   scale_color_manual(values = pal_cols)+
    xlab("Probability of interacting \nwith a bee")+
    ylab("Flower color")+
    theme(legend.position = "none",
@@ -683,7 +454,7 @@ mean(out_df$beta_psi.4. > out_df$beta_psi.1.)
 
  
  # Probability of not bowl >  bowl
- mean(out_df$beta_psi.1. > out_df$beta_psi.7.)
+ mean(out_df$beta_psi.1. > (out_df$beta_psi.1. + out_df$beta_psi.7.))
  
  
  
@@ -735,7 +506,7 @@ mean(out_df$beta_psi.4. > out_df$beta_psi.1.)
          axis.title.x = element_text(size = title.size),
          axis.title.y = element_text(size = title.size))
  
-# bowl.plot
+ bowl.plot
 # 
 # # Save the plot
 # ggsave(paste0("./Figures/", date_folder, "/Bee-plant-interaction-prob-V-flower-shape.pdf")
@@ -760,7 +531,7 @@ mean(out_df$beta_psi.4. > out_df$beta_psi.1.)
 
 
 # Save the plot
-ggsave(paste0("./Figures/", date_folder, "/Fig-2-Bee-plant-interaction-prob.png")
+ggsave(paste0(github_folder_path, "/Figures/", date_folder, "/Fig-2-Bee-plant-interaction-prob.png")
        , height = 8, width = 12)
 
 
@@ -768,7 +539,7 @@ ggsave(paste0("./Figures/", date_folder, "/Fig-2-Bee-plant-interaction-prob.png"
 
 
 
-# 11. Plot the relationship between p and strippiness ----------------------------------------
+# 11. Plot the relationship between p and bee stripes ----------------------------------------
 
 
 
@@ -776,7 +547,8 @@ ggsave(paste0("./Figures/", date_folder, "/Fig-2-Bee-plant-interaction-prob.png"
 
  
  
- mean(out_df$beta_p.2. > out_df$beta_p.1.)
+## Not striped > striped
+ mean(out_df$beta_p.1. > (out_df$beta_p.1. + out_df$beta_p.2.))
  
  
  # Create a dataframe with the parameter estimates from each MCMC iteraction
@@ -796,8 +568,8 @@ ggsave(paste0("./Figures/", date_folder, "/Fig-2-Bee-plant-interaction-prob.png"
  
  # Change labels
  pred.p.long$stripe <- ifelse(pred.p.long$stripe == "stripped",
-                              "Stripped",
-                              "Not \nstripped")
+                              "Striped",
+                              "Not \nstriped")
  
  # Calculate group means
  mu <- ddply(pred.p.long, "stripe", summarise, 
@@ -814,8 +586,8 @@ ggsave(paste0("./Figures/", date_folder, "/Fig-2-Bee-plant-interaction-prob.png"
    geom_vline(data=mu, aes(xintercept=grp.mean, color=stripe),
               linetype="dashed")+
    scale_color_manual(values = wes_palette("Moonrise3", 2, type = c("discrete")))+
-   xlab("Probability of detecting \nthe bee on a plant")+
-   ylab("Stripiness")+
+   xlab("Probability of detecting \na bee on a plant")+
+   ylab("Bee stripes")+
  theme_bw()+ 
    theme(legend.position = "none",
          strip.background = element_rect(colour = "black", fill = "white"),
@@ -825,7 +597,8 @@ ggsave(paste0("./Figures/", date_folder, "/Fig-2-Bee-plant-interaction-prob.png"
          axis.text.y = element_text(size = text.size, color = "black"),
          axis.title.x = element_text(size = title.size, color = "black"),
          axis.title.y = element_text(size = title.size, color = "black"))
- # strip.plot
+ 
+  strip.plot
  
 # # Save the plot
 # ggsave(paste0("./Figures/", date_folder, "/Bee-plant-detection-prob-V-bee-stripes.pdf"), 
@@ -833,6 +606,81 @@ ggsave(paste0("./Figures/", date_folder, "/Fig-2-Bee-plant-interaction-prob.png"
  
  
 
+  
+  
+  
+  # 15. Plot the relationship between p and bee size ----------------------------------------
+  
+  
+  
+  # What proportion of the mass is > 0?
+  mean(out_df$beta_p.3. > 0)
+  
+  
+  
+  # Create a dataframe with the parameter estimates from each MCMC iteraction
+  pred.p.size <- data.frame(beta_p_B_size = out_df$beta_p.3., 
+                            mu.p = out_df$beta_p.1.,
+                            iteration = 1:length(out_df$beta_p.1.))
+  
+  ## Add a column with the covariate
+  pred.p.size <- expand_grid(pred.p.size, 
+                             tibble(Size.scaled = seq(-3, 3, length.out = 50)))
+  
+  
+  # Add predictions
+  pred.p.size$pred <- plogis(pred.p.size$mu.p + 
+                               pred.p.size$beta_p_B_size * 
+                               pred.p.size$Size.scaled)
+  
+  
+  # Take a subsample of the iteractions
+  sub.samp <- sample(1:nrow(out_df), 500, replace = FALSE)
+  
+  # Subset the data
+  pred.p.size.sub <- pred.p.size[pred.p.size$iteration %in% sub.samp,]
+  
+  
+  
+  
+  
+  # Calculate the mean value for the relationship
+  mean_p_size <- data.frame(Size.scaled = seq(-3, 3, length.out = 50),
+                            mu.p = mean(out_df$beta_p.1.),
+                            beta_p_B_size = mean(out_df$beta_p.3.))
+  
+  
+  mean_p_size$pred <- plogis(mean_p_size$mu.p +
+                               mean_p_size$beta_p_B_size * mean_p_size$Size.scaled)
+  
+  
+  # Create plot
+  bee.size.plot.p <- ggplot() +
+    geom_line(data = pred.p.size.sub, aes(x = as.numeric(Size.scaled), 
+                                          y = as.numeric(pred), 
+                                          col = as.factor(iteration)), 
+              alpha = .4) +
+    geom_line(data = mean_p_size, aes(x = Size.scaled,
+                                      y = pred), col = "black", lwd = 1)+
+    
+    ylab("Probability of detecting \nthe bee on a plant")+
+    xlab("Bee size standardized")+
+    theme_bw()+ 
+    theme(legend.position = "none",
+          strip.background = element_rect(colour = "black", fill = "white"),
+          strip.text = element_text(size = title.size, color = "black"), 
+          panel.background = element_rect(colour = "black", fill = NA),
+          axis.text.x = element_text(size = text.size, color = "black"),
+          axis.text.y = element_text(size = text.size, color = "black"),
+          axis.title.x = element_text(size = title.size, color = "black"),
+          axis.title.y = element_text(size = title.size, color = "black"))
+  
+  bee.size.plot.p
+  # # Save the plot
+  # ggsave(paste0("./Figures/", date_folder, "/Bee-plant-detection-prob-V-bee-size.pdf"), 
+  #        height = 3, width = 5)
+  # 
+  
 
 
 
@@ -844,28 +692,28 @@ ggsave(paste0("./Figures/", date_folder, "/Fig-2-Bee-plant-interaction-prob.png"
 
 
  # observation > literature
- mean(out_df$beta_p.6. > out_df$beta_p.4.)
+ mean(out_df$beta_p.1. > out_df$beta_p.4.)
  
  # observation > collection
- mean(out_df$beta_p.6. > out_df$beta_p.5.)
+ mean(out_df$beta_p.1. > out_df$beta_p.5.)
  
  # observation > aggregated
- mean(out_df$beta_p.6. > out_df$beta_p.1.)
+ mean(out_df$beta_p.1. > out_df$beta_p.6.)
  
 
 
 # Create a dataframe with the parameter estimates from each MCMC iteraction
 pred.p <- data.frame(beta_p_lit = out_df$beta_p.4., 
                      beta_p_col = out_df$beta_p.5., 
-                     beta_p_obs = out_df$beta_p.6., 
+                     beta_p_aggs = out_df$beta_p.6., 
                      mu.p = out_df$beta_p.1.,
                      iteration = 1:length(out_df$beta_p.1.))
 
 ## Add a column with the covariate
 pred.p$Literature <- plogis(pred.p$mu.p + pred.p$beta_p_lit)  #literature
 pred.p$Collection <- plogis(pred.p$mu.p + pred.p$beta_p_col)  #collection
-pred.p$Observation <- plogis(pred.p$mu.p + pred.p$beta_p_obs)  #iNaturalist
-pred.p$Aggregated  <- plogis(pred.p$mu.p)  # Aggregated
+pred.p$Aggregated <- plogis(pred.p$mu.p + pred.p$beta_p_aggs)  #iNaturalist
+pred.p$Observation   <- plogis(pred.p$mu.p)  # Aggregated
 
 # Convert to long format
 pred.p.long <- melt(pred.p[,6:9])
@@ -903,7 +751,7 @@ citation.plot <- ggplot(pred.p.long, aes(x = probability, y = citation)) +
         axis.title.x = element_text(size = title.size, color = "black"),
         axis.title.y = element_text(size = title.size, color = "black"))
 
-# citation.plot
+ citation.plot
 # 
 # # Save the plot
 # ggsave(paste0("./Figures/", date_folder, "/Bee-plant-detection-prob-V-citation.pdf"), 
@@ -923,30 +771,30 @@ citation.plot <- ggplot(pred.p.long, aes(x = probability, y = citation)) +
 
 
 
+# yellow > other
+mean(out_df$beta_p.1. > (out_df$beta_p.1. + out_df$beta_p.7.))
+
 # yellow > blue
-mean(out_df$beta_p.7. > out_df$beta_p.8.)
+mean(out_df$beta_p.1. > (out_df$beta_p.1. + out_df$beta_p.8.))
 
 # yellow > white
-mean(out_df$beta_p.7. > out_df$beta_p.9.)
-
-# yellow > other
-mean(out_df$beta_p.7. > out_df$beta_p.1.)
+mean(out_df$beta_p.1. > (out_df$beta_p.1. + out_df$beta_p.9.))
 
 
 
 
 # Create a dataframe with the parameter estimates from each MCMC iteraction
-pred.p.col <- data.frame(beta_p_yellow = out_df$beta_p.7., 
+pred.p.col <- data.frame(beta_p_other = out_df$beta_p.7., 
                          beta_p_blue = out_df$beta_p.8., 
                          beta_p_white = out_df$beta_p.9., 
-                           mu.p = out_df$beta_p.1.,
-                           iteration = 1:length(out_df$beta_p.1.))
+                         mu.p = out_df$beta_p.1.,
+                         iteration = 1:length(out_df$beta_p.1.))
 
 ## Add a column with the covariate
-pred.p.col$yellow <- plogis(pred.p.col$mu.p + pred.p.col$beta_p_yellow)  # yellow
+pred.p.col$other <- plogis(pred.p.col$mu.p + pred.p.col$beta_p_other)  # other
 pred.p.col$blue <- plogis(pred.p.col$mu.p + pred.p.col$beta_p_blue)  # blue
 pred.p.col$white <- plogis(pred.p.col$mu.p + pred.p.col$beta_p_white)  # white
-pred.p.col$other <- plogis(pred.p.col$mu.p)  # other
+pred.p.col$yellow  <- plogis(pred.p.col$mu.p)  # other
 
 
 # Convert to long format
@@ -961,16 +809,24 @@ mu <- ddply(pred.p.col.long, "color", summarise,
 
 head(mu)
 
+# Arrange the colors in the order we want them displayed
+pred.p.col.long$color <- factor(pred.p.col.long$color, levels = c("yellow", 
+                                                                      "other",
+                                                                      "blue", 
+                                                                      "white"))
 
-mean(out_df$beta_p.10. > out_df$beta_p.1.)
+mu$color <- factor(mu$color, levels = c("yellow", 
+                                         "other",
+                                         "blue", 
+                                         "white"))
 
 # Create the plot
 flow.col.plot.p <- ggplot(pred.p.col.long, aes(x = probability, y = color)) +
   geom_density_ridges(aes(fill = color)) +
-  scale_fill_manual(values = c( "#E7B800", "#00AFBB","grey", "black"))+
+  scale_fill_manual(values = pal_cols)+
+  scale_color_manual(values = pal_cols)+
   geom_vline(data=mu, aes(xintercept=grp.mean, color=color),
              linetype="dashed")+
-  scale_color_manual(values = c("#E7B800","#00AFBB", "grey", "black"))+
   xlab("Probability of detecting a \nbee interacting on the plant")+
   ylab("Flower color")+
   theme_bw()+ 
@@ -983,7 +839,7 @@ flow.col.plot.p <- ggplot(pred.p.col.long, aes(x = probability, y = color)) +
         axis.title.x = element_text(size = title.size, color = "black"),
         axis.title.y = element_text(size = title.size, color = "black"))
 
-# flow.col.plot.p
+ flow.col.plot.p
 # # Save the plot
 # ggsave(paste0("./Figures/", date_folder, "/Bee-plant-detection-prob-V-color.pdf"), 
 #        height = 3, width = 5)
@@ -1001,7 +857,8 @@ flow.col.plot.p <- ggplot(pred.p.col.long, aes(x = probability, y = color)) +
 
 
 
-mean(out_df$beta_p.10. > out_df$beta_p.1.)
+ # Not bowl > bowl
+mean(out_df$beta_p.1. > (out_df$beta_p.1. + out_df$beta_p.10.))
 
 
 
@@ -1052,7 +909,7 @@ flow.shape.plot.p <- ggplot(pred.p.shape.long, aes(x = probability, y = bowl)) +
         axis.title.x = element_text(size = title.size, color = "black"),
         axis.title.y = element_text(size = title.size, color = "black"))
 
-# flow.shape.plot.p
+flow.shape.plot.p
 # # Save the plot
 # ggsave(paste0("./Figures/", date_folder, "/Bee-plant-detection-prob-V-shape.pdf"), 
 #        height = 3, width = 5)
@@ -1066,77 +923,6 @@ flow.shape.plot.p <- ggplot(pred.p.shape.long, aes(x = probability, y = bowl)) +
 
 
 
-# 15. Plot the relationship between p and bee size ----------------------------------------
-
-
-
-
-
-
-# Create a dataframe with the parameter estimates from each MCMC iteraction
-pred.p.size <- data.frame(beta_p_B_size = out_df$beta_p.3., 
-                       mu.p = out_df$beta_p.1.,
-                       iteration = 1:length(out_df$beta_p.1.))
-
-## Add a column with the covariate
-pred.p.size <- expand_grid(pred.p.size, 
-                        tibble(Size.scaled = seq(-3, 3, length.out = 50)))
-
-
-# Add predictions
-pred.p.size$pred <- plogis(pred.p.size$mu.p + 
-                           pred.p.size$beta_p_B_size * 
-                           pred.p.size$Size.scaled)
-
-
-# Take a subsample of the iteractions
-sub.samp <- sample(1:nrow(out_df), 500, replace = FALSE)
-
-# Subset the data
-pred.p.size.sub <- pred.p.size[pred.p.size$iteration %in% sub.samp,]
-
-
-
-
-
-# Calculate the mean value for the relationship
-mean_p_size <- data.frame(Size.scaled = seq(-3, 3, length.out = 50),
-                          mu.p = mean(out_df$beta_p.1.),
-                          beta_p_B_size = mean(out_df$beta_p.3.))
-
-
-mean_p_size$pred <- plogis(mean_p_size$mu.p +
-                             mean_p_size$beta_p_B_size * mean_p_size$Size.scaled)
-
-
-# Create plot
-bee.size.plot.p <- ggplot() +
-  geom_line(data = pred.p.size.sub, aes(x = as.numeric(Size.scaled), 
-                                     y = as.numeric(pred), 
-                                     col = as.factor(iteration)), 
-            alpha = .4) +
-  geom_line(data = mean_p_size, aes(x = Size.scaled,
-                                      y = pred), col = "black", lwd = 1)+
-
-  ylab("Probability of detecting \nthe bee on a plant")+
-  xlab("Bee size standardized")+
-  theme_bw()+ 
-  theme(legend.position = "none",
-        strip.background = element_rect(colour = "black", fill = "white"),
-        strip.text = element_text(size = title.size, color = "black"), 
-        panel.background = element_rect(colour = "black", fill = NA),
-        axis.text.x = element_text(size = text.size, color = "black"),
-        axis.text.y = element_text(size = text.size, color = "black"),
-        axis.title.x = element_text(size = title.size, color = "black"),
-        axis.title.y = element_text(size = title.size, color = "black"))
-
-# bee.size.plot.p
-# # Save the plot
-# ggsave(paste0("./Figures/", date_folder, "/Bee-plant-detection-prob-V-bee-size.pdf"), 
-#        height = 3, width = 5)
-# 
-
-
 
 # 11. Combined detection figure ----------------------------------------
 
@@ -1144,7 +930,8 @@ bee.size.plot.p <- ggplot() +
 
 
 
-((bee.size.plot.p + strip.plot + flow.col.plot.p + flow.shape.plot.p)/  citation.plot) + plot_layout(ncol = 2)+
+((strip.plot + bee.size.plot.p + 
+    flow.col.plot.p + flow.shape.plot.p)/  citation.plot) + plot_layout(ncol = 2)+
   plot_annotation(tag_levels = 'A')
 
 

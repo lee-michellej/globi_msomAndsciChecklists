@@ -245,6 +245,40 @@ out_no_bee_plant_df <- as.data.frame(out_no_bee_plant)
 
 
 
+#------------  Upload the data & format
+# object name = bee.plant.cite
+# 3-D array
+load("/Users/gdirenzo/Documents/GitHub/globi_msomAndsciChecklists/Data/data_summary/globi_data_formatted_bee_plant_date_citation_2025_01_22 - short plant list - no apis.rds")
+
+
+
+# Read in the dat_info
+load("/Users/gdirenzo/Documents/GitHub/globi_msomAndsciChecklists/Data/dat_info_2025_01_22.rds")
+# object name = dat_info
+
+
+
+# Load covariates
+load("/Users/gdirenzo/Documents/GitHub/globi_msomAndsciChecklists/Data/model_covariates - 2025 01 22 - no apis.rds")
+
+
+# Flatten the array
+dat_long <- melt(bee.plant.cite) 
+colnames(dat_long) <- c("bee_ID", "plant_ID", "cite_ID", "observation")
+
+
+# Create unique bee-plant pairs for the ecological model
+dat_pairs <- unique(subset(dat_long, select = c("bee_ID","plant_ID"))) 
+colnames(dat_pairs) <- c("bee_species", "plant_species")
+
+head(dat_long)
+
+
+
+
+
+
+
 
 
 # 3. Set universal text size for plots ----------------------------------------
@@ -1940,19 +1974,6 @@ mod_name <- "bee_species"
 
 # n_plants_per_bee
 
-
-#------------  Upload the data & format
-# object name = bee.plant.cite
-# 3-D array
-load("/Users/gdirenzo/Documents/GitHub/globi_msomAndsciChecklists/Data/data_summary/globi_data_formatted_bee_plant_date_citation_2025_01_22 - short plant list - no apis.rds")
-
-
-
-# Read in the dat_info
-load("/Users/gdirenzo/Documents/GitHub/globi_msomAndsciChecklists/Data/dat_info_2025_01_22.rds")
-# object name = dat_info
-
-
   
   # Summarize the observed data
   
@@ -1994,15 +2015,28 @@ load("/Users/gdirenzo/Documents/GitHub/globi_msomAndsciChecklists/Data/dat_info_
   
 
   # Combine the names, and model output
-  dat <- data.frame(names = c(rep("observed", dat_info$bee.species),
-                              rep("Num-interact", dat_info$bee.species)), 
+  dat <- data.frame(names = c(rep("observed", times = length(dat_info$bee.species)),
+                              rep("Num-interact", times = length(dat_info$bee.species))), 
                     species = rep(dat_info$bee.species, times = 2),
+                    bee_num = rep(1:length(dat_info$bee.species), times = 2),
                     mod.mean = c( y.bee.plant,
                                   bee.interactions.mean), 
                     mod.q2.5 = c(rep(NA, times = length(y.bee.plant)),
                                  bee.interactions.lower), 
                     mod.q97.5 = c(rep(NA, times = length(y.bee.plant)),
                                   bee.interactions.upper))
+  
+  
+  # Aggregate data - these are already in the correct species order per file "4 - Format_covariates_2025_01_07.R"
+  covariates$bee.covariates$bee_num <- 1:nrow(covariates$bee.covariates)
+  
+  # Subset bee family and species ID
+  bee_family_species <- covariates$bee.covariates %>% 
+    select(family_num, bee_num, family)
+  
+  dat <- dat %>%
+    left_join(bee_family_species, by = "bee_num") 
+  
   
   
   # Plot with numer of plant interactions per bee species
@@ -2014,6 +2048,7 @@ load("/Users/gdirenzo/Documents/GitHub/globi_msomAndsciChecklists/Data/dat_info_
     geom_point(size = 1) +
     geom_point(data = dat[grep("observed", dat$names),], 
                aes(x= species, y = mod.mean), size = 1, col = "red") +
+    facet_wrap(~family, scale = "free")+
     geom_hline(yintercept = 0, lty=2) +
     coord_flip() + 
     ylab('Number of plant species') +
@@ -2027,8 +2062,8 @@ load("/Users/gdirenzo/Documents/GitHub/globi_msomAndsciChecklists/Data/dat_info_
   
   
   # Save the plot
-  ggsave(paste0("./Figures/", date_folder, "/Appendix-S1-Fig-S1-Number-of-bee-plant-interactions.png"), 
-         height = 14, width = 8)
+  ggsave(paste0(github_folder_path, "/Figures/", date_folder, "/Appendix-S1-Fig-S1-Number-of-bee-plant-interactions.png"), 
+         height = 12, width = 14)
   
 
   
@@ -2071,24 +2106,6 @@ load("/Users/gdirenzo/Documents/GitHub/globi_msomAndsciChecklists/Data/dat_info_
   #   
   #   # Flower shape (== bowl)
   #   beta_psi[7] * flower_shape[plant_species[i]]
-  
-  
-
-  # Before writing the function - we need to call in some data and format it
-  # Load covariates
-  load("/Users/gdirenzo/Documents/GitHub/globi_msomAndsciChecklists/Data/model_covariates - 2025 01 22 - no apis.rds")
-  
-  
-  # Flatten the array
-  dat_long <- melt(bee.plant.cite) 
-  colnames(dat_long) <- c("bee_ID", "plant_ID", "cite_ID", "observation")
-  
-  
-  # Create unique bee-plant pairs for the ecological model
-  dat_pairs <- unique(subset(dat_long, select = c("bee_ID","plant_ID"))) 
-  colnames(dat_pairs) <- c("bee_species", "plant_species")
-  
-  head(dat_long)
   
   
   # Write a function to calculate the average interaction probability across species per family
