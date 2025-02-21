@@ -137,8 +137,43 @@ load("/Users/gdirenzo/Documents/GitHub/globi_msomAndsciChecklists/Data/obs_dat-2
 
 
 
+
+
+
 # 3. Calculate values reported in the results -------------------------------------------------------
 
+
+## Calcualte number of solitary bees
+sum(covariates$bee.covariates$solitary)
+sum(covariates$bee.covariates$notSolitary)
+
+
+## Calcualte number of striped bees
+sum(covariates$bee.covariates$striped)
+sum(covariates$bee.covariates$notStriped)
+
+# Mean bee size
+mean(covariates$bee.covariates$size)
+min(covariates$bee.covariates$size)
+max(covariates$bee.covariates$size)
+
+
+## Plant flower color sample size
+sum(covariates$plant.covariates$yellow)
+sum(covariates$plant.covariates$blue.new)
+sum(covariates$plant.covariates$white)
+sum(covariates$plant.covariates$other)
+
+
+# Bowl vs not bowl
+sum(covariates$plant.covariates$bowl)
+
+
+# Source types
+sum(covariates$citation.covariates$observation)
+sum(covariates$citation.covariates$collection)
+sum(covariates$citation.covariates$literature)
+sum(covariates$citation.covariates$aggregated)
 
 
 ##### Calculate: Number of total unique bee-plant interactions in raw data

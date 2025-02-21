@@ -531,7 +531,7 @@ mean(out_df$beta_psi.1. > (out_df$beta_psi.1. + out_df$beta_psi.6.))
 
 
 # Save the plot
-ggsave(paste0(github_folder_path, "/Figures/", date_folder, "/Fig-2-Bee-plant-interaction-prob.png")
+ggsave(paste0(github_folder_path, "/Figures/", date_folder, "/Fig-1-Bee-plant-interaction-prob.png")
        , height = 8, width = 12)
 
 
@@ -936,7 +936,7 @@ flow.shape.plot.p
 
 
 # Save the plot
-ggsave(paste0("./Figures/", date_folder, "/Fig-3-Bee-plant-detection-prob.png")
+ggsave(paste0(github_folder_path, "/Figures/", date_folder, "/Fig-2-Bee-plant-detection-prob.png")
        , height = 6, width = 15)
 
 

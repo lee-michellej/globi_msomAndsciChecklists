@@ -2160,40 +2160,36 @@ fam_level_interaction_plot <- function(mod_name,
   # Loop through each bee and plant family and MCMC iteration to calculate the interaction probability
   
   for(i in 1:length(dat_pairs$bee_species)){ # for each bee and plant pair
-    
-    for(j in 1:n_samp){ # for each MCMC iteration
-      
       
     if(mod_name == "bee_family"){
+      
       # To calculate the interaction probability per family, you need to calculate psi
-      psi[bee_species[i], plant_species[i], j] <- 
+      psi[bee_species[i], plant_species[i], ] <- 
         
-        plogis(
           # Bee family-specific random effect
-          out_u[MCMC.subset[j], bee_family[bee_species[i]]] +
+          out_u[MCMC.subset, bee_family[bee_species[i]]] +
             
             # Intercept
             # Average size bee
             # Not solitary bee
             # Yellow flower color
             # Not bowl
-            beta_psi[MCMC.subset[j], 1] +
+            beta_psi[MCMC.subset, 1] +
             
             # Bee size
-            beta_psi[MCMC.subset[j], 2] * size[bee_species[i]]+ 
+            beta_psi[MCMC.subset, 2] * size[bee_species[i]]+ 
             
             # Bee solitary (1 = yes; 0 = no)
-            beta_psi[MCMC.subset[j], 3] * solitary[bee_species[i]]+ 
+            beta_psi[MCMC.subset, 3] * solitary[bee_species[i]]+ 
             
             # Flower color
             # Different bee genus have different probabilities of interacting with different plant colors
-            beta_psi[MCMC.subset[j], 4] * other_flower_color[plant_species[i]]+
-            beta_psi[MCMC.subset[j], 5] * blue_flower_color[plant_species[i]]+
-            beta_psi[MCMC.subset[j], 6] * white_flower_color[plant_species[i]]+
+            beta_psi[MCMC.subset, 4] * other_flower_color[plant_species[i]]+
+            beta_psi[MCMC.subset, 5] * blue_flower_color[plant_species[i]]+
+            beta_psi[MCMC.subset, 6] * white_flower_color[plant_species[i]]+
             
             # Flower shape (== bowl)
-            beta_psi[MCMC.subset[j], 7] * flower_shape[plant_species[i]]
-        )
+            beta_psi[MCMC.subset, 7] * flower_shape[plant_species[i]]
       
       
     }
@@ -2202,36 +2198,32 @@ fam_level_interaction_plot <- function(mod_name,
         
       
   # To calculate the interaction probability per family, you need to calculate psi
-   psi[bee_species[i], plant_species[i], j] <- 
+   psi[bee_species[i], plant_species[i], ] <- 
      
-     plogis(
      # Plant family-specific random effect
-     out_u[MCMC.subset[j], plant_family[plant_species[i]]] +
+     out_u[MCMC.subset, plant_family[plant_species[i]]] +
    
      # Intercept
      # Average size bee
      # Not solitary bee
      # Yellow flower color
      # Not bowl
-     beta_psi[MCMC.subset[j], 1] +
+     beta_psi[MCMC.subset, 1] +
      
      # Bee size
-     beta_psi[MCMC.subset[j], 2] * size[bee_species[i]]+ 
+     beta_psi[MCMC.subset, 2] * size[bee_species[i]]+ 
      
      # Bee solitary (1 = yes; 0 = no)
-     beta_psi[MCMC.subset[j], 3] * solitary[bee_species[i]]+ 
+     beta_psi[MCMC.subset, 3] * solitary[bee_species[i]]+ 
      
      # Flower color
      # Different bee genus have different probabilities of interacting with different plant colors
-     beta_psi[MCMC.subset[j], 4] * other_flower_color[plant_species[i]]+
-     beta_psi[MCMC.subset[j], 5] * blue_flower_color[plant_species[i]]+
-     beta_psi[MCMC.subset[j], 6] * white_flower_color[plant_species[i]]+
+     beta_psi[MCMC.subset, 4] * other_flower_color[plant_species[i]]+
+     beta_psi[MCMC.subset, 5] * blue_flower_color[plant_species[i]]+
+     beta_psi[MCMC.subset, 6] * white_flower_color[plant_species[i]]+
      
      # Flower shape (== bowl)
-     beta_psi[MCMC.subset[j], 7] * flower_shape[plant_species[i]]
-     )
-   
-      }
+     beta_psi[MCMC.subset, 7] * flower_shape[plant_species[i]]
       
       
     }
@@ -2263,6 +2255,11 @@ fam_level_interaction_plot <- function(mod_name,
       dplyr::summarize(mean_psi = mean(psi), 
                        lower_95 = quantile(psi, probs = c(0.025, 0.975), na.rm = TRUE)[1],
                        upper_95 = quantile(psi, probs = c(0.025, 0.975), na.rm = TRUE)[2],
+                       
+                       mean_psi_p = mean(plogis(psi)), 
+                       lower_95_p = quantile(plogis(psi), probs = c(0.025, 0.975), na.rm = TRUE)[1],
+                       upper_95_p = quantile(plogis(psi), probs = c(0.025, 0.975), na.rm = TRUE)[2],
+                       
                        .groups = "drop")
     
     ggplot_title <- "Plant family model"
@@ -2284,6 +2281,10 @@ fam_level_interaction_plot <- function(mod_name,
       dplyr::summarize(mean_psi = mean(psi), 
                        lower_95 = quantile(psi, probs = c(0.025, 0.975), na.rm = TRUE)[1],
                        upper_95 = quantile(psi, probs = c(0.025, 0.975), na.rm = TRUE)[2],
+                       
+                       mean_psi_p = mean(plogis(psi)), 
+                       lower_95_p = quantile(plogis(psi), probs = c(0.025, 0.975), na.rm = TRUE)[1],
+                       upper_95_p = quantile(plogis(psi), probs = c(0.025, 0.975), na.rm = TRUE)[2],
                        .groups = "drop")
     
     # Rename bee family column name with capital (so the ggplot function works next)
@@ -2303,6 +2304,25 @@ fam_level_interaction_plot <- function(mod_name,
     geom_point(size = 1) +
    geom_hline(yintercept = 0, lty=2) +
     coord_flip() + 
+    ylab('Interaction probability on the logit scale') +
+    xlab("Family name") +
+    theme_bw()+ 
+    ggtitle(ggplot_title)+
+    theme(axis.text.x = element_text(size = 10, color = "black"), 
+          axis.text.y = element_text(size = 10, color = "black", face = "italic"), 
+          axis.title.y = element_text(size = 10, color = "black"), 
+          axis.title.x =element_text(size = 10, color = "black")
+    ) 
+  
+  # Plot
+  gplot_p <- ggplot(psi_with_family, 
+                  aes(x= Family, y=mean_psi_p, 
+                      ymin= lower_95_p, 
+                      ymax= upper_95_p))+ 
+    geom_linerange(linewidth = 1) +
+    geom_point(size = 1) +
+    geom_hline(yintercept = 0, lty=2) +
+    coord_flip() + 
     ylab('Interaction probability') +
     xlab("Family name") +
     theme_bw()+ 
@@ -2313,34 +2333,51 @@ fam_level_interaction_plot <- function(mod_name,
           axis.title.x =element_text(size = 10, color = "black")
     ) 
   
-  return(gplot)
+  return(list(gplot = gplot,
+              gplot_p = gplot_p,
+              psi_with_family = psi_with_family))
   
 }
 
 
 #---- bee_family
 bee_fam_inter_plot <- fam_level_interaction_plot(mod_name = "bee_family",
-                                                  n_samp = 2000,
+                                                  n_samp = 5000,
                                                   result = result_bee_family)
 
 
 #---- plant_family
 plant_fam_inter_plot <- fam_level_interaction_plot(mod_name = "plant_family",
-                                                 n_samp = 2000,
+                                                 n_samp = 5000,
                                                  result = result_plant_family)
 
 
 
 # Create 1 plot
-bee_fam_inter_plot + plant_fam_inter_plot +
+# Logit plot
+bee_fam_inter_plot$gplot + plant_fam_inter_plot$gplot +
   plot_layout(ncol = 2) +  
   plot_annotation(tag_levels = "A")
 
 
+# Probabilty plot
+bee_fam_inter_plot$gplot_p + plant_fam_inter_plot$gplot_p +
+  plot_layout(ncol = 2) +  
+  plot_annotation(tag_levels = "A")
 
+
+# Calculate the number of families with < 0.20 interaction probability
+# Bee family
+length(which(bee_fam_inter_plot$psi_with_family$mean_psi_p < 0.2))
+# Plant family
+length(which(plant_fam_inter_plot$psi_with_family$mean_psi_p < 0.2))
+length(plant_fam_inter_plot$psi_with_family$mean_psi_p)
+
+
+  
 # Save the plot
 ggsave(paste0(github_folder_path, "/Figures/", date_folder, "/Appendix-S2-Fig-S10-Number-of-bee-plant-interactions.png"), 
-       height = 14, width = 8)
+       height = 10, width = 8)
 
 
 # End script
