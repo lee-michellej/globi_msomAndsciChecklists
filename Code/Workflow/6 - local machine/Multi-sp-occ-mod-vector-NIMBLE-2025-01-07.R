@@ -101,17 +101,17 @@ setwd("/home/gdirenzo/globi/")
 
 
 # Get the model name from command line arguments
-args <- commandArgs(trailingOnly = TRUE)
+args <- c("bee_species", "full")
 
 if (length(args) == 0) {
   stop("No model name provided")
 }
 
 # Save model name as the first argument
-model_name <- "bee_species" #args[1]
+model_name <- args[1]
 
 # Save the type of model run
-model_run_type <- "full" #args[2]
+model_run_type <- args[2]
 
 
 # Stop if no arguments are passed
@@ -137,8 +137,7 @@ nimbleOptions(enableDerivs = TRUE)
 
 
 # Call nimble models
-source("/home/gdirenzo/globi/Code/model-code-2024-01-07.R")
-# source("/Users/gdirenzo/Documents/GitHub/globi_msomAndsciChecklists/Code/Workflow/6 - Model run HPC/model-code-2024-01-07.R")
+source("/Users/gdirenzo/Documents/GitHub/globi_msomAndsciChecklists/Code/Workflow/6 - local machine/model-code-2024-01-07.R")
 
 # There is 1 function where you can specify the type of model:
   # 1. No bee/plant specification = no_bee_plant
@@ -181,35 +180,9 @@ detectCores()
 # Number of cores to use
 ncore <- 3     
 
-# Make a PSOCK cluster explicitly:
-cl <- parallel::makeCluster(ncore, type = "PSOCK")
-
-# Register the doParallel backend
+cl <- makeCluster(ncore)
 registerDoParallel(cl)
 
-# Load the nimble package and source the model code on each worker node
-clusterEvalQ(cl, {
-  # Specify the library location
-  .libPaths( c(
-    "/home/gdirenzo/R/x86_64-redhat-linux-gnu-library/4.2",
-    "/home/software/hovenweep/arc/apps/R/library/4.2/GNU/12.1",
-    "/opt/cray/pe/R/4.2.1.2/lib64/R/library"
-  ))
-  # Load necessary packages
-  library(nimble)  # Ensure nimble is loaded on all nodes
-  library(reshape2)  # Ensure reshape2 is loaded on all nodes
-  # Source the model code to ensure that the required functions are available on each worker
-  source("/home/gdirenzo/globi/Code/model-code-2024-01-07.R")
-})
-
-# Export the necessary global variables to each worker node (no need to export again in foreach)
-clusterExport(cl, list("occ_model", 
-                       "model_name", 
-                       "n.iter", 
-                       "n.burn", 
-                       "n.thin1", 
-                       "n.thin2",
-                       "library_paths"), envir = .GlobalEnv)
 
 # set seeds for each worker
 seeds <- 1:ncore
@@ -219,8 +192,7 @@ start.time <- Sys.time()
 
  # Run the model using dopar 
   result <- foreach(x = seeds, 
-                   .packages = c("nimble", "reshape2")
-                   ) %dopar% {
+                    .packages="nimble") %dopar% {
                      
    # Run the model function
    occ_model(seed = seeds[x],
@@ -230,14 +202,6 @@ start.time <- Sys.time()
              n.thin2 = n.thin2,
              model = model_name)
  }
-
-# Run one chain of the model to determine if the parallel processing is the issue - this runs fine. The HPC runs continue. 
-# result <- occ_model(seed = seeds[x],
-#             n.iter = n.iter, 
-#             n.burn = n.burn,
-#             n.thin1 = n.thin1, 
-#             n.thin2 = n.thin2,
-#             model = model_name)
 
 
 # Stop the cluster after use

@@ -141,6 +141,7 @@ load("/Users/gdirenzo/Documents/GitHub/globi_msomAndsciChecklists/Data/dat_info_
 
 # Load covariates
 load("/Users/gdirenzo/Documents/GitHub/globi_msomAndsciChecklists/Data/model_covariates - 2025 01 22 - no apis.rds")
+# object name = covariates
 
 
 
@@ -167,6 +168,26 @@ title.size <- 12
 
 out_df <- as.data.frame(out)
 
+# Bee size effect
+# Small bee (5mm) vs large bee (15mm)
+# Extract min bee value
+small_bee <- covariates$bee.covariates[which(covariates$bee.covariates$size == min(covariates$bee.covariates$size)),]$size_std[1]
+# Extract max bee value
+large_bee <- covariates$bee.covariates[which(covariates$bee.covariates$size == max(covariates$bee.covariates$size)),]$size_std[1]
+
+# Calculate the probability of interacting with a plant:
+small_bee_prob <- plogis(out_df$beta_psi.1. + out_df$beta_psi.2. * small_bee)
+mean(small_bee_prob)
+quantile(small_bee_prob, c(0.025, 0.975))
+
+large_bee_prob <- plogis(out_df$beta_psi.1. + out_df$beta_psi.2. * large_bee)
+mean(large_bee_prob)
+quantile(large_bee_prob, c(0.025, 0.975))
+
+small_vs_large <- small_bee_prob - large_bee_prob
+mean(small_vs_large)
+quantile(small_vs_large, c(0.025, 0.975))
+
 
 
 # What proportion of the mass is > 0?
@@ -179,10 +200,12 @@ mean(out_df$beta_psi.2. < 0)
  param_df <- data.frame(beta_psi_B_size = out_df$beta_psi.2., 
                         mu.psi = out_df$beta_psi.1.,
                         iteration = 1:length(out_df$beta_psi.1.))
+ # Create a vector of size values
+ size_values <- seq(-3, 3, length.out = 50)
  
- ## Add a column with the covariate
- pred.psi <- expand_grid(param_df, 
-                          tibble(Size.scaled = seq(-3, 3, length.out = 50)))
+ # Create pred.psi more carefully
+ pred.psi <- param_df %>%
+   crossing(Size.scaled = size_values)
  
  
  # Add predictions
@@ -192,43 +215,91 @@ mean(out_df$beta_psi.2. < 0)
  # Look at head
  head(pred.psi)
  
+ # Round to ensure grouping works properly
+ pred.psi$Size.scaled <- round(pred.psi$Size.scaled, 2)
  
- # Take a subsample of the iteractions
- sub.samp <- sample(1:nrow(pred.psi), 100000, replace = FALSE)
+ # Group by Size.scaled and calculate quantiles
+ size_vals <- unique(pred.psi$Size.scaled)
  
- # Subset the data
- pred.psi.sub <- pred.psi[pred.psi$iteration %in% sub.samp,]
+ # Create an empty data frame
+ credible_intervals <- data.frame(
+   Size.scaled = size_vals,
+   lower_95 = NA,
+   upper_95 = NA,
+   lower_80 = NA,
+   upper_80 = NA,
+   lower_50 = NA,
+   upper_50 = NA,
+   mean_pred = NA
+ )
  
+ # Loop through all calculations for the credible intervals
+ for(i in 1:length(size_vals)) {
+   
+   subset_data <- pred.psi$pred[pred.psi$Size.scaled == size_vals[i]]
+   
+   credible_intervals$lower_95[i] <- quantile(subset_data, 0.025)
+   credible_intervals$upper_95[i] <- quantile(subset_data, 0.975)
+   credible_intervals$lower_80[i] <- quantile(subset_data, 0.10)
+   credible_intervals$upper_80[i] <- quantile(subset_data, 0.90)
+   credible_intervals$lower_50[i] <- quantile(subset_data, 0.25)
+   credible_intervals$upper_50[i] <- quantile(subset_data, 0.75)
+   
+   credible_intervals$
+     # Create an empty data frame
+     credible_intervals <- data.frame(
+       Size.scaled = size_vals,
+       lower_95 = NA,
+       upper_95 = NA,
+       lower_80 = NA,
+       upper_80 = NA,
+       lower_50 = NA,
+       upper_50 = NA,
+       mean_pred = NA
+     )
+   
+   # Loop through all calculations for the credible intervals
+   for(i in 1:length(size_vals)) {
+     
+     subset_data <- pred.psi$pred[pred.psi$Size.scaled == size_vals[i]]
+     
+     credible_intervals$lower_95[i] <- quantile(subset_data, 0.025)
+     credible_intervals$upper_95[i] <- quantile(subset_data, 0.975)
+     credible_intervals$lower_80[i] <- quantile(subset_data, 0.10)
+     credible_intervals$upper_80[i] <- quantile(subset_data, 0.90)
+     credible_intervals$lower_50[i] <- quantile(subset_data, 0.25)
+     credible_intervals$upper_50[i] <- quantile(subset_data, 0.75)
+     
+     credible_intervals$me_pred[i] <- median(subset_data)
+   }
+   
+   # Create plot
+   bee.size.plot <- ggplot(data = credible_intervals) +
+     # 95% CI - lightest
+     geom_ribbon(aes(x = Size.scaled, ymin = lower_95, ymax = upper_95), 
+                 alpha = 0.2, fill = "darkblue") +
+     # 80% CI - medium
+     geom_ribbon(aes(x = Size.scaled, ymin = lower_80, ymax = upper_80), 
+                 alpha = 0.3, fill = "darkblue") +
+     # 50% CI - darkest
+     geom_ribbon(aes(x = Size.scaled, ymin = lower_50, ymax = upper_50), 
+                 alpha = 0.4, fill = "darkblue") +
+     # Mean or median (depending on how it is calculated) line
+     geom_line(aes(x = Size.scaled, y = me_pred), 
+               col = "darkblue", linewidth = 1.5)  +  
+     ylab("Probability of interacting \nwith a plant") +
+     xlab("Bee size standardized") +
+     theme(legend.position = "none",
+           strip.background = element_rect(colour = "black", fill = "white"),
+           strip.text = element_text(size = title.size), 
+           panel.background = element_rect(colour = "black", fill = NA),
+           axis.text.x = element_text(size = text.size),
+           axis.text.y = element_text(size = text.size),
+           axis.title.x = element_text(size = title.size),
+           axis.title.y = element_text(size = title.size))
+    }
  
- 
- # Calculate the mean value for the relationship
- mean_psi_size <- data.frame(Size.scaled = seq(-3, 3, length.out = 50))
- 
- 
- mean_psi_size$pred <- plogis(mean(param_df$mu.psi) +
-                              mean(param_df$beta_psi_B_size) * mean_psi_size$Size.scaled)
- 
- 
- 
- # Create plot
- bee.size.plot <- ggplot() +
-   geom_line(data = pred.psi.sub, aes(x = as.numeric(Size.scaled), 
-                                      y = as.numeric(pred), 
-                                      col = as.factor(iteration)), 
-             alpha = .4) +
-   geom_line(data = mean_psi_size, aes(x = Size.scaled,
-                                       y = pred), col = "black")+
-   ylab("Probability of interacting \nwith a plant")+
-   xlab("Bee size standardized")+
-   theme(legend.position = "none",
-         strip.background = element_rect(colour = "black", fill = "white"),
-         strip.text = element_text(size = title.size), 
-         panel.background = element_rect(colour = "black", fill = NA),
-         axis.text.x = element_text(size = text.size),
-         axis.text.y = element_text(size = text.size),
-         axis.title.x = element_text(size = title.size),
-         axis.title.y = element_text(size = title.size))
- 
+
 # bee.size.plot
  
  # Save the plot
@@ -259,16 +330,35 @@ mean(out_df$beta_psi.2. < 0)
 mean(out_df$beta_psi.1. > (out_df$beta_psi.1. + out_df$beta_psi.3.))
 
 
+ # Create a dataframe with the parameter estimates from each MCMC iteraction
+ pred.p.soc <- data.frame(beta_psi_B_solitary = out_df$beta_psi.3., 
+                          mu.psi = out_df$beta_psi.1.,
+                          iteration = 1:length(out_df$beta_psi.1.))
+ 
+ 
+# Calculate the probability of interacting with a plant:
+solitary_prob <- plogis(pred.p.soc$mu.psi + pred.p.soc$beta_psi_B_solitary)
+mean(solitary_prob)
+quantile(solitary_prob, c(0.025, 0.975))
 
+notSolitary_prob <- plogis(pred.p.soc$mu.psi)
+mean(notSolitary_prob)
+quantile(notSolitary_prob, c(0.025, 0.975))
 
-# Create a dataframe with the parameter estimates from each MCMC iteraction
-pred.p.soc <- data.frame(beta_psi_B_solitary = out_df$beta_psi.3., 
-                         mu.psi = out_df$beta_psi.1.,
-                         iteration = 1:length(out_df$beta_psi.1.))
+# Calculate the difference in probabilities
+prob_difference <- solitary_prob - notSolitary_prob
+
+# Mean and 95% CI
+mean(prob_difference)
+quantile(prob_difference, c(0.025, 0.975))
+
 
 ## Add a column with the covariate
 pred.p.soc$solitary <- plogis(pred.p.soc$mu.psi + pred.p.soc$beta_psi_B_solitary) 
 pred.p.soc$notSolitary <- plogis(pred.p.soc$mu.psi) 
+
+
+
 
 # Convert to long format
 pred.p.soc.long <- melt(pred.p.soc[,4:5])
@@ -298,7 +388,8 @@ solitary.plot <- ggplot(pred.p.soc.long, aes(x = probability, y = solitary)) +
              linetype="dashed")+
   scale_color_manual(values = wes_palette("GrandBudapest2", 2, type = c("discrete")))+
   xlab("Probability of interacting \nwith a plant")+
-  ylab("Solitary")+
+  ylab("Sociality")+
+  xlim(c(0, 1))+
   theme_bw()+ 
   theme(legend.position = "none",
         strip.background = element_rect(colour = "black", fill = "white"),
@@ -309,7 +400,7 @@ solitary.plot <- ggplot(pred.p.soc.long, aes(x = probability, y = solitary)) +
         axis.title.x = element_text(size = title.size, color = "black"),
         axis.title.y = element_text(size = title.size, color = "black"))
 
-# solitary.plot
+# # # solitary.plot
 # # # Save the plot
 # ggsave(paste0("./Figures/", date_folder, "/Bee-plant-interaction-prob-V-bee-solitary.pdf"), 
 #        height = 3, width = 5)
@@ -349,7 +440,38 @@ mean(out_df$beta_psi.1. > (out_df$beta_psi.1. + out_df$beta_psi.6.))
                             mu.psi = out_df$beta_psi.1., # yellow
                             iteration = 1:length(out_df$beta_psi.1.))
 
+ # Calculate the probability of interacting with a bee:
+ yellow_prob  <- plogis(pred.psi.col$mu.psi)
+ mean(yellow_prob)
+ quantile(yellow_prob, c(0.025, 0.975))
+ 
+ white_prob <- plogis(pred.psi.col$mu.psi + pred.psi.col$beta_psi_white) 
+ mean(white_prob)
+ quantile(white_prob, c(0.025, 0.975))
+ 
+ blue_prob <- plogis(pred.psi.col$mu.psi + pred.psi.col$beta_psi_blue)
+ mean(blue_prob)
+ quantile(blue_prob, c(0.025, 0.975))
+ 
+ other_prob <- plogis(pred.psi.col$mu.psi + pred.psi.col$beta_psi_other)
+ mean(other_prob)
+ quantile(other_prob, c(0.025, 0.975))
 
+  
+ # Calculate the differences:
+ yellow_vs_white <- yellow_prob - white_prob
+ mean(yellow_vs_white)
+ quantile(yellow_vs_white, c(0.025, 0.975))
+ 
+ yellow_vs_blue  <- yellow_prob - blue_prob
+ mean(yellow_vs_blue)
+ quantile(yellow_vs_blue, c(0.025, 0.975))
+ 
+ yellow_vs_other  <- yellow_prob - other_prob
+ mean(yellow_vs_other)
+ quantile(yellow_vs_other, c(0.025, 0.975))
+ 
+ 
  ## Add a column with the covariate
  pred.psi.col$other <- plogis(pred.psi.col$mu.psi + pred.psi.col$beta_psi_other) 
  pred.psi.col$blue <- plogis(pred.psi.col$mu.psi + pred.psi.col$beta_psi_blue) 
@@ -463,6 +585,22 @@ mean(out_df$beta_psi.1. > (out_df$beta_psi.1. + out_df$beta_psi.6.))
                                mu.psi = out_df$beta_psi.1.,
                                iteration = 1:length(out_df$beta_psi.1.))
  
+ # Calculate the probability of interacting with a bee:
+ bowl_prob <- plogis(pred.psi.shape$mu.psi + pred.psi.shape$beta_psi_F_shape)
+ mean(bowl_prob)
+ quantile(bowl_prob, c(0.025, 0.975))
+ 
+ notBowl_prob <- plogis(pred.psi.shape$mu.psi)
+ mean(notBowl_prob)
+ quantile(notBowl_prob, c(0.025, 0.975))
+ 
+ 
+ # Calculate the differences:
+ notbowl_vs_bowl <- notBowl_prob  - bowl_prob
+ mean(notbowl_vs_bowl)
+ quantile(notbowl_vs_bowl, c(0.025, 0.975))
+ 
+ 
  ## Add a column with the covariate
  pred.psi.shape$bowl <- plogis(pred.psi.shape$mu.psi + pred.psi.shape$beta_psi_F_shape) 
  pred.psi.shape$notBowl <- plogis(pred.psi.shape$mu.psi) 
@@ -556,9 +694,16 @@ ggsave(paste0(github_folder_path, "/Figures/", date_folder, "/Fig-1-Bee-plant-in
                       mu.p = out_df$beta_p.1.,
                       iteration = 1:length(out_df$beta_p.1.))
  
+ 
+ 
  ## Add a column with the covariate
- pred.p$stripped <- plogis(pred.p$mu.p + pred.p$beta_p_B_stripped) 
+ pred.p$stripped <- plogis(pred.p$mu.p + pred.p$beta_p_B_stripped)
+ mean(pred.p$stripped)
+ quantile(pred.p$stripped, c(0.025, 0.975))
+ 
  pred.p$notStripped <- plogis(pred.p$mu.p) 
+ mean(pred.p$notStripped)
+ quantile(pred.p$notStripped, c(0.025, 0.975))
  
  # Convert to long format
  pred.p.long <- melt(pred.p[,4:5])
@@ -632,6 +777,22 @@ ggsave(paste0(github_folder_path, "/Figures/", date_folder, "/Fig-1-Bee-plant-in
   pred.p.size$pred <- plogis(pred.p.size$mu.p + 
                                pred.p.size$beta_p_B_size * 
                                pred.p.size$Size.scaled)
+  
+  # Calculate the probability of detecting a bee:
+  small_bee_prob <- plogis(pred.p.size$mu.p + 
+                             pred.p.size$beta_p_B_size * small_bee)
+  mean(small_bee_prob)
+  quantile(small_bee_prob, c(0.025, 0.975))
+  
+  large_bee_prob <- plogis(pred.p.size$mu.p + 
+                             pred.p.size$beta_p_B_size * large_bee)
+  mean(large_bee_prob)
+  quantile(large_bee_prob, c(0.025, 0.975))
+  
+  small_vs_large <- small_bee_prob - large_bee_prob
+  mean(small_vs_large)
+  quantile(small_vs_large, c(0.025, 0.975))
+  
   
   
   # Take a subsample of the iteractions
@@ -711,9 +872,34 @@ pred.p <- data.frame(beta_p_lit = out_df$beta_p.4.,
 
 ## Add a column with the covariate
 pred.p$Literature <- plogis(pred.p$mu.p + pred.p$beta_p_lit)  #literature
+mean(pred.p$Literature)
+quantile(pred.p$Literature, c(0.025, 0.975))
+
 pred.p$Collection <- plogis(pred.p$mu.p + pred.p$beta_p_col)  #collection
+mean(pred.p$Collection)
+quantile(pred.p$Collection, c(0.025, 0.975))
+
 pred.p$Aggregated <- plogis(pred.p$mu.p + pred.p$beta_p_aggs)  #iNaturalist
+mean(pred.p$Aggregated)
+quantile(pred.p$Aggregated, c(0.025, 0.975))
+
 pred.p$Observation   <- plogis(pred.p$mu.p)  # Aggregated
+mean(pred.p$Observation)
+quantile(pred.p$Observation, c(0.025, 0.975))
+
+# Calculate differences
+obs_vs_agg <- pred.p$Observation - pred.p$Aggregated
+mean(obs_vs_agg)
+quantile(obs_vs_agg, c(0.025, 0.975))
+
+obs_vs_col <- pred.p$Observation - pred.p$Collection
+mean(obs_vs_col)
+quantile(obs_vs_col, c(0.025, 0.975))
+
+obs_vs_lit <- pred.p$Observation - pred.p$Literature
+mean(obs_vs_lit)
+quantile(obs_vs_lit, c(0.025, 0.975))
+
 
 # Convert to long format
 pred.p.long <- melt(pred.p[,6:9])
@@ -791,10 +977,39 @@ pred.p.col <- data.frame(beta_p_other = out_df$beta_p.7.,
                          iteration = 1:length(out_df$beta_p.1.))
 
 ## Add a column with the covariate
-pred.p.col$other <- plogis(pred.p.col$mu.p + pred.p.col$beta_p_other)  # other
-pred.p.col$blue <- plogis(pred.p.col$mu.p + pred.p.col$beta_p_blue)  # blue
-pred.p.col$white <- plogis(pred.p.col$mu.p + pred.p.col$beta_p_white)  # white
 pred.p.col$yellow  <- plogis(pred.p.col$mu.p)  # other
+mean(pred.p.col$yellow)
+quantile(pred.p.col$yellow, c(0.025, 0.975))
+
+pred.p.col$white <- plogis(pred.p.col$mu.p + pred.p.col$beta_p_white)  # white
+mean(pred.p.col$white)
+quantile(pred.p.col$white, c(0.025, 0.975))
+
+pred.p.col$blue <- plogis(pred.p.col$mu.p + pred.p.col$beta_p_blue)  # blue
+mean(pred.p.col$blue)
+quantile(pred.p.col$blue, c(0.025, 0.975))
+
+pred.p.col$other <- plogis(pred.p.col$mu.p + pred.p.col$beta_p_other)  # other
+mean(pred.p.col$other)
+quantile(pred.p.col$other, c(0.025, 0.975))
+
+
+
+# Calculate the differences:
+yellow_vs_other  <- pred.p.col$yellow - pred.p.col$other
+mean(yellow_vs_other)
+quantile(yellow_vs_other, c(0.025, 0.975))
+
+
+white_vs_yellow <- pred.p.col$white - pred.p.col$yellow
+mean(white_vs_yellow)
+quantile(white_vs_yellow, c(0.025, 0.975))
+
+
+blue_vs_yellow  <- pred.p.col$blue - pred.p.col$yellow
+mean(blue_vs_yellow)
+quantile(blue_vs_yellow, c(0.025, 0.975))
+
 
 
 # Convert to long format
@@ -869,7 +1084,17 @@ pred.p.shape <- data.frame(beta_p_F_shape = out_df$beta_p.10.,
 
 ## Add a column with the covariate
 pred.p.shape$bowl <- plogis(pred.p.shape$mu.p + pred.p.shape$beta_p_F_shape) 
+mean(pred.p.shape$bowl)
+quantile(pred.p.shape$bowl, c(0.025, 0.975))
+
 pred.p.shape$notBowl <- plogis(pred.p.shape$mu.p) 
+mean(pred.p.shape$notBowl)
+quantile(pred.p.shape$notBowl, c(0.025, 0.975))
+
+bowl_diff <- pred.p.shape$bowl - pred.p.shape$notBowl
+mean(bowl_diff)
+quantile(bowl_diff, c(0.025, 0.975))
+
 
 # Convert to long format
 pred.p.shape.long <- melt(pred.p.shape[,4:5])

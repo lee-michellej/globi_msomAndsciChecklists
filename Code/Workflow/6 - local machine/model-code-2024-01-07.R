@@ -71,18 +71,18 @@ occ_model <- function(seed,
  
 
 #------------ Load the library
-  library(nimble, lib.loc = library_paths)
-  library(reshape2, lib.loc = library_paths)
+  library(nimble)
+  library(reshape2)
   
   
 #------------  Upload the data & format
   # object name = bee.plant.cite
   # 3-D array
-  load("/home/gdirenzo/globi/Data/data_summary/globi_data_formatted_bee_plant_date_citation_2025_01_22 - short plant list - no apis.rds")
+  load("/Users/gdirenzo/Documents/GitHub/globi_msomAndsciChecklists/Data/data_summary/globi_data_formatted_bee_plant_date_citation_2025_01_22 - short plant list - no apis.rds")
   
   
   # Load covariates
-  load("/home/gdirenzo/globi/Data/model_covariates - 2025 01 22 - no apis.rds")
+  load("/Users/gdirenzo/Documents/GitHub/globi_msomAndsciChecklists/Data/model_covariates - 2025 01 22 - no apis.rds")
   
   
   # Flatten the array

@@ -339,17 +339,40 @@ pred_df <- expand_grid(param_df,
 pred_df$pred <- plogis(pred_df$intercept + 
                          pred_df$beta_psi * pred_df$Cov.scaled)
 
-# Take a subsample of the iteractions
-sub.samp <- sample(1:nrow(pred_df), n_sub, replace = FALSE)
+# Round to ensure grouping works properly
+pred_df$Cov.scaled <- round(pred_df$Cov.scaled, 2)
 
-# Subset the data
-pred_df_sub <- pred_df[pred_df$iteration %in% sub.samp,]
+# Group by Cov.scaled and calculate quantiles
+size_vals <- unique(pred_df$Cov.scaled)
 
-# Calculate the mean value for the relationship
-mean_response <- data.frame(Cov.scaled = seq(-3, 3, length.out = 50))
+# Create an empty data frame
+credible_intervals <- data.frame(
+  Cov.scaled = size_vals,
+  lower_95 = NA,
+  upper_95 = NA,
+  lower_80 = NA,
+  upper_80 = NA,
+  lower_50 = NA,
+  upper_50 = NA,
+  mean_pred = NA
+)
 
-mean_response$pred <- plogis(mean(param_df$intercept) +
-                             mean(param_df$beta_psi) * mean_response$Cov.scaled)
+# Loop through all calculations for the credible intervals
+for(i in 1:length(size_vals)) {
+  
+  subset_data <- pred_df$pred[pred_df$Cov.scaled == size_vals[i]]
+  
+  credible_intervals$lower_95[i] <- quantile(subset_data, 0.025)
+  credible_intervals$upper_95[i] <- quantile(subset_data, 0.975)
+  credible_intervals$lower_80[i] <- quantile(subset_data, 0.10)
+  credible_intervals$upper_80[i] <- quantile(subset_data, 0.90)
+  credible_intervals$lower_50[i] <- quantile(subset_data, 0.25)
+  credible_intervals$upper_50[i] <- quantile(subset_data, 0.75)
+  
+  credible_intervals$mean_pred[i] <- median(subset_data)
+}
+
+
 
 # Create data frame to label each scenario if it is significant or not
 annotation_df <- data.frame(
@@ -362,13 +385,19 @@ annotation_df <- data.frame(
 
 
 # Create plot
-gplot <- ggplot() +
-  geom_line(data = pred_df_sub, aes(x = as.numeric(Cov.scaled), 
-                                     y = as.numeric(pred), 
-                                     col = as.factor(iteration)), 
-            alpha = .4) +
-  geom_line(data = mean_response, aes(x = Cov.scaled,
-                                      y = pred), col = "black")+
+gplot <- ggplot(data = credible_intervals) +
+  # 95% CI - lightest
+  geom_ribbon(aes(x = Size.scaled, ymin = lower_95, ymax = upper_95), 
+              alpha = 0.2, fill = "darkblue") +
+  # 80% CI - medium
+  geom_ribbon(aes(x = Size.scaled, ymin = lower_80, ymax = upper_80), 
+              alpha = 0.3, fill = "darkblue") +
+  # 50% CI - darkest
+  geom_ribbon(aes(x = Size.scaled, ymin = lower_50, ymax = upper_50), 
+              alpha = 0.4, fill = "darkblue") +
+  # Mean line
+  geom_line(aes(x = Size.scaled, y = me_pred), 
+            col = "darkblue", linewidth = 1.5) +
   ylab(y_lab_text)+
   xlab(x_lab_text)+
   theme(legend.position = "none",
