@@ -101,7 +101,7 @@ setwd("/home/gdirenzo/globi/")
 
 
 # Get the model name from command line arguments
-args <- c("bee_species", "full")
+args <- commandArgs(trailingOnly = TRUE)
 
 if (length(args) == 0) {
   stop("No model name provided")
@@ -113,6 +113,8 @@ model_name <- args[1]
 # Save the type of model run
 model_run_type <- args[2]
 
+# set the priors
+priors <- as.numeric(args[3])
 
 # Stop if no arguments are passed
 if (length(args) == 0) {
@@ -124,7 +126,7 @@ cat("Running model:", model_name, "\n")
 
 
 # date object for folder
-date <- "2025 01 26"
+date <- "2025 07 02"
 
 
 
@@ -137,7 +139,7 @@ nimbleOptions(enableDerivs = TRUE)
 
 
 # Call nimble models
-source("/Users/gdirenzo/Documents/GitHub/globi_msomAndsciChecklists/Code/Workflow/6 - local machine/model-code-2024-01-07.R")
+source("/home/gdirenzo/globi/Code/model-code-2025-07-02.R")
 
 # There is 1 function where you can specify the type of model:
   # 1. No bee/plant specification = no_bee_plant
@@ -151,7 +153,7 @@ source("/Users/gdirenzo/Documents/GitHub/globi_msomAndsciChecklists/Code/Workflo
 # For debugging use: model_run_type = test
 
 if(model_run_type == "test"){
-  n.iter = 2 
+  n.iter = 10 
   n.burn = 1
   n.thin1 = 1
   n.thin2 = 1
@@ -160,11 +162,15 @@ if(model_run_type == "test"){
 # For full run use: model_run_type = full
 
 if(model_run_type == "full"){
-    n.iter = 100000
+    n.iter = 250000
     n.burn = 50000 
     n.thin1 = 10
     n.thin2 = 10
 }
+
+# Set the priors
+priors_sd <- c(0.5, 1, 2, 3)[priors]
+
 
 # Print the type of model run type it is:
 print(paste0("Model run type = ", model_run_type))
@@ -180,9 +186,39 @@ detectCores()
 # Number of cores to use
 ncore <- 3     
 
-cl <- makeCluster(ncore)
+# Make a PSOCK cluster explicitly:
+cl <- parallel::makeCluster(ncore, type = "PSOCK")
+
+# Register the doParallel backend
 registerDoParallel(cl)
 
+# Load the nimble package and source the model code on each worker node
+clusterEvalQ(cl, {
+  
+  # Specify the library location
+  .libPaths( c(
+    "/home/gdirenzo/R/x86_64-redhat-linux-gnu-library/4.2",
+    "/home/software/hovenweep/arc/apps/R/library/4.2/GNU/12.1",
+    "/opt/cray/pe/R/4.2.1.2/lib64/R/library"
+  ))
+  
+  # Load necessary packages
+  library(nimble)  # Ensure nimble is loaded on all nodes
+  library(reshape2)  # Ensure reshape2 is loaded on all nodes
+  
+  # Source the model code to ensure that the required functions are available on each worker
+  source("/home/gdirenzo/globi/Code/model-code-2025-07-02.R")
+})
+
+# Export the necessary global variables to each worker node (no need to export again in foreach)
+clusterExport(cl, list("occ_model", 
+                       "model_name", 
+                       "priors_sd",
+                       "n.iter", 
+                       "n.burn", 
+                       "n.thin1", 
+                       "n.thin2",
+                       "library_paths"), envir = .GlobalEnv)
 
 # set seeds for each worker
 seeds <- 1:ncore
@@ -192,16 +228,26 @@ start.time <- Sys.time()
 
  # Run the model using dopar 
   result <- foreach(x = seeds, 
-                    .packages="nimble") %dopar% {
+                   .packages = c("nimble", "reshape2")
+                   ) %dopar% {
                      
    # Run the model function
    occ_model(seed = seeds[x],
+             priors = priors_sd,
              n.iter = n.iter, 
              n.burn = n.burn,
              n.thin1 = n.thin1, 
              n.thin2 = n.thin2,
              model = model_name)
  }
+
+# Run one chain of the model to determine if the parallel processing is the issue - this runs fine. The HPC runs continue. 
+# result <- occ_model(seed = seeds[x],
+#             n.iter = n.iter, 
+#             n.burn = n.burn,
+#             n.thin1 = n.thin1, 
+#             n.thin2 = n.thin2,
+#             model = model_name)
 
 
 # Stop the cluster after use
@@ -258,18 +304,18 @@ MCMCsummary(MCMClist)
 
 # Save MCMC output as table
 write.csv(MCMCsummary(MCMClist),
-          file = paste0("./Tables/", date, "/Table-", model_name, "-MCMC-output.csv"))
+          file = paste0("./Tables/", date, "/Table-", model_name, "-with-priors-", priors, "-MCMC-output.csv"))
 
 
 # Save the model output
 save(out, 
-     file = paste0("./ModelOutput/", date, "/out-", model_name, "-NIMBLE.rds"))
+     file = paste0("./ModelOutput/", date, "/out-", model_name, "-with-priors-", priors, "-NIMBLE.rds"))
 
 save(result, 
-     file = paste0("./ModelOutput/", date, "/result-", model_name, "-NIMBLE.rds"))
+     file = paste0("./ModelOutput/", date, "/result-", model_name, "-with-priors-", priors, "-NIMBLE.rds"))
 
 save(MCMClist,
-     file = paste0("./ModelOutput/", date, "/MCMClist-", model_name,"-NIMBLE.rds"))
+     file = paste0("./ModelOutput/", date, "/MCMClist-", model_name, "-with-priors-", priors, "-NIMBLE.rds"))
 
 
 # Print when the model has finished running

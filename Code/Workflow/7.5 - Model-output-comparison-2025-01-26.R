@@ -93,7 +93,7 @@ library(patchwork)
 
 
 # Add globi folder name
-globi_folder <- "globi-20250210"
+globi_folder <- "globi20250210"
 
 # Set working directory
 setwd(paste0("/Volumes/DIRENZO/", globi_folder, "/gdirenzo/globi/"))
@@ -125,8 +125,7 @@ date <- "2025 01 26"
 mod_name <- "bee_species"
 
 # Load the model output - out
-load(file = paste0("./ModelOutput/", date, "/out-"
-                   , mod_name, "-NIMBLE.rds"))
+load("/Volumes/DIRENZO/globi20250715-ModOutput/2025 07 02/out-bee_species-with-priors-1-NIMBLE.rds")
 
 # Save the out object with a new model specific name
 out_bee_species <- out
@@ -135,8 +134,7 @@ out_bee_species_df <- as.data.frame(out_bee_species)
 
 
 # Load the model output - result
-load(file = paste0("./ModelOutput/", date, "/result-"
-                   , mod_name, "-NIMBLE.rds"))
+load("/Volumes/DIRENZO/globi20250715-ModOutput/2025 07 02/result-bee_species-with-priors-1-NIMBLE.rds")
 
 # Save the out object with a new model specific name
 result_bee_species <- result
@@ -354,7 +352,7 @@ credible_intervals <- data.frame(
   upper_80 = NA,
   lower_50 = NA,
   upper_50 = NA,
-  mean_pred = NA
+  me_pred = NA
 )
 
 # Loop through all calculations for the credible intervals
@@ -369,7 +367,7 @@ for(i in 1:length(size_vals)) {
   credible_intervals$lower_50[i] <- quantile(subset_data, 0.25)
   credible_intervals$upper_50[i] <- quantile(subset_data, 0.75)
   
-  credible_intervals$mean_pred[i] <- median(subset_data)
+  credible_intervals$me_pred[i] <- median(subset_data)
 }
 
 
@@ -377,9 +375,9 @@ for(i in 1:length(size_vals)) {
 # Create data frame to label each scenario if it is significant or not
 annotation_df <- data.frame(
                           # x-axis value
-                            bee_size_value = mean(pred_df_sub$Cov.scaled),
+                            bee_size_value = mean(pred_df$Cov.scaled),
                           # y-axis value
-                            prob_value = max(pred_df_sub$pred),
+                            prob_value = max(pred_df$pred),
                           # labelz
                             label = paste0("Pr(Slope is greater than 0) = ", round(stats_df[1, 3], dig = 2)))
 
@@ -387,16 +385,16 @@ annotation_df <- data.frame(
 # Create plot
 gplot <- ggplot(data = credible_intervals) +
   # 95% CI - lightest
-  geom_ribbon(aes(x = Size.scaled, ymin = lower_95, ymax = upper_95), 
+  geom_ribbon(aes(x = Cov.scaled, ymin = lower_95, ymax = upper_95), 
               alpha = 0.2, fill = "darkblue") +
   # 80% CI - medium
-  geom_ribbon(aes(x = Size.scaled, ymin = lower_80, ymax = upper_80), 
+  geom_ribbon(aes(x = Cov.scaled, ymin = lower_80, ymax = upper_80), 
               alpha = 0.3, fill = "darkblue") +
   # 50% CI - darkest
-  geom_ribbon(aes(x = Size.scaled, ymin = lower_50, ymax = upper_50), 
+  geom_ribbon(aes(x = Cov.scaled, ymin = lower_50, ymax = upper_50), 
               alpha = 0.4, fill = "darkblue") +
   # Mean line
-  geom_line(aes(x = Size.scaled, y = me_pred), 
+  geom_line(aes(x = Cov.scaled, y = me_pred), 
             col = "darkblue", linewidth = 1.5) +
   ylab(y_lab_text)+
   xlab(x_lab_text)+
@@ -650,7 +648,7 @@ response_factor_cov_plot <- function(out_df,
     
     # Create the plot
     gplot <- ggplot(pred_df_long, aes(x = probability, y = covariate)) +
-      geom_density_ridges(aes(fill = covariate)) +
+      stat_dist_gradientinterval(aes(fill = covariate), fill_type = "gradient") +
       scale_fill_manual(values = pal_cols)+
       geom_vline(data=mu, aes(xintercept = grp.mean, color = covariate),
                  linetype="dashed")+
@@ -772,7 +770,7 @@ response_factor_cov_plot <- function(out_df,
     
     # Create the plot with scaled offsets
     gplot <- ggplot(pred_df_long, aes(x = probability, y = covariate)) +
-      geom_density_ridges(aes(fill = covariate)) +
+      stat_dist_gradientinterval(aes(fill = covariate), fill_type = "gradient") +
       scale_fill_manual(values = pal_cols) +
       geom_vline(data = mu, aes(xintercept = grp.mean, color = covariate),
                  linetype = "dashed") +

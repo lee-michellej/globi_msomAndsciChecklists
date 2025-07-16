@@ -56,6 +56,7 @@
 
 # Create a function with all the needed code
 occ_model <- function(seed, 
+                      priors,
                       n.iter, 
                       n.burn,
                       n.thin1, 
@@ -227,11 +228,11 @@ occ_model <- function(seed,
       
       # Priors for covariates
       for (j in 1:ncov_psi){
-        beta_psi[j] ~ dnorm(0,  sd = 1.0)
+        beta_psi[j] ~ dnorm(0,  sd = priors)
       }
       
       for (j in 1:ncov_p){
-        beta_p[j] ~ dnorm(0,  sd = 1.0)
+        beta_p[j] ~ dnorm(0,  sd = priors)
       }
       
       
@@ -249,9 +250,9 @@ occ_model <- function(seed,
           
           # Intercept
           # Average size bee
-          # Not solitary bee (i.e., = social)
+          # Not solitary bee
           # Yellow flower color
-          # Not bowl (i.e., = bowl)
+          # Not bowl
           beta_psi[1] +
           
           # Bee size
@@ -268,7 +269,6 @@ occ_model <- function(seed,
           
           # Flower shape (== bowl)
           beta_psi[7] * flower_shape[plant_species[i]]
-        
       }
       
       # Observation model
@@ -865,6 +865,8 @@ occ_model <- function(seed,
   
   # Bundle all the values that remain constant in the model
   MEconsts <- list(
+    # List the prior
+    priors = priors,
     
     # Total number of bee species
     n_bee = dim(bee.plant.cite)[1],

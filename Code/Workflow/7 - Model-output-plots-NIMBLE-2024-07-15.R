@@ -79,6 +79,7 @@ globi_folder <- "globi-20250210"
 # Set working directory
 setwd(paste0("/Volumes/DIRENZO/", globi_folder, "/gdirenzo/globi/"))
 #setwd("/Users/gdirenzo/OneDrive - University of Massachusetts/Dropbox_transfer/Globi/")
+setwd(paste0("/Volumes/DIRENZO/globi20250715-ModOutput/"))
 
 
 # Add github folder path
@@ -87,7 +88,7 @@ github_folder_path <- "/Users/gdirenzo/Documents/GitHub/globi_msomAndsciChecklis
 
 
 # date object for folder
-date_folder <- "2025 01 26"
+date_folder <- "2025 07 15"
 date <- "2025 01 26"
 
 
@@ -109,19 +110,13 @@ mod_name <- "bee_species"
 load(file = paste0("./ModelOutput/", date, "/out-"
                    , mod_name, "-NIMBLE.rds"))
 
+# load("./2025 07 02/out-bee_species-with-priors-1-NIMBLE.rds")
+
+
 # Save the out object with a new model specific name
 out_bee_species <- out
 
 out_bee_species_df <- as.data.frame(out_bee_species)
-
-
-# Load the model output - result
-load(file = paste0("./ModelOutput/", date, "/result-"
-                   , mod_name, "-NIMBLE.rds"))
-
-# Save the out object with a new model specific name
-result_bee_species <- result
-
 
 
 
@@ -196,6 +191,7 @@ mean(out_df$beta_psi.2. > 0)
 # What proportion of the mass is < 0?
 mean(out_df$beta_psi.2. < 0)
 
+
 # # Create a dataframe with the parameter estimates from each MCMC iteraction
  param_df <- data.frame(beta_psi_B_size = out_df$beta_psi.2., 
                         mu.psi = out_df$beta_psi.1.,
@@ -244,34 +240,10 @@ mean(out_df$beta_psi.2. < 0)
    credible_intervals$upper_80[i] <- quantile(subset_data, 0.90)
    credible_intervals$lower_50[i] <- quantile(subset_data, 0.25)
    credible_intervals$upper_50[i] <- quantile(subset_data, 0.75)
+     
+   credible_intervals$me_pred[i] <- median(subset_data)
    
-   credible_intervals$
-     # Create an empty data frame
-     credible_intervals <- data.frame(
-       Size.scaled = size_vals,
-       lower_95 = NA,
-       upper_95 = NA,
-       lower_80 = NA,
-       upper_80 = NA,
-       lower_50 = NA,
-       upper_50 = NA,
-       mean_pred = NA
-     )
-   
-   # Loop through all calculations for the credible intervals
-   for(i in 1:length(size_vals)) {
-     
-     subset_data <- pred.psi$pred[pred.psi$Size.scaled == size_vals[i]]
-     
-     credible_intervals$lower_95[i] <- quantile(subset_data, 0.025)
-     credible_intervals$upper_95[i] <- quantile(subset_data, 0.975)
-     credible_intervals$lower_80[i] <- quantile(subset_data, 0.10)
-     credible_intervals$upper_80[i] <- quantile(subset_data, 0.90)
-     credible_intervals$lower_50[i] <- quantile(subset_data, 0.25)
-     credible_intervals$upper_50[i] <- quantile(subset_data, 0.75)
-     
-     credible_intervals$me_pred[i] <- median(subset_data)
-   }
+}
    
    # Create plot
    bee.size.plot <- ggplot(data = credible_intervals) +
@@ -297,15 +269,13 @@ mean(out_df$beta_psi.2. < 0)
            axis.text.y = element_text(size = text.size),
            axis.title.x = element_text(size = title.size),
            axis.title.y = element_text(size = title.size))
-    }
  
 
 # bee.size.plot
  
  # Save the plot
-# ggsave(paste0("./Figures/", date_folder, "/Bee-plant-interaction-prob-V-bee-size.pdf")
-#        , height = 10, width =11)
-# 
+# ggsave(paste0(github_folder_path, "/Figures/", date_folder, "/Bee-plant-interaction-prob-V-bee-size.pdf") , height = 10, width =11)
+ 
 
 
  
@@ -496,7 +466,7 @@ mean(out_df$beta_psi.1. > (out_df$beta_psi.1. + out_df$beta_psi.6.))
  annotation_df <- data.frame(
    start =  c("yellow", "yellow", "yellow"),
    end = c("other", "blue", "white"),
-   probability = c(1.1, 1.2, 1.3),
+   probability = c(0.9, 0.95, 1.0),
    label = c(mean(out_df$beta_psi.1. > (out_df$beta_psi.1. + out_df$beta_psi.4.)),
              mean(out_df$beta_psi.1. > (out_df$beta_psi.1. + out_df$beta_psi.5.)),
              mean(out_df$beta_psi.1. > (out_df$beta_psi.1. + out_df$beta_psi.6.))
@@ -549,10 +519,9 @@ mean(out_df$beta_psi.1. > (out_df$beta_psi.1. + out_df$beta_psi.6.))
                                           xend = probability - 0.03,
                                           y = y_end, yend = y_end),
                 color = "black", size = 0.5) +
-   geom_text(data = annotation_df, aes(x = probability + 0.05, 
+   geom_text(data = annotation_df, aes(x = probability + 0.025, 
                                        y = (y_start + y_end) / 2,
-                                       label = round(label, 2)), size = 3,
-             hjust = 0.5, vjust = 0)
+                                       label = round(label, 2)), size = 2.2)
  
  flower.color.plot
 # 
@@ -670,7 +639,7 @@ mean(out_df$beta_psi.1. > (out_df$beta_psi.1. + out_df$beta_psi.6.))
 
 # Save the plot
 ggsave(paste0(github_folder_path, "/Figures/", date_folder, "/Fig-1-Bee-plant-interaction-prob.png")
-       , height = 8, width = 12)
+       , height = 8, width = 13)
 
 
 
@@ -768,15 +737,25 @@ ggsave(paste0(github_folder_path, "/Figures/", date_folder, "/Fig-1-Bee-plant-in
                             mu.p = out_df$beta_p.1.,
                             iteration = 1:length(out_df$beta_p.1.))
   
+  # Create a vector of size values
+  size_values <- seq(-3, 3, length.out = 50)
+  
   ## Add a column with the covariate
-  pred.p.size <- expand_grid(pred.p.size, 
-                             tibble(Size.scaled = seq(-3, 3, length.out = 50)))
+  pred.p.size <- pred.p.size %>%
+                  crossing(Size.scaled = size_values)
   
   
   # Add predictions
   pred.p.size$pred <- plogis(pred.p.size$mu.p + 
-                               pred.p.size$beta_p_B_size * 
-                               pred.p.size$Size.scaled)
+                             pred.p.size$beta_p_B_size * 
+                             pred.p.size$Size.scaled)
+  
+  # Round to ensure grouping works properly
+  pred.p.size$Size.scaled <- round(pred.p.size$Size.scaled, 2)
+  
+  # Group by Size.scaled and calculate quantiles
+  size_vals <- unique(pred.p.size$Size.scaled)
+  
   
   # Calculate the probability of detecting a bee:
   small_bee_prob <- plogis(pred.p.size$mu.p + 
@@ -795,46 +774,60 @@ ggsave(paste0(github_folder_path, "/Figures/", date_folder, "/Fig-1-Bee-plant-in
   
   
   
-  # Take a subsample of the iteractions
-  sub.samp <- sample(1:nrow(out_df), 500, replace = FALSE)
+  # Create an empty data frame
+  credible_intervals_p <- data.frame(
+    Size.scaled = size_vals,
+    lower_95 = NA,
+    upper_95 = NA,
+    lower_80 = NA,
+    upper_80 = NA,
+    lower_50 = NA,
+    upper_50 = NA,
+    me_pred = NA
+  )
   
-  # Subset the data
-  pred.p.size.sub <- pred.p.size[pred.p.size$iteration %in% sub.samp,]
-  
-  
-  
-  
-  
-  # Calculate the mean value for the relationship
-  mean_p_size <- data.frame(Size.scaled = seq(-3, 3, length.out = 50),
-                            mu.p = mean(out_df$beta_p.1.),
-                            beta_p_B_size = mean(out_df$beta_p.3.))
-  
-  
-  mean_p_size$pred <- plogis(mean_p_size$mu.p +
-                               mean_p_size$beta_p_B_size * mean_p_size$Size.scaled)
+  # Loop through all calculations for the credible intervals
+  for(i in 1:length(size_vals)) {
+    
+    subset_data <- pred.p.size$pred[pred.p.size$Size.scaled == size_vals[i]]
+    
+    credible_intervals_p$lower_95[i] <- quantile(subset_data, 0.025)
+    credible_intervals_p$upper_95[i] <- quantile(subset_data, 0.975)
+    credible_intervals_p$lower_80[i] <- quantile(subset_data, 0.10)
+    credible_intervals_p$upper_80[i] <- quantile(subset_data, 0.90)
+    credible_intervals_p$lower_50[i] <- quantile(subset_data, 0.25)
+    credible_intervals_p$upper_50[i] <- quantile(subset_data, 0.75)
+    
+    credible_intervals_p$me_pred[i] <- median(subset_data)
+    
+    }
   
   
   # Create plot
-  bee.size.plot.p <- ggplot() +
-    geom_line(data = pred.p.size.sub, aes(x = as.numeric(Size.scaled), 
-                                          y = as.numeric(pred), 
-                                          col = as.factor(iteration)), 
-              alpha = .4) +
-    geom_line(data = mean_p_size, aes(x = Size.scaled,
-                                      y = pred), col = "black", lwd = 1)+
-    
+  bee.size.plot.p <-  ggplot(data = credible_intervals_p) +
+    # 95% CI - lightest
+    geom_ribbon(aes(x = Size.scaled, ymin = lower_95, ymax = upper_95), 
+                alpha = 0.2, fill = "darkblue") +
+    # 80% CI - medium
+    geom_ribbon(aes(x = Size.scaled, ymin = lower_80, ymax = upper_80), 
+                alpha = 0.3, fill = "darkblue") +
+    # 50% CI - darkest
+    geom_ribbon(aes(x = Size.scaled, ymin = lower_50, ymax = upper_50), 
+                alpha = 0.4, fill = "darkblue") +
+    # Mean or median (depending on how it is calculated) line
+    geom_line(aes(x = Size.scaled, y = me_pred), 
+              col = "darkblue", linewidth = 1.5)  +  
     ylab("Probability of detecting \nthe bee on a plant")+
-    xlab("Bee size standardized")+
-    theme_bw()+ 
+    xlab("Bee size standardized") +
     theme(legend.position = "none",
           strip.background = element_rect(colour = "black", fill = "white"),
-          strip.text = element_text(size = title.size, color = "black"), 
+          strip.text = element_text(size = title.size), 
           panel.background = element_rect(colour = "black", fill = NA),
-          axis.text.x = element_text(size = text.size, color = "black"),
-          axis.text.y = element_text(size = text.size, color = "black"),
-          axis.title.x = element_text(size = title.size, color = "black"),
-          axis.title.y = element_text(size = title.size, color = "black"))
+          axis.text.x = element_text(size = text.size),
+          axis.text.y = element_text(size = text.size),
+          axis.title.x = element_text(size = title.size),
+          axis.title.y = element_text(size = title.size))
+  
   
   bee.size.plot.p
   # # Save the plot
