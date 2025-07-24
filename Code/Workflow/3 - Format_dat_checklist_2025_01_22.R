@@ -665,11 +665,11 @@ dat2 <- droplevels(dat2)
 ##View(table(dat2$sourceCitation))
 
 # Number of observations
-  # 10 836
 nrow(dat2)
+  # 10 836
 
 nrow(dat1)
-
+  # 292 473
 
 
 
@@ -903,7 +903,7 @@ table_S1 <- merge(unique_obs_per_source, citation.sampl.size, by = "citation")
 # Determine the number of unique bee-plant detections per citation
 tot.bee.plant <- apply(bee.plant.cite, c(3), sum, na.rm = TRUE)
 
-hist(tot.bee.plant, breaks = 100)
+# hist(tot.bee.plant, breaks = 100)
 
 sort(tot.bee.plant)
 
@@ -939,6 +939,8 @@ dim(bee.plant.cite)[1]*
   # 240 996
 
 
+
+
 # Create a list with other info about the data and the species order
 dat_info <- list()
 
@@ -952,7 +954,47 @@ dat_info[[3]] <- citations[sourceCit.100.plus]
 names(dat_info) <- c("bee.species", "plant.species", "citations")
 
 
-# 15. Save the data -------------------------------------------------------
+
+
+
+# 15. Subset the dat2 object -------------------------------------------------------
+
+
+
+
+# Subset the dat2 object to only the final sourceCitations
+dat3 <- dat2 %>% 
+  filter(resolvedSource %in% citations[sourceCit.100.plus])
+
+# Determine number of observations in filtered data versus previous data
+nrow(dat3)
+  # 8 052
+nrow(dat2)
+  # 10 836
+
+
+# Determine how many entries do not have date/month
+length(which(is.na(dat3$eventDate) == TRUE))
+length(which(dat3$eventDate == ""))
+
+# Number of observations per bee species with < 10 and < 15 observations
+length(which(count(dat3$resolvedBeeNames)$freq < 10))
+length(which(count(dat3$resolvedBeeNames)$freq < 15))
+
+# Number of observations per plant species with < 10 and < 15 observations
+length(which(count(dat3$resolvedPlantNames)$freq < 10))
+length(which(count(dat3$resolvedPlantNames)$freq < 15))
+
+
+
+
+
+# 16. Save the data -------------------------------------------------------
+
+
+# Save subsetted globi data
+save(dat3,
+     file = "./Data/final_globi_data.csv")
 
 
 # Save the 3-D array
