@@ -11,7 +11,7 @@ for model in "${models[@]}"; do
     echo "Submitting job for model: $model with run type: $model_run_type"
 
     # Submit the job with a unique job name and pass environment variables
-    sbatch --job-name="globi-${model}" --export=MODEL_NAME="$model",MODEL_RUN_TYPE="$model_run_type" /home/gdirenzo/globi/Code/globi-job.sh
+    sbatch --job-name="globi-${model}" --export=MODEL_NAME="$model",MODEL_RUN_TYPE="$model_run_type" ./Code/globi-job.sh
 
     echo "Job submitted for model: $model"
 done

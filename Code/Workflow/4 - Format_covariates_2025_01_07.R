@@ -17,6 +17,17 @@
 
 
 
+##################################
+######## Output of Code ##########
+##################################
+
+# This code generates lots of outputs, but the main objects that are exported and subsquently used are:
+
+# Plant and bee covariates
+  # object name = covariates
+  # file = model_covariates - 2025 01 22 - no apis.rds
+
+
 ################################## 
 ########  Table of Contents ######
 ################################## 
@@ -52,9 +63,11 @@ library(plyr)
 # 2. Load data -------------------------------------------------------
 
 
+# Set path to github folder
+github_path <- ""
 
 # Set working directory
-setwd("/Users/gdirenzo/Documents/GitHub/globi_msomAndsciChecklists/")
+setwd(github_path)
 
 # Bee size data
 size <- read.csv("./Data/Bee traits for checklist species - size.csv")
@@ -156,7 +169,7 @@ bee_family <- bee_family[which(bee_family$ScientificName %in% bee.sp.names),]
   # nrow(bee_family)
 
 # Quick visual check to make sure they are reordered & paired correctly
-#data.frame(sizeSP = size$Species,
+# data.frame(sizeSP = size$Species,
 #           order = bee.sp.names)
 
 
@@ -172,7 +185,7 @@ color <- color[which(color$Species %in% bee.sp.names),]
 sociality <- sociality[which(sociality$Species %in% bee.sp.names),]
 
 # Quick visual check to make sure they are reordered & paired correctly
-#data.frame(socialitySP = sociality$Species,
+# data.frame(socialitySP = sociality$Species,
 #           order = bee.sp.names)
 
 

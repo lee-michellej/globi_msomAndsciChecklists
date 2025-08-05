@@ -12,11 +12,11 @@
 ##################################
 
 
-# To format the globi data [4D array (bee species x plant species x month x citation) & in 2D] for the analysis
+# To format the globi data [3D array (bee species x plant species x citation) & in 2D] for the analysis
 
 # The objective of the analysis is to determine the number of plants that each bee species interacts with while accounting for sampling bias
 
-# We will be using a multi-species occupancy model for the analysis
+# We will be using an occupancy model for the analysis
   # We will account for bee-plant interactions that were not observed
   # We will use citations & collections are the "replicate surveys" (rather than temporal or spatial surveys)
   # This model does not take time or space into account
@@ -27,9 +27,21 @@
 ##################################
 
 
-# This code generates 1 file: 
-  # "./Data/globi_data_formatted_bee_plant_2021_04_05.rds"
-  # Object names: globi.dat
+# This code generates lots of outputs, but the main objects that are exported and subsquently used are:
+
+# Subsetted globi data
+ # object name = dat3,
+     # file = "final_globi_data.csv"
+
+
+# 3-D array  (bee species x plant species x citation)
+  # object name = bee.plant.cite, 
+     # file = globi_data_formatted_bee_plant_date_citation_2025_01_22 - short plant list - no apis.rds
+
+
+# Information about the data
+  # object name = dat_info
+     # file = dat_info_2025_01_22.rds
 
 
 ##################################
@@ -76,19 +88,16 @@
 
 # 1. Load libraries & set working directory
 # 2. Load data
-# 3. Format checklist info a little
+# 3. Format checklist info
 # 4. General metrics from Globi data
-# 5. Format the bee synonym data 
+# 5. Format the bee synonym data
 # 6. Subset Globi to rows with the bee-plant interactions that appear in our checklist
-# 7. Visualize the data - Make a map with the data point
-# 8. Add a new column to globi data with the institution codes to replace SCAN citation
-# 9. Format the date column in globi data 
-# 10. Create the 4-D array we will fill in
-# 11. Determine which bee-plant interactions are possible & which are forbidden
-# 12. Fill in the 4-D array for the model
-# 13. Create a matrix with the observed bee-plant-month by citation elements
-# 14. Save the data
-
+# 7. Add a new column to globi data with the institution codes to replace SCAN citation
+# 8. Create the 3-D array we will fill in
+# 9. Fill in the 3-D array for the model
+# 10. Determine the number of unique bee-plant-citation detections
+# 11. Subset the dat2 object 
+# 12. Save the data 
 
 
 ################################## 
@@ -97,8 +106,6 @@
 
 
 
-
-#* NOTE --- all of the file paths will need to be deleted before we add these to the code release
 
 
 
@@ -116,22 +123,17 @@ library(ggplot2)
 library(dplyr)
 library(plyr)
 
-# Set working directory
-setwd("~/globi_tritrophic_networks/")
-
-# Set working directory
-setwd(dirname(rstudioapi::getActiveDocumentContext()$path))
-  # This function sets the working directory to wherever this file is located
-setwd("/Users/gdirenzo/Documents/GitHub/globi_msomAndsciChecklists/")
-# Check the working directory
-getwd()
 
 
+# Set the paths for the directories where the data lives on your machine
+OneDrive_path <- ""
+github_path <- ""
 
 
 
 
 # 2. Load data -------------------------------------------------------
+
 
 
 
@@ -148,14 +150,12 @@ getwd()
 # Read in data
   # This data was downloaded from globi 
   # resolvedplantnamesglobi_12feb24.csv = This is the whole Globi csv file- with the new resolvedPLant names column
-# dat <- read.csv("./Data/resolvedplantnamesglobi_12feb24.csv")
-# dat <- read.csv("/Volumes/SanDisk/LARGE_globiDataFiles/resolvedplantnamesglobi_12feb24.csv")
- dat <- read.csv("/Users/gdirenzo/OneDrive - University of Massachusetts/_My-Projects/GloBi/Data/resolvedplantnamesglobi_12feb24.csv")
+dat <- read.csv(paste0(OneDrive_path, "/Data/resolvedplantnamesglobi_12feb24.csv"))
 
 
 
 # Read in bee phenology data with the bee checklist names
-bee.list <- read.csv("./Data/SCI checklist and phenology - SCI checklists and phenology - Seltmann 2022 04 01.csv")
+bee.list <- read.csv(paste0(github_path, "/Data/SCI checklist and phenology - SCI checklists and phenology - Seltmann 2022 04 01.csv"))
 
 
 # In this code, we will go through all of the scientific bee names and identify synonyms & update them all to the latest nomenclature
@@ -163,8 +163,7 @@ bee.list <- read.csv("./Data/SCI checklist and phenology - SCI checklists and ph
 #----- We need 6 separate files that store bee names 
 
 # Bee name list from Discover Life (published on Zenodo:https://zenodo.org/records/10463762)
-#bee.names.jan24 <- read_tsv("/Volumes/SanDisk/LARGE_globiDataFiles/discoverlife-January-05-2024.tsv") %>% 
-bee.names.jan24 <- read_tsv("/Users/gdirenzo/OneDrive - University of Massachusetts/_My-Projects/GloBi/Data/discoverlife-January-05-2024.tsv") %>% 
+bee.names.jan24 <- read_tsv(paste0(OneDrive_path, "./Data/discoverlife-January-05-2024.tsv")) %>% 
   dplyr::select(1:11)
 # Add column names
 colnames(bee.names.jan24) <- c("providedExternalId",
@@ -184,26 +183,25 @@ colnames(bee.names.jan24) <- c("providedExternalId",
 
 
 # Bee name list from Discover Life that was used in previous script
-bee.names.orig <- read.csv("./Data/discoverlife-Anthophila-2022 04 01.csv")
+bee.names.orig <- read.csv(paste0(github_path, "/Data/discoverlife-Anthophila-2022 04 01.csv"))
 # Quick note about column names in this file:
   # providedName (old scientific name) --> resolvedName (latest scientific name)
 
 
 # Bee name list that Katja generated for Globi Names not included in Discover Life
-bee.names.globi <- read.csv("./Data/Globi-names-not-in-discoverlife - Sheet1 2022 04 01.csv")
+bee.names.globi <- read.csv(paste0(github_path, "/Data/Globi-names-not-in-discoverlife - Sheet1 2022 04 01.csv"))
 # these are names that were manually edited by Katja
   # sourceTaxonSpeciesName (old scientific name) --> resolvedBeeNames (latest scientific name)
 
 # Bee name list from the Big Bee Network that Katja and others.
 # This file deals with a lot of the typos we were having issues with.
 # bee.names.bigbeenetwork <- read.csv("/Volumes/SanDisk/LARGE_globiDataFiles/names-aligned.csv")
-bee.names.bigbeenetwork <- read.csv("/Users/gdirenzo/OneDrive - University of Massachusetts/_My-Projects/GloBi/Data/names-aligned.csv")
+bee.names.bigbeenetwork <- read.csv(paste0(OneDrive_path, "/Data/names-aligned.csv"))
 # Quick note about column names in this file:
   # providedName (old scientific name) --> alignedSpeciesName (latest scientific name)
 
 # Bee name list from Michelle that was a manual edit to match the last few names that were unmatched by above lists.
-# bee.names.editmar24 <- read.csv("./Data/globibees_namesmissing_26mar24.csv")
-bee.names.editmar24 <- read.csv("/Users/gdirenzo/OneDrive - University of Massachusetts/_My-Projects/GloBi/Data/globibees_namesmissing_26mar24.csv")
+bee.names.editmar24 <- read.csv(paste0(OneDrive_path, "/Data/globibees_namesmissing_26mar24.csv"))
 
 # Quick note about column names in this file:
   # name (old scientific name) --> resolvedName (latest scientific name)
@@ -215,12 +213,12 @@ bee.names.editmar24 <- read.csv("/Users/gdirenzo/OneDrive - University of Massac
 
 # Institution codes
   # This file matches the institution codes in the globi database to a name
-institution.codes <- read.csv("./Data/institutioncodes_2021_12_16.csv")
+institution.codes <- read.csv(paste0(github_path, "/Data/institutioncodes_2021_12_16.csv"))
 
 
 # Read in plant phenology data
   # Resolving the plant names (i.e., updating the synonyms to the latest scientific name) was done in a previous file
-plant.phenology <- read.csv("./Data/resolvedplantsci_12feb24.csv")
+plant.phenology <- read.csv(paste0(github_path, "/Data/resolvedplantsci_12feb24.csv"))
 
 
 # This is the bee phenology data with the following modification:
@@ -255,8 +253,7 @@ str(bee.list)
 
 
 
-
-# 3. Format checklist info a little -------------------------------------------------------
+# 3. Format checklist info -------------------------------------------------------
 
 
 
@@ -679,6 +676,7 @@ nrow(dat1)
 
 
 
+
 # 7. Add a new column to globi data with the institution codes to replace SCAN citation -------------------------------------------------------
 
 
@@ -811,8 +809,8 @@ length(levels(as.factor(dat2$resolvedSource)))
 
 
 
- 
- # 11. Create the 3-D array we will fill in -------------------------------------------------------
+
+# 8. Create the 3-D array we will fill in -------------------------------------------------------
  
  
  
@@ -837,8 +835,9 @@ length(levels(as.factor(dat2$resolvedSource)))
 
  
  
+
  
-# 12. Fill in the 3-D array for the model -------------------------------------------------------
+ # 9. Fill in the 3-D array for the model -------------------------------------------------------
 
 
  
@@ -895,7 +894,8 @@ table_S1 <- merge(unique_obs_per_source, citation.sampl.size, by = "citation")
 
 
 
-# 15. Determine the number of unique bee-plant-citation detections -------------------------------------------------------------- 
+
+# 10. Determine the number of unique bee-plant-citation detections -------------------------------------------------------------- 
 
 
 
@@ -956,8 +956,7 @@ names(dat_info) <- c("bee.species", "plant.species", "citations")
 
 
 
-
-# 15. Subset the dat2 object -------------------------------------------------------
+# 11. Subset the dat2 object -------------------------------------------------------
 
 
 
@@ -988,8 +987,7 @@ length(which(count(dat3$resolvedPlantNames)$freq < 15))
 
 
 
-
-# 16. Save the data -------------------------------------------------------
+# 12. Save the data -------------------------------------------------------
 
 
 # Save subsetted globi data

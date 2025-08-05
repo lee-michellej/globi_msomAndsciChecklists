@@ -56,7 +56,8 @@
 
 # Create a function with all the needed code
 occ_model <- function(seed, 
-                      priors,
+                      prior_cov,
+                      prior_sd,
                       n.iter, 
                       n.burn,
                       n.thin1, 
@@ -79,11 +80,11 @@ occ_model <- function(seed,
 #------------  Upload the data & format
   # object name = bee.plant.cite
   # 3-D array
-  load("/home/gdirenzo/globi/Data/data_summary/globi_data_formatted_bee_plant_date_citation_2025_01_22 - short plant list - no apis.rds")
+  load("./Data/data_summary/globi_data_formatted_bee_plant_date_citation_2025_01_22 - short plant list - no apis.rds")
   
   
   # Load covariates
-  load("/home/gdirenzo/globi/Data/model_covariates - 2025 01 22 - no apis.rds")
+  load("./Data/model_covariates - 2025 01 22 - no apis.rds")
   
   
   # Flatten the array
@@ -106,11 +107,11 @@ occ_model <- function(seed,
     # Priors for covariates
     
     for (j in 1:ncov_psi){
-      beta_psi[j] ~ dnorm(0, sd = 5)
+      beta_psi[j] ~ dnorm(0, sd = prior_cov)
     }
     
     for (j in 1:ncov_p){
-      beta_p[j] ~ dnorm(0, sd = 5)
+      beta_p[j] ~ dnorm(0, sd = prior_cov)
     }
     
     # Ecological model
@@ -221,18 +222,18 @@ occ_model <- function(seed,
       }
 
       # sd values for psi
-      sigma_psi ~ T(dnorm(0.0, sd = 2.0), 0,  )
+      sigma_psi ~ T(dnorm(0.0, sd = prior_sd), 0,  )
       
       # sd values for p
-      sigma_p ~  T(dnorm(0.0, sd = 2.0), 0,  )
+      sigma_p ~  T(dnorm(0.0, sd = prior_sd), 0,  )
       
       # Priors for covariates
       for (j in 1:ncov_psi){
-        beta_psi[j] ~ dnorm(0,  sd = priors)
+        beta_psi[j] ~ dnorm(0,  sd = prior_cov)
       }
       
       for (j in 1:ncov_p){
-        beta_p[j] ~ dnorm(0,  sd = priors)
+        beta_p[j] ~ dnorm(0,  sd = prior_cov)
       }
       
       
@@ -350,18 +351,18 @@ occ_model <- function(seed,
       }
 
       # sd values for psi
-      sigma_psi ~ T(dnorm(0.0, sd = 3.0), 0,  )
+      sigma_psi ~ T(dnorm(0.0, sd = prior_sd), 0,  )
       
       # sd values for p
-      sigma_p ~  T(dnorm(0.0, sd = 3.0), 0,  )
+      sigma_p ~  T(dnorm(0.0, sd = prior_sd), 0,  )
       
       # Priors for covariates
       for (j in 1:ncov_psi){
-        beta_psi[j] ~ dnorm(0, sd = 5)
+        beta_psi[j] ~ dnorm(0, sd = prior_cov)
       }
       
       for (j in 1:ncov_p){
-        beta_p[j] ~ dnorm(0, sd = 5)
+        beta_p[j] ~ dnorm(0, sd = prior_cov)
       }
       
       # Ecological model
@@ -478,18 +479,18 @@ occ_model <- function(seed,
       }
       
       # sd values for psi
-      sigma_psi ~  T(dnorm(0.0, sd = 3.0), 0,  )
+      sigma_psi ~  T(dnorm(0.0, sd = prior_sd), 0,  )
       
       # sd values for p
-      sigma_p ~   T(dnorm(0.0, sd = 3.0), 0,  )
+      sigma_p ~   T(dnorm(0.0, sd = prior_sd), 0,  )
       
       # Priors for covariates
       for (j in 1:ncov_psi){
-        beta_psi[j] ~ dnorm(0, sd = 5)
+        beta_psi[j] ~ dnorm(0, sd = prior_cov)
       }
       
       for (j in 1:ncov_p){
-        beta_p[j] ~ dnorm(0, sd = 5)
+        beta_p[j] ~ dnorm(0, sd = prior_cov)
       }
       
       
@@ -606,18 +607,18 @@ occ_model <- function(seed,
       }
       
       # sd values for psi
-      sigma_psi ~  T(dnorm(0.0, sd = 3.0), 0,  )
+      sigma_psi ~  T(dnorm(0.0, sd = prior_sd), 0,  )
       
       # sd values for p
-      sigma_p ~  T(dnorm(0.0, sd = 3.0), 0,  )
+      sigma_p ~  T(dnorm(0.0, sd = prior_sd), 0,  )
       
       # Priors for covariates
       for (j in 1:ncov_psi){
-        beta_psi[j] ~ dnorm(0, sd = 5)
+        beta_psi[j] ~ dnorm(0, sd = prior_cov)
       }
       
       for (j in 1:ncov_p){
-        beta_p[j] ~ dnorm(0, sd = 5)
+        beta_p[j] ~ dnorm(0, sd = prior_cov)
       }
       
       # Ecological model
@@ -734,12 +735,12 @@ occ_model <- function(seed,
       }
       
       # sd values for psi
-      sigma_psi_u ~ T(dnorm(0.0, sd = 3.0), 0,  )
-      sigma_psi_g ~  T(dnorm(0.0, sd = 3.0), 0,  )
+      sigma_psi_u ~ T(dnorm(0.0, sd = prior_sd), 0,  )
+      sigma_psi_g ~  T(dnorm(0.0, sd = prior_sd), 0,  )
       
       # sd values for p
-      sigma_p_v ~   T(dnorm(0.0, sd = 3.0), 0,  )
-      sigma_p_d ~   T(dnorm(0.0, sd = 3.0), 0,  )
+      sigma_p_v ~   T(dnorm(0.0, sd = prior_sd), 0,  )
+      sigma_p_d ~   T(dnorm(0.0, sd = prior_sd), 0,  )
       
       # Bee family
       for(i in 1:n_bee_fam){ # For each bee species
@@ -756,11 +757,11 @@ occ_model <- function(seed,
       
       # Priors for covariates
       for (j in 1:ncov_psi){
-        beta_psi[j] ~ dnorm(0,  sd = 5)
+        beta_psi[j] ~ dnorm(0,  sd = prior_cov)
       }
       
       for (j in 1:ncov_p){
-        beta_p[j] ~ dnorm(0, sd = 5)
+        beta_p[j] ~ dnorm(0, sd = prior_cov)
       }
       
       # Ecological model
@@ -866,7 +867,8 @@ occ_model <- function(seed,
   # Bundle all the values that remain constant in the model
   MEconsts <- list(
     # List the prior
-    priors = priors,
+    prior_sd = prior_sd,
+    prior_cov = prior_cov,
     
     # Total number of bee species
     n_bee = dim(bee.plant.cite)[1],

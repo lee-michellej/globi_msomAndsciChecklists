@@ -7,8 +7,8 @@
 #SBATCH --mem=132gb
 #SBATCH --partition=cpu
 #SBATCH --account=coop
-#SBATCH --output=/home/gdirenzo/globi/log/Model_%x_${MODEL_NAME}_${PRIORS}.output.txt
-#SBATCH --error=/home/gdirenzo/globi/log/Model_%x_${MODEL_NAME}_${PRIORS}.error.txt
+#SBATCH --output=./log/Model_%x_${MODEL_NAME}_${PRIORS}.output.txt
+#SBATCH --error=./log/Model_%x_${MODEL_NAME}_${PRIORS}.error.txt
 
 # Load R module
 module load cray-R/4.2.1.2
@@ -18,6 +18,6 @@ echo "Job started on $(hostname) at $(date)"
 echo "Running model: $MODEL_NAME with run type: $MODEL_RUN_TYPE with priors $PRIORS"
 
 # Run the R script with the model name and run type
-Rscript --vanilla /home/gdirenzo/globi/Code/loop_all_models_all_priors/Multi-sp-occ-mod-vector-NIMBLE-2025-07-02.R "$MODEL_NAME" "$MODEL_RUN_TYPE" "$PRIORS"
+Rscript --vanilla ./Code/loop_all_models_all_priors/Multi-sp-occ-mod-vector-NIMBLE-2025-07-02.R "$MODEL_NAME" "$MODEL_RUN_TYPE" "$PRIORS"
 
 echo "Job ended at $(date)"

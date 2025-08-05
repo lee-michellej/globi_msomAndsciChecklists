@@ -19,7 +19,7 @@ for model in "${models[@]}"; do
     # Submit the job with a unique job name and pass environment variables
         sbatch --job-name="globi-${model}-p${prior}" \
             --export=MODEL_NAME="$model",MODEL_RUN_TYPE="$model_run_type",PRIORS="$prior" \
-            "/home/gdirenzo/globi/Code/loop_all_models_all_priors/globi-job.sh"
+            "./Code/loop_all_models_all_priors/globi-job.sh"
 
     echo "Job submitted for model: $model with priors $prior"
 

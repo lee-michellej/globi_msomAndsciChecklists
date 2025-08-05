@@ -53,22 +53,15 @@ library(mcmcr)
 
 
 
-# Add globi folder name
-globi_folder <- "globi-20250210"
-
-# Set working directory
-setwd(paste0("/Volumes/DIRENZO/", globi_folder, "/gdirenzo/globi/"))
-#setwd("/Users/gdirenzo/OneDrive - University of Massachusetts/Dropbox_transfer/Globi/")
-
 
 # Add github folder path
 github_folder_path <- "/Users/gdirenzo/Documents/GitHub/globi_msomAndsciChecklists/"
-
+globi_out_folder <- "/Volumes/DIRENZO/globi20250717-out-ModOutput/out"
+globi_result_folder <- "/Volumes/DIRENZO/globi20250717-quarter_results-ModOutput/quarter-results"
 
 
 # date object for folder
-date_folder <- "2025 01 26"
-date <- "2025 01 26"
+date_folder <- "2025 08 05"
 
 
 
@@ -89,8 +82,7 @@ date <- "2025 01 26"
 mod_name <- "bee_species"
 
 # Load the model output - out
-load(file = paste0("./ModelOutput/", date, "/out-"
-                   , mod_name, "-NIMBLE.rds"))
+load(paste0(globi_out_folder, "/out-bee_species-with-priors-1-NIMBLE.rds"))
 
 # Save the out object with a new model specific name
 out_bee_species <- out
@@ -99,12 +91,10 @@ out_bee_species_df <- as.data.frame(out_bee_species)
 
 
 # Load the model output - result
-load(file = paste0("./ModelOutput/", date, "/result-"
-                   , mod_name, "-NIMBLE.rds"))
+load(paste0(globi_result_folder, "/result-quarter-bee_species-with-priors-1-NIMBLE.rds"))
 
 # Save the out object with a new model specific name
-result_bee_species <- result
-
+result_bee_species <- subset_result_quarter
 
 
 
@@ -142,6 +132,9 @@ load("/Users/gdirenzo/Documents/GitHub/globi_msomAndsciChecklists/Data/obs_dat-2
 
 # 3. Calculate values reported in the results -------------------------------------------------------
 
+# number of bees
+nrow(covariates$bee.covariates)
+
 
 ## Calcualte number of solitary bees
 sum(covariates$bee.covariates$solitary)
@@ -157,6 +150,9 @@ mean(covariates$bee.covariates$size)
 min(covariates$bee.covariates$size)
 max(covariates$bee.covariates$size)
 
+# Number of plants
+nrow(covariates$plant.covariates)
+
 
 ## Plant flower color sample size
 sum(covariates$plant.covariates$yellow)
@@ -167,6 +163,8 @@ sum(covariates$plant.covariates$other)
 
 # Bowl vs not bowl
 sum(covariates$plant.covariates$bowl)
+# not bowl
+nrow(covariates$plant.covariates) - sum(covariates$plant.covariates$bowl)
 
 
 # Source types
@@ -227,9 +225,9 @@ length(which(y.bee.plant ==3))
 
 # Summarize z
 # # Latent state variables
-out_num <- as.mcmc(data.frame(rbind(result[[1]]$samples2[,grep("n_plants_per_bee", colnames(result[[1]]$samples2))],
-                                  result[[2]]$samples2[,grep("n_plants_per_bee", colnames(result[[1]]$samples2))],
-                                  result[[3]]$samples2[,grep("n_plants_per_bee", colnames(result[[1]]$samples2))])))
+out_num <- as.mcmc(data.frame(rbind(result_bee_species[[1]]$samples2[,grep("n_plants_per_bee", colnames(result_bee_species[[1]]$samples2))],
+                                    result_bee_species[[2]]$samples2[,grep("n_plants_per_bee", colnames(result_bee_species[[1]]$samples2))],
+                                    result_bee_species[[3]]$samples2[,grep("n_plants_per_bee", colnames(result_bee_species[[1]]$samples2))])))
 
 
 

@@ -70,15 +70,26 @@ setwd("/Volumes/DIRENZO/globi-20250210/gdirenzo/globi/")
 # Add github path
 github_path <- "/Users/gdirenzo/Documents/GitHub/globi_msomAndsciChecklists/"
 
+# Add globi folder name
+globi_out_folder <- "/Volumes/DIRENZO/globi20250717-out-ModOutput/out"
+globi_result_folder <- "/Volumes/DIRENZO/globi20250717-quarter_results-ModOutput/quarter-results"
+globi_MCMC_folder <- "/Volumes/DIRENZO/globi20250717-MCMC-ModOutput/MCMC"
 
-# Load the data
-load("./ModelOutput/2025 01 26/out-bee_species-NIMBLE.rds")
+
+
+# Load the model output - out
+load(paste0(globi_out_folder, "/out-bee_species-with-priors-1-NIMBLE.rds"))
+
 # object = out
 # MCMC object
 
 
-## Load the entire nimble output
-load("./ModelOutput/2025 01 26/result-bee_species-NIMBLE.rds")
+# Load the model output - result
+load(paste0(globi_result_folder, "/result-quarter-bee_species-with-priors-1-NIMBLE.rds"))
+
+# Save the out object with a new model specific name
+result <- subset_result_quarter
+
 # object = result
 # MCMC object
 
@@ -182,7 +193,7 @@ for(i in 1:length(plant.names)){
 
 
 # Save file
-write.csv(z.long3, "./Data/2025 02 11 - bee-plant-mod-probabilities.csv")
+write.csv(z.long3, paste0(github_folder_path, "/Data/2025 08 05 - bee-plant-mod-probabilities.csv"))
 
 
 
