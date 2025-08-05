@@ -1,0 +1,13 @@
+"","mod_name","beta_direction","proportion"
+"1","Bee species model","greater than 0",0.146883333333333
+"2","Bee species model","less than 0",0.853116666666667
+"3","Bee family model","greater than 0",0.433583333333333
+"4","Bee family model","less than 0",0.566416666666667
+"5","Plant species model","greater than 0",0.476666666666667
+"6","Plant species model","less than 0",0.523333333333333
+"7","Plant family model","greater than 0",0.4479
+"8","Plant family model","less than 0",0.5521
+"9","Bee and plant family model","greater than 0",0.134583333333333
+"10","Bee and plant family model","less than 0",0.865416666666667
+"11","No bee and plant model","greater than 0",0.506983333333333
+"12","No bee and plant model","less than 0",0.493016666666667

@@ -90,14 +90,12 @@ library(reshape2)
 library(mcmcr)
 library(wesanderson)
 library(patchwork)
+library(ggdist)
 
 
 # Add globi folder name
-globi_folder <- "globi20250210"
-
-# Set working directory
-setwd(paste0("/Volumes/DIRENZO/", globi_folder, "/gdirenzo/globi/"))
-#setwd("/Users/gdirenzo/OneDrive - University of Massachusetts/Dropbox_transfer/Globi/")
+globi_out_folder <- "/Volumes/DIRENZO/globi20250717-out-ModOutput/out"
+globi_result_folder <- "/Volumes/DIRENZO/globi20250717-quarter_results-ModOutput/quarter-results"
 
 
 # Add github folder path
@@ -114,7 +112,7 @@ github_folder_path <- "/Users/gdirenzo/Documents/GitHub/globi_msomAndsciChecklis
 
 
 # date object for folder
-date_folder <- "2025 01 26"
+date_folder <- "2025 08 05"
 date <- "2025 01 26"
 
 
@@ -125,7 +123,7 @@ date <- "2025 01 26"
 mod_name <- "bee_species"
 
 # Load the model output - out
-load("/Volumes/DIRENZO/globi20250715-ModOutput/2025 07 02/out-bee_species-with-priors-1-NIMBLE.rds")
+load(paste0(globi_out_folder, "/out-bee_species-with-priors-1-NIMBLE.rds"))
 
 # Save the out object with a new model specific name
 out_bee_species <- out
@@ -134,10 +132,10 @@ out_bee_species_df <- as.data.frame(out_bee_species)
 
 
 # Load the model output - result
-load("/Volumes/DIRENZO/globi20250715-ModOutput/2025 07 02/result-bee_species-with-priors-1-NIMBLE.rds")
+load(paste0(globi_result_folder, "/result-quarter-bee_species-with-priors-1-NIMBLE.rds"))
 
 # Save the out object with a new model specific name
-result_bee_species <- result
+result_bee_species <- subset_result_quarter
 
 
 
@@ -150,8 +148,8 @@ result_bee_species <- result
 mod_name <- "bee_family"
 
 # Load the model output
-load(file = paste0("./ModelOutput/", date, "/out-", 
-                   mod_name, "-NIMBLE.rds"))
+load(paste0(globi_out_folder, "/out-bee_family-with-priors-6-NIMBLE.rds"))
+
 
 # Save the out object with a new model specific name
 out_bee_family <- out
@@ -160,11 +158,11 @@ out_bee_family_df <- as.data.frame(out_bee_family)
 
 
 # Load the model output - result
-load(file = paste0("./ModelOutput/", date, "/result-"
-                   , mod_name, "-NIMBLE.rds"))
+load(paste0(globi_result_folder, "/result-quarter-bee_family-with-priors-6-NIMBLE.rds"))
+
 
 # Save the out object with a new model specific name
-result_bee_family <- result
+result_bee_family <- subset_result_quarter
 
 
 
@@ -175,14 +173,21 @@ result_bee_family <- result
 mod_name <- "plant_species"
 
 # Load the model output
-load(file = paste0("./ModelOutput/", date, "/out-"
-                   , mod_name, "-NIMBLE.rds"))
+load(paste0(globi_out_folder, "/out-plant_species-with-priors-6-NIMBLE.rds"))
+
 
 # Save the out object with a new model specific name
 out_plant_species <- out
 
 out_plant_species_df <- as.data.frame(out_plant_species)
 
+
+# Load the model output - result
+load(paste0(globi_result_folder, "/result-quarter-plant_species-with-priors-6-NIMBLE.rds"))
+
+
+# Save the out object with a new model specific name
+result_plant_species <- subset_result_quarter
 
 
 #---- plant_family
@@ -191,8 +196,7 @@ out_plant_species_df <- as.data.frame(out_plant_species)
 mod_name <- "plant_family"
 
 # Load the model output
-load(file = paste0("./ModelOutput/", date, "/out-"
-                   , mod_name, "-NIMBLE.rds"))
+load(paste0(globi_out_folder, "/out-plant_family-with-priors-6-NIMBLE.rds"))
 
 # Save the out object with a new model specific name
 out_plant_family <- out
@@ -201,11 +205,11 @@ out_plant_family_df <- as.data.frame(out_plant_family)
 
 
 # Load the model output - result
-load(file = paste0("./ModelOutput/", date, "/result-"
-                   , mod_name, "-NIMBLE.rds"))
+load(paste0(globi_result_folder, "/result-quarter-plant_family-with-priors-6-NIMBLE.rds"))
+
 
 # Save the out object with a new model specific name
-result_plant_family <- result
+result_plant_family <- subset_result_quarter
 
 
 
@@ -216,13 +220,21 @@ result_plant_family <- result
 mod_name <- "bee_plant_family"
 
 # Load the model output
-load(file = paste0("./ModelOutput/", date, "/out-"
-                   , mod_name, "-NIMBLE.rds"))
+load(paste0(globi_out_folder, "/out-bee_plant_family-with-priors-5-NIMBLE.rds"))
+
 
 # Save the out object with a new model specific name
 out_bee_plant_family <- out
 
 out_bee_plant_family_df <- as.data.frame(out_bee_plant_family)
+
+
+# Load the model output - result
+load(paste0(globi_result_folder, "/result-quarter-bee_plant_family-with-priors-5-NIMBLE.rds"))
+
+
+# Save the out object with a new model specific name
+result_bee_plant_family <- subset_result_quarter
 
 
 
@@ -232,13 +244,24 @@ out_bee_plant_family_df <- as.data.frame(out_bee_plant_family)
 mod_name <- "no_bee_plant"
 
 # Load the model output
-load(file = paste0("./ModelOutput/", date, "/out-"
-                   , mod_name, "-NIMBLE.rds"))
+load(paste0(globi_out_folder, "/out-no_bee_plant-with-priors-6-NIMBLE.rds"))
+
 
 # Save the out object with a new model specific name
 out_no_bee_plant <- out
 
 out_no_bee_plant_df <- as.data.frame(out_no_bee_plant)
+
+
+
+# Load the model output - result
+load(paste0(globi_result_folder, "/result-quarter-no_bee_plant-with-priors-6-NIMBLE.rds"))
+
+
+# Save the out object with a new model specific name
+result_no_bee_plant <- subset_result_quarter
+
+
 
 
 
@@ -289,8 +312,6 @@ text.size <- 12
 title.size <- 12
 
 
-# Number of samples for MCMC lines on continuous variable plots
-n_samp <- 5000
 
 
 
@@ -306,8 +327,7 @@ response_continous_cov_plot <- function(out_df,
                                         intercept, # For most it will be: out_df$beta_psi.1.
                                         mod_name,
                                         x_lab_text,
-                                        y_lab_text,
-                                        n_sub){
+                                        y_lab_text){
 
 # Create empty data frame
   stats_df <- data.frame(mod_name = rep(mod_name, times = 2),
@@ -436,8 +456,7 @@ return(list(gplot = gplot,
   # x_lab_text = "Bee size standardized"
   # y_lab_tex = "Probability of interacting \nwith a plant"
   # mod_name = "Bee species model"
-  # n_sub = n_samp
-  
+
 
 
 # Bee species model
@@ -446,8 +465,7 @@ bee_size_bee_species_mod <- response_continous_cov_plot(out_df = out_bee_species
                                       intercept = out_bee_species_df$beta_psi.1.,
                                       mod_name = "Bee species model",
                                       x_lab_text = "Bee size standardized",
-                                      y_lab_text = "Probability of interacting \nwith a plant",
-                                      n_sub = n_samp)
+                                      y_lab_text = "Probability of interacting \nwith a plant")
 
 # Bee family model
 bee_size_bee_family_mod <- response_continous_cov_plot(out_df = out_bee_family_df, 
@@ -455,8 +473,7 @@ bee_size_bee_family_mod <- response_continous_cov_plot(out_df = out_bee_family_d
                                           intercept = out_bee_family_df$beta_psi.1.,
                                           mod_name = "Bee family model",
                                          x_lab_text = "Bee size standardized",
-                                         y_lab_text = "Probability of interacting \nwith a plant",
-                                         n_sub = n_samp)
+                                         y_lab_text = "Probability of interacting \nwith a plant")
 
 
 
@@ -466,8 +483,7 @@ bee_size_plant_species_mod <- response_continous_cov_plot(out_df = out_plant_spe
                                           intercept = out_plant_species_df$beta_psi.1.,
                                           mod_name = "Plant species model",
                                           x_lab_text = "Bee size standardized",
-                                          y_lab_text = "Probability of interacting \nwith a plant",
-                                          n_sub = n_samp)
+                                          y_lab_text = "Probability of interacting \nwith a plant")
 
 # Plant family model
 bee_size_plant_family_mod <- response_continous_cov_plot(out_df = out_plant_family_df, 
@@ -475,8 +491,7 @@ bee_size_plant_family_mod <- response_continous_cov_plot(out_df = out_plant_fami
                                           intercept = out_plant_family_df$beta_psi.1., 
                                           mod_name = "Plant family model",
                                           x_lab_text = "Bee size standardized",
-                                          y_lab_text = "Probability of interacting \nwith a plant",
-                                          n_sub = n_samp)
+                                          y_lab_text = "Probability of interacting \nwith a plant")
 
 
 # Bee and Plant family model
@@ -485,8 +500,7 @@ bee_size_bee_plant_family_mod <- response_continous_cov_plot(out_df = out_bee_pl
                                            intercept = out_bee_plant_family_df$beta_psi.1.,
                                            mod_name = "Bee and plant family model",
                                            x_lab_text = "Bee size standardized",
-                                           y_lab_text = "Probability of interacting \nwith a plant",
-                                           n_sub = n_samp)
+                                           y_lab_text = "Probability of interacting \nwith a plant")
 
 
 
@@ -496,8 +510,7 @@ bee_size_no_bee_plant_mod <- response_continous_cov_plot(out_df = out_no_bee_pla
                                                intercept = out_no_bee_plant_df$beta_psi.1.,
                                                mod_name = "No bee and plant model",
                                            x_lab_text = "Bee size standardized",
-                                           y_lab_text = "Probability of interacting \nwith a plant",
-                                           n_sub = n_samp)
+                                           y_lab_text = "Probability of interacting \nwith a plant")
 
 
 
@@ -646,12 +659,19 @@ response_factor_cov_plot <- function(out_df,
       y_end = 2
     )
     
+    # Add a little more room for the labels
+    annotation_df <- annotation_df %>% 
+      arrange(probability) %>% 
+      mutate(
+        gap     = 0.08 * x_range,
+        label_x = probability + seq_along(probability) * gap,
+        bracket_x = label_x - 0.02 * x_range
+      )
+    
     # Create the plot
     gplot <- ggplot(pred_df_long, aes(x = probability, y = covariate)) +
       stat_dist_gradientinterval(aes(fill = covariate), fill_type = "gradient") +
       scale_fill_manual(values = pal_cols)+
-      geom_vline(data=mu, aes(xintercept = grp.mean, color = covariate),
-                 linetype="dashed")+
       scale_color_manual(values = pal_cols)+
       xlab(x_lab_text)+
       ylab(y_lab_text)+
@@ -665,25 +685,52 @@ response_factor_cov_plot <- function(out_df,
             axis.title.x = element_text(size = title.size, color = "black"),
             axis.title.y = element_text(size = title.size, color = "black"))+
       ggtitle(mod_name)+
-      geom_segment(data = annotation_df, aes(x = probability, 
-                                             xend = probability,
-                                             y = y_start, 
-                                             yend = y_end),
-                   color = "black", size = 0.5)+
-      geom_segment(data = annotation_df, aes(x = probability, 
-                                             xend = probability - offset_minor,
-                                             y = y_start, 
-                                             yend = y_start),
-                   color = "black", size = 0.5) +
-      geom_segment(data = annotation_df, aes(x = probability, 
-                                             xend = probability - offset_minor,
-                                             y = y_end, 
-                                             yend = y_end),
-                   color = "black", size = 0.5)+
-      geom_text(data = annotation_df, aes(x = probability + offset_major, 
-                                          y = (y_start + y_end) / 2,
-                                          label = round(label, 2)), size = 3,
-                hjust = 0.5, vjust = 0)
+      ## ── formatting ────────────────────────────────────────────────
+      # Remove any ticks & labels > 1.0
+      scale_x_continuous(
+        breaks = function(lims) {                 # lims = current axis limits
+          br <- scales::pretty_breaks()(lims)     # default pretty breaks
+          br[br < 1]                             # keep those ≤ 1
+        }
+      ) + 
+      theme(legend.position = "none",
+            strip.background = element_rect(colour = "black", fill = "white"),
+            strip.text = element_text(size = title.size), 
+            panel.background = element_rect(colour = "black", fill = NA),
+            axis.text.x = element_text(size = text.size),
+            axis.text.y = element_text(size = text.size),
+            axis.title.x = element_text(size = title.size),
+            axis.title.y = element_text(size = title.size)) +
+      ## ── brackets ────────────────────────────────────────────────
+      geom_segment(                                         # vertical part
+        data = annotation_df,
+        aes(x = bracket_x, xend = bracket_x,
+            y = y_start,  yend = y_end),
+        linewidth = 0.5
+      ) +
+      geom_segment(                                         # top hook
+        data = annotation_df,
+        aes(x = bracket_x,                xend = bracket_x - 0.02 * x_range,
+            y = y_start,                  yend = y_start),
+        linewidth = 0.5
+      ) +
+      geom_segment(                                         # bottom hook
+        data = annotation_df,
+        aes(x = bracket_x,                xend = bracket_x - 0.02 * x_range,
+            y = y_end,                    yend = y_end),
+        linewidth = 0.5
+      ) +
+      
+      ## ── numbers ─────────────────────────────────────────────────
+      geom_text(
+        data = annotation_df,
+        aes(x = label_x,
+            y = (y_start + y_end) / 2,
+            label = sprintf("%.2f", label)),
+        hjust = 0, vjust = 0, size = 3
+      ) +
+      ## ── give the text room to breathe ───────────────────────────
+      expand_limits(x = max(annotation_df$label_x) * 1.05)
     
   }
   
@@ -760,6 +807,15 @@ response_factor_cov_plot <- function(out_df,
                 mean( pred_df$beta1_prob > pred_df$beta4_prob))
     )
     
+    # Add alittle more room for the labels
+    annotation_df <- annotation_df %>% 
+      arrange(probability) %>% 
+      mutate(
+        gap     = 0.08 * x_range,
+        label_x = probability + seq_along(probability) * gap,
+        bracket_x = label_x - 0.02 * x_range
+      )
+    
     # Create a mapping of color to numeric positions
     color_levels <- c(beta1_name, beta2_name, beta3_name, beta4_name)
     color_map <- setNames(seq_along(color_levels), color_levels)
@@ -767,16 +823,23 @@ response_factor_cov_plot <- function(out_df,
     # Adjust annotation_df to use numeric positions
     annotation_df$y_start <- color_map[annotation_df$start]
     annotation_df$y_end   <- color_map[annotation_df$end]
+  
     
     # Create the plot with scaled offsets
     gplot <- ggplot(pred_df_long, aes(x = probability, y = covariate)) +
       stat_dist_gradientinterval(aes(fill = covariate), fill_type = "gradient") +
       scale_fill_manual(values = pal_cols) +
-      geom_vline(data = mu, aes(xintercept = grp.mean, color = covariate),
-                 linetype = "dashed") +
       scale_color_manual(values = pal_cols) +
       xlab(x_lab_text) +
       ylab(y_lab_text) +
+      ## ── formatting ────────────────────────────────────────────────
+      # Remove any ticks & labels > 1.0
+      scale_x_continuous(
+        breaks = function(lims) {                 # lims = current axis limits
+          br <- scales::pretty_breaks()(lims)     # default pretty breaks
+          br[br < 1]                             # keep those ≤ 1
+        }
+      ) + 
       theme(legend.position = "none",
             strip.background = element_rect(colour = "black", fill = "white"),
             strip.text = element_text(size = title.size), 
@@ -785,24 +848,37 @@ response_factor_cov_plot <- function(out_df,
             axis.text.y = element_text(size = text.size),
             axis.title.x = element_text(size = title.size),
             axis.title.y = element_text(size = title.size)) +
-      geom_segment(data = annotation_df, aes(x = probability, 
-                                             xend = probability,
-                                             y = y_start, yend = y_end),
-                   color = "black", size = 0.5) +
-      geom_segment(data = annotation_df, aes(x = probability, 
-                                             xend = probability - offset_minor,
-                                             y = y_start, 
-                                             yend = y_start),
-                   color = "black", size = 0.5) +
-      geom_segment(data = annotation_df, aes(x = probability, 
-                                             xend = probability - offset_minor,
-                                             y = y_end, 
-                                             yend = y_end),
-                   color = "black", size = 0.5) +
-      geom_text(data = annotation_df, aes(x = probability + offset_major, 
-                                          y = (y_start + y_end) / 2,
-                                          label = round(label, 2)), size = 3,
-                hjust = 0.5, vjust = 0) +
+      ## ── brackets ────────────────────────────────────────────────
+      geom_segment(                                         # vertical part
+        data = annotation_df,
+        aes(x = bracket_x, xend = bracket_x,
+            y = y_start,  yend = y_end),
+        linewidth = 0.5
+      ) +
+      geom_segment(                                         # top hook
+        data = annotation_df,
+        aes(x = bracket_x,                xend = bracket_x - 0.02 * x_range,
+            y = y_start,                  yend = y_start),
+        linewidth = 0.5
+      ) +
+      geom_segment(                                         # bottom hook
+        data = annotation_df,
+        aes(x = bracket_x,                xend = bracket_x - 0.02 * x_range,
+            y = y_end,                    yend = y_end),
+        linewidth = 0.5
+      ) +
+      
+      ## ── numbers ─────────────────────────────────────────────────
+      geom_text(
+        data = annotation_df,
+        aes(x = label_x,
+            y = (y_start + y_end) / 2,
+            label = sprintf("%.2f", label)),
+        hjust = 0, vjust = 0, size = 3
+      ) +
+      
+      ## ── give the text room to breathe ───────────────────────────
+      expand_limits(x = max(annotation_df$label_x) * 1.05) +  # 5 % extra padding
       ggtitle(mod_name)
     
   }
@@ -996,7 +1072,7 @@ write.csv(bee_sociality_stats, paste0(github_folder_path, "/Tables/", date_folde
   # beta4_name = "white"
 
 
-pal_cols <- c("#E7B800", "grey", "#00AFBB", "white")
+pal_cols <- c("#E7B800", "pink", "#00AFBB", "grey")
 
 # Bee species model
 flow_col_bee_species_mod <- response_factor_cov_plot(out_df = out_bee_species_df,
@@ -1904,8 +1980,7 @@ bee_size_p_bee_species_mod <- response_continous_cov_plot(out_df = out_bee_speci
                                                           intercept = out_bee_species_df$beta_p.1.,
                                                           x_lab_text = "Bee size standardized",
                                                           y_lab_tex = "Probability of detecting \nthe bee on a plant",
-                                                          mod_name = "Bee species model", 
-                                                          n_sub = n_samp)
+                                                          mod_name = "Bee species model")
 
 # Bee family model
 bee_size_p_bee_family_mod <- response_continous_cov_plot(out_df = out_bee_family_df, 
@@ -1913,8 +1988,7 @@ bee_size_p_bee_family_mod <- response_continous_cov_plot(out_df = out_bee_family
                                            intercept = out_bee_family_df$beta_p.1.,
                                            x_lab_text = "Bee size standardized",
                                            y_lab_tex = "Probability of detecting \nthe bee on a plant",
-                                           mod_name = "Bee family model", 
-                                           n_sub = n_samp)
+                                           mod_name = "Bee family model")
 
 
 
@@ -1924,8 +1998,7 @@ bee_size_p_plant_species_mod <- response_continous_cov_plot(out_df = out_plant_s
                                               intercept = out_plant_species_df$beta_p.1.,
                                               x_lab_text = "Bee size standardized",
                                               y_lab_tex = "Probability of detecting \nthe bee on a plant",
-                                            mod_name = "Plant species model", 
-                                            n_sub = n_samp)
+                                            mod_name = "Plant species model")
 
 # Plant family model
 bee_size_p_plant_family_mod <- response_continous_cov_plot(out_df = out_plant_family_df, 
@@ -1933,8 +2006,7 @@ bee_size_p_plant_family_mod <- response_continous_cov_plot(out_df = out_plant_fa
                                              intercept = out_plant_family_df$beta_p.1.,
                                              x_lab_text = "Bee size standardized",
                                              y_lab_tex = "Probability of detecting \nthe bee on a plant",
-                                             mod_name = "Plant family model", 
-                                             n_sub = n_samp)
+                                             mod_name = "Plant family model")
 
 
 # Bee and Plant family model
@@ -1943,8 +2015,7 @@ bee_size_p_bee_plant_family_mod <- response_continous_cov_plot(out_df = out_bee_
                                                  intercept = out_bee_plant_family_df$beta_p.1.,
                                                  x_lab_text = "Bee size standardized",
                                                  y_lab_tex = "Probability of detecting \nthe bee on a plant",
-                                                 mod_name = "Bee and plant family model", 
-                                                 n_sub = n_samp)
+                                                 mod_name = "Bee and plant family model")
 
 
 
@@ -1954,8 +2025,7 @@ bee_size_p_no_bee_plant_mod <- response_continous_cov_plot(out_df = out_no_bee_p
                                              intercept = out_no_bee_plant_df$beta_p.1.,
                                              x_lab_text = "Bee size standardized",
                                              y_lab_tex = "Probability of detecting \nthe bee on a plant",
-                                             mod_name = "No bee and plant model", 
-                                             n_sub = n_samp)
+                                             mod_name = "No bee and plant model")
 
 
 
@@ -2026,13 +2096,13 @@ mod_name <- "bee_species"
   
   
   # Take a random subset of MCMC iterations to keep
-  row.subset <- sample(1:dim(result[[1]]$samples2)[1], size = n_samp, replace = F)
+  row.subset <- sample(1:dim(result_bee_species[[1]]$samples2)[1], size = n_samp, replace = F)
 
   
   # Extract the number of plant interactions per bee species (n_plants_per_bee)
-  out_n <- as.mcmc(data.frame(rbind(result[[1]]$samples2[row.subset, grep("n_", colnames(result[[1]]$samples2))],
-                                    result[[2]]$samples2[row.subset, grep("n_", colnames(result[[1]]$samples2))],
-                                    result[[3]]$samples2[row.subset, grep("n_", colnames(result[[1]]$samples2))])))
+  out_n <- as.mcmc(data.frame(rbind(result_bee_species[[1]]$samples2[row.subset, grep("n_", colnames(result_bee_species[[1]]$samples2))],
+                                    result_bee_species[[2]]$samples2[row.subset, grep("n_", colnames(result_bee_species[[1]]$samples2))],
+                                    result_bee_species[[3]]$samples2[row.subset, grep("n_", colnames(result_bee_species[[1]]$samples2))])))
   
   
   # Calculate mean and 95% CI for the number of plant interactions per bee species
@@ -2369,13 +2439,13 @@ fam_level_interaction_plot <- function(mod_name,
 
 #---- bee_family
 bee_fam_inter_plot <- fam_level_interaction_plot(mod_name = "bee_family",
-                                                  n_samp = 5000,
+                                                  n_samp = 100,
                                                   result = result_bee_family)
 
 
 #---- plant_family
 plant_fam_inter_plot <- fam_level_interaction_plot(mod_name = "plant_family",
-                                                 n_samp = 5000,
+                                                 n_samp = 100,
                                                  result = result_plant_family)
 
 

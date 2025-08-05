@@ -1,0 +1,19 @@
+"","mod_name","beta_direction","proportion"
+"1","Bee species model","yellow greater than other",0.00143333333333333
+"2","Bee species model","yellow greater than blue",0.805216666666667
+"3","Bee species model","yellow greater than white",0.902516666666667
+"4","Bee family model","yellow greater than other",0.00155
+"5","Bee family model","yellow greater than blue",0.202783333333333
+"6","Bee family model","yellow greater than white",0.8964
+"7","Plant species model","yellow greater than other",0.50485
+"8","Plant species model","yellow greater than blue",0.9989
+"9","Plant species model","yellow greater than white",0.639966666666667
+"10","Plant family model","yellow greater than other",0.3961
+"11","Plant family model","yellow greater than blue",0.596316666666667
+"12","Plant family model","yellow greater than white",0.778866666666667
+"13","Bee and plant family model","yellow greater than other",0.605116666666667
+"14","Bee and plant family model","yellow greater than blue",0.169466666666667
+"15","Bee and plant family model","yellow greater than white",0.995166666666667
+"16","No bee and plant family model","yellow greater than other",0.0229
+"17","No bee and plant family model","yellow greater than blue",0.61125
+"18","No bee and plant family model","yellow greater than white",0.7164
