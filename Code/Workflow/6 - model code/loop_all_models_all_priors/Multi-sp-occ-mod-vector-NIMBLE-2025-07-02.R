@@ -18,7 +18,7 @@
 
 # We will estimate:
   # psi = The probability a bee species interacts with a plant species
-  # p = The probability that a sourceCitation documented the bee-plant interaction
+  # p = The probability that the bee-plant interaction was documented
 
 
 ########################################
@@ -46,8 +46,8 @@
 # 6. MCMC settings
 # 7. Run the models
 # 8. Look at model outputs
-# 9. Compare model outputs to truth
-
+# 9. Subset result object 
+# 10. Save outputs
 
 ########################################
 ########################################
@@ -101,7 +101,7 @@ setwd("/home/gdirenzo/globi/")
 
 
 # Get the model name from command line arguments
-args <- c("bee_species", "full")
+args <- commandArgs(trailingOnly = TRUE)
 
 if (length(args) == 0) {
   stop("No model name provided")
@@ -113,6 +113,8 @@ model_name <- args[1]
 # Save the type of model run
 model_run_type <- args[2]
 
+# set the priors
+priors <- as.numeric(args[3])
 
 # Stop if no arguments are passed
 if (length(args) == 0) {
@@ -124,7 +126,7 @@ cat("Running model:", model_name, "\n")
 
 
 # date object for folder
-date <- "2025 01 26"
+date <- "2025 07 17"
 
 
 
@@ -137,7 +139,7 @@ nimbleOptions(enableDerivs = TRUE)
 
 
 # Call nimble models
-source("/Users/gdirenzo/Documents/GitHub/globi_msomAndsciChecklists/Code/Workflow/6 - local machine/model-code-2024-01-07.R")
+source("/home/gdirenzo/globi/Code/loop_all_models_all_priors/model-code-2025-07-02.R")
 
 # There is 1 function where you can specify the type of model:
   # 1. No bee/plant specification = no_bee_plant
@@ -151,7 +153,7 @@ source("/Users/gdirenzo/Documents/GitHub/globi_msomAndsciChecklists/Code/Workflo
 # For debugging use: model_run_type = test
 
 if(model_run_type == "test"){
-  n.iter = 2 
+  n.iter = 10 
   n.burn = 1
   n.thin1 = 1
   n.thin2 = 1
@@ -160,14 +162,22 @@ if(model_run_type == "test"){
 # For full run use: model_run_type = full
 
 if(model_run_type == "full"){
-    n.iter = 100000
+    n.iter = 250000
     n.burn = 50000 
     n.thin1 = 10
     n.thin2 = 10
 }
 
+# Set prior table
+prior_table <- expand.grid(prior_cov = c(1, 3, 5),
+                           prior_sd = c(2, 3))
+
+# Set the priors
+model_priors <- prior_table[priors,]
+
+
 # Print the type of model run type it is:
-print(paste0("Model run type = ", model_run_type))
+print(paste0("Model run type = ", model_run_type, " with the following priors = ", model_priors))
 
 
 # 7. Run the models --------------------------------------------------------
@@ -180,9 +190,39 @@ detectCores()
 # Number of cores to use
 ncore <- 3     
 
-cl <- makeCluster(ncore)
+# Make a PSOCK cluster explicitly:
+cl <- parallel::makeCluster(ncore, type = "PSOCK")
+
+# Register the doParallel backend
 registerDoParallel(cl)
 
+# Load the nimble package and source the model code on each worker node
+clusterEvalQ(cl, {
+  
+  # Specify the library location
+  .libPaths( c(
+    "/home/gdirenzo/R/x86_64-redhat-linux-gnu-library/4.2",
+    "/home/software/hovenweep/arc/apps/R/library/4.2/GNU/12.1",
+    "/opt/cray/pe/R/4.2.1.2/lib64/R/library"
+  ))
+  
+  # Load necessary packages
+  library(nimble)  # Ensure nimble is loaded on all nodes
+  library(reshape2)  # Ensure reshape2 is loaded on all nodes
+  
+  # Source the model code to ensure that the required functions are available on each worker
+  source("/home/gdirenzo/globi/Code/loop_all_models_all_priors/model-code-2025-07-02.R")
+})
+
+# Export the necessary global variables to each worker node (no need to export again in foreach)
+clusterExport(cl, list("occ_model", 
+                       "model_name", 
+                       "model_priors",
+                       "n.iter", 
+                       "n.burn", 
+                       "n.thin1", 
+                       "n.thin2",
+                       "library_paths"), envir = .GlobalEnv)
 
 # set seeds for each worker
 seeds <- 1:ncore
@@ -192,16 +232,27 @@ start.time <- Sys.time()
 
  # Run the model using dopar 
   result <- foreach(x = seeds, 
-                    .packages="nimble") %dopar% {
+                   .packages = c("nimble", "reshape2")
+                   ) %dopar% {
                      
    # Run the model function
    occ_model(seed = seeds[x],
+             prior_cov = model_priors$prior_cov,
+             prior_sd = model_priors$prior_sd,
              n.iter = n.iter, 
              n.burn = n.burn,
              n.thin1 = n.thin1, 
              n.thin2 = n.thin2,
              model = model_name)
  }
+
+# Run one chain of the model to determine if the parallel processing is the issue - this runs fine. The HPC runs continue. 
+# result <- occ_model(seed = seeds[x],
+#             n.iter = n.iter, 
+#             n.burn = n.burn,
+#             n.thin1 = n.thin1, 
+#             n.thin2 = n.thin2,
+#             model = model_name)
 
 
 # Stop the cluster after use
@@ -212,8 +263,6 @@ end.time <- Sys.time()
 
 # How long did the model take?
 end.time - start.time
-
-
 
 
 
@@ -256,20 +305,99 @@ MCMClist <- mcmc.list(simp_list)
 MCMCsummary(MCMClist)
 
 
+
+
+# 9. Subset result object -------------------------------------------------
+
+
+
+# Calculate number of MCMC samples
+n.MCMC.samples <- nrow(result[[1]]$samples)
+
+# Draw a random sample of the MCMC samples
+sub.set.half <- sample(1:n.MCMC.samples, n.MCMC.samples/2)
+sub.set.quarter <- sample(1:n.MCMC.samples, n.MCMC.samples/4)
+
+# Create empty lists to store data
+subset_result_half <- list()
+subset_result_half_chain_1 <- list()
+subset_result_half_chain_2 <- list()
+subset_result_half_chain_3 <- list()
+subset_result_quarter <- list()
+subset_result_quarter_chain_1 <- list()
+subset_result_quarter_chain_2 <- list()
+subset_result_quarter_chain_3 <- list()
+
+
+#---- Subset to half of the MCMC runs
+subset_result_half_chain_1[[1]] <- result[[1]]$samples[sub.set.half, ]
+subset_result_half_chain_1[[2]] <- result[[1]]$samples2[sub.set.half, ]
+
+subset_result_half_chain_2[[1]] <- result[[2]]$samples[sub.set.half, ]
+subset_result_half_chain_2[[2]] <- result[[2]]$samples2[sub.set.half, ]
+
+subset_result_half_chain_3[[1]] <- result[[3]]$samples[sub.set.half, ]
+subset_result_half_chain_3[[2]] <- result[[3]]$samples2[sub.set.half, ]
+
+names(subset_result_half_chain_1) <-
+  names(subset_result_half_chain_2) <-
+  names(subset_result_half_chain_3) <-c("samples", "samples2")
+
+subset_result_half[[1]] <- subset_result_half_chain_1
+subset_result_half[[2]] <- subset_result_half_chain_2
+subset_result_half[[3]] <- subset_result_half_chain_3
+
+
+
+
+#---- Subset to a quarter of the MCMC runs
+subset_result_quarter_chain_1[[1]] <- result[[1]]$samples[sub.set.quarter, ]
+subset_result_quarter_chain_1[[2]] <- result[[1]]$samples2[sub.set.quarter, ]
+
+subset_result_quarter_chain_2[[1]] <- result[[2]]$samples[sub.set.quarter, ]
+subset_result_quarter_chain_2[[2]] <- result[[2]]$samples2[sub.set.quarter, ]
+
+subset_result_quarter_chain_3[[1]] <- result[[3]]$samples[sub.set.quarter, ]
+subset_result_quarter_chain_3[[2]] <- result[[3]]$samples2[sub.set.quarter, ]
+
+names(subset_result_quarter_chain_1) <-
+  names(subset_result_quarter_chain_2) <-
+  names(subset_result_quarter_chain_3) <-c("samples", "samples2")
+
+subset_result_quarter[[1]] <- subset_result_quarter_chain_1
+subset_result_quarter[[2]] <- subset_result_quarter_chain_2
+subset_result_quarter[[3]] <- subset_result_quarter_chain_3
+
+
+
+
+
+
+
+# 10. Save outputs -------------------------------------------------
+
+
+
 # Save MCMC output as table
 write.csv(MCMCsummary(MCMClist),
-          file = paste0("./Tables/", date, "/Table-", model_name, "-MCMC-output.csv"))
+          file = paste0("./Tables/", date, "/Table-", model_name, "-with-priors-", priors, "-MCMC-output.csv"))
 
 
 # Save the model output
 save(out, 
-     file = paste0("./ModelOutput/", date, "/out-", model_name, "-NIMBLE.rds"))
+     file = paste0("./ModelOutput/", date, "/out-", model_name, "-with-priors-", priors, "-NIMBLE.rds"))
 
 save(result, 
-     file = paste0("./ModelOutput/", date, "/result-", model_name, "-NIMBLE.rds"))
+     file = paste0("./ModelOutput/", date, "/result-", model_name, "-with-priors-", priors, "-NIMBLE.rds"))
+
+save(subset_result_half, 
+     file = paste0("./ModelOutput/", date, "/result-half-", model_name, "-with-priors-", priors, "-NIMBLE.rds"))
+
+save(subset_result_quarter, 
+     file = paste0("./ModelOutput/", date, "/result-quarter-", model_name, "-with-priors-", priors, "-NIMBLE.rds"))
 
 save(MCMClist,
-     file = paste0("./ModelOutput/", date, "/MCMClist-", model_name,"-NIMBLE.rds"))
+     file = paste0("./ModelOutput/", date, "/MCMClist-", model_name, "-with-priors-", priors, "-NIMBLE.rds"))
 
 
 # Print when the model has finished running

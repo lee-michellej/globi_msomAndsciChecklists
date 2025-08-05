@@ -110,8 +110,6 @@ mod_name <- "bee_species"
 load(file = paste0("./ModelOutput/", date, "/out-"
                    , mod_name, "-NIMBLE.rds"))
 
-# load("./2025 07 02/out-bee_species-with-priors-1-NIMBLE.rds")
-
 
 # Save the out object with a new model specific name
 out_bee_species <- out
