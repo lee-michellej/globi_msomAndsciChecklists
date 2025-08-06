@@ -25,6 +25,7 @@
 #######################################
 
 
+# None - just the values reported in the results section in the manuscript
 
 
 #######################################
@@ -52,12 +53,12 @@ library(tidyverse)
 library(mcmcr)
 
 
+# Add github path
+github_path <- ""
 
-
-# Add github folder path
-github_folder_path <- "/Users/gdirenzo/Documents/GitHub/globi_msomAndsciChecklists/"
-globi_out_folder <- "/Volumes/DIRENZO/globi20250717-out-ModOutput/out"
-globi_result_folder <- "/Volumes/DIRENZO/globi20250717-quarter_results-ModOutput/quarter-results"
+# Add globi folder name
+globi_out_folder    <- ""
+globi_result_folder <- ""
 
 
 # date object for folder

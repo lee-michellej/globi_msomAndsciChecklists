@@ -67,18 +67,21 @@ The necessary data files to run all three scripts can be found in Globi Communit
 
 ### "0 - RemoveDupsInGloBI.R"
 
-Details: The purpose of this code is to take the latest download of Globi data for bees and remove duplicates that have been added due to recent publications and SCAN additions. These artificial duplicates could impact the probabilities of detecting these various interactions. These additions were discovered by Katja Seltmann.
+**Details**: The purpose of this code is to take the latest download of Globi data for bees and remove duplicates that have been added due to recent publications and SCAN additions. These artificial duplicates could impact the probabilities of detecting these various interactions. These additions were discovered by Katja Seltmann.
 
-Outputs:
+**Outputs**:
+
   - New Globi file to take into analyses
+  
     - file name = all_bee_data_unique_01feb24.tsv
 
 ### "1 - SourceTargetStandardization.Rmd" 
 
 
-Details: R script that downloads the data from the repository on Zenodo. The Zenodo repository already has the bee-plant interactions trimmed from the entire Globi dataset. Bee and plant names can be in any order in either the "source" or "target" columns.
+**Details**: R script that downloads the data from the repository on Zenodo. The Zenodo repository already has the bee-plant interactions trimmed from the entire Globi dataset. Bee and plant names can be in any order in either the "source" or "target" columns.
 
-Outputs:
+**Outputs**:
+
   - interactions_dup.csv.gz
   
   - interactions.csv.gz
@@ -87,18 +90,20 @@ Outputs:
 ### "2 - PlantStandardization_02feb24.R"
 
 
-Details: This code is part of the standardization process for matching the santa cruz island plant list and Globi interactions. The goal is to make a standardized name column for each dataset and then merge the files
+**Details**: This code is part of the standardization process for matching the santa cruz island plant list and Globi interactions. The goal is to make a standardized name column for each dataset and then merge the files
 
 
-Outputs: 
+**Outputs**: 
+
 	- resolvedplantnamesglobi_12feb24.csv.csv
 	
 
 ### "3 - Format_dat_checklist_2025_01_22"
 
-Details: This R script formats the Globi data for the model into a 3D array (bee species x plant species x citation) & in 2D. The objective of the analysis is to determine the number of plants that each bee species interacts with while accounting for sampling bias. We will be using an occupancy model for the analysis. We will account for bee-plant interactions that were not observed. We will use citations & collections are the "replicate surveys" (rather than temporal or spatial surveys). This model does not take time or space into account.
+**Details**: This R script formats the Globi data for the model into a 3D array (bee species x plant species x citation) & in 2D. The objective of the analysis is to determine the number of plants that each bee species interacts with while accounting for sampling bias. We will be using an occupancy model for the analysis. We will account for bee-plant interactions that were not observed. We will use citations & collections are the "replicate surveys" (rather than temporal or spatial surveys). This model does not take time or space into account.
 
-Outputs: 
+**Outputs**: 
+
  - Subsetted globi data
    - file = final_globi_data.csv
 
@@ -112,17 +117,19 @@ Outputs:
 
 ### "4 - Format_covariates_2025_01_07"
 
-Details: This R script formats the covariates for the model. It also explores correlations among the covariates and generates a number of exploratory plots. 
+**Details**: This R script formats the covariates for the model. It also explores correlations among the covariates and generates a number of exploratory plots. 
 
-Outputs: 
+**Outputs**: 
+
   - Plant and bee covariates
+  
     - file = model_covariates - 2025 01 22 - no apis.rds
 
 
 
 ### "5 - model code"
 
-Folder contains the following folders and files:
+**Folder contains the following folders and files**:
 
   - Check-Model-Output
     
@@ -158,7 +165,7 @@ Folder contains the following folders and files:
     
     - Multi-sp-occ-mod-vector-NIMBLE-2025-07-02.R
 
-Details: The folder "Check-Model-Output" contains 1 R script that checks the Rhat values of the model outputs. 
+**Details**: The folder "Check-Model-Output" contains 1 R script that checks the Rhat values of the model outputs. 
 
 The folder "loop_all_models_all_priors" contains the files for running the analyses for all model types (bee species, plant species, plant family, etc.) and prior combinations (standard deviation = 1, 3, 5, etc.). 
 
@@ -169,7 +176,7 @@ The folder "loop_priors_bee_model" contains the files for running the bee specie
 
 
 
-Outputs: 
+**Outputs**: 
 
 	- Outputs all "out" and "result" files for each model type and prior combination.
 	
@@ -179,9 +186,9 @@ Outputs:
 
 ### "6 - functions for covariate plots.R"
 
-Details: This R script contains the code for 2 functions that generate most of the figures in the manuscript.
+**Details**: This R script contains the code for 2 functions that generate most of the figures in the manuscript.
 
-Outputs: 
+**Outputs**: 
   
   - response_continous_cov_plot()
   
@@ -190,9 +197,9 @@ Outputs:
 
 ### "7 - Model-output-plots-NIMBLE-2024-07-15.R"
 
-Details: This R script creates plots from the model output. It sources the code to the file: "6 - functions for covariate plots.R", and creates all of the figures and statistics that are reported in the results section of the manuscript. 
+**Details**: This R script creates plots from the model output. It sources the code to the file: "6 - functions for covariate plots.R", and creates all of the figures and statistics that are reported in the results section of the manuscript. 
 
-Outputs:
+**Outputs**:
 
 	- Figure 1 - covariates on interaction probability
 	
@@ -201,50 +208,40 @@ Outputs:
 
 ### "8 - Model-output-comparison-2025-01-26.R"
 
-Details: This R script produces all of the figures in Appendix S2, and Appendix S1, Figure S1. The primary purpose of this code is to compare the model output of the 6 different model types. 
+**Details**: This R script produces all of the figures in Appendix S2, and Appendix S1, Figure S1. The primary purpose of this code is to compare the model output of the 6 different model types. 
 
-Outputs: 
+**Outputs**: 
 
   - Appendix S1, Figure S1
   
   - All figures in Appendix S2
 
 
+### "9 - Results reported 2024-07-19.R"
 
+**Details**: This R script generates the values reported in the results section of the Globi manuscript.
 
+**Outputs**:
 
-
-
-
-
-
-
-
-
------- start here -----------
-
-
-
-
-
-
-
-
-
-
-### File 9: "9 - Bipartite networks 2022-09-23.R"
-
-Details: This R script generates the values for the bipartite figure (Figure 3) from the model output
-
-Outputs: 
-  bee-plant-mod-probabilities.csv
+  - None
 	
+	
+	
+### "10 - Bipartite networks 2022-09-23.R"
 
+**Details**: This R script formats the output from the occupancy model for the bipartite network analysis.
 
-### File 10: "10 - create_bipartite_visualizationsAndAnalysis_18oct22.R"
+**Outputs**: 
 
-Details: This R script creates the bipartite figure (Figure 3).
+  - 2025 08 05 - bee-plant-mod-probabilities.csv
+  
+  
 
-Outputs: 
-	Figure 3 - bipartite network figure
+### "11 - create_bipartite_visAndAnalysis_2024_08_02.R"
+
+**Details**: This R script creates the bipartite figure (Figure 3).
+
+**Outputs**: 
+
+	- Figure 3 - bipartite network figure
 

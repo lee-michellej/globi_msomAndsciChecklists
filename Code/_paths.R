@@ -172,7 +172,7 @@ github_folder_path <- "/Users/gdirenzo/Documents/GitHub/globi_msomAndsciChecklis
 
 
 
-#------ Model comparison document
+#------ 8 - Model comparison document
 
 
 # Add globi folder name
@@ -203,3 +203,15 @@ load("/Users/gdirenzo/Documents/GitHub/globi_msomAndsciChecklists/Data/dat_info_
 # Load covariates
 load("/Users/gdirenzo/Documents/GitHub/globi_msomAndsciChecklists/Data/model_covariates - 2025 01 22 - no apis.rds")
 
+
+
+#------ 10 - Bi-partitie data
+
+
+# Add github path
+github_path <- "/Users/gdirenzo/Documents/GitHub/globi_msomAndsciChecklists/"
+
+# Add globi folder name
+globi_out_folder <- "/Volumes/DIRENZO/globi20250717-out-ModOutput/out"
+globi_result_folder <- "/Volumes/DIRENZO/globi20250717-quarter_results-ModOutput/quarter-results"
+globi_MCMC_folder <- "/Volumes/DIRENZO/globi20250717-MCMC-ModOutput/MCMC"

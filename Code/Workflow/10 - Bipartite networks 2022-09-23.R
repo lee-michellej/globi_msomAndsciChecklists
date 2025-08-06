@@ -16,7 +16,7 @@
 
 
 
-# To generate the values reported in the results section of the Globi manuscript
+# To format the output from the occupancy model for the bipartite network analysis
 
 
 
@@ -25,6 +25,8 @@
 #######################################
 
 
+# Formatted csv file for the bipartite analysis:
+  # 2025 08 05 - bee-plant-mod-probabilities.csv
 
 
 #######################################
@@ -55,25 +57,20 @@ library(splitstackshape)
 
 
 
-# Set working directory
-setwd("~/globi_tritrophic_networks/")
-
-setwd("/Volumes/DIRENZO/globi-20250210/gdirenzo/globi/")
-
 
 
 
 # 2. Load data -------------------------------------------------------
 
 
-
 # Add github path
-github_path <- "/Users/gdirenzo/Documents/GitHub/globi_msomAndsciChecklists/"
+github_path <- ""
 
 # Add globi folder name
-globi_out_folder <- "/Volumes/DIRENZO/globi20250717-out-ModOutput/out"
-globi_result_folder <- "/Volumes/DIRENZO/globi20250717-quarter_results-ModOutput/quarter-results"
-globi_MCMC_folder <- "/Volumes/DIRENZO/globi20250717-MCMC-ModOutput/MCMC"
+globi_out_folder    <- ""
+globi_result_folder <- ""
+globi_MCMC_folder   <- ""
+
 
 
 
