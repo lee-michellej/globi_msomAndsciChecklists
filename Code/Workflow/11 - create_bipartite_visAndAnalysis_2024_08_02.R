@@ -1,6 +1,7 @@
 # ### Create example network visualizations for GloBI manuscript ###
 # created by M. Lee 26 Sep 2022
 # updated by M. Lee 02 Aug 2024
+# updated by M. Lee 11 Feb 2025
 
 
 
@@ -47,13 +48,14 @@ df2intmatrix <- function(dframe, varnames = c("lower", "higher", "freq"), type.o
 
 
 # 1 - Main csv files for manipulation ------------------------
-dat <- read_csv("./Data/2024 07 19 - bee-plant-mod-probabilities.csv") %>% 
+#dat <- read_csv("./Data/2025 02 11 - bee-plant-mod-probabilities.csv") %>% 
+dat <- read_csv("~/Downloads/2025 08 05 - bee-plant-mod-probabilities.csv") %>% 
   dplyr::select(-1) %>% 
   mutate(prob = max_prob * 10000,
          prob_100 = max_prob * 100,
          prob_10 = max_prob * 10)
-# 41374 interactions
-# 137 bee species
+# 40166 interactions
+# 133 bee species
 # 302 plant species
 
 hist(dat$prob)
@@ -71,13 +73,24 @@ globi_dat <- read_csv("./Data/final-globi-list-clean 2024 04 07.csv") %>%
   mutate(plant_order = ifelse(is.na(targetTaxonOrderName),
                               "Boraginales",
                               targetTaxonOrderName)) %>% 
-  separate(resolvedPlantNames, into = c("genus", NA), sep = " ", remove = FALSE)
-# 9555 interactions
-# 89 bee species
+  separate(resolvedPlantNames, into = c("genus", NA), sep = " ", remove = FALSE) %>% 
+  # need to remove these bee species (2025 update): 
+  #[1] "Eucera edwardsii"    "Colletes kincaidii"  "Eucera lunata"       "Bombus occidentalis"
+  filter(resolvedBeeNames != "Eucera edwardsii",
+        resolvedBeeNames != "Colletes kincaidii",
+        resolvedBeeNames !="Eucera lunata",
+        resolvedBeeNames !="Bombus occidentalis")
+# 9335 interactions
+# 85 bee species
 # 172 plant species
 
 
+# make summary file for Katja here (14 feb 25)
+globi_simplified <- globi_dat %>% 
+  group_by_all() %>% 
+  count()
 
+#write.csv(globi_simplified, "./Data/globiIntSimplified_14feb25.csv")
 
 
 
@@ -122,7 +135,7 @@ cut_matdat <- as.data.frame(df2intmatrix(as.data.frame(cut_df),
 
 
 
-globi_matdat <- as.data.frame(df2intmatrix(as.data.frame(globi_filtered), 
+globi_matdat <- as.data.frame(df2intmatrix(as.data.frame(globi_dat), 
                                            varnames = c("resolvedPlantNames", "resolvedBeeNames"),
                                            type.out = "array",
                                            emptylist = TRUE))
@@ -134,7 +147,7 @@ globi_matdat <- as.data.frame(df2intmatrix(as.data.frame(globi_filtered),
 # Aug 2 2024 note: There must be a cut off as there is no 0% probability of interactions in the modeled network
 
 # calculate some basic metrics for the model
-model_metrics <- as.data.frame(networklevel(cut_matdat, index = c('nestedness', 
+model_metrics <- as.data.frame(networklevel(cut_matdat, index = c(#'nestedness', 
                                                            'connectance',
                                                            'interaction evenness',
                                                            'NODF',
@@ -145,7 +158,7 @@ names(model_metrics)[1] <- "model_values"
 
 
 # calculate some basic metrics for the globi data
-globi_metrics <- as.data.frame(networklevel(globi_matdat, index = c('nestedness', 
+globi_metrics <- as.data.frame(networklevel(globi_matdat, index = c(#'nestedness', 
                                                                  'connectance',
                                                                  'interaction evenness',
                                                                  'NODF',
@@ -167,7 +180,7 @@ metrics <- cbind(model_metrics, globi_metrics)
 
 cutoffs <- c(0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10)
 cutoff_values <- data.frame(index = c('connectance', 
-                                      'nestedness',
+                                      #'nestedness',
                                       'NODF',
                                       'interaction evenness',
                                       'H2'))
@@ -189,7 +202,7 @@ for(i in unique(cutoffs)){
   
   # calculate some basic metrics for the model
   cutoff_metrics <- as.data.frame(networklevel(cutoff_mat, index = c('connectance', 
-                                                                    'nestedness',
+                                                                    #'nestedness',
                                                                     'NODF',
                                                                     'interaction evenness',
                                                                     'H2')))
@@ -227,7 +240,7 @@ ggplot(plotdf, aes(x = (cutoff*10), y = value)) +
              color = "red",
              linewidth = 1,
              linetype = 2)
-ggsave("./Figures/Bipartite_figures/varyCutOffs_19aug24.jpeg",
+ggsave("./Figures/Bipartite_figures/varyCutOffs_07aug25.jpeg",
        width = 6,
        height = 4)
 
@@ -330,15 +343,14 @@ add.pvalues = function(net.metric.zscore){
 vaz.test.nest <- add.pvalues(vaz.nest.zscore)
 qt(vaz.test.nest$pvalue, 499)
 # tstatistics: 
-#-2.5544350
-#-0.6607475
-
+# [1]      -Inf -12.36888
 
 # print p-values of zscores
 
 print(vaz.test.nest)
-
-
+#site     metric       pvalue significance
+#1 model nestedness 0.000000e+00          ***
+#2 globi nestedness 3.861452e-31          ***
 
 
 
@@ -386,14 +398,15 @@ vaz.test.inteve <- add.pvalues(vaz.inteve.zscore)
 
 qt(vaz.test.inteve$pvalue, 499)
 # tstatistics: 
-#-34.0664169
-#-0.7612433
+# [1]      -Inf -40.34883
 
 
 # print p-values of zscores
 
 print(vaz.test.inteve)
-
+#    site               metric        pvalue significance
+#1 model interaction evenness  0.000000e+00          ***
+#2 globi interaction evenness 1.607296e-159          ***
 
 
 
@@ -442,11 +455,15 @@ vaz.test.h2 <- add.pvalues(vaz.h2.zscore)
 print(vaz.test.h2)
 
 qt(vaz.test.h2$pvalue, 499)
+#[1] -6.494956      -Inf
+
 # tstatistics: 
 #-8.858786
 #-6.731044
 
-
+#site metric       pvalue significance
+#1 model     H2 1.005677e-10          ***
+#  2 globi     H2 0.000000e+00          ***
 
 
 
@@ -579,11 +596,12 @@ tests <- rbind(vaz.test.nest,
 # first attempt with only apidae family
 # this file is likely not complete -- maybe check with Katja if missing anything major
 apis <- read_csv("./Data/apidae.csv")
+bee.list <- read_csv("./Data/bees-SCI_2021_08_04.csv")
 
 apis_df1 <- cut_df %>% 
-  left_join(bee.list, by = c("bee.names" = "resolvedBeeNames")) %>% 
-  dplyr::rename(plant.genus = genus.x,
-                bee.genus = genus.y) %>% 
+  left_join(bee.list, by = c("bee.names" = "ScientificName")) %>% 
+  dplyr::rename(plant.genus = genus,
+                bee.genus = Genus) %>% 
   left_join(apis, by = c("bee.genus" = "genus")) %>% 
   filter(!is.na(family)) %>% 
   filter(prob_10 > 5)
@@ -638,4 +656,163 @@ plotweb(visglobi_matdat, method = "normal", empty = TRUE, arrow = "no",
         #sequence = mod_order.matchplants
         #plot.axes = TRUE
 )
-# make visualizations
+
+
+
+
+
+# 5 - Diadasia visualization ------------
+
+# first attempt with only Diadasia genus
+
+dia_df1 <- cut_df %>% 
+  left_join(bee.list, by = c("bee.names" = "scientificName")) %>% 
+  dplyr::rename(plant.genus = genus.x,
+                bee.genus = genus.y) %>% 
+  left_join(apis, by = c("bee.genus" = "genus")) %>% 
+  filter(!is.na(family)) %>% 
+  filter(prob_10 > 5) %>% 
+  filter(bee.genus == "Diadasia")
+
+
+dia_matdat <- as.data.frame(df2intmatrix(as.data.frame(dia_df1), 
+                                          varnames = c("plant.names", "bee.names", "prob_10"),
+                                          type.out = "array",
+                                          emptylist = TRUE))
+
+plotweb(dia_matdat, method = "normal", empty = TRUE, arrow = "no",
+        col.interaction = adjustcolor("cornsilk3"),
+        col.high = "goldenrod",
+        col.low = "olivedrab4",
+        bor.col.interaction = NA,
+        bor.col.high = NA,
+        bor.col.low = NA,
+        text.rot = 90,
+        y.lim = c(-1.55,3.25),
+        #x.lim = c(0, 2.2),
+        #sequence = mod_order.matchplants
+        #plot.axes = TRUE
+)
+
+
+
+
+
+visdia <- globi_dat %>% 
+  separate(resolvedBeeNames, into = c("bee.genus", "bee.spp"), remove = F) %>% 
+  filter(bee.genus == "Diadasia")
+
+visdia_matdat <- as.data.frame(df2intmatrix(as.data.frame(visdia), 
+                                              varnames = c("resolvedPlantNames", "resolvedBeeNames"),
+                                              type.out = "array",
+                                              emptylist = TRUE))
+
+plotweb(visdia_matdat, method = "normal", empty = TRUE, arrow = "no",
+        col.interaction = adjustcolor("cornsilk3"),
+        col.high = "goldenrod",
+        col.low = "olivedrab4",
+        bor.col.interaction = NA,
+        bor.col.high = NA,
+        bor.col.low = NA,
+        text.rot = 90,
+        y.lim = c(-1.55,3.25),
+        #x.lim = c(0, 2.2),
+        #sequence = mod_order.matchplants
+        #plot.axes = TRUE
+)
+
+
+
+
+
+
+
+# # 6 - check specialization of specific species ========
+# 
+# modelPlantFam <- read.csv("./Data/resolvedplantsci_12feb24.csv") %>% 
+#   select(scientificName, Family) %>% 
+#   rename("plant.names" = "scientificName")
+# 
+# cut_df_fam <- cut_df %>% 
+#   left_join(modelPlantFam, by = "plant.names")
+# 
+# cut_matdat_fam <- as.data.frame(df2intmatrix(as.data.frame(cut_df_fam), 
+#                                          varnames = c("Family", "bee.names", "prob_10"),
+#                                          type.out = "array",
+#                                          emptylist = TRUE))
+# 
+# globi_matdat_fam <- as.data.frame(df2intmatrix(as.data.frame(globi_dat), 
+#                                            varnames = c("targetTaxonFamilyName", "resolvedBeeNames"),
+#                                            type.out = "array",
+#                                            emptylist = TRUE))
+# 
+# 
+# 
+# modelspec <- specieslevel(cut_matdat_fam,
+#                           index = c("d", "degree"),
+#                           level = "higher")
+# 
+# globispec <- specieslevel(globi_matdat_fam,
+#                           index = c("d", "degree"),
+#                           level = "higher")
+# 
+# 
+# speclevel_model <- modelspec %>% 
+#   rename(spec_model = d,
+#          links_model = degree) %>% 
+#   rownames_to_column("bee")
+# 
+# speclevel <- globispec %>% 
+#   rename(spec_glob = d,
+#          links_glob = degree) %>% 
+#   rownames_to_column("bee") %>% 
+#   left_join(speclevel_model, "bee")
+# 
+# 
+# 
+# 
+# 
+# # 7 - Pearson Correlation between model and globi species values =====
+# 
+# # read in file from Katja about SCI bee specialization
+# specialization <- read.csv("./Data/scir_beespec_25feb25.csv") %>% 
+#   select(ScientificName, dietBreadth) %>% 
+#   rename("bee" = "ScientificName") %>% 
+#   right_join(speclevel, by = "bee")
+# #write.csv(specialization, "./Figures/Bipartite_figures/specLevelOutput_25feb25.csv", row.names = F)
+# 
+# # pearson correlation
+# correlation <- cor(specialization$links_glob, specialization$links_model, method = 'pearson')
+# correlation
+# # 0.1801355
+# 
+# 
+# 
+# 
+# ggplot(specialization, aes(x = links_glob, y = links_model)) +
+#   geom_smooth(method = "lm", color = "black", se = F, linetype = 2) +
+#   geom_point(aes(color = dietBreadth)) +
+#   xlab("GloBI network family links") +
+#   ylab("Modeled network family links")
+# ggsave("./Figures/Bipartite_figures/beeSpecializationLinks_25feb25.jpeg",
+#        width = 6,
+#        height = 4)
+# 
+# # pearson correlation
+# correlation <- cor(specialization$links_glob, specialization$links_model, method = 'pearson')
+# correlation
+# # 0.1801355
+# 
+# ggplot(specialization, aes(x = spec_glob, y = spec_model)) +
+#   geom_smooth(method = "lm", color = "black", se = F, linetype = 2) +
+#   geom_point(aes(color = dietBreadth)) +
+#   xlab("GloBI network specialization") +
+#   ylab("Modeled network specialization")
+# ggsave("./Figures/Bipartite_figures/beeSpecializationdPrime_25feb25.jpeg",
+#        width = 6,
+#        height = 4)
+# 
+# # pearson correlation 2
+# correlation2 <- cor(specialization$spec_glob, specialization$spec_model, method = 'pearson')
+# correlation2
+# # 0.207
