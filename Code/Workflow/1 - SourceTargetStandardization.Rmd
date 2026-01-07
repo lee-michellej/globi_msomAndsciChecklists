@@ -5,90 +5,155 @@ date: "18 Feb 2021"
 output: html_document
 ---
 
-# To download data for this workflow, please look at our README.md file. These data accessed in September 2021 can be found here: 
-# GloBI Community, & Seltmann, Katja C. (2021). Bee Interaction Data from Global Biotic Interactions (2021-09-14_v2) [Data set]. Zenodo. https://doi.org/10.5281/zenodo.7753956
+# Code Objective
 
-# Download the data
-```{r}
+The purpose of this code is to standardize the source and target columns in the GloBI (Global Biotic Interactions) dataset. In GloBI, bee-plant interaction records can have the bee species in either the "source" or "target" column (and correspondingly, the plant in the opposite column). This script normalizes the data so that:
+
+- **Source columns** = Bee information
+- **Target columns** = Plant information
+
+This standardization is necessary for consistent downstream analysis of bee-plant interactions.
+
+
+# Input Data
+
+Data is downloaded from Zenodo: GloBI Community, & Seltmann, Katja C. (2021). Bee Interaction Data from Global Biotic Interactions (2021-09-14_v2) [Data set]. Zenodo. https://doi.org/10.5281/zenodo.7753956
+
+
+# Output of Code
+
+1. **interactions_dup.csv.gz** - Combined dataset (may contain duplicates)
+2. **interactions.csv.gz** - Combined dataset with duplicates removed
+
+
+# Table of Contents
+
+1. Download the data from Zenodo
+2. Load libraries
+3. Install Python and pandas (for data manipulation)
+4. Filter data to bee-plant interactions
+5. Standardize source/target columns
+6. Combine and export data
+
+# 1. Download the data from Zenodo
+
+```{r download-data}
 library(inborutils)
 
-# This function downloads the data as a zip file
-# The data will be downloaded to your current working directory. To check your current working directory (and the location where the data will be downloaded), use the function getwd():
+# Check current working directory (data will download here)
 getwd()
-# You can change your current working directory (and where the data are downloaded), using the setwd() function.
-# It takes about 10 min to download the data
+# Note: Use setwd() to change download location if needed
+
+# Download data from Zenodo (takes approximately 10 minutes)
 download_zenodo(doi = "10.5281/zenodo.7753956")
-  # This will download 3 files:
-    # all_bee_data_unique.txt.zip
-    # globi_bee_data.sh
-    # interactions-GloBI-September-14-2021.tsv.gz
+  # Downloads 3 files:
+  #   - all_bee_data_unique.txt.zip (main data file)
+  #   - globi_bee_data.sh
+  #   - interactions-GloBI-September-14-2021.tsv.gz
 
-# After the data are downloaded, in your browser, navigate to the all_bee_data_unique.txt.zip file that was downloaded
-# Double click on the file to unzip
-# Once it is unzipped, there will be a new file called: "all_bee_data_unique.txt"
-# We will work with that file
+# MANUAL STEP REQUIRED:
+# After download completes, unzip "all_bee_data_unique.txt.zip"
+# This creates "all_bee_data_unique.txt" which is used in the next steps
 ```
 
-# Load libraries
-```{r}
+# 2. Load libraries
+
+```{r load-libraries}
 library(tidyverse)
-library(reticulate)
-
+library(reticulate)  # Allows R to interface with Python
 ```
 
-# Install python and pandas
-```{r}
+
+# 3. Install Python and pandas
+
+```{r install-python}
+# Uncomment and modify if you need to specify a Python path:
 # path_to_python <- "~/anaconda3/bin/python"
 # use_python(path_to_python)
+
+# Install pandas package for Python data manipulation
 conda_install('r-reticulate', packages = 'pandas')
 ```
-# Filtering
-```{python}
+
+
+# 4. Filter data to bee-plant interactions
+
+```{python load-data}
 import pandas as pd
+
+# Read the unzipped GloBI data file
 df = pd.read_csv("all_bee_data_unique.txt", sep='\t', header=0)
 ```
 
-## Subset
-```{python}
-# List of total seven of bee families
-b_families = ['Andrenidae','Apidae','Colletidae','Halictidae','Megachilidae','Melittidae','Stenotritidae']
-# Bee as target, Plant as source
+
+# 5. Standardize source/target columns
+
+In GloBI, bee-plant interactions can be recorded in two ways:
+- Bee in "source" column, Plant in "target" column
+- Plant in "source" column, Bee in "target" column
+
+We standardize so that ALL records have:
+- Bee information in "source" columns
+- Plant information in "target" columns
+
+```{python subset-and-standardize}
+# Define the seven bee families
+b_families = ['Andrenidae', 'Apidae', 'Colletidae', 'Halictidae',
+              'Megachilidae', 'Melittidae', 'Stenotritidae']
+
+# Case 1: Records where bee is already in "source" column
+# Filter: source = bee family AND target = Plantae kingdom
 bee_source_df = df.loc[(df['sourceTaxonFamilyName'].isin(b_families)) &
-                         (df['targetTaxonKingdomName']=='Plantae')]
-# Plant as source, Bee as target
-plant_source_df = df.loc[(df['sourceTaxonKingdomName']=='Plantae') &
-                           (df['targetTaxonFamilyName'].isin(b_families))]
-# Flip target/source for above df
+                       (df['targetTaxonKingdomName'] == 'Plantae')]
+
+# Case 2: Records where plant is in "source" column (needs flipping)
+# Filter: source = Plantae kingdom AND target = bee family
+plant_source_df = df.loc[(df['sourceTaxonKingdomName'] == 'Plantae') &
+                         (df['targetTaxonFamilyName'].isin(b_families))]
+
+# Flip source/target columns for Case 2 records
+# This swaps all "source" column names to "target" and vice versa
 new_col = {}
 for col in df.columns:
-  if 'source' in col:
-    new_col[col] = 'target'+col[6:]
-  elif 'target' in col:
-    new_col[col] = 'source'+col[6:]
-  else:
-    new_col[col] = col
+    if 'source' in col:
+        new_col[col] = 'target' + col[6:]
+    elif 'target' in col:
+        new_col[col] = 'source' + col[6:]
+    else:
+        new_col[col] = col
+
 plant_source_df = plant_source_df.rename(columns=new_col)
 ```
 
-## Combine
-```{python}
-# Combine without dropping duplicates
-# The filtering method guarantees two disjoint data frames
-interactions_dup = pd.concat([bee_source_df,plant_source_df], axis=0)
-# Combine and drop duplicates
-interactions = pd.concat([bee_source_df,plant_source_df], axis=0).drop_duplicates()
+
+# 6. Combine and export data
+
+```{python combine-data}
+# Combine both dataframes (with potential duplicates)
+# Note: The filtering guarantees two disjoint data frames
+interactions_dup = pd.concat([bee_source_df, plant_source_df], axis=0)
+
+# Combine and remove any duplicate rows
+interactions = pd.concat([bee_source_df, plant_source_df], axis=0).drop_duplicates()
 ```
 
-## Result
-```{r}
+
+## Preview the result
+
+```{r preview-result}
 glimpse(py$interactions)
 ```
 
-# Export to csv.gz file
-```{python}
-interactions_dup.to_csv("interactions_dup.csv.gz", 
-                        index=False, 
+
+## Export to compressed CSV files
+
+```{python export-data}
+# Export dataset with potential duplicates
+interactions_dup.to_csv("interactions_dup.csv.gz",
+                        index=False,
                         compression="gzip")
+
+# Export deduplicated dataset (used in subsequent scripts)
 interactions.to_csv("interactions.csv.gz",
                     index=False,
                     compression='gzip')

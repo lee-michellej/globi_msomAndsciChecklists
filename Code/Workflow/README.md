@@ -95,7 +95,7 @@ The necessary data files to run all three scripts can be found in Globi Communit
 
 **Outputs**: 
 
-  - resolvedplantnamesglobi_12feb24.csv.csv
+  - resolvedplantnamesglobi_12feb24.csv
 	
 
 ## "3 - Format_dat_checklist_2025_01_22.R"
@@ -146,14 +146,14 @@ The necessary data files to run all three scripts can be found in Globi Communit
     - Multi-sp-occ-mod-vector-NIMBLE-2025-07-02.R
     
   - loop_models
-  
+
     - _loop-shell-script.sh
-    
+
     - globi-job.sh
-    
-    - model-code-2025-07-02.R
-    
-    - Multi-sp-occ-mod-vector-NIMBLE-2025-07-02.R
+
+    - model-code-2024-01-07.R
+
+    - Multi-sp-occ-mod-vector-NIMBLE-2025-01-07.R
     
   - loop_priors_bee_model
     
@@ -186,7 +186,7 @@ The folder "loop_priors_bee_model" contains the files for running the bee specie
 
 ## "6 - functions for covariate plots.R"
 
-**Details**: This R script contains the code for 2 functions that generate most of the figures in the manuscript.
+**Details**: This R script contains the code for 2 functions that are used to generate covariate plots for comparing the output of 6 different model types.
 
 **Outputs**: 
   

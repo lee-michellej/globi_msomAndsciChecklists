@@ -21,11 +21,27 @@
 
 
 #######################################
+## Input Data:
+#######################################
+
+
+# Model output files (from Script 5):
+#   - out-bee_species-with-priors-1-NIMBLE.rds
+#   - result-bee_species-with-priors-1-NIMBLE.rds
+
+# Data info (from Script 3):
+#   - dat_info_2025_01_22.rds
+
+
+
+#######################################
 ## Output of code:
 #######################################
 
 
-# None - just the values reported in the results section in the manuscript
+# None - this script calculates and prints the statistics reported in the
+# results section of the manuscript (no files are saved)
+
 
 
 #######################################

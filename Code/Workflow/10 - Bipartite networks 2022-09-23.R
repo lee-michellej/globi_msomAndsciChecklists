@@ -21,12 +21,29 @@
 
 
 #######################################
+## Input Data:
+#######################################
+
+
+# Model output files (from Script 5):
+#   - out-bee_species-with-priors-1-NIMBLE.rds
+#   - result-quarter-bee_species-with-priors-1-NIMBLE.rds
+
+# 3D array data (from Script 3):
+#   - globi_data_formatted_bee_plant_date_citation_2025_01_22 - short plant list - no apis.rds
+#   - dat_info_2025_01_22.rds
+
+
+
+#######################################
 ## Output of code:
 #######################################
 
 
-# Formatted csv file for the bipartite analysis:
-  # 2025 08 05 - bee-plant-mod-probabilities.csv
+# Formatted csv file for the bipartite network analysis:
+#   - 2025 08 05 - bee-plant-mod-probabilities.csv
+# Contains bee-plant interaction probabilities from the occupancy model
+
 
 
 #######################################
@@ -36,6 +53,7 @@
 
 # 1. Load libraries & set working directory
 # 2. Load data
+# 3. Format and export bee-plant interaction probabilities
 
 
 #######################################

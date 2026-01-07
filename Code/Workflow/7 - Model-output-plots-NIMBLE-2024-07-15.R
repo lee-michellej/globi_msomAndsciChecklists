@@ -8,11 +8,35 @@
 
 
 ##################################
-######## Code objective ##########
+######## Code Objective ##########
 ##################################
 
 
-# To create plots from the model output
+# To create plots from the model output. This script generates the main figures
+# for the manuscript showing relationships between covariates and both
+# interaction probability (psi) and detection probability (p).
+
+
+
+##################################
+######## Input Data ##############
+##################################
+
+
+# Model output files (from Script 5):
+#   - out-bee_species-with-priors-1-NIMBLE.rds (model output)
+#   - result-bee_species-with-priors-1-NIMBLE.rds (model results)
+#   - MCMC_posterior_samples-bee_species-with-priors-1.rds (posterior samples)
+
+# Covariate data (from Script 4):
+#   - model_covariates - 2025 01 22 - no apis.rds
+
+# Data info (from Script 3):
+#   - dat_info_2025_01_22.rds
+
+# Functions (from Script 6):
+#   - 6 - functions for covariate plots.R
+
 
 
 ##################################

@@ -28,11 +28,29 @@
 
 
 #######################################
+## Input Data:
+#######################################
+
+
+# Model output files for all 6 model types (from Script 5):
+#   - out-[model_type]-with-priors-1-NIMBLE.rds
+#   - result-[model_type]-with-priors-1-NIMBLE.rds
+# Where [model_type] = no_bee_plant, bee_species, plant_species, bee_family,
+#                      plant_family, bee_plant_family
+
+# Covariate data (from Script 4):
+#   - model_covariates - 2025 01 22 - no apis.rds
+
+
+
+#######################################
 ## Output of code:
 #######################################
 
 
 # The statistics and figures that compare the output of 6 different models
+# Generates: Appendix S1 Figure S1, and all figures in Appendix S2
+
 
 
 #######################################

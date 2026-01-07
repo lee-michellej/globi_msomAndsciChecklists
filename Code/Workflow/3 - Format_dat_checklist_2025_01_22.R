@@ -23,11 +23,28 @@
 
 
 ##################################
+######## Input Data ##############
+##################################
+
+
+# 1. resolvedplantnamesglobi_12feb24.csv - GloBI data with standardized plant names (from Script 2)
+# 2. SCI checklist and phenology - bee checklist with phenology data
+# 3. discoverlife-January-05-2024.tsv - Bee name synonyms from Discover Life (Zenodo)
+# 4. discoverlife-Anthophila-2022 04 01.csv - Original Discover Life bee names
+# 5. Globi-names-not-in-discoverlife - Sheet1 2022 04 01.csv - Manual bee name corrections
+# 6. names-aligned.csv - Big Bee Network name alignments
+# 7. globibees_namesmissing_26mar24.csv - Additional manual bee name corrections
+# 8. institutioncodes_2021_12_16.csv - Institution code mappings
+# 9. resolvedplantsci_12feb24.csv - SCI plant phenology with standardized names
+
+
+
+##################################
 ######## Output of Code ##########
 ##################################
 
 
-# This code generates lots of outputs, but the main objects that are exported and subsquently used are:
+# This code generates lots of outputs, but the main objects that are exported and subsequently used are:
 
 # Subsetted globi data
  # object name = dat3,

@@ -1,38 +1,80 @@
-# ### Create example network visualizations for GloBI manuscript ###
-# created by M. Lee 26 Sep 2022
-# updated by M. Lee 02 Aug 2024
-# updated by M. Lee 11 Feb 2025
+########################################
+########################################
+# This code was written by: M. J. Lee
+# Date Created: 26 Sep 2022
+# Updated: 02 Aug 2024, 11 Feb 2025
+# If you have any questions, please email: michellejlee@ucsb.edu
+########################################
+########################################
+
+
+
+##################################
+######## Code Objective ##########
+##################################
+
+
+# To create bipartite network visualizations comparing the modeled bee-plant
+# interactions (from occupancy model) with the observed GloBI interactions.
+# This script also calculates network metrics and compares them between datasets.
+
+
+
+##################################
+######## Input Data ##############
+##################################
+
+
+# From Script 10:
+#   - 2025 08 05 - bee-plant-mod-probabilities.csv (modeled interaction probabilities)
+
+# GloBI observed data:
+#   - final-globi-list-clean 2024 04 07.csv
+
+
+
+##################################
+######## Output of Code ##########
+##################################
+
+
+# Figure 3 - Bipartite network visualization comparing modeled vs observed networks
+
+
+
+##################################
+######## Table of Contents #######
+##################################
+
+
+# 1. Load libraries and set working directory
+# 2. Load and prepare modeled interaction data
+# 3. Load and prepare GloBI observed data
+# 4. Compare networks - calculate network metrics
+# 5. Calculate null models and compare
+# 6. Create bipartite network visualizations (Figure 3)
+
+
+
+##################################
+##################################
+##################################
 
 
 
 
-# This code does the following ---------------------------------------
-# 1 - download cleaned interaction and network metric data
+# 1. Load libraries and set working directory -------------------------------------------------------
 
-# 2 - compare networks
-# calculate network metrics for modeled data
-# calculate network metric for globi data
-# calculate null models
-# calculate network metrics for null models
-# compare results
-
-# 3 - create visualization
-# subset the modeled and globi data to only one family
-# create network visualizations
-
-
-
-
-# Load libraries and set working directory ------------------------------
 
 
 library(tidyverse)
 library(ggplot2)
-library(bipartite)
-library(vegan)
+library(bipartite)  # For bipartite network analysis and visualization
+library(vegan)      # For null model generation
 
 
-# code from bipartite to make interaction matrix -------
+
+# Helper function from bipartite package to convert dataframe to interaction matrix
 df2intmatrix <- function(dframe, varnames = c("lower", "higher", "freq"), type.out = "list", emptylist = TRUE) {
   if (length(varnames)==3) {
     if (any(is.na(dframe[,varnames[3]]))) warning(paste("NAs in", varnames[3], "converted to 0"))
@@ -47,8 +89,11 @@ df2intmatrix <- function(dframe, varnames = c("lower", "higher", "freq"), type.o
 }
 
 
-# 1 - Main csv files for manipulation ------------------------
-#dat <- read_csv("./Data/2025 02 11 - bee-plant-mod-probabilities.csv") %>% 
+# 2. Load and prepare modeled interaction data -------------------------------------------------------
+
+
+
+# Load modeled bee-plant interaction probabilities from Script 10
 dat <- read_csv("~/Downloads/2025 08 05 - bee-plant-mod-probabilities.csv") %>% 
   dplyr::select(-1) %>% 
   mutate(prob = max_prob * 10000,

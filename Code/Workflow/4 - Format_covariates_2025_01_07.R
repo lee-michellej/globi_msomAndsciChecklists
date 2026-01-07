@@ -8,12 +8,40 @@
 
 
 ##################################
-######## Code objective ##########
+######## Code Objective ##########
 ##################################
 
 
-# To format the covariates of the Globi model
+# To format the covariates (bee traits, plant traits, citation info) for the
+# occupancy model. This script:
+#   1. Loads and cleans bee trait data (size, coloration, sociality)
+#   2. Loads and cleans plant trait data (flower color, phenology)
+#   3. Loads citation/source information
+#   4. Ensures all species are in the correct order to match the 3D array
+#   5. Explores correlations among covariates
 
+
+
+##################################
+######## Input Data ##############
+##################################
+
+
+# Bee trait data:
+#   - Bee traits for checklist species - size.csv
+#   - Bee traits for checklist species - coloration_NEW.csv
+#   - KS-Bee traits for checklist species - sociality.csv
+#   - bees-SCI_2021_08_04.csv (bee family information)
+
+# Plant trait data:
+#   - plant.phenology2.csv (flower color and phenology)
+
+# Model data from Script 3:
+#   - globi_data_formatted_bee_plant_date_citation_2025_01_22 - short plant list - no apis.rds
+#   - dat_info_2025_01_22.rds
+
+# Citation data:
+#   - KS-sources.kept.2024.07.01.csv
 
 
 
