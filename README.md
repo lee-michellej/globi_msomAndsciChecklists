@@ -2,7 +2,7 @@
 
 ## Authors
 
-Michelle J. Lee☨, Ecology, (michellejlee@ucsb.edu) Evolution and Marine Biology, University of California Santa Barbara, USA 
+Michelle J. Lee☨, (michellejlee@ucsb.edu) Ecology & Evolution and Marine Biology, University of California Santa Barbara, USA 
 
 Graziella V. DiRenzo☨, (gdirenzo@umass.edu) U.S. Geological Survey, Massachusetts Cooperative Fish and Wildlife Research Unit, University of Massachusetts Amherst, USA
 
@@ -43,7 +43,7 @@ Lee, M.J., Diao, C. & Seltmann, K.C. (2024). lee-michellej/globi_msomAndsciCheck
 
 ## Citation for associated Manuscript
 
-Lee, M. J., DiRenzo, G. V., Y. Diao, K. C. Seltmann. In review. Leveraging local species data, a global database, and an occupancy model to explore bee-plant interactions. Ecological Applications.
+Lee, M. J., DiRenzo, G. V., Y. Diao, K. C. Seltmann. In press. Leveraging local species data, a global database, and an occupancy model to explore bee-plant interactions. Ecological Applications.
 
 ## Abstract 
 
@@ -98,7 +98,7 @@ The necessary data files to run all three scripts can be found in Globi Communit
   - resolvedplantnamesglobi_12feb24.csv.csv
 	
 
-## "3 - Format_dat_checklist_2025_01_22"
+## "3 - Format_dat_checklist_2025_01_22.R"
 
 **Details**: This R script formats the Globi data for the model into a 3D array (bee species x plant species x citation) & in 2D. The objective of the analysis is to determine the number of plants that each bee species interacts with while accounting for sampling bias. We will be using an occupancy model for the analysis. We will account for bee-plant interactions that were not observed. We will use citations & collections are the "replicate surveys" (rather than temporal or spatial surveys). This model does not take time or space into account.
 
@@ -115,7 +115,7 @@ The necessary data files to run all three scripts can be found in Globi Communit
 
 
 
-## "4 - Format_covariates_2025_01_07"
+## "4 - Format_covariates_2025_01_07.R"
 
 **Details**: This R script formats the covariates for the model. It also explores correlations among the covariates and generates a number of exploratory plots. 
 
