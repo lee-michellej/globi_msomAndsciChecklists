@@ -18,7 +18,7 @@
 
 # We will estimate:
   # psi = The probability a bee species interacts with a plant species
-  # p = The probability that a sourceCitation documented the bee-plant interaction
+  # p = The probability that the bee-plant interaction was documented
 
 
 ########################################
@@ -46,8 +46,8 @@
 # 6. MCMC settings
 # 7. Run the models
 # 8. Look at model outputs
-# 9. Compare model outputs to truth
-
+# 9. Subset result object 
+# 10. Save outputs
 
 ########################################
 ########################################
@@ -126,7 +126,7 @@ cat("Running model:", model_name, "\n")
 
 
 # date object for folder
-date <- "2025 07 02"
+date <- "2025 07 17"
 
 
 
@@ -162,18 +162,22 @@ if(model_run_type == "test"){
 # For full run use: model_run_type = full
 
 if(model_run_type == "full"){
-    n.iter = 250000
+    n.iter = 500000
     n.burn = 50000 
     n.thin1 = 10
     n.thin2 = 10
 }
 
+# Set prior table
+prior_table <- expand.grid(prior_cov = c(1, 3, 5),
+                           prior_sd = c(2, 3))
+
 # Set the priors
-priors_sd <- c(0.5, 1, 2, 3)[priors]
+model_priors <- prior_table[priors,]
 
 
 # Print the type of model run type it is:
-print(paste0("Model run type = ", model_run_type))
+print(paste0("Model run type = ", model_run_type, " with the following priors = ", model_priors))
 
 
 # 7. Run the models --------------------------------------------------------
@@ -213,7 +217,7 @@ clusterEvalQ(cl, {
 # Export the necessary global variables to each worker node (no need to export again in foreach)
 clusterExport(cl, list("occ_model", 
                        "model_name", 
-                       "priors_sd",
+                       "model_priors",
                        "n.iter", 
                        "n.burn", 
                        "n.thin1", 
@@ -233,7 +237,8 @@ start.time <- Sys.time()
                      
    # Run the model function
    occ_model(seed = seeds[x],
-             priors = priors_sd,
+             prior_cov = model_priors$prior_cov,
+             prior_sd = model_priors$prior_sd,
              n.iter = n.iter, 
              n.burn = n.burn,
              n.thin1 = n.thin1, 
@@ -258,8 +263,6 @@ end.time <- Sys.time()
 
 # How long did the model take?
 end.time - start.time
-
-
 
 
 
@@ -302,6 +305,79 @@ MCMClist <- mcmc.list(simp_list)
 MCMCsummary(MCMClist)
 
 
+
+
+# 9. Subset result object -------------------------------------------------
+
+
+
+# Calculate number of MCMC samples
+n.MCMC.samples <- nrow(result[[1]]$samples)
+
+# Draw a random sample of the MCMC samples
+sub.set.half <- sample(1:n.MCMC.samples, n.MCMC.samples/2)
+sub.set.quarter <- sample(1:n.MCMC.samples, n.MCMC.samples/4)
+
+# Create empty lists to store data
+subset_result_half <- list()
+subset_result_half_chain_1 <- list()
+subset_result_half_chain_2 <- list()
+subset_result_half_chain_3 <- list()
+subset_result_quarter <- list()
+subset_result_quarter_chain_1 <- list()
+subset_result_quarter_chain_2 <- list()
+subset_result_quarter_chain_3 <- list()
+
+
+#---- Subset to half of the MCMC runs
+subset_result_half_chain_1[[1]] <- result[[1]]$samples[sub.set.half, ]
+subset_result_half_chain_1[[2]] <- result[[1]]$samples2[sub.set.half, ]
+
+subset_result_half_chain_2[[1]] <- result[[2]]$samples[sub.set.half, ]
+subset_result_half_chain_2[[2]] <- result[[2]]$samples2[sub.set.half, ]
+
+subset_result_half_chain_3[[1]] <- result[[3]]$samples[sub.set.half, ]
+subset_result_half_chain_3[[2]] <- result[[3]]$samples2[sub.set.half, ]
+
+names(subset_result_half_chain_1) <-
+  names(subset_result_half_chain_2) <-
+  names(subset_result_half_chain_3) <-c("samples", "samples2")
+
+subset_result_half[[1]] <- subset_result_half_chain_1
+subset_result_half[[2]] <- subset_result_half_chain_2
+subset_result_half[[3]] <- subset_result_half_chain_3
+
+
+
+
+#---- Subset to a quarter of the MCMC runs
+subset_result_quarter_chain_1[[1]] <- result[[1]]$samples[sub.set.quarter, ]
+subset_result_quarter_chain_1[[2]] <- result[[1]]$samples2[sub.set.quarter, ]
+
+subset_result_quarter_chain_2[[1]] <- result[[2]]$samples[sub.set.quarter, ]
+subset_result_quarter_chain_2[[2]] <- result[[2]]$samples2[sub.set.quarter, ]
+
+subset_result_quarter_chain_3[[1]] <- result[[3]]$samples[sub.set.quarter, ]
+subset_result_quarter_chain_3[[2]] <- result[[3]]$samples2[sub.set.quarter, ]
+
+names(subset_result_quarter_chain_1) <-
+  names(subset_result_quarter_chain_2) <-
+  names(subset_result_quarter_chain_3) <-c("samples", "samples2")
+
+subset_result_quarter[[1]] <- subset_result_quarter_chain_1
+subset_result_quarter[[2]] <- subset_result_quarter_chain_2
+subset_result_quarter[[3]] <- subset_result_quarter_chain_3
+
+
+
+
+
+
+
+# 10. Save outputs -------------------------------------------------
+
+
+
 # Save MCMC output as table
 write.csv(MCMCsummary(MCMClist),
           file = paste0("./Tables/", date, "/Table-", model_name, "-with-priors-", priors, "-MCMC-output.csv"))
@@ -313,6 +389,12 @@ save(out,
 
 save(result, 
      file = paste0("./ModelOutput/", date, "/result-", model_name, "-with-priors-", priors, "-NIMBLE.rds"))
+
+save(subset_result_half, 
+     file = paste0("./ModelOutput/", date, "/result-half-", model_name, "-with-priors-", priors, "-NIMBLE.rds"))
+
+save(subset_result_quarter, 
+     file = paste0("./ModelOutput/", date, "/result-quarter-", model_name, "-with-priors-", priors, "-NIMBLE.rds"))
 
 save(MCMClist,
      file = paste0("./ModelOutput/", date, "/MCMClist-", model_name, "-with-priors-", priors, "-NIMBLE.rds"))

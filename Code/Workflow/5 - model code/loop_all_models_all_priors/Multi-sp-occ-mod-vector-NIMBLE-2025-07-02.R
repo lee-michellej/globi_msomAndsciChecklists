@@ -61,7 +61,11 @@
 
 
 # Set library paths:
-library_paths <- c( .libPaths())
+library_paths <- c( .libPaths(),
+"/home/gdirenzo/R/x86_64-redhat-linux-gnu-library/4.2",
+"/home/software/hovenweep/arc/apps/R/library/4.2/GNU/12.1",
+"/opt/cray/pe/R/4.2.1.2/lib64/R/library"
+)
 
 #.libPaths(c(.libPaths, library_paths))
 
@@ -85,7 +89,7 @@ library(ggmcmc, lib.loc = library_paths)
 
 
 # set working directory for Hovenweep (HPC):
-setwd("~/")
+setwd("/home/gdirenzo/globi/")
 
 
 
@@ -135,7 +139,7 @@ nimbleOptions(enableDerivs = TRUE)
 
 
 # Call nimble models
-source("./Code/loop_all_models_all_priors/model-code-2025-07-02.R")
+source("/home/gdirenzo/globi/Code/loop_all_models_all_priors/model-code-2025-07-02.R")
 
 # There is 1 function where you can specify the type of model:
   # 1. No bee/plant specification = no_bee_plant
@@ -197,7 +201,9 @@ clusterEvalQ(cl, {
   
   # Specify the library location
   .libPaths( c(
-    ""
+    "/home/gdirenzo/R/x86_64-redhat-linux-gnu-library/4.2",
+    "/home/software/hovenweep/arc/apps/R/library/4.2/GNU/12.1",
+    "/opt/cray/pe/R/4.2.1.2/lib64/R/library"
   ))
   
   # Load necessary packages
@@ -205,7 +211,7 @@ clusterEvalQ(cl, {
   library(reshape2)  # Ensure reshape2 is loaded on all nodes
   
   # Source the model code to ensure that the required functions are available on each worker
-  source("./Code/loop_all_models_all_priors/model-code-2025-07-02.R")
+  source("/home/gdirenzo/globi/Code/loop_all_models_all_priors/model-code-2025-07-02.R")
 })
 
 # Export the necessary global variables to each worker node (no need to export again in foreach)
