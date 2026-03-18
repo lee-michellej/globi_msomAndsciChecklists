@@ -43,7 +43,7 @@ Lee, M.J., Diao, C. & Seltmann, K.C. (2024). lee-michellej/globi_msomAndsciCheck
 
 ## Citation for associated Manuscript
 
-Lee, M. J., DiRenzo, G. V., Y. Diao, K. C. Seltmann. In press. Leveraging local species data, a global database, and an occupancy model to explore bee-plant interactions. Ecological Applications.
+Lee, Michelle J., Graziella V. DiRenzo, Chengyi Diao, and Katja C. Seltmann. 2026. “Leveraging Local Species Data, a Global Database, and an Occupancy Model to Explore Bee–Plant Interactions.” Ecological Applications e70221. https://doi.org/10.1002/eap.70221
 
 ## Abstract 
 
