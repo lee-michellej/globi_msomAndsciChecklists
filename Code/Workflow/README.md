@@ -62,8 +62,7 @@ We took the following steps to prepare the data:
       - Formatting data for analysis
 After the data were prepared, we used an occupancy model to estimate the probability of bee-plant interactions and the total number of bee species interacting with each plant species. To understand the difference between the bee-plant interactions predicted from the occupancy model and the normalized GloBI dataset, we compared network metrics calculated from each bipartite matrix. 
 
-The necessary data files to run all three scripts can be found in Globi Community & Seltmann (2022), whereas the accompanying research article can be found in Lee et al. (202x).
-
+*Note* that all scripts/files are in the "Workflow.zip" compressed folder. Once that folder is downloaded, unzip it; and the following files/folders will be available.
 
 ## "0 - RemoveDupsInGloBI.R"
 
